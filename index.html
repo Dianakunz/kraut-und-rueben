@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kraut und Rüben</title>
+<meta name="description" content="Kraut und Rüben – dein Gartenplaner: geplant, gepflanzt, geerntet.">
+<meta name="theme-color" content="#1f4d1a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="bilder/favicon.png">
+<link rel="apple-touch-icon" href="bilder/apple-touch-icon.png">
+<style>
+/* ============================================================
+   FARBEN & GRUNDLAGEN
+   Die Farben stammen aus dem Logo: Blattgrün, Schriftgrün,
+   Rübenrot, Erdbraun und ein heller Cremeton.
+   ============================================================ */
+:root{
+  --bg:#f7f4ea; --karte:#fffdf7; --karte2:#f1ecdd; --linie:#e2dac6;
+  --text:#25301f; --leise:#6b6f5e;
+  --gruen:#3f8a2a; --gruen-dunkel:#1f4d1a; --gruen-hell:#e3efd3; --blatt:#8cc63f;
+  --rot:#c8234a; --rot-hell:#fbe3e8; --erde:#5a3418; --erde-hell:#efe2d3;
+  --blau:#2f6f9f; --blau-hell:#e1edf6; --gelb:#b7791f; --gelb-hell:#fbefd6;
+  --schatten:0 1px 2px rgba(60,50,20,.06),0 4px 14px rgba(60,50,20,.06);
+  --radius:14px;
+  --marke:var(--gruen-dunkel);
+}
+[data-theme="dark"]{
+  --bg:#141812; --karte:#1d2219; --karte2:#252b20; --linie:#333b2c;
+  --text:#e8eadf; --leise:#a3a895;
+  --gruen:#7cc25a; --gruen-dunkel:#a6d98a; --gruen-hell:#26361f; --blatt:#8cc63f;
+  --rot:#ef6a8b; --rot-hell:#3d1e26; --erde:#c9a07e; --erde-hell:#33281f;
+  --blau:#7fb5df; --blau-hell:#1d2c38; --gelb:#e2b25c; --gelb-hell:#3a2f1a;
+  --schatten:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+  --marke:#a6d98a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg); color:var(--text); font-size:16px; line-height:1.5;
+  -webkit-tap-highlight-color:transparent;
+}
+h1,h2,h3{line-height:1.25;margin:0 0 .5em}
+h1{font-size:1.5rem;color:var(--gruen-dunkel)}
+h2{font-size:1.15rem}
+h3{font-size:1rem}
+p{margin:0 0 .75em}
+a{color:var(--gruen)}
+button{font:inherit;color:inherit}
+.verborgen{display:none!important}
+svg.icon{width:24px;height:24px;flex:none}
+
+/* ============================================================
+   AUFBAU: Handy (Standard) und Laptop (ab 900 px Breite)
+   ============================================================ */
+#kopf{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;gap:10px;
+  padding:8px 12px; padding-top:calc(8px + env(safe-area-inset-top));
+  background:var(--bg); border-bottom:1px solid var(--linie);
+}
+.marke{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--marke);min-width:0}
+.marke img{height:38px;width:auto}
+.marke svg.wortmarke{height:34px;width:auto}
+.version{font-size:.72rem;color:var(--leise);white-space:nowrap;align-self:flex-end;margin-bottom:2px}
+.kopf-knoepfe{margin-left:auto;display:flex;gap:4px}
+.rund{
+  width:42px;height:42px;border-radius:50%;border:0;background:transparent;
+  display:grid;place-items:center;cursor:pointer;color:var(--gruen-dunkel);
+}
+.rund:hover{background:var(--karte2)}
+.rund.aktiv{background:var(--gruen-hell)}
+
+#seitenleiste{display:none}
+
+#leiste{
+  position:fixed;left:0;right:0;bottom:0;z-index:20;
+  display:grid;grid-template-columns:repeat(6,1fr);
+  background:var(--karte);border-top:1px solid var(--linie);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+#leiste a{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:7px 0 6px;text-decoration:none;color:var(--leise);font-size:.7rem;
+}
+#leiste a.aktiv{color:var(--gruen-dunkel);font-weight:600}
+#leiste a.aktiv svg{color:var(--gruen)}
+
+main{padding:16px 14px calc(90px + env(safe-area-inset-bottom));max-width:1100px;margin:0 auto}
+.seitenkopf{display:none}
+
+@media (min-width:900px){
+  body{display:grid;grid-template-columns:250px 1fr;min-height:100vh;
+    background:linear-gradient(to right,var(--karte) 249px,var(--linie) 249px,var(--linie) 250px,var(--bg) 250px)}
+  #kopf,#leiste{display:none}
+  #seitenleiste{
+    display:flex;flex-direction:column;gap:4px;
+    position:sticky;top:0;height:100vh;padding:20px 14px;
+    background:transparent;
+  }
+  #seitenleiste .marke{flex-direction:column;align-items:flex-start;gap:6px;margin:0 8px 18px}
+  #seitenleiste .marke .zeile{display:flex;align-items:center;gap:8px}
+  #seitenleiste .marke img{height:58px}
+  #seitenleiste .marke svg.wortmarke{height:48px}
+  #seitenleiste nav a{
+    display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;
+    text-decoration:none;color:var(--text);font-weight:500;
+  }
+  #seitenleiste nav a:hover{background:var(--karte2)}
+  #seitenleiste nav a.aktiv{background:var(--gruen-hell);color:var(--gruen-dunkel);font-weight:650}
+  #seitenleiste nav a.aktiv svg{color:var(--gruen)}
+  #seitenleiste .fuss{margin-top:auto;font-size:.75rem;color:var(--leise);padding:0 10px}
+  .rechts{min-width:0}
+  .seitenkopf{
+    display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;
+    background:var(--bg);padding:16px 28px 12px;border-bottom:1px solid var(--linie);
+  }
+  .seitenkopf h1{margin:0}
+  main{padding:24px 28px 48px}
+  main > .seitentitel{display:none}
+}
+
+/* ============================================================
+   BAUSTEINE
+   ============================================================ */
+.karte{
+  background:var(--karte);border:1px solid var(--linie);border-radius:var(--radius);
+  box-shadow:var(--schatten);padding:16px;margin-bottom:14px;
+}
+.karte > h2{display:flex;align-items:center;gap:8px}
+.raster{display:grid;gap:14px}
+@media (min-width:900px){ .raster.zwei{grid-template-columns:1.3fr 1fr;align-items:start} }
+.leise{color:var(--leise)}
+.klein{font-size:.85rem}
+.knopf{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:42px;padding:8px 16px;border-radius:10px;border:1px solid var(--linie);
+  background:var(--karte);cursor:pointer;font-weight:550;text-decoration:none;color:var(--text);
+}
+.knopf:hover{background:var(--karte2)}
+.knopf.haupt{background:var(--gruen-dunkel);border-color:var(--gruen-dunkel);color:#fff}
+[data-theme="dark"] .knopf.haupt{background:#4f8f35;border-color:#4f8f35}
+.knopf.haupt:hover{filter:brightness(1.1)}
+.knopf.gefahr{color:var(--rot);border-color:var(--rot)}
+.knopf.gefahr.voll{background:var(--rot);color:#fff}
+.knopf.text{border-color:transparent;background:transparent;color:var(--gruen)}
+.knopfreihe{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+input[type=text],input[type=search]{
+  width:100%;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--linie);
+  background:var(--karte);color:var(--text);font:inherit;
+}
+input:focus,.knopf:focus-visible,.rund:focus-visible,a:focus-visible{outline:2px solid var(--gruen);outline-offset:2px}
+.suchzeile{display:flex;gap:8px;max-width:560px}
+.suchzeile input{flex:1}
+.liste{list-style:none;margin:8px 0 0;padding:0}
+.liste li button{
+  width:100%;text-align:left;padding:10px 12px;border:0;border-bottom:1px solid var(--linie);
+  background:transparent;cursor:pointer;
+}
+.liste li button:hover{background:var(--karte2)}
+.umschalter{display:inline-flex;border:1px solid var(--linie);border-radius:10px;overflow:hidden}
+.umschalter button{border:0;background:var(--karte);padding:9px 14px;cursor:pointer}
+.umschalter button+button{border-left:1px solid var(--linie)}
+.umschalter button.an{background:var(--gruen-hell);color:var(--gruen-dunkel);font-weight:650}
+.hinweis{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;margin:8px 0 0}
+.hinweis .sym{font-size:1.2rem;line-height:1.3}
+.hinweis.frost{background:var(--blau-hell)}
+.hinweis.warn{background:var(--gelb-hell)}
+.hinweis.hitze{background:var(--rot-hell)}
+.hinweis.ok{background:var(--gruen-hell)}
+.hinweis b{display:block}
+.marker{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:99px;background:var(--erde-hell);color:var(--erde);font-weight:600}
+
+/* Wetter */
+.wettertage{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:8px}
+.tag{text-align:center;padding:8px 2px;border-radius:10px;background:var(--karte2);font-size:.8rem}
+.tag.heute{background:var(--gruen-hell)}
+.tag .wt{font-weight:650}
+.tag .sym{font-size:1.35rem;line-height:1.6}
+.tag .max{font-weight:650}
+.tag .min{color:var(--leise)}
+.tag .min.frost{color:var(--blau);font-weight:650}
+.tag .regen{color:var(--blau);font-size:.72rem;min-height:1.1em;white-space:nowrap}
+.raster > div{display:grid;gap:14px;align-content:start}
+.raster .karte{margin-bottom:0}
+.raster{margin-bottom:14px}
+
+/* Geplante Funktionen */
+.bald{border-style:dashed;background:transparent;box-shadow:none}
+.bald ul{margin:6px 0 0;padding-left:20px}
+.bald li{margin:3px 0}
+
+/* Anleitung */
+.anleitung details{border-top:1px solid var(--linie);padding:10px 0}
+.anleitung details:first-of-type{border-top:0}
+.anleitung summary{cursor:pointer;font-weight:650;color:var(--gruen-dunkel)}
+.anleitung details > div{padding-top:8px}
+
+/* Willkommen */
+#willkommen{
+  position:fixed;inset:0;z-index:50;background:var(--bg);overflow:auto;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+#willkommen .innen{max-width:460px;width:100%;text-align:center}
+#willkommen .logo{display:flex;align-items:center;justify-content:center;gap:14px;color:var(--marke);margin-bottom:6px}
+#willkommen .logo img{height:120px}
+#willkommen .logo svg{height:84px;width:auto}
+#willkommen .unter{font-size:1.1rem;color:var(--erde);margin:0 0 22px;font-weight:550}
+#willkommen .karte{text-align:left}
+
+/* Dialog & Meldung */
+dialog{
+  border:0;border-radius:var(--radius);padding:20px;max-width:420px;width:calc(100% - 32px);
+  background:var(--karte);color:var(--text);box-shadow:0 10px 40px rgba(0,0,0,.25);
+}
+dialog::backdrop{background:rgba(20,24,18,.45)}
+dialog .knopfreihe{justify-content:flex-end}
+#meldung{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));
+  z-index:60;background:var(--gruen-dunkel);color:#fff;padding:10px 16px;border-radius:10px;
+  box-shadow:var(--schatten);max-width:calc(100% - 32px);display:flex;gap:12px;align-items:center;
+}
+[data-theme="dark"] #meldung{background:#3d6e2a}
+#meldung button{background:transparent;border:1px solid rgba(255,255,255,.6);color:#fff;border-radius:8px;padding:4px 10px;cursor:pointer}
+@media (min-width:900px){ #meldung{bottom:24px} }
+@media print{ #kopf,#leiste,#seitenleiste,.seitenkopf .kopf-knoepfe{display:none!important} body{display:block} }
+</style>
+</head>
+<body>
+
+<!-- Symbole (werden über <use> eingebunden) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="wm" viewBox="0 0 810 399"><path fill="currentColor" fill-rule="evenodd" d="M709.3 340.0 708.7 337.7 707.0 335.3 704.3 334.0 702.3 334.0 699.7 335.7 694.3 344.3 689.7 349.0 686.7 351.0 683.7 352.0 680.0 352.0 677.0 351.0 674.0 348.3 671.7 344.0 670.7 340.7 669.0 327.7 669.0 302.7 670.0 285.7 669.3 268.0 666.7 260.0 664.0 255.7 658.0 250.3 654.0 248.3 648.7 247.0 641.7 247.0 635.0 248.3 629.3 250.7 622.7 255.0 612.3 266.0 607.3 273.3 602.7 282.3 601.7 282.0 602.7 273.3 602.7 260.7 600.3 254.0 597.0 250.3 593.3 248.3 585.0 247.3 578.0 248.7 573.3 250.7 568.7 254.7 567.7 257.3 567.7 260.0 569.3 263.7 571.0 270.0 571.7 278.7 571.3 303.0 570.3 321.0 563.0 333.0 554.0 342.7 544.3 349.3 537.0 352.3 533.3 353.3 524.3 354.0 519.0 353.3 512.3 351.0 507.7 348.0 501.7 341.7 498.7 336.3 496.7 329.3 497.3 328.7 503.3 328.0 514.7 325.0 528.0 318.7 533.3 315.0 539.7 309.0 546.3 299.3 549.3 292.0 550.7 286.0 550.7 274.7 548.7 267.7 546.7 263.3 542.7 258.0 539.0 254.7 534.3 251.7 528.7 249.3 522.0 248.0 515.0 247.7 507.7 248.3 502.3 249.7 495.7 252.3 490.3 255.3 485.0 259.3 479.7 264.7 472.3 275.0 467.0 286.3 463.0 301.0 462.0 309.3 462.0 324.0 463.0 332.0 466.0 343.7 472.0 356.0 476.0 361.3 482.0 367.3 488.3 371.7 494.3 374.7 501.0 377.0 510.0 378.7 520.7 378.7 527.0 378.0 535.0 376.0 545.0 371.7 556.7 363.3 565.0 354.7 569.3 348.7 570.3 349.3 570.3 366.3 571.7 370.3 574.3 373.3 579.7 375.7 586.7 376.0 591.7 375.0 597.0 372.0 600.0 368.7 601.7 364.0 601.7 345.3 602.7 334.0 604.7 322.0 608.7 307.3 613.7 295.0 621.0 283.0 626.3 277.3 632.0 274.3 634.0 274.3 636.7 276.3 638.0 279.3 638.7 284.7 637.7 334.3 639.0 348.3 641.3 356.7 643.7 361.7 646.0 365.3 650.3 370.0 657.3 374.0 665.3 376.0 673.7 376.0 677.3 375.3 686.7 371.7 693.0 367.3 700.7 359.3 706.7 349.3 709.0 343.3ZM518.0 268.7 521.0 272.0 523.0 280.0 522.7 286.7 519.3 296.3 515.0 302.3 509.3 307.3 501.7 311.3 494.7 313.0 494.0 311.7 494.0 303.7 495.0 295.7 497.7 285.3 501.7 276.7 506.7 270.7 511.0 268.0 515.3 267.7ZM238.0 202.7 233.3 205.0 229.3 209.3 227.0 215.0 227.0 222.7 230.0 229.3 234.3 233.0 239.3 235.0 247.0 235.0 253.0 232.3 257.3 227.7 259.3 222.3 259.3 216.3 258.7 213.3 255.3 207.3 251.7 204.3 247.0 202.3 241.7 202.0ZM288.0 201.3 282.3 203.3 278.3 206.7 275.3 212.3 274.7 215.0 274.7 220.7 277.3 227.7 280.7 231.3 285.3 234.0 288.3 234.7 293.7 234.7 299.3 232.7 304.3 228.3 307.0 222.3 307.0 215.3 306.0 212.0 303.7 207.7 300.3 204.3 297.0 202.3 293.7 201.3ZM59.7 208.0 56.7 211.3 54.3 217.3 54.3 223.0 56.0 227.0 59.3 230.0 63.7 230.3 72.7 226.3 74.7 226.7 73.0 246.7 65.0 317.3 65.0 322.3 62.0 351.3 61.3 377.3 62.0 380.0 64.0 383.7 69.0 387.0 73.0 388.0 82.0 388.0 87.7 386.7 93.3 384.0 96.3 381.3 98.3 378.3 99.7 371.7 98.7 360.3 98.7 336.0 99.7 325.7 99.7 318.0 101.0 304.3 102.3 303.0 104.0 303.0 105.0 303.7 113.0 319.3 122.3 335.3 136.7 357.3 147.7 371.0 157.0 380.3 165.3 387.0 173.7 392.0 182.0 395.7 190.3 398.0 198.3 399.0 206.7 398.7 213.3 397.3 219.3 395.0 224.3 391.7 227.0 389.0 228.7 386.0 229.3 383.0 228.3 380.0 226.7 378.7 219.3 378.3 209.3 375.3 204.0 372.7 198.0 368.7 189.3 361.7 180.0 352.3 166.7 336.3 151.7 315.7 139.7 296.7 141.3 295.3 148.0 293.0 156.0 289.0 168.7 280.3 177.3 271.7 184.7 260.3 187.0 254.7 188.7 247.3 188.7 230.7 185.7 221.0 182.7 215.3 179.7 211.3 171.3 203.7 166.7 200.7 160.0 197.7 149.3 194.3 131.0 192.3 122.0 192.3 109.3 193.3 94.3 195.7 74.0 201.3 66.3 204.3ZM142.0 220.3 148.7 226.7 151.0 231.0 152.7 236.7 153.0 244.0 152.0 249.7 148.0 259.7 145.0 264.0 140.0 269.3 131.7 275.3 125.0 278.3 118.0 280.3 104.7 281.7 103.7 280.0 109.7 227.7 110.3 217.7 111.3 216.7 115.7 216.0 126.7 215.7 134.3 217.0ZM449.7 278.7 444.7 269.0 437.0 260.3 429.0 255.3 423.3 253.3 418.0 252.3 409.3 252.7 404.3 254.0 398.0 257.0 393.0 260.7 389.0 264.7 381.7 274.3 381.0 273.7 381.7 255.3 384.0 223.3 384.0 205.3 382.7 197.3 379.3 190.7 375.3 186.7 371.3 184.3 366.0 183.0 361.0 182.7 355.7 183.3 349.0 185.3 343.3 188.3 339.3 191.7 336.0 197.0 335.7 200.3 336.3 202.7 338.3 204.3 342.0 203.7 346.3 204.3 349.3 208.0 351.0 215.0 351.3 240.0 349.0 297.3 348.7 340.7 340.0 350.7 336.3 353.3 331.3 355.3 328.3 355.3 324.3 353.7 322.0 351.7 320.3 349.0 317.7 340.0 316.3 326.7 316.7 299.7 320.0 260.0 317.7 254.3 313.7 251.3 309.0 250.0 302.3 250.0 297.0 251.3 293.0 253.3 289.3 256.7 287.3 261.0 287.0 286.3 285.0 308.3 283.0 320.0 278.0 336.3 272.7 345.3 267.0 351.3 261.0 353.7 257.3 353.3 254.0 351.3 252.0 348.3 250.7 344.7 249.0 333.7 249.0 319.3 252.0 274.7 251.3 262.7 249.0 257.3 245.0 253.7 239.0 251.7 232.3 251.7 224.7 253.3 220.3 255.3 216.3 259.0 215.0 261.3 215.0 265.0 218.0 271.0 219.0 275.7 219.0 293.0 217.0 317.7 216.7 338.0 218.0 351.7 220.0 359.0 225.3 369.0 230.0 373.7 237.7 378.0 245.3 380.0 256.7 379.7 262.3 378.0 269.0 374.7 273.7 371.3 279.7 365.0 283.7 359.3 287.3 352.3 288.7 353.0 291.0 361.3 296.0 369.7 302.0 374.7 310.0 378.0 318.0 378.7 324.7 377.7 329.7 376.0 334.3 373.7 340.3 369.3 346.0 363.7 350.3 358.0 351.7 358.3 353.0 364.0 357.0 371.0 362.3 375.3 368.3 378.0 378.7 380.0 391.0 380.0 398.7 379.0 409.3 376.0 422.3 369.3 434.0 359.3 441.7 349.3 448.7 335.0 451.3 326.3 453.7 312.3 453.7 296.0 451.7 285.0ZM408.0 277.3 411.7 279.0 414.7 282.0 417.7 287.7 420.0 295.7 420.7 313.0 420.0 319.3 417.7 329.3 415.0 337.3 412.3 343.0 408.7 348.7 404.0 354.0 398.7 358.0 392.0 360.3 386.3 360.3 383.7 359.3 381.3 356.7 380.0 351.3 379.3 344.7 379.7 325.7 380.7 316.7 382.7 307.3 386.7 296.7 391.0 288.7 394.0 284.7 400.0 279.3 404.7 277.3ZM221.0 54.0 217.3 52.3 210.3 51.7 206.0 52.3 198.3 55.7 194.7 58.3 188.7 65.0 184.0 71.7 180.7 79.0 179.7 80.0 179.0 79.7 179.3 69.0 178.3 63.0 176.0 58.7 173.7 56.3 170.0 54.3 165.7 53.3 161.7 53.3 156.0 54.3 148.0 58.3 143.3 63.0 142.0 66.7 142.0 68.7 143.0 71.0 144.7 72.0 149.7 72.0 152.0 75.3 152.7 79.7 152.7 98.0 150.3 135.7 150.0 155.0 151.0 158.7 153.3 161.7 157.7 163.7 166.3 163.7 173.7 160.7 176.7 157.3 178.0 154.3 178.0 139.3 180.0 120.0 182.7 108.0 187.7 93.7 191.0 87.0 197.0 79.0 202.0 75.7 205.3 75.3 207.0 76.0 209.0 78.0 210.7 81.3 213.0 83.0 217.3 83.0 219.0 82.3 223.7 78.7 225.7 75.7 227.3 71.0 227.7 64.0 225.7 58.7ZM788.7 28.0 787.3 26.3 784.7 24.7 782.0 24.0 777.0 24.0 772.3 25.3 769.7 27.0 767.7 29.3 766.7 32.0 766.0 76.7 765.0 78.0 758.7 76.7 754.7 76.7 749.0 77.7 744.3 79.3 736.3 84.3 730.0 91.3 727.0 96.0 723.3 103.7 720.0 115.7 719.0 129.3 720.7 140.7 716.3 145.7 713.7 147.3 710.0 147.7 708.3 147.0 705.7 144.0 704.0 137.7 703.3 122.7 704.7 104.7 704.7 94.3 703.7 89.3 701.7 85.0 698.7 81.7 694.3 79.3 691.0 78.7 683.0 79.3 676.7 82.3 669.3 89.0 662.7 98.7 662.0 98.3 662.7 93.7 662.7 85.7 661.3 81.7 659.3 79.3 654.3 77.3 649.7 77.3 644.0 79.3 641.3 81.7 640.3 83.7 641.7 95.7 640.3 135.7 639.7 137.0 633.0 143.3 629.3 145.0 627.0 145.0 624.7 144.0 622.0 141.0 620.7 138.0 619.7 132.7 619.0 116.0 619.7 103.7 621.7 87.0 621.7 81.3 621.0 79.3 618.7 76.7 614.0 75.0 606.7 75.3 603.7 76.7 601.0 79.3 600.0 81.3 598.0 110.7 596.0 121.0 594.0 127.7 590.3 135.0 586.3 139.3 583.0 140.7 580.7 140.0 578.3 137.7 577.3 135.7 576.3 129.7 576.3 118.0 579.3 90.3 579.3 81.7 578.3 78.3 575.3 74.7 571.0 73.0 567.0 72.7 562.3 73.3 558.0 75.3 555.7 77.3 554.0 80.0 554.0 83.0 557.0 89.0 557.0 99.3 555.0 119.3 555.0 133.3 557.0 143.7 559.0 148.3 562.7 153.0 568.7 157.0 574.0 158.3 581.3 158.0 586.7 156.0 592.7 151.7 596.3 147.3 599.3 141.7 600.7 141.0 603.0 148.3 605.7 153.0 608.0 155.7 613.3 159.0 618.0 160.0 626.3 159.0 633.0 155.3 639.7 149.3 640.3 150.0 641.0 156.3 642.7 159.0 646.3 161.0 649.3 161.3 655.7 160.3 658.0 159.0 661.0 155.0 661.7 137.3 662.7 130.3 665.7 118.3 668.7 110.3 671.0 105.7 674.3 101.3 678.3 97.7 681.3 97.0 683.0 98.7 684.0 102.0 684.0 111.3 683.0 124.7 683.0 137.3 684.0 145.7 686.0 152.0 688.3 156.0 694.0 161.0 699.7 162.7 705.7 162.7 709.7 161.7 716.3 158.0 724.0 150.3 729.7 157.3 735.3 161.0 741.0 162.7 747.3 162.7 750.7 162.0 756.7 159.0 762.7 153.3 768.3 143.7 769.3 144.0 770.0 146.7 773.3 153.3 777.3 157.3 780.0 159.0 784.7 160.3 790.3 160.3 798.0 157.7 801.3 155.3 805.7 150.7 809.7 143.3 809.7 140.7 808.3 138.3 805.3 137.7 799.3 143.7 796.0 145.0 794.3 145.0 791.3 143.7 789.7 141.7 787.3 135.0 785.7 117.7 785.7 87.7 787.7 53.0 789.7 33.0ZM760.0 90.3 763.7 91.7 765.3 93.7 765.3 112.0 764.0 123.7 762.0 131.0 758.0 139.3 753.7 144.0 750.7 145.3 749.0 145.3 746.7 144.3 744.7 142.3 742.7 138.3 741.7 134.7 741.0 129.0 741.7 114.7 745.7 101.7 749.3 95.7 753.7 92.0 755.7 91.0ZM502.7 44.7 502.0 43.0 499.0 41.0 481.7 41.7 480.7 40.7 483.3 14.3 482.3 11.7 480.3 9.7 478.0 8.3 475.0 7.7 470.0 7.7 464.0 9.3 461.7 10.7 459.0 13.7 458.0 15.7 457.0 20.7 454.7 43.0 453.7 44.0 445.7 44.7 440.3 46.0 438.0 47.7 436.0 51.3 435.7 57.0 436.3 59.0 438.3 61.0 440.3 61.7 452.3 61.0 452.7 66.7 450.7 95.0 451.0 124.3 443.7 133.3 439.7 136.3 435.7 138.0 432.0 138.0 430.3 137.3 427.0 134.3 424.7 129.0 422.7 118.7 422.3 99.7 423.7 70.0 424.7 63.0 424.7 54.3 421.3 49.7 418.0 48.0 415.3 47.3 410.3 47.3 406.0 48.3 401.0 51.3 398.0 55.7 398.0 72.0 397.0 94.7 394.0 113.3 391.7 120.7 388.0 128.7 382.0 135.7 378.3 137.3 374.7 137.3 370.7 134.7 368.7 131.0 367.0 123.0 366.7 99.7 368.7 71.7 368.7 61.3 367.7 57.0 365.7 53.3 362.0 50.3 357.3 49.0 349.3 49.3 346.0 50.3 340.3 53.7 338.3 56.0 337.3 58.3 337.3 60.3 340.0 65.7 341.0 70.7 341.0 82.0 339.7 105.0 340.0 128.7 333.3 136.3 329.3 139.3 324.0 141.3 321.0 141.0 316.3 137.7 314.7 134.7 312.7 127.0 311.7 118.3 311.7 95.0 313.0 69.7 310.3 66.0 310.7 60.3 308.0 56.3 303.7 53.3 297.7 51.3 291.0 50.3 278.7 50.7 266.0 54.0 256.7 58.7 250.7 63.0 246.0 67.3 241.3 72.7 237.0 79.0 231.0 90.3 227.0 101.7 224.3 117.3 224.3 130.0 225.0 134.7 227.3 142.7 231.7 151.0 236.3 156.0 240.3 159.0 244.3 161.0 251.3 162.7 258.7 162.7 263.3 161.7 267.7 160.0 272.7 157.0 281.7 148.3 288.0 138.0 289.0 138.7 289.0 140.3 291.3 147.0 295.0 153.0 300.3 157.7 304.7 159.7 309.0 160.7 316.0 160.7 319.7 160.0 326.7 157.0 333.7 152.0 342.0 142.0 343.0 142.3 345.0 147.3 347.3 150.7 351.3 154.7 356.3 158.0 365.3 160.3 371.3 160.3 375.0 159.7 382.0 157.0 389.7 151.3 392.7 148.3 396.0 143.7 399.7 137.0 401.0 138.3 402.0 143.0 405.7 149.7 411.3 154.7 419.0 157.7 425.3 158.0 429.3 157.3 436.3 154.7 441.3 151.3 446.7 146.3 453.0 137.7 454.3 138.3 456.0 143.0 460.3 149.3 464.7 153.0 470.3 156.0 475.7 157.3 482.7 157.7 487.3 157.0 493.7 155.0 500.3 151.3 507.7 144.7 514.3 135.0 516.3 131.0 517.7 126.3 517.3 124.3 515.7 121.3 513.0 120.0 511.3 120.0 508.3 122.3 503.0 130.3 500.0 133.3 495.3 136.0 493.0 136.7 488.7 136.7 485.0 135.0 481.7 131.0 480.0 127.0 478.7 120.3 477.7 106.7 477.7 90.0 479.3 59.3 480.0 58.7 493.3 57.7 496.3 57.0 499.7 55.0 501.7 52.3 502.7 49.7ZM285.3 68.3 287.0 70.3 286.0 95.7 284.0 108.7 280.7 120.3 276.0 130.0 274.0 133.0 269.0 138.0 264.3 140.0 260.7 139.7 259.3 139.0 255.7 135.0 253.7 129.7 252.7 121.0 253.7 107.0 257.0 94.0 261.7 84.0 265.0 79.0 270.3 73.3 273.0 71.3 278.0 69.0 280.7 68.3ZM123.7 2.3 119.0 0.3 110.0 0.0 102.7 1.3 97.3 3.3 94.7 5.0 92.7 8.0 93.0 15.3 92.0 18.7 83.0 34.0 76.0 43.3 67.7 52.7 58.7 61.3 50.0 68.3 49.0 68.0 55.3 15.7 55.3 10.7 54.7 7.7 53.3 5.3 49.7 2.3 45.3 1.0 36.3 0.7 26.3 2.7 17.0 6.3 13.0 8.7 9.3 12.3 7.3 17.3 7.3 20.7 8.7 24.0 10.0 25.3 12.3 26.3 21.7 24.0 22.7 25.3 22.7 31.3 15.7 90.3 9.0 138.3 6.0 150.0 4.3 153.0 0.7 156.3 0.0 158.0 0.3 160.7 3.7 165.3 6.3 167.0 12.3 168.7 19.7 168.7 24.0 168.0 31.7 165.0 37.7 159.3 39.7 154.7 40.7 149.3 45.7 93.0 49.0 89.7 50.0 89.7 51.0 90.7 56.0 101.0 72.0 129.7 81.0 143.7 87.7 152.3 97.0 161.0 102.0 164.0 109.7 166.7 114.3 167.3 122.3 167.0 129.7 165.0 134.7 162.7 139.0 159.7 144.0 154.3 145.7 150.7 145.7 147.3 145.0 145.3 143.7 144.0 141.3 144.0 136.7 145.3 132.3 145.3 128.3 144.0 120.3 138.3 111.7 129.0 104.0 118.7 94.0 103.3 75.3 72.3 76.0 71.0 85.7 63.0 101.7 47.3 110.7 37.3 120.3 25.0 124.3 18.7 127.3 11.7 127.3 7.7 126.7 5.7Z"/></symbol>
+    <symbol id="i-start" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-garten" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-8"/><path d="M12 12C12 8 9.5 5.5 5 5.5 5 10 7.5 12 12 12z"/><path d="M12 10c0-3.6 2.4-6 7-6 0 4.4-2.6 6-7 6z"/><path d="M4 20h16"/></g></symbol>
+    <symbol id="i-planung" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.5 14.5l2 2 4-4"/></g></symbol>
+    <symbol id="i-chronik" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4v4.5H8"/><path d="M12 7.5V12l3 2"/></g></symbol>
+    <symbol id="i-wissen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5.5A2.5 2.5 0 0 1 7 3h12.5v15H7a2.5 2.5 0 0 0-2.5 2.5z"/><path d="M4.5 20.5V5.5"/><path d="M19.5 18v3H7"/><path d="M9 7.5h6"/></g></symbol>
+    <symbol id="i-vorrat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8v3H8z"/><path d="M7 6h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M5 11.5h14"/><path d="M9 15.5h6"/></g></symbol>
+    <symbol id="i-hilfe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.3-2.5 3.8"/><path d="M12 17.2v.1"/></g></symbol>
+    <symbol id="i-zahnrad" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4.3a2 2 0 0 1-2 0l-.2-.1a2 2 0 0 0-2.7.7l-.2.4a2 2 0 0 0 .7 2.7l.2.1a2 2 0 0 1 1 1.7v.5a2 2 0 0 1-1 1.8l-.2.1a2 2 0 0 0-.7 2.7l.2.4a2 2 0 0 0 2.7.7l.2-.1a2 2 0 0 1 2 0l.4.3a2 2 0 0 1 1 1.7v.2a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.2a2 2 0 0 1 1-1.7l.4-.3a2 2 0 0 1 2 0l.2.1a2 2 0 0 0 2.7-.7l.2-.4a2 2 0 0 0-.7-2.7l-.2-.1a2 2 0 0 1-1-1.8v-.5a2 2 0 0 1 1-1.7l.2-.1a2 2 0 0 0 .7-2.7l-.2-.4a2 2 0 0 0-2.7-.7l-.2.1a2 2 0 0 1-2 0l-.4-.3a2 2 0 0 1-1-1.7V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></g></symbol>
+    <symbol id="i-ort" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></g></symbol>
+</svg>
+
+<!-- Laptop: Seitenleiste -->
+<aside id="seitenleiste">
+  <a class="marke" href="#start" aria-label="Kraut und Rüben – Startseite">
+    <span class="zeile"><img src="bilder/ruebe.png" alt=""><svg class="wortmarke" viewBox="0 0 810 399"><use href="#wm"/></svg></span>
+    <span class="version">Version <span class="app-version"></span></span>
+  </a>
+  <nav id="nav-gross"></nav>
+  <div class="fuss">Wetterdaten: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a></div>
+</aside>
+
+<div class="rechts">
+  <!-- Handy: Kopfzeile -->
+  <header id="kopf">
+    <a class="marke" href="#start" aria-label="Kraut und Rüben – Startseite">
+      <img src="bilder/ruebe.png" alt=""><svg class="wortmarke" viewBox="0 0 810 399"><use href="#wm"/></svg>
+      <span class="version">v<span class="app-version"></span></span>
+    </a>
+    <div class="kopf-knoepfe">
+      <button class="rund" data-ziel="anleitung" aria-label="Anleitung"><svg class="icon"><use href="#i-hilfe"/></svg></button>
+      <button class="rund" data-ziel="einstellungen" aria-label="Einstellungen"><svg class="icon"><use href="#i-zahnrad"/></svg></button>
+    </div>
+  </header>
+
+  <!-- Laptop: Seitentitel mit Knöpfen -->
+  <div class="seitenkopf">
+    <h1 id="seitentitel-gross"></h1>
+    <div class="kopf-knoepfe">
+      <button class="rund" data-ziel="anleitung" aria-label="Anleitung" title="Anleitung"><svg class="icon"><use href="#i-hilfe"/></svg></button>
+      <button class="rund" data-ziel="einstellungen" aria-label="Einstellungen" title="Einstellungen"><svg class="icon"><use href="#i-zahnrad"/></svg></button>
+    </div>
+  </div>
+
+  <main id="inhalt"></main>
+</div>
+
+<!-- Handy: Reiterleiste unten -->
+<nav id="leiste"></nav>
+
+<!-- Willkommen beim allerersten Öffnen -->
+<div id="willkommen" class="verborgen">
+  <div class="innen">
+    <div class="logo"><img src="bilder/ruebe.png" alt=""><svg viewBox="0 0 810 399" role="img" aria-label="Kraut und Rüben"><use href="#wm"/></svg></div>
+    <p class="unter">Geplant, gepflanzt, geerntet.</p>
+    <div class="karte">
+      <h2>Willkommen!</h2>
+      <p>Trag zuerst ein, wo dein Garten liegt. Damit bekommst du auf der Startseite das Wetter, Frostwarnungen und Hinweise auf Trockenphasen.</p>
+      <div id="willkommen-ort"></div>
+    </div>
+    <button class="knopf text" id="willkommen-spaeter">Später eintragen</button>
+  </div>
+</div>
+
+<dialog id="dialog"></dialog>
+<div id="meldung" class="verborgen"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   KRAUT UND RÜBEN – Gartenplaner
+   ============================================================ */
+const APP_VERSION = "0.1.0";
+const SPEICHER_SCHLUESSEL = "kur-daten";
+const WETTER_SCHLUESSEL = "kur-wetter";
+const DATEN_SCHEMA = 1;
+
+/* ---------- Reiter ---------- */
+const REITER = [
+  { id: "start",   name: "Start",   icon: "i-start" },
+  { id: "garten",  name: "Garten",  icon: "i-garten" },
+  { id: "planung", name: "Planung", icon: "i-planung" },
+  { id: "chronik", name: "Chronik", icon: "i-chronik" },
+  { id: "wissen",  name: "Wissen",  icon: "i-wissen" },
+  { id: "vorrat",  name: "Vorrat",  icon: "i-vorrat" },
+];
+const SONDERSEITEN = { einstellungen: "Einstellungen", anleitung: "Anleitung" };
+
+/* ============================================================
+   DATEN
+   Alles liegt als ein Objekt im Browser-Speicher (localStorage).
+   ============================================================ */
+function leereDaten() {
+  return {
+    schema: DATEN_SCHEMA,
+    einstellungen: { standort: null, design: "auto", willkommenGesehen: false },
+    garten: { breite: 0, tiefe: 0, flaechen: [], bereiche: [], beete: [] },
+    pflanzungen: [],   // was wirklich im Garten steht oder stand
+    planungen: [],     // Entwürfe für kommende Jahreszeiten
+    sorten: [],        // eigene Sorten mit Bewertung
+    saatgut: [],       // Saatgutvorrat
+    rezepte: [],       // eigene Rezeptsammlung
+    geaendert: null,
+  };
+}
+
+let D = laden();
+
+function laden() {
+  try {
+    const roh = localStorage.getItem(SPEICHER_SCHLUESSEL);
+    if (!roh) return leereDaten();
+    return ergaenzen(JSON.parse(roh));
+  } catch (e) {
+    console.error("Daten konnten nicht gelesen werden:", e);
+    return leereDaten();
+  }
+}
+
+/* Fehlende Felder (z. B. nach einem Update) mit Standardwerten auffüllen */
+function ergaenzen(d) {
+  const basis = leereDaten();
+  const neu = Object.assign(basis, d);
+  neu.einstellungen = Object.assign(leereDaten().einstellungen, d.einstellungen || {});
+  neu.garten = Object.assign(leereDaten().garten, d.garten || {});
+  return neu;
+}
+
+function speichern() {
+  D.geaendert = new Date().toISOString();
+  try {
+    localStorage.setItem(SPEICHER_SCHLUESSEL, JSON.stringify(D));
+    return true;
+  } catch (e) {
+    console.error(e);
+    melden("Speichern hat nicht geklappt: " + e.message);
+    return false;
+  }
+}
+
+/* ============================================================
+   HILFSFUNKTIONEN
+   ============================================================ */
+const $ = (sel, el = document) => el.querySelector(sel);
+const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
+function esc(t) {
+  return String(t ?? "").replace(/[&<>"']/g, z => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[z]));
+}
+const icon = id => `<svg class="icon"><use href="#${id}"/></svg>`;
+const WOCHENTAGE = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+const WOCHENTAGE_LANG = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+const MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+function datumText(d) { return `${d.getDate()}. ${MONATE[d.getMonth()]} ${d.getFullYear()}`; }
+function zeitText(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString("de-DE") + ", " + d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) + " Uhr";
+}
+function heuteISO() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+function zahl(n, stellen = 0) {
+  let x = Number(n);
+  if (Math.abs(x) < 0.5 * Math.pow(10, -stellen)) x = 0; // verhindert „-0“
+  return x.toLocaleString("de-DE", { maximumFractionDigits: stellen, minimumFractionDigits: stellen });
+}
+
+/* Kurze Meldung unten */
+let meldungTimer;
+function melden(text, aktion) {
+  const m = $("#meldung");
+  m.innerHTML = `<span>${esc(text)}</span>`;
+  if (aktion) {
+    const b = document.createElement("button");
+    b.textContent = aktion.text;
+    b.onclick = () => { m.classList.add("verborgen"); aktion.tun(); };
+    m.appendChild(b);
+  }
+  m.classList.remove("verborgen");
+  clearTimeout(meldungTimer);
+  if (!aktion) meldungTimer = setTimeout(() => m.classList.add("verborgen"), 3500);
+}
+
+/* Eigene Rückfrage (statt der Browser-Meldung mit Adresszeile) */
+function fragen({ titel, text, ja = "OK", nein = "Abbrechen", gefahr = false }) {
+  return new Promise(fertig => {
+    const dlg = $("#dialog");
+    dlg.innerHTML = `<h2>${esc(titel)}</h2><p>${text}</p>
+      <div class="knopfreihe">
+        ${nein ? `<button class="knopf" data-a="0">${esc(nein)}</button>` : ""}
+        <button class="knopf ${gefahr ? "gefahr voll" : "haupt"}" data-a="1">${esc(ja)}</button>
+      </div>`;
+    const zu = wert => { dlg.close(); fertig(wert); };
+    $$("button", dlg).forEach(b => b.onclick = () => zu(b.dataset.a === "1"));
+    dlg.oncancel = e => { e.preventDefault(); zu(false); };
+    dlg.showModal();
+  });
+}
+
+/* ============================================================
+   DESIGN (hell / dunkel / wie das Gerät)
+   ============================================================ */
+const dunkelAbfrage = window.matchMedia("(prefers-color-scheme: dark)");
+function designAnwenden() {
+  const w = D.einstellungen.design;
+  const dunkel = w === "dunkel" || (w === "auto" && dunkelAbfrage.matches);
+  document.documentElement.dataset.theme = dunkel ? "dark" : "light";
+  $('meta[name="theme-color"]').setAttribute("content", dunkel ? "#141812" : "#1f4d1a");
+}
+dunkelAbfrage.addEventListener("change", designAnwenden);
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function navAufbauen() {
+  const links = REITER.map(r => `<a href="#${r.id}" data-reiter="${r.id}">${icon(r.icon)}<span>${r.name}</span></a>`).join("");
+  $("#nav-gross").innerHTML = links;
+  $("#leiste").innerHTML = links;
+  $$("[data-ziel]").forEach(b => b.onclick = () => { location.hash = b.dataset.ziel; });
+  $$(".app-version").forEach(e => e.textContent = APP_VERSION);
+}
+
+function aktuelleSeite() {
+  const h = location.hash.replace("#", "").split("/")[0];
+  if (REITER.some(r => r.id === h) || SONDERSEITEN[h]) return h;
+  return "start";
+}
+
+function zeigen() {
+  const seite = aktuelleSeite();
+  const titel = SONDERSEITEN[seite] || REITER.find(r => r.id === seite).name;
+  $$("[data-reiter]").forEach(a => a.classList.toggle("aktiv", a.dataset.reiter === seite));
+  $$("[data-ziel]").forEach(b => b.classList.toggle("aktiv", b.dataset.ziel === seite));
+  $("#seitentitel-gross").textContent = seite === "start" ? begruessung() : titel;
+  document.title = seite === "start" ? "Kraut und Rüben" : `${titel} · Kraut und Rüben`;
+  const main = $("#inhalt");
+  main.innerHTML = "";
+  (SEITEN[seite] || SEITEN.start)(main);
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", zeigen);
+
+function begruessung() {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 11) return "Guten Morgen";
+  if (h >= 18) return "Guten Abend";
+  return "Hallo";
+}
+
+/* ============================================================
+   STANDORT (Ortssuche über Open-Meteo)
+   ============================================================ */
+function ortsauswahl(ziel, nachher) {
+  ziel.innerHTML = `
+    <div class="suchzeile">
+      <input type="search" placeholder="Ort oder Postleitzahl" aria-label="Ort suchen" autocomplete="off">
+      <button class="knopf haupt">Suchen</button>
+    </div>
+    <button class="knopf text" data-gps>${icon("i-ort")} Aktuellen Standort verwenden</button>
+    <ul class="liste"></ul>
+    <p class="klein leise ort-info"></p>`;
+  const feld = $("input", ziel), liste = $("ul", ziel), info = $(".ort-info", ziel);
+
+  async function suchen() {
+    const q = feld.value.trim();
+    if (q.length < 2) { info.textContent = "Bitte mindestens zwei Zeichen eingeben."; return; }
+    info.textContent = "Suche läuft …";
+    liste.innerHTML = "";
+    try {
+      const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=8&language=de&format=json`;
+      const r = await fetch(url);
+      if (!r.ok) throw new Error("Server antwortet mit " + r.status);
+      const j = await r.json();
+      const treffer = j.results || [];
+      if (!treffer.length) { info.textContent = "Kein Ort gefunden. Versuch es mit einer anderen Schreibweise."; return; }
+      info.textContent = "Bitte den richtigen Ort antippen:";
+      liste.innerHTML = treffer.map((t, i) => {
+        const zusatz = [t.postcodes?.[0], t.admin1, t.country].filter(Boolean).join(", ");
+        return `<li><button data-i="${i}"><b>${esc(t.name)}</b> <span class="leise klein">${esc(zusatz)}</span></button></li>`;
+      }).join("");
+      $$("button", liste).forEach(b => b.onclick = () => {
+        const t = treffer[+b.dataset.i];
+        uebernehmen({ name: [t.name, t.admin1].filter(Boolean).join(", "), lat: t.latitude, lon: t.longitude });
+      });
+    } catch (e) {
+      info.textContent = "Die Ortssuche hat nicht geklappt (" + e.message + "). Bist du online?";
+    }
+  }
+  function uebernehmen(ort) {
+    D.einstellungen.standort = ort;
+    speichern();
+    localStorage.removeItem(WETTER_SCHLUESSEL);
+    melden("Standort gespeichert: " + ort.name);
+    nachher && nachher();
+  }
+  $(".suchzeile button", ziel).onclick = suchen;
+  feld.addEventListener("keydown", e => { if (e.key === "Enter") suchen(); });
+  $("[data-gps]", ziel).onclick = () => {
+    if (!navigator.geolocation) { info.textContent = "Dein Browser kann den Standort nicht ermitteln."; return; }
+    info.textContent = "Standort wird ermittelt …";
+    navigator.geolocation.getCurrentPosition(
+      p => uebernehmen({ name: "Mein Garten (per Standortfreigabe)", lat: +p.coords.latitude.toFixed(3), lon: +p.coords.longitude.toFixed(3) }),
+      () => { info.textContent = "Der Standort konnte nicht ermittelt werden. Such stattdessen nach deinem Ort."; },
+      { timeout: 10000 }
+    );
+  };
+}
+
+/* ============================================================
+   WETTER (Open-Meteo, ohne Anmeldung)
+   Tiefstwert ≤ 0 °C  → Frost
+   Tiefstwert unter 4 °C → Bodenfrost möglich (am Boden oft einige Grad kälter als in 2 m Höhe)
+   Höchstwert ab 30 °C → Hitze
+   Trockenphase: letzte 7 Tage unter 5 mm Regen und nächste 3 Tage unter 3 mm, bei mindestens 12 °C am Tag
+   ============================================================ */
+const GRENZEN = { frost: 0, bodenfrost: 4, hitze: 30, trockenVorher: 5, trockenNachher: 3, trockenWaerme: 12 };
+
+const WETTERCODES = {
+  0: ["☀️", "Klar"], 1: ["🌤️", "Überwiegend klar"], 2: ["⛅", "Teils bewölkt"], 3: ["☁️", "Bedeckt"],
+  45: ["🌫️", "Nebel"], 48: ["🌫️", "Nebel mit Reif"],
+  51: ["🌦️", "Leichter Niesel"], 53: ["🌦️", "Niesel"], 55: ["🌧️", "Starker Niesel"], 56: ["🌧️", "Gefrierender Niesel"], 57: ["🌧️", "Gefrierender Niesel"],
+  61: ["🌧️", "Leichter Regen"], 63: ["🌧️", "Regen"], 65: ["🌧️", "Starker Regen"], 66: ["🌧️", "Gefrierender Regen"], 67: ["🌧️", "Gefrierender Regen"],
+  71: ["🌨️", "Leichter Schnee"], 73: ["🌨️", "Schnee"], 75: ["❄️", "Starker Schnee"], 77: ["🌨️", "Schneegriesel"],
+  80: ["🌦️", "Regenschauer"], 81: ["🌦️", "Regenschauer"], 82: ["⛈️", "Heftige Schauer"],
+  85: ["🌨️", "Schneeschauer"], 86: ["🌨️", "Schneeschauer"],
+  95: ["⛈️", "Gewitter"], 96: ["⛈️", "Gewitter mit Hagel"], 99: ["⛈️", "Gewitter mit Hagel"],
+};
+
+async function wetterHolen() {
+  const ort = D.einstellungen.standort;
+  if (!ort) return null;
+  let cache = null;
+  try { cache = JSON.parse(localStorage.getItem(WETTER_SCHLUESSEL) || "null"); } catch (e) {}
+  const passt = cache && cache.lat === ort.lat && cache.lon === ort.lon;
+  if (passt && Date.now() - cache.zeit < 60 * 60 * 1000) return cache;
+  try {
+    const url = "https://api.open-meteo.com/v1/forecast?latitude=" + ort.lat + "&longitude=" + ort.lon +
+      "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max" +
+      "&past_days=7&forecast_days=7&timezone=auto";
+    const r = await fetch(url);
+    if (!r.ok) throw new Error("Server antwortet mit " + r.status);
+    const j = await r.json();
+    const neu = { lat: ort.lat, lon: ort.lon, zeit: Date.now(), daily: j.daily };
+    localStorage.setItem(WETTER_SCHLUESSEL, JSON.stringify(neu));
+    return neu;
+  } catch (e) {
+    console.warn("Wetter konnte nicht geladen werden:", e);
+    if (passt) return Object.assign({ veraltet: true }, cache);
+    throw e;
+  }
+}
+
+/* Tage in Vergangenheit und Vorhersage aufteilen */
+function wetterAufbereiten(w) {
+  const d = w.daily, heute = heuteISO(), tage = [];
+  d.time.forEach((t, i) => tage.push({
+    datum: t, code: d.weather_code[i], max: d.temperature_2m_max[i], min: d.temperature_2m_min[i],
+    regen: d.precipitation_sum[i] ?? 0, chance: d.precipitation_probability_max?.[i],
+  }));
+  return { vorher: tage.filter(t => t.datum < heute), kommend: tage.filter(t => t.datum >= heute) };
+}
+
+function tagName(iso, lang = false) {
+  if (iso === heuteISO()) return "heute";
+  const d = new Date(iso + "T12:00:00");
+  const morgen = new Date(); morgen.setDate(morgen.getDate() + 1);
+  if (d.toDateString() === morgen.toDateString()) return "morgen";
+  return (lang ? WOCHENTAGE_LANG : WOCHENTAGE)[d.getDay()];
+}
+
+function wetterHinweise({ vorher, kommend }) {
+  const h = [];
+  const frostTage = kommend.filter(t => t.min <= GRENZEN.frost);
+  const bodenTage = kommend.filter(t => t.min > GRENZEN.frost && t.min < GRENZEN.bodenfrost);
+  if (frostTage.length) {
+    const kalt = frostTage.reduce((a, b) => (b.min < a.min ? b : a));
+    h.push({ art: "frost", sym: "❄️", titel: "Frost erwartet",
+      text: `Tiefstwerte bis ${zahl(kalt.min, 1)} °C (${frostTage.map(t => tagName(t.datum)).join(", ")}). Empfindliche Pflanzen abdecken oder hereinholen, Gießwasser und Leitungen schützen.` });
+  } else if (bodenTage.length) {
+    const kalt = bodenTage.reduce((a, b) => (b.min < a.min ? b : a));
+    h.push({ art: "frost", sym: "🌡️", titel: "Bodenfrost möglich",
+      text: `Tiefstwert ${zahl(kalt.min, 1)} °C (${bodenTage.map(t => tagName(t.datum)).join(", ")}). In klaren, windstillen Nächten kann es am Boden einige Grad kälter sein als angezeigt.` });
+  }
+  const heiss = kommend.filter(t => t.max >= GRENZEN.hitze);
+  if (heiss.length) {
+    const max = Math.max(...heiss.map(t => t.max));
+    h.push({ art: "hitze", sym: "🔥", titel: "Hitze",
+      text: `Bis ${zahl(max, 0)} °C (${heiss.map(t => tagName(t.datum)).join(", ")}). Früh morgens oder abends gießen, empfindliche Pflanzen schattieren.` });
+  }
+  const regenVorher = vorher.reduce((s, t) => s + (t.regen || 0), 0);
+  const naechste3 = kommend.slice(0, 3);
+  const regenNachher = naechste3.reduce((s, t) => s + (t.regen || 0), 0);
+  const warm = naechste3.length && naechste3.reduce((s, t) => s + t.max, 0) / naechste3.length >= GRENZEN.trockenWaerme;
+  if (vorher.length >= 5 && regenVorher < GRENZEN.trockenVorher && regenNachher < GRENZEN.trockenNachher && warm) {
+    h.push({ art: "warn", sym: "💧", titel: "Trockenphase",
+      text: `In den letzten 7 Tagen nur ${zahl(regenVorher, 1)} mm Regen, und auch in den nächsten Tagen kommt kaum etwas dazu. Beete, Jungpflanzen und Kübel gießen.` });
+  }
+  if (!h.length) h.push({ art: "ok", sym: "✅", titel: "Keine Warnungen", text: "Kein Frost, keine Hitze und keine Trockenphase in Sicht." });
+  return { hinweise: h, regenVorher };
+}
+
+async function wetterKarte(ziel) {
+  const ort = D.einstellungen.standort;
+  if (!ort) {
+    ziel.innerHTML = `<h2>🌦️ Wetter</h2>
+      <p>Trag deinen Standort ein, dann siehst du hier die Vorhersage mit Frost- und Trockenwarnungen.</p>
+      <a class="knopf haupt" href="#einstellungen">${icon("i-ort")} Standort eintragen</a>`;
+    return;
+  }
+  ziel.innerHTML = `<h2>🌦️ Wetter <span class="leise klein" style="font-weight:400">· ${esc(ort.name)}</span></h2><p class="leise">Wetter wird geladen …</p>`;
+  let w;
+  try { w = await wetterHolen(); }
+  catch (e) {
+    ziel.innerHTML = `<h2>🌦️ Wetter</h2><p>Das Wetter konnte gerade nicht geladen werden. Bist du online?</p>
+      <p class="klein leise">Technischer Grund: ${esc(e.message)}</p>`;
+    return;
+  }
+  const auf = wetterAufbereiten(w);
+  const { hinweise, regenVorher } = wetterHinweise(auf);
+  const tage = auf.kommend.slice(0, 7).map(t => {
+    const [sym, text] = WETTERCODES[t.code] || ["❔", "Unbekannt"];
+    const frost = t.min <= GRENZEN.frost || t.min < GRENZEN.bodenfrost;
+    return `<div class="tag ${t.datum === heuteISO() ? "heute" : ""}" title="${esc(text)}">
+      <div class="wt">${t.datum === heuteISO() ? "Heute" : WOCHENTAGE[new Date(t.datum + "T12:00:00").getDay()]}</div>
+      <div class="sym" aria-label="${esc(text)}">${sym}</div>
+      <div class="max">${zahl(t.max, 0)}°</div>
+      <div class="min ${frost ? "frost" : ""}">${zahl(t.min, 0)}°</div>
+      <div class="regen">${t.regen >= 0.5 ? zahl(t.regen, 0) + " mm" : ""}</div>
+    </div>`;
+  }).join("");
+  ziel.innerHTML = `<h2>🌦️ Wetter <span class="leise klein" style="font-weight:400">· ${esc(ort.name)}</span></h2>
+    <div class="wettertage">${tage}</div>
+    ${hinweise.map(x => `<div class="hinweis ${x.art}"><span class="sym">${x.sym}</span><div><b>${esc(x.titel)}</b>${esc(x.text)}</div></div>`).join("")}
+    <p class="klein leise" style="margin:10px 0 0">Regen in den letzten 7 Tagen: ${zahl(regenVorher, 1)} mm ·
+    ${w.veraltet ? "Offline – Stand vom " + zeitText(w.zeit) : "Stand: " + new Date(w.zeit).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) + " Uhr"}</p>`;
+}
+
+/* ============================================================
+   SEITEN
+   ============================================================ */
+function seitentitel(main, titel, unter) {
+  main.insertAdjacentHTML("beforeend", `<div class="seitentitel"><h1>${esc(titel)}</h1>${unter ? `<p class="leise">${unter}</p>` : ""}</div>`);
+}
+function baldKarte(titel, punkte) {
+  return `<div class="karte bald"><h2>🌱 ${esc(titel)}</h2>
+    <p class="leise klein">Diese Funktionen kommen Schritt für Schritt in den nächsten Versionen:</p>
+    <ul>${punkte.map(p => `<li>${p}</li>`).join("")}</ul></div>`;
+}
+
+const SEITEN = {
+  start(main) {
+    const heute = new Date();
+    seitentitel(main, begruessung(), `${WOCHENTAGE_LANG[heute.getDay()]}, ${datumText(heute)}`);
+    main.insertAdjacentHTML("beforeend", `
+      <p class="leise" style="margin-top:-6px" id="datum-gross">${WOCHENTAGE_LANG[heute.getDay()]}, ${datumText(heute)}</p>
+      <div class="raster zwei">
+        <div class="karte" id="wetter"></div>
+        <div>
+          <div class="karte">
+            <h2>🗓️ Im ${MONATE[heute.getMonth()]}</h2>
+            <p class="leise">Sobald das Pflanzenlexikon da ist, siehst du hier, was du diesen Monat säen, vorziehen, pflanzen und ernten kannst.</p>
+          </div>
+          <div class="karte">
+            <h2>🥕 Im Garten</h2>
+            ${D.pflanzungen.length
+              ? `<p>${D.pflanzungen.length} Pflanzungen eingetragen.</p>`
+              : `<p class="leise">Noch nichts eingetragen. Als Erstes zeichnest du deinen Garten und legst die Beete an.</p>`}
+            <a class="knopf" href="#garten">${icon("i-garten")} Zum Gartenplan</a>
+          </div>
+        </div>
+      </div>`);
+    if (window.matchMedia("(min-width:900px)").matches) $(".seitentitel", main)?.remove(); else $("#datum-gross").remove();
+    wetterKarte($("#wetter"));
+  },
+
+  garten(main) {
+    seitentitel(main, "Garten");
+    main.insertAdjacentHTML("beforeend", `
+      <div class="karte"><p>Hier entsteht dein Gartenplan: ein großer Plan in der echten Form deines Gartens, den du stufenlos zoomen kannst.</p></div>
+      ${baldKarte("Geplant", [
+        "Garten zeichnen: Grundfläche, Haus und Wege eintragen",
+        "Bereiche benennen (z. B. „Vorgarten“, „Seite“) und direkt hinspringen",
+        "Beete anlegen: Beet, Hochbeet, Gewächshaus, Kübel – verschieben und in der Größe ändern per Ziehen",
+        "Pflanzen setzen per Klick: Platzbedarf als Kreis, Nachbarn leuchten grün (gute) oder rot (schlechte)",
+        "Ganze Reihen säen, z. B. Möhren oder Radieschen",
+        "Pflanzen ernten (wahlweise mit Menge) oder abräumen – der Plan zeigt nur, was gerade wächst",
+        "Notizen zu jeder Pflanze",
+      ])}`);
+  },
+
+  planung(main) {
+    seitentitel(main, "Planung");
+    main.insertAdjacentHTML("beforeend", `
+      <div class="karte"><p>Hier planst du die nächste Saison auf demselben Gartenplan – im Planungsmodus, ohne deinen echten Garten zu verändern.</p></div>
+      ${baldKarte("Geplant", [
+        "Jahreszeiten, die aufeinander aufbauen: Frühling → Sommer → Herbst → Winter",
+        "Hinweise zur Fruchtfolge: Was stand hier im letzten Jahr?",
+        "Geplante Pflanzen mit einem Klick als „gepflanzt“ übernehmen",
+        "Druckansicht des Plans (als PDF speicherbar)",
+      ])}`);
+  },
+
+  chronik(main) {
+    seitentitel(main, "Chronik");
+    main.insertAdjacentHTML("beforeend", `
+      <div class="karte"><p>Die Chronik hält fest, was in deinem Garten passiert ist.</p></div>
+      ${baldKarte("Geplant", [
+        "Alles Gepflanzte, Geerntete und Abgeräumte mit Datum und Ort",
+        "Filter nach Zeitraum, Beet und Pflanze",
+        "Notizen-Verlauf und Erntemengen",
+        "Auswertungen und ein Wetter-Rückblick",
+        "Druckbarer Bericht für einen Zeitraum (als PDF speicherbar)",
+      ])}`);
+  },
+
+  wissen(main) {
+    seitentitel(main, "Wissen");
+    main.insertAdjacentHTML("beforeend", `
+      <div class="karte"><p>Nachschlagen statt suchen: alles Wissen rund um deine Pflanzen – sorgfältig mit Quellen geprüft und in eigenen Worten.</p></div>
+      ${baldKarte("Geplant", [
+        "Pflanzenlexikon mit Aussaat-, Vorzieh-, Pflanz- und Erntezeiten, Platzbedarf und Pflanzenfamilie",
+        "Kurze Anbauanleitung je Pflanze und Platz für deine eigenen Notizen",
+        "Deine Sorten mit Bewertung und Erfahrungen",
+        "Mischkultur: gute und schlechte Nachbarn",
+        "Fruchtfolge und Anbaupausen",
+        "Saatgut selbst gewinnen",
+      ])}`);
+  },
+
+  vorrat(main) {
+    seitentitel(main, "Vorrat");
+    main.insertAdjacentHTML("beforeend", `
+      <div class="karte"><p>Was du an Samen im Schrank und an Ernte im Glas hast.</p></div>
+      ${baldKarte("Geplant", [
+        "Saatgutvorrat: welche Samen du hast und wie lange sie noch gut keimen",
+        "Haltbarmachen: Grundlagen und wichtige Sicherheitsregeln (z. B. Einkochen, Fermentieren, Trocknen)",
+        "Deine eigene Rezeptsammlung",
+      ])}`);
+  },
+
+  einstellungen(main) {
+    seitentitel(main, "Einstellungen");
+    const ort = D.einstellungen.standort;
+    main.insertAdjacentHTML("beforeend", `
+      <div class="karte">
+        <h2>${icon("i-ort")} Standort</h2>
+        <p>${ort ? `Aktuell: <b>${esc(ort.name)}</b> <span class="leise klein">(${zahl(ort.lat, 2)}, ${zahl(ort.lon, 2)})</span>` : "Noch kein Standort eingetragen."}</p>
+        <p class="leise klein">Wird für Wetter, Frost- und Trockenwarnungen gebraucht.</p>
+        <div id="ort-wahl"></div>
+      </div>
+      <div class="karte">
+        <h2>🎨 Darstellung</h2>
+        <div class="umschalter" id="design">
+          <button data-w="hell">Hell</button><button data-w="dunkel">Dunkel</button><button data-w="auto">Wie das Gerät</button>
+        </div>
+      </div>
+      <div class="karte">
+        <h2>💾 Daten</h2>
+        <p>Deine Daten liegen in diesem Browser auf diesem Gerät. ${D.geaendert ? `Zuletzt gespeichert: ${zeitText(D.geaendert)}.` : ""}</p>
+        <p class="leise klein">Wenn du die Browserdaten löschst, sind auch die Gartendaten weg. Lade dir deshalb ab und zu eine Sicherung herunter.</p>
+        <div class="knopfreihe">
+          <button class="knopf" id="sichern">⬇️ Sicherung herunterladen</button>
+          <button class="knopf" id="laden">⬆️ Sicherung laden</button>
+          <input type="file" id="datei" accept=".json,application/json" class="verborgen">
+        </div>
+        <div class="knopfreihe"><button class="knopf gefahr" id="loeschen">🗑️ Alle Daten löschen</button></div>
+      </div>
+      <div class="karte bald">
+        <h2>🔄 Abgleich zwischen Laptop und Handy</h2>
+        <p class="leise klein" style="margin:0">Kommt in einer späteren Version: deine Daten automatisch auf allen deinen Geräten, kostenlos über ein privates GitHub-Repository.</p>
+      </div>
+      <div class="karte">
+        <h2>ℹ️ Über die App</h2>
+        <p>Kraut und Rüben · Version ${APP_VERSION}</p>
+        <p class="klein leise" style="margin:0">Wetter- und Ortsdaten: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> (CC BY 4.0)</p>
+      </div>`);
+
+    ortsauswahl($("#ort-wahl"), () => zeigen());
+
+    $$("#design button").forEach(b => {
+      b.classList.toggle("an", b.dataset.w === D.einstellungen.design);
+      b.onclick = () => { D.einstellungen.design = b.dataset.w; speichern(); designAnwenden(); zeigen(); };
+    });
+
+    $("#sichern").onclick = sicherungHerunterladen;
+    $("#laden").onclick = () => $("#datei").click();
+    $("#datei").onchange = e => sicherungLaden(e.target.files[0]);
+    $("#loeschen").onclick = async () => {
+      const ok = await fragen({ titel: "Alle Daten löschen?", text: "Garten, Pflanzungen, Planungen, Sorten, Vorrat und Einstellungen werden auf diesem Gerät gelöscht. Das lässt sich nicht rückgängig machen.<br><br>Tipp: Lade vorher eine Sicherung herunter.", ja: "Alles löschen", gefahr: true });
+      if (!ok) return;
+      localStorage.removeItem(SPEICHER_SCHLUESSEL);
+      localStorage.removeItem(WETTER_SCHLUESSEL);
+      D = leereDaten();
+      designAnwenden();
+      location.hash = "start";
+      zeigen();
+      willkommenPruefen();
+    };
+  },
+
+  anleitung(main) {
+    seitentitel(main, "Anleitung");
+    main.insertAdjacentHTML("beforeend", `
+      <div class="karte anleitung">
+        <p>Kraut und Rüben ist dein Gartenplaner: Du zeichnest deinen Garten, trägst ein, was du pflanzt und erntest, planst die nächste Saison und schlägst Wissen nach. Die App wächst Schritt für Schritt – hier steht immer, was sie schon kann.</p>
+        <details open><summary>Aufbau der App</summary><div>
+          <p>Es gibt sechs Bereiche: <b>Start</b>, <b>Garten</b>, <b>Planung</b>, <b>Chronik</b>, <b>Wissen</b> und <b>Vorrat</b>. Am Laptop stehen sie links in der Seitenleiste, am Handy unten in der Leiste.</p>
+          <p>Oben rechts findest du immer das <b>Fragezeichen</b> (diese Anleitung) und das <b>Zahnrad</b> (Einstellungen).</p>
+        </div></details>
+        <details><summary>Startseite und Wetter</summary><div>
+          <p>Die Startseite zeigt das Wetter der nächsten 7 Tage für deinen Standort: Höchst- und Tiefstwert, Regenmenge und darunter Hinweise.</p>
+          <ul>
+            <li><b>Frost:</b> wenn der Tiefstwert bei 0 °C oder darunter liegt.</li>
+            <li><b>Bodenfrost möglich:</b> wenn der Tiefstwert unter 4 °C liegt. Die Vorhersage misst in 2 m Höhe. Direkt am Boden kann es in klaren, windstillen Nächten einige Grad kälter sein.</li>
+            <li><b>Hitze:</b> ab 30 °C.</li>
+            <li><b>Trockenphase:</b> wenn es in den letzten 7 Tagen weniger als 5 mm geregnet hat, in den nächsten 3 Tagen kaum Regen kommt und es tagsüber mindestens 12 °C warm ist. Das ist eine Faustregel der App, keine amtliche Warnung.</li>
+          </ul>
+          <p>Das Wetter wird höchstens einmal pro Stunde neu geladen. Ohne Internet siehst du den letzten Stand. Amtliche Unwetterwarnungen gibt es beim Deutschen Wetterdienst.</p>
+        </div></details>
+        <details><summary>Standort ändern</summary><div>
+          <p>Über das <b>Zahnrad</b> → Standort. Du kannst nach einem Ort oder einer Postleitzahl suchen oder den aktuellen Standort deines Geräts verwenden.</p>
+        </div></details>
+        <details><summary>Deine Daten und Sicherungen</summary><div>
+          <p>Alles, was du einträgst, wird in diesem Browser auf diesem Gerät gespeichert – es gibt kein Konto und keine Anmeldung.</p>
+          <p>Unter <b>Zahnrad → Daten</b> kannst du eine Sicherung als Datei herunterladen und später wieder laden. Beim Laden werden die aktuellen Daten ersetzt.</p>
+          <p>Ein automatischer Abgleich zwischen Laptop und Handy ist geplant.</p>
+        </div></details>
+        <details><summary>Hell oder dunkel</summary><div>
+          <p>Unter <b>Zahnrad → Darstellung</b> wählst du Hell, Dunkel oder „Wie das Gerät“.</p>
+        </div></details>
+        <details><summary>App auf den Startbildschirm legen</summary><div>
+          <p>Am Handy im Browser-Menü „Zum Startbildschirm hinzufügen“ wählen. Dann öffnet sich Kraut und Rüben wie eine eigene App und funktioniert auch ohne Internet (außer Wetter und Ortssuche).</p>
+        </div></details>
+      </div>`);
+  },
+};
+
+/* ============================================================
+   SICHERUNG
+   ============================================================ */
+function sicherungHerunterladen() {
+  const inhalt = JSON.stringify({ app: "kraut-und-rueben", version: APP_VERSION, gesichert: new Date().toISOString(), daten: D }, null, 2);
+  const blob = new Blob([inhalt], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `kraut-und-rueben-sicherung-${heuteISO()}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  melden("Sicherung heruntergeladen.");
+}
+
+async function sicherungLaden(datei) {
+  if (!datei) return;
+  try {
+    const j = JSON.parse(await datei.text());
+    const daten = j.app === "kraut-und-rueben" ? j.daten : null;
+    if (!daten || typeof daten !== "object" || !daten.schema) throw new Error("Das ist keine Sicherung von Kraut und Rüben.");
+    const ok = await fragen({ titel: "Sicherung laden?", text: `Sicherung vom ${zeitText(j.gesichert)}. Deine aktuellen Daten auf diesem Gerät werden dadurch ersetzt.`, ja: "Laden" });
+    if (!ok) return;
+    D = ergaenzen(daten);
+    D.einstellungen.willkommenGesehen = true;
+    speichern();
+    designAnwenden();
+    zeigen();
+    melden("Sicherung geladen.");
+  } catch (e) {
+    fragen({ titel: "Laden nicht möglich", text: esc(e.message), ja: "OK", nein: null });
+  } finally {
+    const f = $("#datei"); if (f) f.value = "";
+  }
+}
+
+/* ============================================================
+   WILLKOMMEN (nur beim allerersten Öffnen)
+   ============================================================ */
+function willkommenPruefen() {
+  if (D.einstellungen.willkommenGesehen) return;
+  const w = $("#willkommen");
+  w.classList.remove("verborgen");
+  const fertig = () => {
+    D.einstellungen.willkommenGesehen = true;
+    speichern();
+    w.classList.add("verborgen");
+    zeigen();
+  };
+  ortsauswahl($("#willkommen-ort"), fertig);
+  $("#willkommen-spaeter").onclick = fertig;
+}
+
+/* ============================================================
+   OFFLINE-FÄHIGKEIT & UPDATES
+   ============================================================ */
+function serviceWorkerStarten() {
+  if (!("serviceWorker" in navigator) || location.protocol === "file:") return;
+  navigator.serviceWorker.register("sw.js").then(reg => {
+    reg.addEventListener("updatefound", () => {
+      const neu = reg.installing;
+      neu && neu.addEventListener("statechange", () => {
+        if (neu.state === "installed" && navigator.serviceWorker.controller) {
+          melden("Eine neue Version ist da.", { text: "Aktualisieren", tun: () => neu.postMessage("jetzt-aktivieren") });
+        }
+      });
+    });
+  }).catch(e => console.warn("Service Worker:", e));
+  // Nur neu laden, wenn eine ältere Version durch eine neue ersetzt wurde (nicht beim allerersten Besuch)
+  const hatteVersion = !!navigator.serviceWorker.controller;
+  let neuGeladen = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!hatteVersion || neuGeladen) return; neuGeladen = true; location.reload();
+  });
+}
+
+/* ============================================================
+   START
+   ============================================================ */
+designAnwenden();
+navAufbauen();
+zeigen();
+willkommenPruefen();
+serviceWorkerStarten();
+window.addEventListener("resize", (() => { let breit = matchMedia("(min-width:900px)").matches;
+  return () => { const b = matchMedia("(min-width:900px)").matches; if (b !== breit) { breit = b; if (aktuelleSeite() === "start") zeigen(); } }; })());
+</script>
+</body>
+</html>
