@@ -203,6 +203,116 @@ input:focus,.knopf:focus-visible,.rund:focus-visible,a:focus-visible{outline:2px
 .bald ul{margin:6px 0 0;padding-left:20px}
 .bald li{margin:3px 0}
 
+/* Dialog-Eingaben */
+.felder label{display:block;margin:0 0 10px;font-weight:550}
+.feld-einheit{display:flex;align-items:center;gap:8px;margin-top:4px}
+.feld-einheit input{flex:1}
+input[type=number],select{
+  min-height:40px;padding:6px 10px;border-radius:10px;border:1px solid var(--linie);
+  background:var(--karte);color:var(--text);font:inherit;width:100%;
+}
+
+/* ============ GARTENPLAN ============ */
+:root{
+  --f-garten:#e6f1d3; --s-garten:#8cc63f;
+  --f-rasen:#c9e4a0;  --s-rasen:#7fb13d;
+  --f-weg:#e7dfd0;    --s-weg:#b3a58c;
+  --f-terrasse:#ddd3c3; --s-terrasse:#9c8c72;
+  --f-haus:#d8d0c4;   --s-haus:#7d6f5d;
+  --f-sonstiges:#e3dbd0; --s-sonstiges:#8f8170;
+  --f-beet:#b98a63;   --s-beet:#5a3418;
+  --f-hochbeet:#94643d; --s-hochbeet:#4a2a12;
+  --f-gewaechshaus:#d4eaf4; --s-gewaechshaus:#2f6f9f;
+  --f-kuebel:#c27a45; --s-kuebel:#6b3a17;
+  --plan-bg:#fbfaf4; --raster:#e4e0d2; --raster-stark:#d2ccb9; --auswahl:#c8234a;
+  --beschriftung:#25301f;
+}
+[data-theme="dark"]{
+  --f-garten:#26331d; --s-garten:#6fa33a;
+  --f-rasen:#2f4721;  --s-rasen:#6fa33a;
+  --f-weg:#3a352c;    --s-weg:#7d715d;
+  --f-terrasse:#3b352d; --s-terrasse:#86775f;
+  --f-haus:#3a3631;   --s-haus:#a4967f;
+  --f-sonstiges:#36322c; --s-sonstiges:#998b76;
+  --f-beet:#5b4129;   --s-beet:#c9a07e;
+  --f-hochbeet:#4b3220; --s-hochbeet:#d2a57e;
+  --f-gewaechshaus:#1f3a4a; --s-gewaechshaus:#7fb5df;
+  --f-kuebel:#5e3a20; --s-kuebel:#e0a070;
+  --plan-bg:#161b14; --raster:#232a1f; --raster-stark:#2f382a; --auswahl:#ef6a8b;
+  --beschriftung:#e8eadf;
+}
+.plan-leiste{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px}
+.plan-leiste .knopf{min-height:38px;padding:6px 12px}
+.plan-leiste .knopf.an{background:var(--gruen-hell);border-color:var(--gruen);color:var(--gruen-dunkel)}
+@media (max-width:600px){
+  .plan-leiste{gap:5px}
+  .plan-leiste .lang{display:none}
+  .plan-leiste .knopf{padding:6px 10px;min-width:40px}
+  .plan-leiste .trenner{display:none}
+  .plan-leiste select{max-width:130px}
+  .menue-liste{position:fixed;left:12px;right:12px;top:auto;min-width:0}
+}
+.plan-leiste .trenner{width:1px;height:26px;background:var(--linie);margin:0 2px}
+.plan-leiste select{width:auto;min-height:38px}
+.knopf:disabled{opacity:.4;cursor:default}
+.menue{position:relative}
+.menue > summary{list-style:none}
+.menue > summary::-webkit-details-marker{display:none}
+.menue-liste{
+  position:absolute;z-index:15;top:calc(100% + 4px);left:0;min-width:220px;
+  background:var(--karte);border:1px solid var(--linie);border-radius:12px;box-shadow:var(--schatten);padding:6px;
+}
+.menue-liste button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:transparent;padding:8px 10px;border-radius:8px;cursor:pointer}
+.menue-liste button:hover{background:var(--karte2)}
+.farbpunkt{width:16px;height:16px;border-radius:4px;border:2px solid;flex:none}
+.farbpunkt.rund{border-radius:50%}
+.garten-layout{display:grid;gap:14px}
+@media (min-width:900px){ .garten-layout{grid-template-columns:minmax(0,1fr) 320px;align-items:start} }
+.plan-rahmen{
+  position:relative;border:1px solid var(--linie);border-radius:var(--radius);overflow:hidden;
+  background:var(--plan-bg);height:62vh;min-height:340px;
+}
+@media (min-width:900px){ .plan-rahmen{height:calc(100vh - 210px);min-height:460px} }
+#plan{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+#plan.ziehen{cursor:grabbing}
+.massstab{position:absolute;left:12px;bottom:10px;font-size:.75rem;color:var(--leise);pointer-events:none}
+.massstab div{height:6px;border:2px solid var(--leise);border-top:0;margin-bottom:2px}
+.plan-hinweis{position:absolute;right:10px;bottom:8px;font-size:.75rem;color:var(--leise);pointer-events:none;text-align:right}
+#plan .obj{stroke-width:1.5px;vector-effect:non-scaling-stroke;cursor:pointer}
+#plan .obj.gewaehlt{stroke:var(--auswahl);stroke-width:2.5px}
+#plan .art-haus{stroke-width:2px}
+#plan .art-garten{fill:var(--f-garten);stroke:var(--s-garten)}
+#plan .art-rasen{fill:var(--f-rasen);stroke:var(--s-rasen)}
+#plan .art-weg{fill:var(--f-weg);stroke:var(--s-weg)}
+#plan .art-terrasse{fill:var(--f-terrasse);stroke:var(--s-terrasse)}
+#plan .art-haus{fill:var(--f-haus);stroke:var(--s-haus)}
+#plan .art-sonstiges{fill:var(--f-sonstiges);stroke:var(--s-sonstiges)}
+#plan .art-beet{fill:var(--f-beet);stroke:var(--s-beet)}
+#plan .art-hochbeet{fill:var(--f-hochbeet);stroke:var(--s-hochbeet)}
+#plan .art-gewaechshaus{fill:var(--f-gewaechshaus);stroke:var(--s-gewaechshaus)}
+#plan .art-kuebel{fill:var(--f-kuebel);stroke:var(--s-kuebel)}
+#plan .griff{fill:#fff;stroke:var(--auswahl);stroke-width:2px;vector-effect:non-scaling-stroke;cursor:move}
+#plan .griff.aktiv{fill:var(--auswahl)}
+#plan .neu{fill:var(--auswahl);opacity:.55;cursor:copy}
+#plan .neu:hover{opacity:1}
+#plan .neu-plus{stroke:#fff;stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
+#plan text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;pointer-events:none}
+#plan .beschriftung{fill:var(--beschriftung);font-weight:600}
+#plan .beschriftung.klein{font-weight:400;opacity:.75}
+#plan .kantenmass{fill:var(--auswahl);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round}
+.panel .karte{margin-bottom:12px}
+.panel h2{font-size:1.05rem}
+.panel label{display:block;font-size:.85rem;color:var(--leise);margin:8px 0 2px}
+.panel .zwei{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.panel .kanten{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;font-size:.9rem}
+.panel .kanten input{min-height:34px;padding:4px 8px}
+.panel .knopfreihe .knopf{min-height:36px;padding:6px 12px;font-size:.92rem}
+.objliste{list-style:none;margin:0;padding:0}
+.objliste li{display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid var(--linie);cursor:pointer}
+.objliste li:hover{background:var(--karte2)}
+.objliste li .leise{margin-left:auto;font-size:.8rem}
+.objliste li .x{margin-left:6px;border:0;background:transparent;cursor:pointer;color:var(--leise);font-size:1rem;padding:2px 6px}
+
 /* Anleitung */
 .anleitung details{border-top:1px solid var(--linie);padding:10px 0}
 .anleitung details:first-of-type{border-top:0}
@@ -315,7 +425,7 @@ dialog .knopfreihe{justify-content:flex-end}
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.1.1";
+const APP_VERSION = "0.2.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -339,7 +449,7 @@ function leereDaten() {
   return {
     schema: DATEN_SCHEMA,
     einstellungen: { standort: null, design: "auto", willkommenGesehen: false },
-    garten: { breite: 0, tiefe: 0, flaechen: [], bereiche: [], beete: [] },
+    garten: { objekte: [], bereiche: [], raster: 10 },  // Maße in cm
     pflanzungen: [],   // was wirklich im Garten steht oder stand
     planungen: [],     // Entwürfe für kommende Jahreszeiten
     sorten: [],        // eigene Sorten mit Bewertung
@@ -430,13 +540,39 @@ function melden(text, aktion) {
 function fragen({ titel, text, ja = "OK", nein = "Abbrechen", gefahr = false }) {
   return new Promise(fertig => {
     const dlg = $("#dialog");
-    dlg.innerHTML = `<h2>${esc(titel)}</h2><p>${text}</p>
+    dlg.innerHTML = `<h2 tabindex="-1" autofocus>${esc(titel)}</h2><p>${text}</p>
       <div class="knopfreihe">
         ${nein ? `<button class="knopf" data-a="0">${esc(nein)}</button>` : ""}
         <button class="knopf ${gefahr ? "gefahr voll" : "haupt"}" data-a="1">${esc(ja)}</button>
       </div>`;
     const zu = wert => { dlg.close(); fertig(wert); };
     $$("button", dlg).forEach(b => b.onclick = () => zu(b.dataset.a === "1"));
+    dlg.oncancel = e => { e.preventDefault(); zu(false); };
+    dlg.showModal();
+  });
+}
+
+/* Dialog mit Eingabefeldern. Liefert die Werte oder null (Abbrechen). */
+function eingabe({ titel, text = "", felder, ja = "OK" }) {
+  return new Promise(fertig => {
+    const dlg = $("#dialog");
+    dlg.innerHTML = `<h2 tabindex="-1" autofocus>${esc(titel)}</h2>${text ? `<p>${text}</p>` : ""}
+      <form method="dialog" class="felder">
+        ${felder.map(f => `<label>${esc(f.label)}
+          <span class="feld-einheit"><input name="${f.id}" type="${f.typ || "text"}" ${f.typ === "number" ? `step="${f.schritt || "any"}" min="${f.min ?? ""}" inputmode="decimal"` : ""} value="${esc(f.wert ?? "")}">${f.einheit ? `<span>${esc(f.einheit)}</span>` : ""}</span></label>`).join("")}
+        <div class="knopfreihe">
+          <button type="button" class="knopf" data-a="0">Abbrechen</button>
+          <button type="submit" class="knopf haupt" data-a="1">${esc(ja)}</button>
+        </div>
+      </form>`;
+    const form = $("form", dlg);
+    const zu = ok => {
+      const werte = {};
+      felder.forEach(f => { const v = form.elements[f.id].value; werte[f.id] = f.typ === "number" ? parseFloat(String(v).replace(",", ".")) : v.trim(); });
+      dlg.close(); fertig(ok ? werte : null);
+    };
+    $('[data-a="0"]', dlg).onclick = () => zu(false);
+    form.onsubmit = e => { e.preventDefault(); zu(true); };
     dlg.oncancel = e => { e.preventDefault(); zu(false); };
     dlg.showModal();
   });
@@ -707,9 +843,14 @@ const SEITEN = {
           </div>
           <div class="karte">
             <h2>🥕 Im Garten</h2>
-            ${D.pflanzungen.length
-              ? `<p>${D.pflanzungen.length} Pflanzungen eingetragen.</p>`
-              : `<p class="leise">Noch nichts eingetragen. Als Erstes zeichnest du deinen Garten und legst die Beete an.</p>`}
+            ${(() => {
+              const beete = D.garten.objekte.filter(o => ARTEN[o.art]?.pflanzbar);
+              if (!D.garten.objekte.length) return `<p class="leise">Noch nichts eingetragen. Als Erstes zeichnest du deinen Garten und legst die Beete an.</p>`;
+              const qm = beete.reduce((a, o) => a + flaeche(o), 0) / 10000;
+              return beete.length
+                ? `<p>${beete.length} ${beete.length === 1 ? "Beet" : "Beete"} mit zusammen ${zahl(qm, 1)} m² Pflanzfläche.</p>`
+                : `<p class="leise">Dein Garten ist gezeichnet. Als Nächstes legst du die Beete an.</p>`;
+            })()}
             <a class="knopf" href="#garten">${icon("i-garten")} Zum Gartenplan</a>
           </div>
         </div>
@@ -718,20 +859,7 @@ const SEITEN = {
     wetterKarte($("#wetter"));
   },
 
-  garten(main) {
-    seitentitel(main, "Garten");
-    main.insertAdjacentHTML("beforeend", `
-      <div class="karte"><p>Hier entsteht dein Gartenplan: ein großer Plan in der echten Form deines Gartens, den du stufenlos zoomen kannst.</p></div>
-      ${baldKarte("Geplant", [
-        "Garten zeichnen: Grundfläche, Haus und Wege eintragen",
-        "Bereiche benennen (z. B. „Vorgarten“, „Seite“) und direkt hinspringen",
-        "Beete anlegen: Beet, Hochbeet, Gewächshaus, Kübel – verschieben und in der Größe ändern per Ziehen",
-        "Pflanzen setzen per Klick: Platzbedarf als Kreis, Nachbarn leuchten grün (gute) oder rot (schlechte)",
-        "Ganze Reihen säen, z. B. Möhren oder Radieschen",
-        "Pflanzen ernten (wahlweise mit Menge) oder abräumen – der Plan zeigt nur, was gerade wächst",
-        "Notizen zu jeder Pflanze",
-      ])}`);
-  },
+  garten(main) { gartenSeite(main); },
 
   planung(main) {
     seitentitel(main, "Planung");
@@ -852,6 +980,23 @@ const SEITEN = {
           <p>Es gibt sechs Bereiche: <b>Start</b>, <b>Garten</b>, <b>Planung</b>, <b>Chronik</b>, <b>Wissen</b> und <b>Vorrat</b>. Am Laptop stehen sie links in der Seitenleiste, am Handy unten in der Leiste.</p>
           <p>Oben rechts findest du immer das <b>Fragezeichen</b> (diese Anleitung) und das <b>Zahnrad</b> (Einstellungen).</p>
         </div></details>
+        <details><summary>Garten zeichnen</summary><div>
+          <p><b>Erster Schritt:</b> Im Bereich Garten auf „Gartenfläche anlegen“ tippen und die ungefähre Größe eingeben. Es entsteht ein Rechteck.</p>
+          <p><b>Die echte Form:</b> Mit „Bearbeiten“ eingeschaltet die Fläche antippen. Dann erscheinen rote Punkte an den Ecken.</p>
+          <ul>
+            <li><b>Ecke ziehen</b> verändert die Form.</li>
+            <li><b>Das Plus</b> in der Mitte einer Kante fügt dort eine neue Ecke ein – so wird aus dem Rechteck zum Beispiel ein L.</li>
+            <li><b>Doppelklick auf eine Ecke</b> entfernt sie (am Handy: Ecke antippen, dann „Ecke entfernen“ unter „Kanten und Ecken“).</li>
+            <li><b>Kantenlänge eintippen</b> unter „Kanten und Ecken“: Die zweite Ecke der Kante rückt auf das genaue Maß. An jeder Kante steht außerdem ihre Länge im Plan.</li>
+            <li><b>Ziehen der ganzen Fläche</b> verschiebt sie.</li>
+          </ul>
+          <p>Alles rastet in einem Raster ein (Standard 10 cm, einstellbar in der Übersicht rechts bzw. unter dem Plan). Wer am Laptop die Umschalttaste gedrückt hält, zieht ohne Raster.</p>
+          <p><b>Hinzufügen:</b> Über „＋ Hinzufügen“ kommen Haus, Wege, Terrasse, Rasen, Beete, Hochbeete, Gewächshaus, Kübel und Sonstiges (z. B. Schuppen, Kompost) dazu. Neue Flächen erscheinen in der Mitte des sichtbaren Ausschnitts. Rechteckige Flächen haben Felder für Breite und Tiefe, Kübel für den Durchmesser. Flächen lassen sich drehen, duplizieren und löschen.</p>
+          <p><b>Ansehen und Bearbeiten:</b> Ist „Bearbeiten“ aus, kannst du nichts versehentlich verschieben. Antippen zeigt dann nur Name und Größe. Am Handy ist Bearbeiten deshalb anfangs aus.</p>
+          <p><b>Bewegen im Plan:</b> Mit der Maus ziehen bzw. mit einem Finger wischen verschiebt den Ausschnitt. Zoomen geht mit dem Mausrad, mit zwei Fingern oder mit den Knöpfen + und −. „Alles“ zeigt den ganzen Garten.</p>
+          <p><b>Bereiche:</b> Einen Ausschnitt mit „📍 Merken“ benennen, zum Beispiel „Vorgarten“. Über „Springe zu …“ kommst du direkt dorthin.</p>
+          <p><b>Rückgängig:</b> ↶ und ↷ in der Leiste (am Laptop auch Strg+Z und Strg+Y). Am Laptop verschieben die Pfeiltasten die gewählte Fläche um eine Rasterweite, Entf löscht sie.</p>
+        </div></details>
         <details><summary>Startseite und Wetter</summary><div>
           <p>Die Startseite zeigt das Wetter der nächsten 7 Tage für deinen Standort: Höchst- und Tiefstwert, Regenmenge und darunter Hinweise.</p>
           <ul>
@@ -879,6 +1024,619 @@ const SEITEN = {
       </div>`);
   },
 };
+
+/* ============================================================
+   GARTENPLAN
+   Alle Maße in Zentimetern. x nach rechts, y nach unten.
+   Objekt: { id, art, name, form: "poly", punkte: [[x,y], …] }
+       oder { id, art, name, form: "kreis", x, y, r }
+   ============================================================ */
+const ARTEN = {
+  garten:       { name: "Gartenfläche", ebene: 0, b: 1200, t: 800, ohneNummer: true },
+  rasen:        { name: "Rasen", ebene: 1, b: 500, t: 400 },
+  terrasse:     { name: "Terrasse", ebene: 1, b: 400, t: 300 },
+  weg:          { name: "Weg", ebene: 1, b: 100, t: 500 },
+  haus:         { name: "Haus", ebene: 2, b: 1000, t: 800, ohneNummer: true },
+  sonstiges:    { name: "Sonstiges", ebene: 2, b: 200, t: 200, hinweis: "Schuppen, Kompost, Teich …" },
+  beet:         { name: "Beet", ebene: 3, b: 120, t: 300, pflanzbar: true },
+  hochbeet:     { name: "Hochbeet", ebene: 3, b: 80, t: 200, pflanzbar: true },
+  gewaechshaus: { name: "Gewächshaus", ebene: 3, b: 200, t: 300, pflanzbar: true },
+  kuebel:       { name: "Kübel", ebene: 3, kreis: true, r: 25, pflanzbar: true },
+};
+const ART_REIHENFOLGE = ["garten", "haus", "weg", "terrasse", "rasen", "beet", "hochbeet", "gewaechshaus", "kuebel", "sonstiges"];
+
+const G = {               // Zustand des Plans (nicht gespeichert)
+  view: null,             // sichtbarer Ausschnitt {x, y, w} in cm
+  auswahl: null,          // id des gewählten Objekts
+  ecke: null,             // Index der gewählten Ecke
+  bearbeiten: null,       // Bearbeiten-Modus an/aus
+  zurueck: [], vor: [],   // Rückgängig / Wiederholen
+  zeiger: new Map(), zug: null,
+};
+
+const gid = () => Math.random().toString(36).slice(2, 10);
+const objekt = id => D.garten.objekte.find(o => o.id === id);
+const kopie = x => JSON.parse(JSON.stringify(x));
+function m(cm) { // „1,2 m“ ohne unnötige Nullen
+  const t = (Math.round(cm) / 100).toLocaleString("de-DE", { maximumFractionDigits: 2 });
+  return t + " m";
+}
+function rasterwert(e) { return e && e.shiftKey ? 1 : (D.garten.raster || 10); }
+function einrasten(v, r) { return Math.round(v / r) * r; }
+
+/* ---------- Geometrie ---------- */
+function flaeche(o) {
+  if (o.form === "kreis") return Math.PI * o.r * o.r;
+  let a = 0; const p = o.punkte;
+  for (let i = 0; i < p.length; i++) { const [x1, y1] = p[i], [x2, y2] = p[(i + 1) % p.length]; a += x1 * y2 - x2 * y1; }
+  return Math.abs(a / 2);
+}
+function rahmen(o) {
+  if (o.form === "kreis") return { x1: o.x - o.r, y1: o.y - o.r, x2: o.x + o.r, y2: o.y + o.r };
+  const xs = o.punkte.map(p => p[0]), ys = o.punkte.map(p => p[1]);
+  return { x1: Math.min(...xs), y1: Math.min(...ys), x2: Math.max(...xs), y2: Math.max(...ys) };
+}
+function schwerpunkt(o) {
+  if (o.form === "kreis") return [o.x, o.y];
+  const p = o.punkte; let a = 0, cx = 0, cy = 0;
+  for (let i = 0; i < p.length; i++) {
+    const [x1, y1] = p[i], [x2, y2] = p[(i + 1) % p.length], f = x1 * y2 - x2 * y1;
+    a += f; cx += (x1 + x2) * f; cy += (y1 + y2) * f;
+  }
+  if (Math.abs(a) < 1e-6) { const r = rahmen(o); return [(r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2]; }
+  return [cx / (3 * a), cy / (3 * a)];
+}
+function punktIn(o, [x, y]) {
+  if (o.form === "kreis") return Math.hypot(x - o.x, y - o.y) <= o.r;
+  let drin = false; const p = o.punkte;
+  for (let i = 0, j = p.length - 1; i < p.length; j = i++) {
+    const [xi, yi] = p[i], [xj, yj] = p[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) drin = !drin;
+  }
+  return drin;
+}
+const abstand = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+function istRechteck(o) {
+  if (o.form !== "poly" || o.punkte.length !== 4) return false;
+  const p = o.punkte;
+  const h = (a, b) => a[1] === b[1], v = (a, b) => a[0] === b[0];
+  return (h(p[0], p[1]) && v(p[1], p[2]) && h(p[2], p[3]) && v(p[3], p[0])) ||
+         (v(p[0], p[1]) && h(p[1], p[2]) && v(p[2], p[3]) && h(p[3], p[0]));
+}
+
+/* ---------- Rückgängig ---------- */
+function stand() { return JSON.stringify({ objekte: D.garten.objekte, bereiche: D.garten.bereiche }); }
+function merken(vorher) {
+  if (vorher === stand()) return;
+  G.zurueck.push(vorher); if (G.zurueck.length > 60) G.zurueck.shift();
+  G.vor = [];
+  speichern();
+}
+function wiederherstellen(json) {
+  const s = JSON.parse(json);
+  D.garten.objekte = s.objekte; D.garten.bereiche = s.bereiche;
+  if (G.auswahl && !objekt(G.auswahl)) { G.auswahl = null; G.ecke = null; }
+  speichern(); planZeichnen(); panelZeichnen(); leisteAktualisieren();
+}
+function rueckgaengig() { if (!G.zurueck.length) return; G.vor.push(stand()); wiederherstellen(G.zurueck.pop()); }
+function wiederholen() { if (!G.vor.length) return; G.zurueck.push(stand()); wiederherstellen(G.vor.pop()); }
+
+/* ---------- Ansicht ---------- */
+function planGroesse() { const r = $("#plan").getBoundingClientRect(); return { b: r.width || 1, h: r.height || 1, l: r.left, o: r.top }; }
+function viewHoehe() { const g = planGroesse(); return G.view.w * g.h / g.b; }
+function massstab() { return planGroesse().b / G.view.w; } // Pixel pro cm
+function welt(cx, cy) {
+  const g = planGroesse();
+  return [G.view.x + (cx - g.l) / g.b * G.view.w, G.view.y + (cy - g.o) / g.h * viewHoehe()];
+}
+function allesZeigen() {
+  const ob = D.garten.objekte;
+  if (!ob.length) { G.view = { x: -100, y: -100, w: 1400 }; planZeichnen(); return; }
+  const rs = ob.map(rahmen);
+  const x1 = Math.min(...rs.map(r => r.x1)), y1 = Math.min(...rs.map(r => r.y1));
+  const x2 = Math.max(...rs.map(r => r.x2)), y2 = Math.max(...rs.map(r => r.y2));
+  zeigeBereich(x1, y1, x2 - x1, y2 - y1);
+}
+function zeigeBereich(x, y, b, h) {
+  const g = planGroesse(), rand = 0.08;
+  const w = Math.max(b * (1 + 2 * rand), h * (1 + 2 * rand) * g.b / g.h, 100);
+  const vh = w * g.h / g.b;
+  G.view = { x: x + b / 2 - w / 2, y: y + h / 2 - vh / 2, w };
+  planZeichnen();
+}
+function zoomen(faktor, cx, cy) {
+  const g = planGroesse();
+  if (cx === undefined) { cx = g.l + g.b / 2; cy = g.o + g.h / 2; }
+  const [wx, wy] = welt(cx, cy);
+  const neuW = Math.min(Math.max(G.view.w * faktor, 40), 30000);
+  const fx = (cx - g.l) / g.b, fy = (cy - g.o) / g.h;
+  G.view = { x: wx - fx * neuW, y: wy - fy * neuW * g.h / g.b, w: neuW };
+  planZeichnen();
+}
+
+/* ---------- Zeichnen ---------- */
+function planZeichnen() {
+  const svg = $("#plan"); if (!svg || !G.view) return;
+  const vh = viewHoehe(), s = massstab(), v = G.view;
+  svg.setAttribute("viewBox", `${v.x} ${v.y} ${v.w} ${vh}`);
+  const linie = 1 / s;
+  // Raster: feine Linien nur, wenn sie weit genug auseinander liegen
+  const fein = [10, 50].find(r => r * s >= 7);
+  let html = `<defs>
+    ${fein ? `<pattern id="r-fein" width="${fein}" height="${fein}" patternUnits="userSpaceOnUse"><path d="M${fein} 0H0V${fein}" fill="none" stroke="var(--raster)" stroke-width="${linie}"/></pattern>` : ""}
+    <pattern id="r-grob" width="${s * 100 >= 6 ? 100 : 1000}" height="${s * 100 >= 6 ? 100 : 1000}" patternUnits="userSpaceOnUse"><path d="M${s * 100 >= 6 ? 100 : 1000} 0H0V${s * 100 >= 6 ? 100 : 1000}" fill="none" stroke="var(--raster-stark)" stroke-width="${linie * 1.2}"/></pattern>
+  </defs>
+  ${fein ? `<rect x="${v.x}" y="${v.y}" width="${v.w}" height="${vh}" fill="url(#r-fein)"/>` : ""}
+  <rect x="${v.x}" y="${v.y}" width="${v.w}" height="${vh}" fill="url(#r-grob)"/>`;
+
+  const sortiert = [...D.garten.objekte].sort((a, b) => ARTEN[a.art].ebene - ARTEN[b.art].ebene);
+  for (const o of sortiert) {
+    const kl = `obj art-${o.art}${o.id === G.auswahl ? " gewaehlt" : ""}`;
+    if (o.form === "kreis") html += `<circle class="${kl}" data-rolle="obj" data-id="${o.id}" cx="${o.x}" cy="${o.y}" r="${o.r}"/>`;
+    else html += `<polygon class="${kl}" data-rolle="obj" data-id="${o.id}" points="${o.punkte.map(p => p.join(",")).join(" ")}"/>`;
+  }
+  // Beschriftungen: nur wenn genug Platz, nicht unter höheren Flächen, nicht übereinander
+  const fs = 13 / s, belegt = [];
+  for (const o of [...sortiert].reverse()) {
+    const r = rahmen(o), breitePx = (r.x2 - r.x1) * s, hoehePx = (r.y2 - r.y1) * s;
+    if (breitePx < o.name.length * 7 + 6 || hoehePx < 18) continue;
+    const zweite = ARTEN[o.art].pflanzbar && hoehePx > 40
+      ? (o.form === "kreis" ? "Ø " + m(o.r * 2) : (istRechteck(o) ? `${m(r.x2 - r.x1)} × ${m(r.y2 - r.y1)}` : zahl(flaeche(o) / 10000, 1) + " m²")) : "";
+    const bw = (Math.max(o.name.length, zweite.length * 0.85) * 7.2 + 6) / s, bh = (zweite ? 2.3 : 1.3) * fs;
+    // Kandidaten: Schwerpunkt, dann ein Raster von Punkten innerhalb der Fläche
+    const kandidaten = [schwerpunkt(o)];
+    for (const fy of [0.5, 0.25, 0.75, 0.12, 0.88]) for (const fx of [0.5, 0.25, 0.75, 0.15, 0.85])
+      kandidaten.push([r.x1 + (r.x2 - r.x1) * fx, r.y1 + (r.y2 - r.y1) * fy]);
+    const hoeher = D.garten.objekte.filter(q => q !== o && ARTEN[q.art].ebene > ARTEN[o.art].ebene);
+    const passt = ([cx, cy]) => {
+      const ecken = [[cx - bw / 2, cy - bh / 2], [cx + bw / 2, cy - bh / 2], [cx + bw / 2, cy + bh / 2], [cx - bw / 2, cy + bh / 2]];
+      if (!ecken.every(e => punktIn(o, e))) return false;
+      if (hoeher.some(q => ecken.some(e => punktIn(q, e)) || punktIn(q, [cx, cy]))) return false;
+      return !belegt.some(b => Math.abs(b[0] - cx) < (b[2] + bw) / 2 && Math.abs(b[1] - cy) < (b[3] + bh) / 2);
+    };
+    const pos = kandidaten.find(passt);
+    if (!pos) continue;
+    const [cx, cy] = pos;
+    belegt.push([cx, cy, bw, bh]);
+    html += `<text class="beschriftung" x="${cx}" y="${zweite ? cy - fs * 0.45 : cy}" font-size="${fs}" text-anchor="middle" dominant-baseline="middle">${esc(o.name)}</text>`;
+    if (zweite) html += `<text class="beschriftung klein" x="${cx}" y="${cy + fs * 0.8}" font-size="${fs * 0.85}" text-anchor="middle" dominant-baseline="middle">${zweite}</text>`;
+  }
+  // Griffe für das gewählte Objekt
+  const o = G.auswahl && objekt(G.auswahl);
+  if (o && G.bearbeiten) {
+    const rg = 7 / s;
+    if (o.form === "kreis") {
+      html += `<text class="kantenmass" x="${o.x}" y="${o.y - o.r - 10 / s}" font-size="${12 / s}" text-anchor="middle">Ø ${m(o.r * 2)}</text>`;
+      html += `<circle class="griff" data-rolle="radius" cx="${o.x + o.r}" cy="${o.y}" r="${rg}"/>`;
+    } else {
+      const p = o.punkte, n = p.length;
+      const flaecheVorzeichen = p.reduce((a, q, i) => a + q[0] * p[(i + 1) % n][1] - p[(i + 1) % n][0] * q[1], 0) > 0 ? 1 : -1;
+      for (let i = 0; i < n; i++) {
+        const a = p[i], b = p[(i + 1) % n], laenge = abstand(a, b);
+        const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+        // Maß außen neben die Kante setzen
+        const nx = (b[1] - a[1]) / (laenge || 1) * flaecheVorzeichen, ny = -(b[0] - a[0]) / (laenge || 1) * flaecheVorzeichen;
+        const text = m(laenge), versatz = (11 + Math.abs(nx) * text.length * 3.4 + Math.abs(ny) * 3) / s;
+        if (laenge * s > 34) html += `<text class="kantenmass" x="${mx + nx * versatz}" y="${my + ny * versatz}" font-size="${11.5 / s}" text-anchor="middle" dominant-baseline="middle">${text}</text>`;
+        if (laenge * s > 30) html += `<g data-rolle="neu" data-i="${i}"><circle class="neu" cx="${mx}" cy="${my}" r="${rg * 0.85}"/><path class="neu-plus" d="M${mx - rg * 0.45} ${my}H${mx + rg * 0.45}M${mx} ${my - rg * 0.45}V${my + rg * 0.45}"/></g>`;
+      }
+      p.forEach((q, i) => { html += `<circle class="griff${G.ecke === i ? " aktiv" : ""}" data-rolle="griff" data-i="${i}" cx="${q[0]}" cy="${q[1]}" r="${rg}"/>`; });
+    }
+  }
+  svg.innerHTML = html;
+  massstabZeichnen();
+}
+function massstabZeichnen() {
+  const el = $("#massstab"); if (!el) return;
+  const s = massstab();
+  const ziel = 90 / s; // ca. 90 px
+  const stufen = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000];
+  const l = stufen.find(x => x >= ziel) || 10000;
+  el.innerHTML = `<div style="width:${l * s}px"></div>${m(l)}`;
+}
+
+/* ---------- Objekte anlegen und ändern ---------- */
+function neuerName(art) {
+  const a = ARTEN[art];
+  const anzahl = D.garten.objekte.filter(o => o.art === art).length;
+  if (a.ohneNummer && anzahl === 0) return a.name;
+  let n = anzahl + 1;
+  while (D.garten.objekte.some(o => o.name === `${a.name} ${n}`)) n++;
+  return `${a.name} ${n}`;
+}
+function hinzufuegen(art, masse) {
+  const a = ARTEN[art], vorher = stand(), r = D.garten.raster || 10;
+  const g = planGroesse();
+  let [cx, cy] = welt(g.l + g.b / 2, g.o + g.h / 2);
+  cx = einrasten(cx, r); cy = einrasten(cy, r);
+  let o;
+  if (a.kreis) o = { id: gid(), art, name: neuerName(art), form: "kreis", x: cx, y: cy, r: a.r };
+  else {
+    const b = masse ? masse.b : a.b, t = masse ? masse.t : a.t;
+    const x = masse ? 0 : einrasten(cx - b / 2, r), y = masse ? 0 : einrasten(cy - t / 2, r);
+    o = { id: gid(), art, name: neuerName(art), form: "poly", punkte: [[x, y], [x + b, y], [x + b, y + t], [x, y + t]] };
+  }
+  D.garten.objekte.push(o);
+  G.auswahl = o.id; G.ecke = null; G.bearbeiten = true;
+  merken(vorher);
+  if (masse) allesZeigen(); else planZeichnen();
+  panelZeichnen(); leisteAktualisieren();
+}
+async function gartenflaecheAnlegen() {
+  const w = await eingabe({
+    titel: "Gartenfläche anlegen",
+    text: "Gib ungefähr an, wie groß deine Gartenfläche ist. Es entsteht ein Rechteck, das du danach in die echte Form ziehen kannst.",
+    felder: [
+      { id: "b", label: "Breite", typ: "number", wert: 12, schritt: 0.1, min: 1, einheit: "m" },
+      { id: "t", label: "Tiefe", typ: "number", wert: 8, schritt: 0.1, min: 1, einheit: "m" },
+    ],
+    ja: "Anlegen",
+  });
+  if (!w || !(w.b > 0) || !(w.t > 0)) return;
+  hinzufuegen("garten", { b: Math.round(w.b * 100), t: Math.round(w.t * 100) });
+}
+function loeschen(id) {
+  const o = objekt(id); if (!o) return;
+  const vorher = stand();
+  D.garten.objekte = D.garten.objekte.filter(x => x.id !== id);
+  G.auswahl = null; G.ecke = null;
+  merken(vorher); planZeichnen(); panelZeichnen(); leisteAktualisieren();
+  melden(`„${o.name}“ gelöscht.`, { text: "Rückgängig", tun: rueckgaengig });
+}
+function duplizieren(id) {
+  const o = objekt(id); if (!o) return;
+  const vorher = stand(), k = kopie(o), d = 50;
+  k.id = gid(); k.name = neuerName(o.art);
+  if (k.form === "kreis") { k.x += d; k.y += d; } else k.punkte = k.punkte.map(([x, y]) => [x + d, y + d]);
+  D.garten.objekte.push(k); G.auswahl = k.id; G.ecke = null;
+  merken(vorher); planZeichnen(); panelZeichnen();
+}
+function drehen(id, grad) {
+  const o = objekt(id); if (!o || o.form !== "poly") return;
+  const vorher = stand(), [cx, cy] = schwerpunkt(o), w = grad * Math.PI / 180, c = Math.cos(w), sn = Math.sin(w);
+  o.punkte = o.punkte.map(([x, y]) => [Math.round(cx + (x - cx) * c - (y - cy) * sn), Math.round(cy + (x - cx) * sn + (y - cy) * c)]);
+  merken(vorher); planZeichnen(); panelZeichnen();
+}
+function verschieben(id, dx, dy) {
+  const o = objekt(id); if (!o) return;
+  if (o.form === "kreis") { o.x += dx; o.y += dy; } else o.punkte = o.punkte.map(([x, y]) => [x + dx, y + dy]);
+}
+function eckeEntfernen(id, i) {
+  const o = objekt(id); if (!o || o.form !== "poly") return;
+  if (o.punkte.length <= 3) { melden("Eine Fläche braucht mindestens drei Ecken."); return; }
+  const vorher = stand();
+  o.punkte.splice(i, 1); G.ecke = null;
+  merken(vorher); planZeichnen(); panelZeichnen();
+}
+function waehlen(id) {
+  G.auswahl = id; G.ecke = null;
+  planZeichnen(); panelZeichnen(); leisteAktualisieren();
+}
+
+/* ---------- Maus, Finger, Tastatur ---------- */
+function planEreignisse() {
+  const svg = $("#plan");
+  svg.addEventListener("pointerdown", e => {
+    G.zeiger.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    try { svg.setPointerCapture(e.pointerId); } catch (x) {}
+    if (G.zeiger.size === 2) {           // zwei Finger: zoomen
+      const [a, b] = [...G.zeiger.values()];
+      if (G.zug && G.zug.vorher) { wiederherstellen(G.zug.vorher); }
+      G.zug = { art: "pinch", d0: Math.hypot(a.x - b.x, a.y - b.y), view0: { ...G.view }, mitte: welt((a.x + b.x) / 2, (a.y + b.y) / 2) };
+      return;
+    }
+    if (G.zeiger.size > 2) return;
+    const t = e.target.closest("[data-rolle]"), rolle = t && t.dataset.rolle;
+    const w = welt(e.clientX, e.clientY);
+    const start = { x: e.clientX, y: e.clientY };
+    const o = G.auswahl && objekt(G.auswahl);
+    if (G.bearbeiten && o && rolle === "griff") {
+      G.ecke = +t.dataset.i;
+      G.zug = { art: "ecke", i: G.ecke, vorher: stand(), start, bewegt: false };
+      planZeichnen(); panelZeichnen();
+    } else if (G.bearbeiten && o && rolle === "neu") {
+      const i = +t.dataset.i, p = o.punkte, a = p[i], b = p[(i + 1) % p.length], r = rasterwert(e);
+      const vorher = stand();
+      p.splice(i + 1, 0, [einrasten((a[0] + b[0]) / 2, r), einrasten((a[1] + b[1]) / 2, r)]);
+      G.ecke = i + 1;
+      G.zug = { art: "ecke", i: i + 1, vorher, start, bewegt: true };
+      planZeichnen();
+    } else if (G.bearbeiten && o && rolle === "radius") {
+      G.zug = { art: "radius", vorher: stand(), start, bewegt: false };
+    } else if (rolle === "obj" && G.bearbeiten) {
+      const id = t.dataset.id;
+      if (G.auswahl !== id) waehlen(id);
+      G.zug = { art: "obj", id, w0: w, orig: kopie(objekt(id)), vorher: stand(), start, bewegt: false };
+    } else {
+      G.zug = { art: "pan", start, view0: { ...G.view }, klickId: rolle === "obj" ? t.dataset.id : null, bewegt: false };
+    }
+    svg.classList.add("ziehen");
+  });
+
+  svg.addEventListener("pointermove", e => {
+    if (!G.zeiger.has(e.pointerId)) return;
+    G.zeiger.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const z = G.zug; if (!z) return;
+    if (z.art === "pinch") {
+      const [a, b] = [...G.zeiger.values()]; if (!b) return;
+      const d = Math.hypot(a.x - b.x, a.y - b.y) || 1, g = planGroesse();
+      const neuW = Math.min(Math.max(z.view0.w * z.d0 / d, 40), 30000);
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      const fx = (mx - g.l) / g.b, fy = (my - g.o) / g.h;
+      G.view = { x: z.mitte[0] - fx * neuW, y: z.mitte[1] - fy * neuW * g.h / g.b, w: neuW };
+      planZeichnen(); return;
+    }
+    if (!z.bewegt && Math.hypot(e.clientX - z.start.x, e.clientY - z.start.y) < 4) return;
+    z.bewegt = true;
+    const w = welt(e.clientX, e.clientY), r = rasterwert(e);
+    if (z.art === "pan") {
+      const s = massstab();
+      G.view = { ...z.view0, x: z.view0.x - (e.clientX - z.start.x) / s, y: z.view0.y - (e.clientY - z.start.y) / s };
+      planZeichnen();
+    } else if (z.art === "obj") {
+      const o = objekt(z.id), anker = z.orig.form === "kreis" ? [z.orig.x, z.orig.y] : z.orig.punkte[0];
+      const zx = einrasten(anker[0] + w[0] - z.w0[0], r), zy = einrasten(anker[1] + w[1] - z.w0[1], r);
+      const dx = zx - anker[0], dy = zy - anker[1];
+      if (o.form === "kreis") { o.x = z.orig.x + dx; o.y = z.orig.y + dy; }
+      else o.punkte = z.orig.punkte.map(([x, y]) => [x + dx, y + dy]);
+      planZeichnen();
+    } else if (z.art === "ecke") {
+      const o = objekt(G.auswahl); o.punkte[z.i] = [einrasten(w[0], r), einrasten(w[1], r)];
+      planZeichnen();
+    } else if (z.art === "radius") {
+      const o = objekt(G.auswahl); o.r = Math.max(5, einrasten(Math.hypot(w[0] - o.x, w[1] - o.y), Math.min(r, 5)));
+      planZeichnen();
+    }
+  });
+
+  const ende = e => {
+    G.zeiger.delete(e.pointerId);
+    const z = G.zug; if (!z) return;
+    if (z.art === "pinch") { if (G.zeiger.size === 0) G.zug = null; return; }
+    G.zug = null; svg.classList.remove("ziehen");
+    if (z.art === "pan" && !z.bewegt) waehlen(z.klickId);
+    else if (z.vorher) { merken(z.vorher); panelZeichnen(); }
+    leisteAktualisieren();
+  };
+  svg.addEventListener("pointerup", ende);
+  svg.addEventListener("pointercancel", ende);
+
+  svg.addEventListener("dblclick", e => {
+    const t = e.target.closest('[data-rolle="griff"]');
+    if (t && G.bearbeiten && G.auswahl) eckeEntfernen(G.auswahl, +t.dataset.i);
+  });
+
+  svg.addEventListener("wheel", e => {
+    e.preventDefault();
+    zoomen(Math.exp(e.deltaY * (e.ctrlKey ? 0.01 : 0.0015)), e.clientX, e.clientY);
+  }, { passive: false });
+}
+
+function gartenTasten(e) {
+  if (aktuelleSeite() !== "garten" || $("#dialog").open) return;
+  if (/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)) return;
+  const strg = e.ctrlKey || e.metaKey;
+  if (strg && e.key.toLowerCase() === "z") { e.preventDefault(); e.shiftKey ? wiederholen() : rueckgaengig(); return; }
+  if (strg && e.key.toLowerCase() === "y") { e.preventDefault(); wiederholen(); return; }
+  if (e.key === "Escape") { waehlen(null); return; }
+  if (!G.auswahl || !G.bearbeiten) return;
+  if (e.key === "Delete" || e.key === "Backspace") {
+    e.preventDefault();
+    if (G.ecke !== null) eckeEntfernen(G.auswahl, G.ecke); else loeschen(G.auswahl);
+    return;
+  }
+  const schritte = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+  if (schritte) {
+    e.preventDefault();
+    const d = (D.garten.raster || 10) * (e.shiftKey ? 10 : 1), vorher = stand();
+    verschieben(G.auswahl, schritte[0] * d, schritte[1] * d);
+    merken(vorher); planZeichnen();
+  }
+}
+document.addEventListener("keydown", gartenTasten);
+
+/* ---------- Werkzeugleiste ---------- */
+function leisteAktualisieren() {
+  const l = $(".plan-leiste"); if (!l) return;
+  $("#k-bearbeiten").classList.toggle("an", !!G.bearbeiten);
+  $("#k-bearbeiten").innerHTML = `✏️<span class="lang"> Bearbeiten${G.bearbeiten ? ": an" : ""}</span>`;
+  $("#k-bearbeiten").title = G.bearbeiten ? "Bearbeiten ist an – tippen zum Ausschalten" : "Bearbeiten einschalten";
+  $("#k-zurueck").disabled = !G.zurueck.length;
+  $("#k-vor").disabled = !G.vor.length;
+  $("#k-hinzu").classList.toggle("verborgen", !G.bearbeiten);
+  const sel = $("#k-bereich");
+  sel.innerHTML = `<option value="">Springe zu …</option><option value="alles">Ganzer Garten</option>` +
+    D.garten.bereiche.map(b => `<option value="${b.id}">${esc(b.name)}</option>`).join("");
+}
+function farbpunkt(art) {
+  return `<span class="farbpunkt${ARTEN[art].kreis ? " rund" : ""}" style="background:var(--f-${art});border-color:var(--s-${art})"></span>`;
+}
+async function bereichMerken() {
+  const w = await eingabe({ titel: "Ansicht als Bereich merken", text: "Der jetzige Ausschnitt bekommt einen Namen. Über „Springe zu …“ kommst du jederzeit direkt hierher.", felder: [{ id: "name", label: "Name", wert: "", typ: "text" }], ja: "Merken" });
+  if (!w || !w.name) return;
+  const vorher = stand(), v = G.view;
+  D.garten.bereiche.push({ id: gid(), name: w.name, x: Math.round(v.x), y: Math.round(v.y), w: Math.round(v.w), h: Math.round(viewHoehe()) });
+  merken(vorher); leisteAktualisieren(); panelZeichnen();
+  melden(`Bereich „${w.name}“ gemerkt.`);
+}
+
+/* ---------- Seitenleiste (Panel) ---------- */
+function panelZeichnen() {
+  const el = $("#garten-panel"); if (!el) return;
+  const o = G.auswahl && objekt(G.auswahl);
+  if (!o) { el.innerHTML = uebersichtHTML(); uebersichtEreignisse(el); return; }
+  const a = ARTEN[o.art], r = rahmen(o), fl = flaeche(o) / 10000;
+  const kreis = o.form === "kreis";
+  let h = `<div class="karte"><h2>${farbpunkt(o.art)} ${esc(o.name)}</h2>`;
+  if (!G.bearbeiten) {
+    h += `<p class="leise">${esc(a.name)} · ${kreis ? "Ø " + m(o.r * 2) + " · " : istRechteck(o) ? `${m(r.x2 - r.x1)} × ${m(r.y2 - r.y1)} · ` : ""}${zahl(fl, fl < 10 ? 2 : 1)} m²</p>
+      <button class="knopf" data-tun="bearbeiten">✏️ Bearbeiten</button></div>`;
+    el.innerHTML = h; panelEreignisse(el, o); return;
+  }
+  h += `<label>Name</label><input type="text" data-feld="name" value="${esc(o.name)}">
+    <label>Art</label><select data-feld="art">${ART_REIHENFOLGE.filter(k => !!ARTEN[k].kreis === kreis).map(k => `<option value="${k}" ${k === o.art ? "selected" : ""}>${ARTEN[k].name}</option>`).join("")}</select>`;
+  if (kreis) {
+    h += `<label>Durchmesser</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-feld="durchmesser" value="${(o.r * 2 / 100).toFixed(2)}"><span>m</span></div>`;
+  } else if (istRechteck(o)) {
+    h += `<div class="zwei">
+      <div><label>Breite</label><div class="feld-einheit"><input type="number" step="0.05" min="0.05" inputmode="decimal" data-feld="breite" value="${((r.x2 - r.x1) / 100).toFixed(2)}"><span>m</span></div></div>
+      <div><label>Tiefe</label><div class="feld-einheit"><input type="number" step="0.05" min="0.05" inputmode="decimal" data-feld="tiefe" value="${((r.y2 - r.y1) / 100).toFixed(2)}"><span>m</span></div></div></div>`;
+  }
+  h += `<p class="klein leise" style="margin:10px 0 0">Fläche: ${zahl(fl, fl < 10 ? 2 : 1)} m²</p></div>`;
+  if (!kreis) {
+    h += `<div class="karte"><details ${istRechteck(o) ? "" : "open"}><summary><b>Kanten und Ecken</b></summary>
+      <p class="klein leise">Länge eintippen: Die zweite Ecke der Kante rückt auf das genaue Maß.</p>
+      <div class="kanten">${o.punkte.map((p, i) => `<span>Kante ${i + 1}</span><div class="feld-einheit"><input type="number" step="0.01" min="0.01" inputmode="decimal" data-kante="${i}" value="${(abstand(p, o.punkte[(i + 1) % o.punkte.length]) / 100).toFixed(2)}"><span>m</span></div>`).join("")}</div>
+      ${G.ecke !== null ? `<div class="knopfreihe"><button class="knopf gefahr" data-tun="ecke-weg">Ecke ${G.ecke + 1} entfernen</button></div>` : ""}
+    </details></div>`;
+  }
+  h += `<div class="karte"><div class="knopfreihe" style="margin:0">
+      ${kreis ? "" : `<button class="knopf" data-tun="drehen90">↻ 90° drehen</button><button class="knopf" data-tun="drehen">Drehen um …</button>`}
+      <button class="knopf" data-tun="duplizieren">⧉ Duplizieren</button>
+      <button class="knopf gefahr" data-tun="loeschen">🗑️ Löschen</button>
+    </div></div>
+    <p class="klein leise">${kreis ? "Ziehen verschiebt den Kreis, der Punkt rechts ändert die Größe." :
+      "Ziehen verschiebt die Fläche. Ecken ziehen ändert die Form, das Plus auf einer Kante fügt eine Ecke ein, Doppelklick auf eine Ecke entfernt sie."} Umschalttaste gedrückt halten = ohne Raster.</p>`;
+  el.innerHTML = h;
+  panelEreignisse(el, o);
+}
+
+function panelEreignisse(el, o) {
+  const aendern = fn => { const vorher = stand(); fn(); merken(vorher); planZeichnen(); panelZeichnen(); leisteAktualisieren(); };
+  $$("[data-feld]", el).forEach(f => f.addEventListener("change", () => {
+    const wert = f.value, zahlwert = parseFloat(String(wert).replace(",", "."));
+    aendern(() => {
+      if (f.dataset.feld === "name") o.name = wert.trim() || o.name;
+      else if (f.dataset.feld === "art") o.art = wert;
+      else if (f.dataset.feld === "durchmesser" && zahlwert > 0) o.r = Math.round(zahlwert * 50);
+      else if ((f.dataset.feld === "breite" || f.dataset.feld === "tiefe") && zahlwert > 0) {
+        const r = rahmen(o);
+        const b = f.dataset.feld === "breite" ? Math.round(zahlwert * 100) : r.x2 - r.x1;
+        const t = f.dataset.feld === "tiefe" ? Math.round(zahlwert * 100) : r.y2 - r.y1;
+        o.punkte = [[r.x1, r.y1], [r.x1 + b, r.y1], [r.x1 + b, r.y1 + t], [r.x1, r.y1 + t]];
+      }
+    });
+  }));
+  $$("[data-kante]", el).forEach(f => f.addEventListener("change", () => {
+    const l = parseFloat(String(f.value).replace(",", ".")); if (!(l > 0)) return;
+    const i = +f.dataset.kante, n = o.punkte.length, a = o.punkte[i], b = o.punkte[(i + 1) % n], alt = abstand(a, b) || 1;
+    aendern(() => { o.punkte[(i + 1) % n] = [Math.round(a[0] + (b[0] - a[0]) / alt * l * 100), Math.round(a[1] + (b[1] - a[1]) / alt * l * 100)]; });
+  }));
+  $$("[data-tun]", el).forEach(k => k.onclick = async () => {
+    const t = k.dataset.tun;
+    if (t === "bearbeiten") { G.bearbeiten = true; planZeichnen(); panelZeichnen(); leisteAktualisieren(); }
+    if (t === "loeschen") loeschen(o.id);
+    if (t === "duplizieren") duplizieren(o.id);
+    if (t === "drehen90") drehen(o.id, 90);
+    if (t === "ecke-weg") eckeEntfernen(o.id, G.ecke);
+    if (t === "drehen") {
+      const w = await eingabe({ titel: "Drehen", text: "Um wie viel Grad soll die Fläche im Uhrzeigersinn gedreht werden? Minus dreht andersherum.", felder: [{ id: "grad", label: "Winkel", typ: "number", wert: 15, schritt: 1, einheit: "°" }], ja: "Drehen" });
+      if (w && w.grad) drehen(o.id, w.grad);
+    }
+  });
+}
+
+function uebersichtHTML() {
+  const ob = D.garten.objekte;
+  if (!ob.length) return `<div class="karte"><h2>So fängst du an</h2>
+    <ol class="klein" style="padding-left:18px;margin:0 0 10px">
+      <li>Gartenfläche als Rechteck mit ungefähren Maßen anlegen.</li>
+      <li>Ecken ziehen, bis die Form passt. Mit dem Plus auf einer Kante entstehen neue Ecken, zum Beispiel für ein L.</li>
+      <li>Haus, Wege und Beete hinzufügen.</li>
+    </ol>
+    <button class="knopf haupt" data-tun="anlegen">Gartenfläche anlegen</button></div>`;
+  const nachArt = ART_REIHENFOLGE.map(k => ob.filter(o => o.art === k)).filter(l => l.length).flat();
+  return `<div class="karte"><h2>Im Plan</h2><ul class="objliste">
+      ${nachArt.map(o => `<li data-waehle="${o.id}">${farbpunkt(o.art)}<span>${esc(o.name)}</span><span class="leise">${zahl(flaeche(o) / 10000, 1)} m²</span></li>`).join("")}
+    </ul></div>
+    <div class="karte"><h2>Bereiche</h2>
+      ${D.garten.bereiche.length ? `<ul class="objliste">${D.garten.bereiche.map(b => `<li data-bereich="${b.id}"><span>📍 ${esc(b.name)}</span><button class="x" data-bereich-weg="${b.id}" aria-label="Bereich löschen" title="Löschen">✕</button></li>`).join("")}</ul>`
+        : `<p class="klein leise">Noch keine. Zoome auf einen Teil des Gartens und tippe auf „📍 Merken“, um direkt dorthin springen zu können.</p>`}
+    </div>
+    <div class="karte"><h2>Raster</h2>
+      <p class="klein leise">Ecken und Flächen rasten in diesem Abstand ein.</p>
+      <div class="umschalter" id="raster">${[1, 5, 10, 50].map(r => `<button data-r="${r}" class="${(D.garten.raster || 10) === r ? "an" : ""}">${r} cm</button>`).join("")}</div>
+    </div>`;
+}
+function uebersichtEreignisse(el) {
+  const a = $('[data-tun="anlegen"]', el); if (a) a.onclick = gartenflaecheAnlegen;
+  $$("[data-waehle]", el).forEach(li => li.onclick = () => {
+    const o = objekt(li.dataset.waehle); waehlen(o.id);
+    const r = rahmen(o); zeigeBereich(r.x1, r.y1, r.x2 - r.x1, r.y2 - r.y1);
+  });
+  $$("[data-bereich]", el).forEach(li => li.onclick = e => {
+    if (e.target.closest("[data-bereich-weg]")) return;
+    const b = D.garten.bereiche.find(x => x.id === li.dataset.bereich); zeigeBereich(b.x, b.y, b.w, b.h);
+  });
+  $$("[data-bereich-weg]", el).forEach(k => k.onclick = () => {
+    const vorher = stand(); D.garten.bereiche = D.garten.bereiche.filter(b => b.id !== k.dataset.bereichWeg);
+    merken(vorher); panelZeichnen(); leisteAktualisieren();
+  });
+  $$("#raster button", el).forEach(k => k.onclick = () => { D.garten.raster = +k.dataset.r; speichern(); panelZeichnen(); });
+}
+
+/* ---------- Seite „Garten“ ---------- */
+function gartenSeite(main) {
+  seitentitel(main, "Garten");
+  if (G.bearbeiten === null) G.bearbeiten = D.garten.objekte.length === 0 || matchMedia("(min-width:900px)").matches;
+  main.insertAdjacentHTML("beforeend", `
+    <div class="plan-leiste">
+      <button class="knopf" id="k-bearbeiten"></button>
+      <details class="menue" id="k-hinzu"><summary class="knopf haupt" title="Hinzufügen">＋<span class="lang"> Hinzufügen</span></summary>
+        <div class="menue-liste">${ART_REIHENFOLGE.map(k => `<button data-art="${k}">${farbpunkt(k)}<span>${ARTEN[k].name}${ARTEN[k].hinweis ? `<br><span class="klein leise">${ARTEN[k].hinweis}</span>` : ""}</span></button>`).join("")}</div>
+      </details>
+      <button class="knopf" id="k-zurueck" title="Rückgängig (Strg+Z)" aria-label="Rückgängig">↶</button>
+      <button class="knopf" id="k-vor" title="Wiederholen (Strg+Y)" aria-label="Wiederholen">↷</button>
+      <span class="trenner"></span>
+      <button class="knopf" id="k-minus" aria-label="Verkleinern" title="Verkleinern">−</button>
+      <button class="knopf" id="k-plus" aria-label="Vergrößern" title="Vergrößern">+</button>
+      <button class="knopf" id="k-alles" title="Ganzen Garten zeigen" aria-label="Ganzen Garten zeigen">⤢<span class="lang"> Alles</span></button>
+      <select id="k-bereich" aria-label="Springe zu Bereich"></select>
+      <button class="knopf" id="k-merken" title="Aktuelle Ansicht als Bereich merken" aria-label="Ansicht merken">📍<span class="lang"> Merken</span></button>
+    </div>
+    <div class="garten-layout">
+      <div class="plan-rahmen">
+        <svg id="plan" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" role="img" aria-label="Gartenplan"></svg>
+        <div class="massstab" id="massstab"></div>
+      </div>
+      <div class="panel" id="garten-panel"></div>
+    </div>
+    <div class="karte bald" style="margin-top:14px"><h2>🌱 Als Nächstes</h2>
+      <p class="leise klein" style="margin:0">Pflanzen per Klick in die Beete setzen, ernten und abräumen – sobald das Pflanzenlexikon da ist.</p></div>`);
+
+  planEreignisse();
+  $("#k-bearbeiten").onclick = () => { G.bearbeiten = !G.bearbeiten; G.ecke = null; planZeichnen(); panelZeichnen(); leisteAktualisieren(); };
+  $("#k-zurueck").onclick = rueckgaengig;
+  $("#k-vor").onclick = wiederholen;
+  $("#k-plus").onclick = () => zoomen(1 / 1.4);
+  $("#k-minus").onclick = () => zoomen(1.4);
+  $("#k-alles").onclick = allesZeigen;
+  $("#k-merken").onclick = bereichMerken;
+  $("#k-bereich").onchange = e => {
+    const v = e.target.value; e.target.value = "";
+    if (v === "alles") allesZeigen();
+    else { const b = D.garten.bereiche.find(x => x.id === v); if (b) zeigeBereich(b.x, b.y, b.w, b.h); }
+  };
+  $$("#k-hinzu [data-art]").forEach(b => b.onclick = () => {
+    $("#k-hinzu").open = false;
+    if (b.dataset.art === "garten" && !D.garten.objekte.some(o => o.art === "garten")) gartenflaecheAnlegen();
+    else hinzufuegen(b.dataset.art);
+  });
+
+  leisteAktualisieren();
+  // Größe erst kennen, wenn das Layout steht
+  requestAnimationFrame(() => {
+    if (!G.view) allesZeigen(); else planZeichnen();
+    panelZeichnen();
+  });
+}
+let gartenGroesseTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(gartenGroesseTimer);
+  gartenGroesseTimer = setTimeout(() => { if (aktuelleSeite() === "garten") planZeichnen(); }, 100);
+});
+
+document.addEventListener("click", e => { const mn = $("#k-hinzu"); if (mn && mn.open && !mn.contains(e.target)) mn.open = false; });
 
 /* ============================================================
    SICHERUNG
