@@ -271,6 +271,14 @@ input[type=number],select{
 .panel label.schalter input{width:18px;height:18px;accent-color:var(--gruen)}
 .garten-layout{display:grid;gap:14px}
 @media (min-width:900px){ .garten-layout{grid-template-columns:minmax(0,1fr) 320px;align-items:start} }
+.plan-spalte{min-width:0}
+.zeichnen-leiste{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+  background:var(--rot-hell);border:1px solid var(--auswahl);border-radius:var(--radius);padding:10px 14px;margin-bottom:10px}
+.zeichnen-leiste .knopf{min-height:36px;padding:6px 12px}
+.menue-liste .neu-modus{display:flex;margin:2px 2px 8px}
+.menue-liste .neu-modus button{flex:1;justify-content:center;padding:7px 8px;border-radius:0;font-size:.85rem}
+.menue-liste .neu-modus button.an{background:var(--gruen-hell);color:var(--gruen-dunkel);font-weight:650}
+.menue-liste button:disabled{opacity:.4;cursor:default}
 .plan-rahmen{
   position:relative;border:1px solid var(--linie);border-radius:var(--radius);overflow:hidden;
   background:var(--plan-bg);height:62vh;min-height:340px;
@@ -304,6 +312,10 @@ input[type=number],select{
 #plan .rechtwinklig{fill:none;stroke:var(--auswahl);stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
 #plan .winkelmass{fill:var(--leise);font-weight:700;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px}
 #plan .winkelmass.genau{fill:var(--auswahl)}
+#plan .zeichnung{fill:var(--auswahl);fill-opacity:.12;stroke:var(--auswahl);stroke-width:2px;stroke-dasharray:6 4;vector-effect:non-scaling-stroke;pointer-events:none}
+#plan .zeichnung-strich{fill:none;stroke:var(--blau);stroke-width:2.5px;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;pointer-events:none}
+#plan .zeichnung-punkt{fill:var(--auswahl);pointer-events:none}
+#plan .zeichnung-start{fill:#fff;stroke:var(--auswahl);stroke-width:2.5px;vector-effect:non-scaling-stroke;pointer-events:none}
 #plan .kante-hervor{fill:none;stroke:var(--gelb);stroke-width:7px;stroke-linecap:round;opacity:.7;vector-effect:non-scaling-stroke;pointer-events:none}
 #plan .aussenmass{fill:none;stroke:var(--leise);stroke-width:1px;vector-effect:non-scaling-stroke;pointer-events:none}
 #plan .aussenmass-text{fill:var(--leise);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round}
@@ -446,7 +458,7 @@ dialog .knopfreihe{justify-content:flex-end}
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.2.2";
+const APP_VERSION = "0.2.3";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1003,6 +1015,8 @@ const SEITEN = {
         </div></details>
         <details><summary>Garten zeichnen</summary><div>
           <p><b>Erster Schritt:</b> Im Bereich Garten auf „Gartenfläche anlegen“ tippen und die ungefähre Größe eingeben. Es entsteht ein Rechteck.</p>
+          <p><b>Oder selbst zeichnen:</b> Statt der Maße kannst du „✎ Selbst zeichnen“ wählen. Dann fährst du die Form mit gedrückter Maustaste grob nach oder klickst die Ecken nacheinander an. Ein Klick auf den ersten Punkt, ein Doppelklick oder Enter beendet die Form, Esc bricht ab. Das Raster zeigt die Meter, unten links steht der Maßstab und beim Zeichnen die Länge der aktuellen Kante. Die App vereinfacht die Linie danach: Fast gerade Kanten werden gerade, fast waagerechte und senkrechte werden genau ausgerichtet, alles rastet im Raster ein. Feinheiten passt du danach wie gewohnt an.</p>
+          <p>Das geht auch für alle anderen Flächen und Wege: Im Menü „＋ Hinzufügen“ oben auf „✎ Selbst zeichnen“ umschalten, dann die Art wählen. Kübel sind immer Kreise und werden nicht gezeichnet.</p>
           <p><b>Auswählen, dann ändern:</b> Erst ein Klick wählt eine Fläche aus (rot umrandet). Nur die ausgewählte Fläche lässt sich ziehen. Ziehen auf einer nicht ausgewählten Fläche verschiebt nur den Ausschnitt – so verrutscht nichts aus Versehen.</p>
           <p><b>Die echte Form:</b> Bei der ausgewählten Fläche erscheinen rote Punkte an den Ecken.</p>
           <ul>
@@ -1415,6 +1429,13 @@ function planZeichnen() {
     if (zweite) html += `<text class="beschriftung klein" x="${cx}" y="${cy + fs * 0.8}" font-size="${fs * 0.85}" text-anchor="middle" dominant-baseline="middle">${zweite}</text>`;
   }
 
+  if (G.zeichnen) {
+    if (G.fuehrung) {
+      if (G.fuehrung.x !== null) html += `<line class="fuehrung" x1="${G.fuehrung.x}" y1="${v.y}" x2="${G.fuehrung.x}" y2="${v.y + vh}"/>`;
+      if (G.fuehrung.y !== null) html += `<line class="fuehrung" x1="${v.x}" y1="${G.fuehrung.y}" x2="${v.x + v.w}" y2="${G.fuehrung.y}"/>`;
+    }
+    svg.innerHTML = html + zeichnenHTML(s); massstabZeichnen(); return;
+  }
   // Gewähltes Objekt: Abstände, Hilfslinien, Griffe
   const o = G.auswahl && objekt(G.auswahl);
   if (o && editierbar(o)) {
@@ -1588,6 +1609,161 @@ function waehlen(id) {
   planZeichnen(); panelZeichnen(); leisteAktualisieren();
 }
 
+
+/* ============================================================
+   SELBST ZEICHNEN
+   Mit gedrückter Maustaste grob umfahren oder Ecken einzeln anklicken.
+   Danach wird die Linie vereinfacht, begradigt und ins Raster gelegt.
+   ============================================================ */
+function zeichnenStarten(art) {
+  G.zeichnen = { art, punkte: [], strich: null, maus: null, unten: null };
+  G.auswahl = null; G.ecke = null; G.bearbeiten = true;
+  zeichnenHinweis(); planZeichnen(); panelZeichnen(); leisteAktualisieren();
+}
+function zeichnenBeenden(abbrechen) {
+  const z = G.zeichnen; G.zeichnen = null;
+  zeichnenHinweis();
+  if (abbrechen || !z) { planZeichnen(); panelZeichnen(); return; }
+  const linie = ARTEN[z.art].linie;
+  let p = z.punkte.filter((q, i, a) => i === 0 || abstand(q, a[i - 1]) > 1);
+  if (!linie && p.length > 3 && abstand(p[0], p[p.length - 1]) < 30 / massstab()) p.pop();
+  if (p.length < (linie ? 2 : 3)) { melden(linie ? "Zeichne mindestens zwei Punkte." : "Zeichne mindestens drei Ecken."); planZeichnen(); panelZeichnen(); return; }
+  p = begradigen(begradigen(p, !linie), !linie);
+  const r = D.garten.raster || 10;
+  p = p.map(([x, y]) => [einrasten(x, r), einrasten(y, r)]).filter((q, i, a) => i === 0 || abstand(q, a[i - 1]) > 0);
+  p = geradeZusammenfassen(p, !linie);
+  const vorher = stand();
+  const o = linie
+    ? { id: gid(), art: z.art, name: neuerName(z.art), form: "linie", breite: ARTEN[z.art].breite, rund: true, punkte: p }
+    : { id: gid(), art: z.art, name: neuerName(z.art), form: "poly", punkte: p };
+  D.garten.objekte.push(o);
+  G.auswahl = o.id;
+  merken(vorher); if (z.art === "garten") allesZeigen(); else planZeichnen(); panelZeichnen(); leisteAktualisieren();
+  melden(`„${o.name}“ gezeichnet. Jetzt kannst du Ecken ziehen, Maße eintippen oder Kanten biegen.`);
+}
+/* Fast waagerechte oder senkrechte Kanten gerade ausrichten (bis 7° Abweichung) */
+function begradigen(p, geschlossen) {
+  const q = p.map(x => x.slice()), n = q.length, grenze = Math.tan(7 * Math.PI / 180);
+  const anz = geschlossen ? n : n - 1;
+  for (let i = 0; i < anz; i++) {
+    const a = q[i], b = q[(i + 1) % n], dx = b[0] - a[0], dy = b[1] - a[1];
+    if (Math.abs(dy) <= Math.abs(dx) * grenze) { const y = (a[1] + b[1]) / 2; a[1] = y; b[1] = y; }
+    else if (Math.abs(dx) <= Math.abs(dy) * grenze) { const x = (a[0] + b[0]) / 2; a[0] = x; b[0] = x; }
+  }
+  return q;
+}
+/* Punkte entfernen, an denen die Linie fast geradeaus weiterläuft (unter 12°) */
+function geradeZusammenfassen(p, geschlossen) {
+  let q = p.slice(), geaendert = true;
+  while (geaendert && q.length > (geschlossen ? 3 : 2)) {
+    geaendert = false;
+    for (let i = geschlossen ? 0 : 1; i < (geschlossen ? q.length : q.length - 1); i++) {
+      const n = q.length, a = q[(i - 1 + n) % n], b = q[i], c = q[(i + 1) % n];
+      const w1 = Math.atan2(b[1] - a[1], b[0] - a[0]), w2 = Math.atan2(c[1] - b[1], c[0] - b[0]);
+      let d = Math.abs(w1 - w2) * 180 / Math.PI; if (d > 180) d = 360 - d;
+      if (d < 12 || abstand(a, b) < 1 || abstand(b, c) < 1) { q.splice(i, 1); geaendert = true; break; }
+    }
+  }
+  return q;
+}
+/* Linie vereinfachen (Douglas-Peucker) */
+function vereinfachen(p, tol) {
+  if (p.length < 3) return p;
+  let max = 0, idx = 0;
+  for (let i = 1; i < p.length - 1; i++) { const d = abstandZuStrecke(p[i], p[0], p[p.length - 1]); if (d > max) { max = d; idx = i; } }
+  if (max <= tol) return [p[0], p[p.length - 1]];
+  return [...vereinfachen(p.slice(0, idx + 1), tol).slice(0, -1), ...vereinfachen(p.slice(idx), tol)];
+}
+function zeichnenFang(w, e) {
+  if (e && e.shiftKey) return w;
+  const r = D.garten.raster || 10, tol = 10 / massstab();
+  let x = einrasten(w[0], r), y = einrasten(w[1], r);
+  const { xs, ys } = fangKandidaten({ id: null });
+  G.zeichnen.punkte.forEach(q => { xs.push(q[0]); ys.push(q[1]); });
+  const fx = naechster(xs, w[0], tol), fy = naechster(ys, w[1], tol);
+  G.fuehrung = { x: fx, y: fy };
+  if (fx !== null) x = fx;
+  if (fy !== null) y = fy;
+  return [x, y];
+}
+function zeichnenRunter(e) {
+  const z = G.zeichnen, w = welt(e.clientX, e.clientY);
+  z.unten = { x: e.clientX, y: e.clientY, bewegt: false };
+  z.strich = [w];
+}
+function zeichnenBewegen(e) {
+  const z = G.zeichnen, w = welt(e.clientX, e.clientY);
+  z.maus = zeichnenFang(w, e);
+  if (z.unten) {
+    if (!z.unten.bewegt && Math.hypot(e.clientX - z.unten.x, e.clientY - z.unten.y) > 5) z.unten.bewegt = true;
+    if (z.unten.bewegt && abstand(w, z.strich[z.strich.length - 1]) > 2 / massstab()) z.strich.push(w);
+  }
+  planZeichnen();
+}
+function zeichnenHoch(e) {
+  const z = G.zeichnen; if (!z || !z.unten) return;
+  const s = massstab(), linie = ARTEN[z.art].linie;
+  if (z.unten.bewegt && z.strich.length > 2) {
+    // Freihand: vereinfachen und anhängen
+    const roh = z.strich, geschlossen = !linie && abstand(roh[0], roh[roh.length - 1]) < 30 / s && laengeLinie(roh) > 120 / s;
+    let neu = vereinfachen(roh, 12 / s);
+    if (z.punkte.length && abstand(neu[0], z.punkte[z.punkte.length - 1]) < 15 / s) neu = neu.slice(1);
+    z.punkte.push(...neu);
+    z.unten = null; z.strich = null;
+    if (geschlossen) { zeichnenBeenden(); return; }
+  } else {
+    // Einzelner Klick: Ecke setzen, Klick auf den ersten Punkt schließt, Doppelklick beendet
+    const p = zeichnenFang(welt(e.clientX, e.clientY), e), jetzt = Date.now();
+    z.unten = null; z.strich = null;
+    if (z.letzterKlick && jetzt - z.letzterKlick.t < 400 && Math.hypot(e.clientX - z.letzterKlick.x, e.clientY - z.letzterKlick.y) < 8) { zeichnenBeenden(); return; }
+    z.letzterKlick = { t: jetzt, x: e.clientX, y: e.clientY };
+    if (!linie && z.punkte.length >= 3 && abstand(p, z.punkte[0]) < 12 / s) { zeichnenBeenden(); return; }
+    z.punkte.push(p);
+  }
+  zeichnenHinweis(); planZeichnen();
+}
+function zeichnenHinweis() {
+  const el = $("#zeichnen-leiste"); if (!el) return;
+  const z = G.zeichnen;
+  el.classList.toggle("verborgen", !z);
+  if (!z) return;
+  const linie = ARTEN[z.art].linie;
+  el.innerHTML = `<div><b>✎ ${esc(ARTEN[z.art].name)} zeichnen</b><br><span class="klein">${linie
+      ? "Mit gedrückter Maustaste den Weg entlangfahren oder Punkte einzeln anklicken."
+      : "Mit gedrückter Maustaste grob umfahren oder die Ecken einzeln anklicken. Klick auf den ersten Punkt schließt die Form."}
+      Doppelklick oder Enter = fertig, Esc = abbrechen. Mausrad zoomt.</span></div>
+    <div class="knopfreihe" style="margin:0">
+      <button class="knopf" data-z="zurueck" ${z.punkte.length ? "" : "disabled"}>↶ Letzter Punkt weg</button>
+      <button class="knopf" data-z="abbrechen">Abbrechen</button>
+      <button class="knopf haupt" data-z="fertig" ${z.punkte.length >= (linie ? 2 : 3) ? "" : "disabled"}>Fertig</button>
+    </div>`;
+  $$("[data-z]", el).forEach(k => k.onclick = () => {
+    if (k.dataset.z === "zurueck") { z.punkte.pop(); zeichnenHinweis(); planZeichnen(); }
+    if (k.dataset.z === "abbrechen") zeichnenBeenden(true);
+    if (k.dataset.z === "fertig") zeichnenBeenden();
+  });
+}
+function zeichnenHTML(s) {
+  const z = G.zeichnen, linie = ARTEN[z.art].linie, p = z.punkte;
+  let h = "";
+  const alle = z.maus && !z.unten ? [...p, z.maus] : p;
+  if (alle.length >= 2) h += `<path class="zeichnung" d="M${alle.map(q => q.join(" ")).join("L")}${!linie && alle.length >= 3 ? "Z" : ""}"/>`;
+  if (z.strich && z.strich.length > 1) h += `<path class="zeichnung-strich" d="M${z.strich.map(q => q.join(" ")).join("L")}"/>`;
+  // Länge der Kante, die gerade entsteht, und Außenmaße
+  if (z.maus && p.length && !z.unten) {
+    const a = p[p.length - 1], l = abstand(a, z.maus);
+    if (l * s > 30) h += `<text class="kantenmass" x="${(a[0] + z.maus[0]) / 2}" y="${(a[1] + z.maus[1]) / 2 - 10 / s}" font-size="${12 / s}" text-anchor="middle">${m(l)}</text>`;
+  }
+  if (alle.length >= 2) {
+    const xs = alle.map(q => q[0]), ys = alle.map(q => q[1]);
+    const r = { x1: Math.min(...xs), x2: Math.max(...xs), y1: Math.min(...ys), y2: Math.max(...ys) };
+    h += `<text class="aussenmass-text" x="${r.x2 + 10 / s}" y="${r.y2 + 16 / s}" font-size="${11.5 / s}">${m(r.x2 - r.x1)} × ${m(r.y2 - r.y1)}</text>`;
+  }
+  p.forEach((q, i) => { h += `<circle class="${i === 0 && !linie ? "zeichnung-start" : "zeichnung-punkt"}" cx="${q[0]}" cy="${q[1]}" r="${(i === 0 && !linie ? 8 : 4.5) / s}"/>`; });
+  if (z.maus && !z.unten) h += `<circle class="zeichnung-punkt" cx="${z.maus[0]}" cy="${z.maus[1]}" r="${4 / s}" opacity=".6"/>`;
+  return h;
+}
+
 /* ---------- Maus, Finger, Tastatur ---------- */
 function planEreignisse() {
   const svg = $("#plan");
@@ -1602,6 +1778,7 @@ function planEreignisse() {
       return;
     }
     if (G.zeiger.size > 2) return;
+    if (G.zeichnen) { zeichnenRunter(e); return; }
     const t = e.target.closest("[data-rolle]"), rolle = t && t.dataset.rolle;
     const w = welt(e.clientX, e.clientY), start = { x: e.clientX, y: e.clientY };
     const o = G.auswahl && objekt(G.auswahl), ed = editierbar(o);
@@ -1634,6 +1811,7 @@ function planEreignisse() {
   });
 
   svg.addEventListener("pointermove", e => {
+    if (G.zeichnen && G.zeiger.size < 2) { zeichnenBewegen(e); return; }
     if (!G.zeiger.has(e.pointerId)) return;
     G.zeiger.set(e.pointerId, { x: e.clientX, y: e.clientY });
     const z = G.zug; if (!z) return;
@@ -1669,9 +1847,15 @@ function planEreignisse() {
 
   const ende = e => {
     G.zeiger.delete(e.pointerId);
+    if (G.zeichnen && (!G.zug || G.zug.art !== "pinch")) { zeichnenHoch(e); return; }
     const z = G.zug; if (!z) return;
     if (z.art === "pinch") { if (G.zeiger.size === 0) G.zug = null; return; }
     G.zug = null; G.fuehrung = null; svg.classList.remove("ziehen");
+    if (z.art === "ecke" && !z.bewegt) {
+      const jetzt = Date.now(), l = G.letzteEcke;
+      G.letzteEcke = { t: jetzt, i: z.i, id: G.auswahl };
+      if (l && l.id === G.auswahl && l.i === z.i && jetzt - l.t < 400) { G.letzteEcke = null; eckeEntfernen(G.auswahl, z.i); leisteAktualisieren(); return; }
+    }
     if (z.art === "pan" && !z.bewegt) waehlen(z.klickId);
     else { if (z.vorher) { merken(z.vorher); panelZeichnen(); } planZeichnen(); }
     leisteAktualisieren();
@@ -1680,6 +1864,7 @@ function planEreignisse() {
   svg.addEventListener("pointercancel", ende);
 
   svg.addEventListener("dblclick", e => {
+    if (G.zeichnen) { zeichnenBeenden(); return; }
     const t = e.target.closest('[data-rolle="griff"]');
     if (t && editierbar(objekt(G.auswahl))) eckeEntfernen(G.auswahl, +t.dataset.i);
   });
@@ -1693,6 +1878,12 @@ function planEreignisse() {
 function gartenTasten(e) {
   if (aktuelleSeite() !== "garten" || $("#dialog").open) return;
   if (/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)) return;
+  if (G.zeichnen) {
+    if (e.key === "Enter") { e.preventDefault(); zeichnenBeenden(); }
+    else if (e.key === "Escape") zeichnenBeenden(true);
+    else if (e.key === "Backspace" || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z")) { e.preventDefault(); G.zeichnen.punkte.pop(); zeichnenHinweis(); planZeichnen(); }
+    return;
+  }
   const strg = e.ctrlKey || e.metaKey;
   if (strg && e.key.toLowerCase() === "z") { e.preventDefault(); e.shiftKey ? wiederholen() : rueckgaengig(); return; }
   if (strg && e.key.toLowerCase() === "y") { e.preventDefault(); wiederholen(); return; }
@@ -1919,11 +2110,13 @@ function uebersichtHTML() {
   const ob = D.garten.objekte;
   if (!ob.length) return `<div class="karte"><h2>So fängst du an</h2>
     <ol class="klein" style="padding-left:18px;margin:0 0 10px">
-      <li>Gartenfläche als Rechteck mit ungefähren Maßen anlegen.</li>
+      <li>Gartenfläche anlegen: als Rechteck mit ungefähren Maßen oder grob selbst gezeichnet.</li>
       <li>Ecken ziehen, bis die Form passt. Mit dem Plus auf einer Kante entstehen neue Ecken, zum Beispiel für ein L.</li>
       <li>Gartenfläche fixieren, dann Haus, Wege und Beete hinzufügen.</li>
     </ol>
-    <button class="knopf haupt" data-tun="anlegen">Gartenfläche anlegen</button></div>`;
+    <div class="knopfreihe"><button class="knopf haupt" data-tun="anlegen">▭ Mit Maßen anlegen</button>
+    <button class="knopf" data-tun="zeichnen">✎ Selbst zeichnen</button></div>
+    <p class="klein leise" style="margin:8px 0 0">Beim Zeichnen fährst du die Form mit gedrückter Maustaste grob nach oder klickst die Ecken an. Das Raster zeigt die Meter.</p></div>`;
   const nachArt = ART_REIHENFOLGE.map(k => ob.filter(o => o.art === k)).filter(l => l.length).flat();
   return `<div class="karte"><h2>Im Plan</h2><ul class="objliste">
       ${nachArt.map(o => `<li data-waehle="${o.id}">${farbpunkt(o.art)}<span>${esc(o.name)}${o.fest ? " 🔒" : ""}</span><span class="leise">${o.form === "linie" ? m(laengeLinie(umriss(o))) : zahl(flaeche(o) / 10000, 1) + " m²"}</span></li>`).join("")}
@@ -1939,6 +2132,7 @@ function uebersichtHTML() {
 }
 function uebersichtEreignisse(el) {
   const a = $('[data-tun="anlegen"]', el); if (a) a.onclick = gartenflaecheAnlegen;
+  const zb = $('[data-tun="zeichnen"]', el); if (zb) zb.onclick = () => zeichnenStarten("garten");
   $$("[data-waehle]", el).forEach(li => li.onclick = () => {
     const o = objekt(li.dataset.waehle); waehlen(o.id);
     const r = rahmen(o); zeigeBereich(r.x1, r.y1, r.x2 - r.x1, r.y2 - r.y1);
@@ -1957,12 +2151,13 @@ function uebersichtEreignisse(el) {
 /* ---------- Seite „Garten“ ---------- */
 function gartenSeite(main) {
   seitentitel(main, "Garten");
+  G.zeichnen = null;
   if (G.bearbeiten === null) G.bearbeiten = D.garten.objekte.length === 0 || matchMedia("(min-width:900px)").matches;
   main.insertAdjacentHTML("beforeend", `
     <div class="plan-leiste">
       <button class="knopf" id="k-bearbeiten"></button>
       <details class="menue" id="k-hinzu"><summary class="knopf haupt" title="Hinzufügen">＋<span class="lang"> Hinzufügen</span></summary>
-        <div class="menue-liste">${ART_REIHENFOLGE.map(k => `<button data-art="${k}">${farbpunkt(k)}<span>${ARTEN[k].name}${ARTEN[k].hinweis ? `<br><span class="klein leise">${ARTEN[k].hinweis}</span>` : ""}</span></button>`).join("")}</div>
+        <div class="menue-liste"><div class="umschalter neu-modus" id="neu-modus"><button data-m="form" class="${G.neuModus !== "zeichnen" ? "an" : ""}">▭ Fertige Form</button><button data-m="zeichnen" class="${G.neuModus === "zeichnen" ? "an" : ""}">✎ Selbst zeichnen</button></div>${ART_REIHENFOLGE.map(k => `<button data-art="${k}">${farbpunkt(k)}<span>${ARTEN[k].name}${ARTEN[k].hinweis ? `<br><span class="klein leise">${ARTEN[k].hinweis}</span>` : ""}</span></button>`).join("")}</div>
       </details>
       <button class="knopf" id="k-zurueck" title="Rückgängig (Strg+Z)" aria-label="Rückgängig">↶</button>
       <button class="knopf" id="k-vor" title="Wiederholen (Strg+Y)" aria-label="Wiederholen">↷</button>
@@ -1974,10 +2169,11 @@ function gartenSeite(main) {
       <button class="knopf" id="k-merken" title="Aktuelle Ansicht als Bereich merken" aria-label="Ansicht merken">📍<span class="lang"> Merken</span></button>
     </div>
     <div class="garten-layout">
+      <div class="plan-spalte"><div class="zeichnen-leiste verborgen" id="zeichnen-leiste"></div>
       <div class="plan-rahmen">
         <svg id="plan" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" role="img" aria-label="Gartenplan"></svg>
         <div class="massstab" id="massstab"></div>
-      </div>
+      </div></div>
       <div class="panel" id="garten-panel"></div>
     </div>
     <div class="karte bald" style="margin-top:14px"><h2>🌱 Als Nächstes</h2>
@@ -1996,10 +2192,20 @@ function gartenSeite(main) {
     if (v === "alles") allesZeigen();
     else { const b = D.garten.bereiche.find(x => x.id === v); if (b) zeigeBereich(b.x, b.y, b.w, b.h); }
   };
-  $$("#k-hinzu [data-art]").forEach(b => b.onclick = () => {
-    $("#k-hinzu").open = false;
-    if (b.dataset.art === "garten" && !D.garten.objekte.some(o => o.art === "garten")) gartenflaecheAnlegen();
-    else hinzufuegen(b.dataset.art);
+  $$("#neu-modus button").forEach(b => b.onclick = e => {
+    e.preventDefault(); G.neuModus = b.dataset.m;
+    $$("#neu-modus button").forEach(x => x.classList.toggle("an", x === b));
+    $$("#k-hinzu [data-art]").forEach(x => x.disabled = G.neuModus === "zeichnen" && !!ARTEN[x.dataset.art].kreis);
+  });
+  $$("#k-hinzu [data-art]").forEach(b => {
+    b.disabled = G.neuModus === "zeichnen" && !!ARTEN[b.dataset.art].kreis;
+    b.onclick = () => {
+      $("#k-hinzu").open = false;
+      const art = b.dataset.art;
+      if (G.neuModus === "zeichnen" && !ARTEN[art].kreis) zeichnenStarten(art);
+      else if (art === "garten" && !D.garten.objekte.some(o => o.art === "garten")) gartenflaecheAnlegen();
+      else hinzufuegen(art);
+    };
   });
 
   leisteAktualisieren();
