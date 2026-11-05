@@ -304,6 +304,14 @@ input[type=number],select{
 #plan .rechtwinklig{fill:none;stroke:var(--auswahl);stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
 #plan .winkelmass{fill:var(--leise);font-weight:700;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px}
 #plan .winkelmass.genau{fill:var(--auswahl)}
+#plan .kante-hervor{fill:none;stroke:var(--gelb);stroke-width:7px;stroke-linecap:round;opacity:.7;vector-effect:non-scaling-stroke;pointer-events:none}
+#plan .aussenmass{fill:none;stroke:var(--leise);stroke-width:1px;vector-effect:non-scaling-stroke;pointer-events:none}
+#plan .aussenmass-text{fill:var(--leise);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round}
+.panel .formen{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.panel .formen .knopf{min-height:34px;padding:4px 10px;font-size:.88rem}
+.panel .kanten .kantenart{min-height:32px;min-width:36px;padding:2px 8px;font-size:1rem}
+.panel .kanten .kantenart.an{background:var(--gruen-hell);border-color:var(--gruen);color:var(--gruen-dunkel)}
+.panel .kanten .winkel{min-width:34px;text-align:right}
 #plan .griff{fill:#fff;stroke:var(--auswahl);stroke-width:2px;vector-effect:non-scaling-stroke;cursor:move}
 #plan .griff.aktiv{fill:var(--auswahl)}
 #plan .neu{fill:var(--auswahl);opacity:.55;cursor:copy}
@@ -438,7 +446,7 @@ dialog .knopfreihe{justify-content:flex-end}
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.2.1";
+const APP_VERSION = "0.2.2";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1011,7 +1019,9 @@ const SEITEN = {
             <li><b>Rechte Winkel</b> sind mit einem kleinen roten Winkelzeichen markiert. Beim Ziehen einer Ecke steht der Winkel daneben und wird bei genau 90° rot. Bei schrägen Flächen rastet die Ecke im rechten Winkel ein.</li>
             <li>Alles rastet außerdem im Raster ein (Standard 10 cm). Wer am Laptop die Umschalttaste gedrückt hält, zieht frei ohne Einrasten.</li>
           </ul>
-          <p><b>Geschwungen:</b> Beim Haken „Geschwungen“ werden die Kanten einer Fläche zu einer weichen Kurve durch die Ecken – für runde Beete, Rasen oder Teiche. Mehr Punkte ergeben feinere Schwünge.</p>
+          <p><b>Maße jeder Form:</b> Bei ausgewählter Fläche stehen Breite und Tiefe als graue Maßlinien oben und links daneben – auch bei runden Formen. Rechts unter „Breite“ und „Tiefe“ kannst du sie eintippen; die Form wird dann im gleichen Verhältnis größer oder kleiner. Liegt eine gerade Seite am Rand (zum Beispiel am Zaun), bleibt sie dabei stehen.</p>
+          <p><b>Form-Vorlagen:</b> Rechteck, Runde Ecken, Oval und Halbrund (mit gerader Seite links, rechts, oben oder unten). Sie ersetzen die Form und behalten Breite und Tiefe. Beispiel halbrunde Terrasse am Zaun: Terrasse anlegen, an den Zaun schieben, „Halbrund – gerade Seite rechts“ wählen, dann Breite und Tiefe eintippen.</p>
+          <p><b>Gerade oder gebogen – pro Kante:</b> Unter „Kanten und Ecken“ hat jede Kante ein Zeichen: — für gerade, ⌒ für gebogen. Antippen schaltet um. Fährst du mit der Maus über eine Zeile, leuchtet die Kante im Plan gelb. Zwischen zwei gebogenen Kanten läuft die Kurve weich durch, neben einer geraden Kante entsteht eine Ecke. „Alle Kanten geschwungen“ schaltet alle auf einmal um. Mehr Punkte ergeben feinere Schwünge.</p>
           <p><b>Wege:</b> „Weg (Fläche)“ ist ein Rechteck. „Weg (Linie)“ zeichnest du wie eine Linie mit Punkten und fester Breite, auf Wunsch geschwungen. Das Plus an den Enden verlängert den Weg.</p>
           <p><b>Hinzufügen:</b> Über „＋ Hinzufügen“ kommen Haus, Wege, Terrasse, Rasen, Beete, Hochbeete, Gewächshaus, Kübel und Sonstiges dazu. Neue Flächen erscheinen in der Mitte des sichtbaren Ausschnitts. Flächen lassen sich drehen, duplizieren und löschen.</p>
           <p><b>Ansehen und Bearbeiten:</b> Ist „Bearbeiten“ aus, kannst du nichts verändern. Antippen zeigt dann nur Name und Größe. Am Handy ist Bearbeiten deshalb anfangs aus.</p>
@@ -1091,44 +1101,59 @@ function einrasten(v, r) { return Math.round(v / r) * r; }
 const editierbar = o => !!(o && G.bearbeiten && !o.fest);
 
 /* ---------- Geschwungene Linien (Catmull-Rom als Bézier) ---------- */
-function bezierTeile(p, geschlossen) {
-  const n = p.length, teile = [];
-  const pt = i => geschlossen ? p[(i + n) % n] : p[Math.max(0, Math.min(n - 1, i))];
-  const anzahl = geschlossen ? n : n - 1;
-  for (let i = 0; i < anzahl; i++) {
-    const p0 = pt(i - 1), p1 = pt(i), p2 = pt(i + 1), p3 = pt(i + 2);
-    teile.push([p1, [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6], p2]);
+function kanteRund(o, i) { return Array.isArray(o.rund) ? !!o.rund[i] : !!o.rund; }
+function kantenAnzahl(o) { return o.form === "poly" ? o.punkte.length : o.punkte.length - 1; }
+function rundListe(o) { return Array.from({ length: kantenAnzahl(o) }, (_, i) => kanteRund(o, i)); }
+function rundSetzen(o, liste) {
+  if (liste.length && liste.every(x => x)) o.rund = true;
+  else if (!liste.some(x => x)) delete o.rund;
+  else o.rund = liste;
+}
+/* Abschnitte einer Form: gerade Strecke oder Bézier-Kurve.
+   An einer Ecke zwischen zwei runden Kanten geht die Kurve weich durch,
+   neben einer geraden Kante entsteht eine Ecke. */
+function teile(o) {
+  const p = o.punkte, n = p.length, zu = o.form === "poly", anz = kantenAnzahl(o), R = rundListe(o);
+  const pt = i => zu ? p[(i + n) % n] : p[Math.max(0, Math.min(n - 1, i))];
+  const out = [];
+  for (let i = 0; i < anz; i++) {
+    const p1 = pt(i), p2 = pt(i + 1);
+    if (!R[i]) { out.push({ a: p1, b: p2, bez: null }); continue; }
+    const vorRund = zu ? R[(i - 1 + anz) % anz] : i > 0 && R[i - 1];
+    const nachRund = zu ? R[(i + 1) % anz] : i < anz - 1 && R[i + 1];
+    const p0 = vorRund ? pt(i - 1) : p1, p3 = nachRund ? pt(i + 2) : p2;
+    out.push({ a: p1, b: p2, bez: [p1, [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6], p2] });
   }
-  return teile;
+  return out;
 }
 function bezierPunkt([a, b, c, d], t) {
   const u = 1 - t;
   return [u * u * u * a[0] + 3 * u * u * t * b[0] + 3 * u * t * t * c[0] + t * t * t * d[0],
           u * u * u * a[1] + 3 * u * u * t * b[1] + 3 * u * t * t * c[1] + t * t * t * d[1]];
 }
-function pfadD(p, geschlossen, rund) {
-  if (!rund || p.length < 3) return "M" + p.map(q => q.join(" ")).join("L") + (geschlossen ? "Z" : "");
-  return "M" + p[0].join(" ") + bezierTeile(p, geschlossen).map(([, b, c, d]) => `C${b.join(" ")} ${c.join(" ")} ${d.join(" ")}`).join("") + (geschlossen ? "Z" : "");
+function pfadD(o) {
+  const p = o.punkte;
+  return "M" + p[0].join(" ") + teile(o).map(t => t.bez ? `C${t.bez[1].join(" ")} ${t.bez[2].join(" ")} ${t.b.join(" ")}` : `L${t.b.join(" ")}`).join("") + (o.form === "poly" ? "Z" : "");
 }
-function abtasten(p, geschlossen, rund, je = 12) {
-  if (!rund || p.length < 3) return geschlossen ? p : p.slice();
+function abtasten(o, je = 12) {
   const out = [];
-  bezierTeile(p, geschlossen).forEach(t => { for (let k = 0; k < je; k++) out.push(bezierPunkt(t, k / je)); });
-  if (!geschlossen) out.push(p[p.length - 1]);
+  teile(o).forEach(t => { if (t.bez) for (let k = 0; k < je; k++) out.push(bezierPunkt(t.bez, k / je)); else out.push(t.a); });
+  if (o.form !== "poly") out.push(o.punkte[o.punkte.length - 1]);
   return out;
 }
-/* Mitte eines Abschnitts (auf der Kurve, falls geschwungen) */
+/* Mitte eines Abschnitts (auf der Kurve, falls gebogen) */
 function abschnittMitte(o, i) {
-  const p = o.punkte, geschlossen = o.form === "poly", n = p.length;
-  if (o.rund && n >= 3) return bezierPunkt(bezierTeile(p, geschlossen)[i], 0.5);
-  const a = p[i], b = p[(i + 1) % n];
-  return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  const t = teile(o)[i];
+  return t.bez ? bezierPunkt(t.bez, 0.5) : [(t.a[0] + t.b[0]) / 2, (t.a[1] + t.b[1]) / 2];
 }
+/* Beim Einfügen/Entfernen von Punkten die Kurven-Liste mitführen */
+function rundEinfuegen(o, i, vorlage) { if (Array.isArray(o.rund)) o.rund.splice(i, 0, !!o.rund[vorlage]); }
+function rundEntfernen(o, i) { if (Array.isArray(o.rund)) { o.rund.splice(Math.min(i, o.rund.length - 1), 1); rundSetzen(o, o.rund); } }
 
 /* ---------- Geometrie ---------- */
 function umriss(o) {        // Umriss als Punktliste (Kreise und Kurven abgetastet)
   if (o.form === "kreis") return Array.from({ length: 36 }, (_, k) => [o.x + o.r * Math.cos(k * Math.PI / 18), o.y + o.r * Math.sin(k * Math.PI / 18)]);
-  return abtasten(o.punkte, o.form === "poly", o.rund);
+  return abtasten(o);
 }
 function laengeLinie(pts) { let l = 0; for (let i = 1; i < pts.length; i++) l += abstand(pts[i - 1], pts[i]); return l; }
 function flaeche(o) {
@@ -1183,7 +1208,7 @@ function punktIn(o, pt) {
 }
 const abstand = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 function istRechteck(o) {
-  if (o.form !== "poly" || o.rund || o.punkte.length !== 4) return false;
+  if (o.form !== "poly" || o.rund || o.punkte.length !== 4) return false; // o.rund: true oder Liste
   const p = o.punkte;
   const h = (a, b) => a[1] === b[1], v = (a, b) => a[0] === b[0];
   return (h(p[0], p[1]) && v(p[1], p[2]) && h(p[2], p[3]) && v(p[3], p[0])) ||
@@ -1308,7 +1333,7 @@ function eckeFangen(o, i, w, e) {
   if (fx !== null) { x = fx; G.fuehrung.x = fx; }
   if (fy !== null) { y = fy; G.fuehrung.y = fy; }
   // Rechter Winkel bei schrägen Kanten: auf die Senkrechte zur Nachbarkante ziehen
-  if (o.form === "poly" && !o.rund && fx === null && fy === null && o.punkte.length >= 4) {
+  if (o.form === "poly" && !kanteRund(o, i) && !kanteRund(o, (i - 1 + o.punkte.length) % o.punkte.length) && fx === null && fy === null && o.punkte.length >= 4) {
     const p = o.punkte, n = p.length;
     for (const [nb, nb2] of [[p[(i - 1 + n) % n], p[(i - 2 + n) % n]], [p[(i + 1) % n], p[(i + 2) % n]]]) {
       const d = [nb[0] - nb2[0], nb[1] - nb2[1]], l2 = d[0] * d[0] + d[1] * d[1];
@@ -1341,10 +1366,10 @@ function formElement(o, kl, s) {
   const id = `data-rolle="obj" data-id="${o.id}"`;
   if (o.form === "kreis") return `<circle class="${kl}" ${id} cx="${o.x}" cy="${o.y}" r="${o.r}"/>`;
   if (o.form === "linie") {
-    const d = pfadD(o.punkte, false, o.rund), gew = o.id === G.auswahl;
+    const d = pfadD(o), gew = o.id === G.auswahl;
     return `<g ${id} class="pfad-gruppe"><path class="pfad-rand${gew ? " gewaehlt" : ""}" d="${d}" stroke-width="${o.breite + (gew ? 5 : 3) / s}"/><path class="pfad-innen" d="${d}" stroke-width="${o.breite}"/></g>`;
   }
-  if (o.rund) return `<path class="${kl}" ${id} d="${pfadD(o.punkte, true, true)}"/>`;
+  if (o.rund) return `<path class="${kl}" ${id} d="${pfadD(o)}"/>`;
   return `<polygon class="${kl}" ${id} points="${o.punkte.map(p => p.join(",")).join(" ")}"/>`;
 }
 
@@ -1417,7 +1442,7 @@ function planZeichnen() {
       for (let i = 0; i < abschnitte; i++) {
         const a = p[i], b = p[(i + 1) % n], laenge = abstand(a, b);
         const [mx, my] = abschnittMitte(o, i);
-        if (zu && !o.rund && laenge * s > 34) {
+        if (zu && !kanteRund(o, i) && laenge * s > 34) {
           const nx = (b[1] - a[1]) / (laenge || 1) * vz, ny = -(b[0] - a[0]) / (laenge || 1) * vz;
           const text = m(laenge), versatz = (11 + Math.abs(nx) * text.length * 3.4 + Math.abs(ny) * 3) / s;
           html += `<text class="kantenmass" x="${mx + nx * versatz}" y="${my + ny * versatz}" font-size="${11.5 / s}" text-anchor="middle" dominant-baseline="middle">${text}</text>`;
@@ -1431,7 +1456,8 @@ function planZeichnen() {
         });
       }
       // Rechte Winkel markieren
-      if (zu && !o.rund) p.forEach((b, i) => {
+      if (zu) p.forEach((b, i) => {
+        if (kanteRund(o, i) || kanteRund(o, (i - 1 + n) % n)) return;
         const w = winkelAn(p, i);
         if (w === null || Math.abs(w - 90) > 0.3) return;
         const a = p[(i - 1 + n) % n], c = p[(i + 1) % n], k = 11 / s;
@@ -1439,15 +1465,28 @@ function planZeichnen() {
         html += `<path class="rechtwinklig" d="M${b[0] + u[0] * k} ${b[1] + u[1] * k}L${b[0] + (u[0] + vv[0]) * k} ${b[1] + (u[1] + vv[1]) * k}L${b[0] + vv[0] * k} ${b[1] + vv[1] * k}"/>`;
       });
       // Winkel an der gerade gezogenen Ecke
-      if (zu && !o.rund && G.zug && G.zug.art === "ecke") {
+      if (zu && G.zug && G.zug.art === "ecke" && !kanteRund(o, G.zug.i) && !kanteRund(o, (G.zug.i - 1 + n) % n)) {
         const w = winkelAn(p, G.zug.i), q = p[G.zug.i];
         if (w !== null) html += `<text class="winkelmass${Math.abs(w - 90) < 0.3 ? " genau" : ""}" x="${q[0] + 12 / s}" y="${q[1] - 14 / s}" font-size="${12 / s}">${zahl(w, Math.abs(w - Math.round(w)) < 0.05 ? 0 : 1)}°</text>`;
       }
+      if (G.kanteHervor !== null && G.kanteHervor !== undefined && G.kanteHervor < abschnitte) {
+        const t = teile(o)[G.kanteHervor];
+        html += `<path class="kante-hervor" d="M${t.a.join(" ")}${t.bez ? `C${t.bez[1].join(" ")} ${t.bez[2].join(" ")} ${t.b.join(" ")}` : `L${t.b.join(" ")}`}"/>`;
+      }
+      if (zu && !istRechteck(o)) html += aussenmasse(o, s);
       p.forEach((q, i) => { html += `<circle class="griff${G.ecke === i ? " aktiv" : ""}" data-rolle="griff" data-i="${i}" cx="${q[0]}" cy="${q[1]}" r="${rg}"/>`; });
     }
   }
   svg.innerHTML = html;
   massstabZeichnen();
+}
+/* Breite und Tiefe als Maßlinien oben und links neben der Fläche */
+function aussenmasse(o, s) {
+  const r = rahmen(o), a = 46 / s, t = 4 / s, fs = 11.5 / s;
+  const yo = r.y1 - a, xl = r.x1 - a;
+  return `<path class="aussenmass" d="M${r.x1} ${yo}H${r.x2}M${r.x1} ${yo - t}V${yo + t}M${r.x2} ${yo - t}V${yo + t}M${xl} ${r.y1}V${r.y2}M${xl - t} ${r.y1}H${xl + t}M${xl - t} ${r.y2}H${xl + t}"/>
+    <text class="aussenmass-text" x="${(r.x1 + r.x2) / 2}" y="${yo - 6 / s}" font-size="${fs}" text-anchor="middle">${m(r.x2 - r.x1)}</text>
+    <text class="aussenmass-text" x="${xl - 6 / s}" y="${(r.y1 + r.y2) / 2}" font-size="${fs}" text-anchor="end" dominant-baseline="middle">${m(r.y2 - r.y1)}</text>`;
 }
 function plusGriff(rolle, daten, x, y, rg) {
   return `<g data-rolle="${rolle}" ${daten}><circle class="neu" cx="${x}" cy="${y}" r="${rg * 0.85}"/><path class="neu-plus" d="M${x - rg * 0.45} ${y}H${x + rg * 0.45}M${x} ${y - rg * 0.45}V${y + rg * 0.45}"/></g>`;
@@ -1534,7 +1573,7 @@ function eckeEntfernen(id, i) {
   const min = o.form === "linie" ? 2 : 3;
   if (o.punkte.length <= min) { melden(o.form === "linie" ? "Ein Weg braucht mindestens zwei Punkte." : "Eine Fläche braucht mindestens drei Ecken."); return; }
   const vorher = stand();
-  o.punkte.splice(i, 1); G.ecke = null;
+  o.punkte.splice(i, 1); rundEntfernen(o, i); G.ecke = null;
   merken(vorher); planZeichnen(); panelZeichnen();
 }
 function festSetzen(id, fest) {
@@ -1573,12 +1612,14 @@ function planEreignisse() {
     } else if (ed && rolle === "neu") {
       const i = +t.dataset.i, r = rasterwert(e), vorher = stand(), mitte = abschnittMitte(o, i);
       o.punkte.splice(i + 1, 0, [einrasten(mitte[0], r), einrasten(mitte[1], r)]);
+      rundEinfuegen(o, i + 1, i);
       G.ecke = i + 1;
       G.zug = { art: "ecke", i: i + 1, vorher, start, bewegt: true };
       planZeichnen();
     } else if (ed && rolle === "verlaengern") {
       const vorher = stand(), r = rasterwert(e), neu = [einrasten(w[0], r), einrasten(w[1], r)];
-      if (t.dataset.ende === "0") { o.punkte.unshift(neu); G.ecke = 0; } else { o.punkte.push(neu); G.ecke = o.punkte.length - 1; }
+      if (t.dataset.ende === "0") { o.punkte.unshift(neu); rundEinfuegen(o, 0, 0); G.ecke = 0; }
+      else { o.punkte.push(neu); rundEinfuegen(o, o.punkte.length - 2, o.punkte.length - 3); G.ecke = o.punkte.length - 1; }
       G.zug = { art: "ecke", i: G.ecke, vorher, start, bewegt: true };
       planZeichnen();
     } else if (ed && rolle === "radius") {
@@ -1726,20 +1767,40 @@ function panelZeichnen() {
     h += `<label>Durchmesser</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-feld="durchmesser" value="${(o.r * 2 / 100).toFixed(2)}"><span>m</span></div>`;
   } else if (form === "linie") {
     h += `<label>Breite des Wegs</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-feld="wegbreite" value="${(o.breite / 100).toFixed(2)}"><span>m</span></div>`;
-  } else if (istRechteck(o)) {
+  } else {
+    const recht = istRechteck(o);
     h += `<div class="zwei">
-      <div><label>Breite</label><div class="feld-einheit"><input type="number" step="0.05" min="0.05" inputmode="decimal" data-feld="breite" value="${((r.x2 - r.x1) / 100).toFixed(2)}"><span>m</span></div></div>
-      <div><label>Tiefe</label><div class="feld-einheit"><input type="number" step="0.05" min="0.05" inputmode="decimal" data-feld="tiefe" value="${((r.y2 - r.y1) / 100).toFixed(2)}"><span>m</span></div></div></div>`;
+      <div><label>Breite${recht ? "" : " (außen)"}</label><div class="feld-einheit"><input type="number" step="0.05" min="0.05" inputmode="decimal" data-feld="breite" value="${((r.x2 - r.x1) / 100).toFixed(2)}"><span>m</span></div></div>
+      <div><label>Tiefe${recht ? "" : " (außen)"}</label><div class="feld-einheit"><input type="number" step="0.05" min="0.05" inputmode="decimal" data-feld="tiefe" value="${((r.y2 - r.y1) / 100).toFixed(2)}"><span>m</span></div></div></div>
+      ${recht ? "" : `<p class="klein leise" style="margin:4px 0 0">Ändert die ganze Form im gleichen Verhältnis. Eine gerade Seite am Rand (z. B. am Zaun) bleibt dabei stehen.</p>`}
+      <label>Form-Vorlage</label>
+      <div class="formen">
+        <button class="knopf" data-vorlage="rechteck" title="Rechteck">▭ Rechteck</button>
+        <button class="knopf" data-vorlage="abgerundet" title="Rechteck mit runden Ecken">▢ Runde Ecken</button>
+        <button class="knopf" data-vorlage="oval" title="Oval bzw. Kreis">⬭ Oval</button>
+      </div>
+      <select data-vorlage-halbrund aria-label="Halbrund mit gerader Seite">
+        <option value="">◗ Halbrund – gerade Seite …</option>
+        <option value="links">gerade Seite links</option><option value="rechts">gerade Seite rechts</option>
+        <option value="oben">gerade Seite oben</option><option value="unten">gerade Seite unten</option>
+      </select>
+      <p class="klein leise" style="margin:4px 0 0">Vorlagen ersetzen die Form und behalten Breite und Tiefe.</p>`;
   }
-  if (form !== "kreis") h += `<label class="schalter"><input type="checkbox" data-feld="rund" ${o.rund ? "checked" : ""}> Geschwungen (Kanten als weiche Kurve)</label>`;
+  if (form !== "kreis") h += `<label class="schalter"><input type="checkbox" data-feld="rund" ${o.rund === true ? "checked" : ""}> ${form === "linie" ? "Geschwungen" : "Alle Kanten geschwungen"}</label>`;
   h += `<p class="klein leise" style="margin:10px 0 0">${groesseText(o)}</p>
     <div class="knopfreihe"><button class="knopf" data-tun="fixieren">🔒 Fixieren</button></div>
     ${o.art === "garten" || o.art === "haus" ? `<p class="klein leise" style="margin:6px 0 0">Tipp: Passt die Form, fixiere sie. Dann verrutscht nichts, während du Beete platzierst.</p>` : ""}
   </div>`;
-  if (form === "poly" && !o.rund) {
-    h += `<div class="karte"><details ${istRechteck(o) ? "" : "open"}><summary><b>Kanten und Ecken</b></summary>
-      <p class="klein leise">Länge eintippen: Die zweite Ecke der Kante rückt auf das genaue Maß.</p>
-      <div class="kanten">${o.punkte.map((p, i) => { const w = winkelAn(o.punkte, i); return `<span>Kante ${i + 1}</span><div class="feld-einheit"><input type="number" step="0.01" min="0.01" inputmode="decimal" data-kante="${i}" value="${(abstand(p, o.punkte[(i + 1) % o.punkte.length]) / 100).toFixed(2)}"><span>m</span><span class="klein leise" title="Winkel an Ecke ${i + 1}">${w === null ? "" : (Math.abs(w - 90) < 0.3 ? "∟ 90°" : zahl(w, 0) + "°")}</span></div>`; }).join("")}</div>
+  if (form === "poly") {
+    const n = o.punkte.length;
+    h += `<div class="karte"><details ${istRechteck(o) && !G.kantenOffen ? "" : "open"} id="kanten-details"><summary><b>Kanten und Ecken</b></summary>
+      <p class="klein leise">Jede Kante kann gerade (—) oder gebogen (⌒) sein: auf das Zeichen tippen. Länge eintippen: Die zweite Ecke rückt auf das genaue Maß. Die Kante unter dem Mauszeiger bzw. Finger wird im Plan hervorgehoben.</p>
+      <div class="kanten">${o.punkte.map((p, i) => {
+        const rund = kanteRund(o, i), eckeGerade = !rund && !kanteRund(o, (i - 1 + n) % n), w = eckeGerade ? winkelAn(o.punkte, i) : null;
+        return `<span data-kante-zeile="${i}">Kante ${i + 1}</span><div class="feld-einheit" data-kante-zeile="${i}">
+          <input type="number" step="0.01" min="0.01" inputmode="decimal" data-kante="${i}" value="${(abstand(p, o.punkte[(i + 1) % n]) / 100).toFixed(2)}" title="${rund ? "Abstand der Endpunkte (gerade gemessen)" : "Länge"}"><span>m</span>
+          <button class="knopf kantenart${rund ? " an" : ""}" data-kante-rund="${i}" title="${rund ? "Gebogen – tippen für gerade" : "Gerade – tippen für gebogen"}">${rund ? "⌒" : "—"}</button>
+          <span class="klein leise winkel" title="Winkel an Ecke ${i + 1}">${w === null ? "" : (Math.abs(w - 90) < 0.3 ? "∟90°" : zahl(w, 0) + "°")}</span></div>`; }).join("")}</div>
       ${G.ecke !== null ? `<div class="knopfreihe"><button class="knopf gefahr" data-tun="ecke-weg">Ecke ${G.ecke + 1} entfernen</button></div>` : ""}
     </details></div>`;
   } else if (form !== "kreis" && G.ecke !== null) {
@@ -1755,7 +1816,47 @@ function panelZeichnen() {
       "Ziehen verschiebt die Fläche. Ecken ziehen ändert die Form, das Plus auf einer Kante fügt eine Ecke ein, Doppelklick auf eine Ecke entfernt sie."}
       Blau gestrichelt: Abstand zur nächsten Kante. Ecken rasten an anderen Ecken ein (rote Hilfslinie). Umschalttaste = frei, ohne Einrasten.</p>`;
   el.innerHTML = h;
+  const cb = $('[data-feld="rund"]', el); if (cb && Array.isArray(o.rund)) cb.indeterminate = true;
   panelEreignisse(el, o);
+}
+
+/* Breite/Tiefe einer beliebigen Fläche ändern (proportional). Eine gerade Kante am Rand bleibt stehen. */
+function skalieren(o, neuB, neuT) {
+  const r = rahmen(o), b = r.x2 - r.x1 || 1, t = r.y2 - r.y1 || 1;
+  const fx = neuB ? neuB / b : 1, fy = neuT ? neuT / t : 1;
+  const tl = teile(o), nah = (a, c) => Math.abs(a - c) < 0.5;
+  const amRand = test => tl.some(k => !k.bez && test(k.a) && test(k.b));
+  const ax = amRand(q => nah(q[0], r.x2)) && !amRand(q => nah(q[0], r.x1)) ? r.x2 : r.x1;
+  const ay = amRand(q => nah(q[1], r.y2)) && !amRand(q => nah(q[1], r.y1)) ? r.y2 : r.y1;
+  o.punkte = o.punkte.map(([x, y]) => [Math.round(ax + (x - ax) * fx), Math.round(ay + (y - ay) * fy)]);
+}
+
+/* Fertige Formen, die Breite und Tiefe der bisherigen Fläche übernehmen */
+function bogenPunkte(cx, cy, rx, ry, von, bis, schritte) {
+  return Array.from({ length: schritte + 1 }, (_, k) => {
+    const w = (von + (bis - von) * k / schritte) * Math.PI / 180;
+    return [Math.round(cx + rx * Math.cos(w)), Math.round(cy + ry * Math.sin(w))];
+  });
+}
+function formVorlage(o, art, seite) {
+  const r = rahmen(o), x1 = Math.round(r.x1), y1 = Math.round(r.y1), x2 = Math.round(r.x2), y2 = Math.round(r.y2);
+  const w = x2 - x1, h = y2 - y1, cx = (x1 + x2) / 2, cy = (y1 + y2) / 2;
+  let p, rund;
+  if (art === "rechteck") { p = [[x1, y1], [x2, y1], [x2, y2], [x1, y2]]; rund = [false, false, false, false]; }
+  else if (art === "oval") { p = bogenPunkte(cx, cy, w / 2, h / 2, 0, 315, 7); rund = p.map(() => true); }
+  else if (art === "abgerundet") {
+    const k = Math.round(Math.min(w, h) * 0.2);
+    p = [...bogenPunkte(x2 - k, y1 + k, k, k, 270, 360, 2), ...bogenPunkte(x2 - k, y2 - k, k, k, 0, 90, 2),
+         ...bogenPunkte(x1 + k, y2 - k, k, k, 90, 180, 2), ...bogenPunkte(x1 + k, y1 + k, k, k, 180, 270, 2)];
+    rund = [true, true, false, true, true, false, true, true, false, true, true, false];
+  } else if (art === "halbrund") {
+    const b = { rechts: [x2, cy, w, h / 2, 270, 90], links: [x1, cy, w, h / 2, -90, 90],
+                oben: [cx, y1, w / 2, h, 0, 180], unten: [cx, y2, w / 2, h, 180, 360] }[seite];
+    p = bogenPunkte(b[0], b[1], b[2], b[3], b[4], b[5], 6);
+    rund = [...p.slice(1).map(() => true), false];
+  }
+  if (!p) return;
+  o.punkte = p; rundSetzen(o, rund); G.ecke = null;
 }
 
 function panelEreignisse(el, o) {
@@ -1770,13 +1871,29 @@ function panelEreignisse(el, o) {
       else if (feld === "durchmesser" && zahlwert > 0) o.r = Math.round(zahlwert * 50);
       else if (feld === "wegbreite" && zahlwert > 0) o.breite = Math.round(zahlwert * 100);
       else if ((feld === "breite" || feld === "tiefe") && zahlwert > 0) {
-        const r = rahmen(o);
-        const b = feld === "breite" ? Math.round(zahlwert * 100) : r.x2 - r.x1;
-        const t = feld === "tiefe" ? Math.round(zahlwert * 100) : r.y2 - r.y1;
-        o.punkte = [[r.x1, r.y1], [r.x1 + b, r.y1], [r.x1 + b, r.y1 + t], [r.x1, r.y1 + t]];
+        if (istRechteck(o)) {
+          const r = rahmen(o);
+          const b = feld === "breite" ? Math.round(zahlwert * 100) : r.x2 - r.x1;
+          const t = feld === "tiefe" ? Math.round(zahlwert * 100) : r.y2 - r.y1;
+          o.punkte = [[r.x1, r.y1], [r.x1 + b, r.y1], [r.x1 + b, r.y1 + t], [r.x1, r.y1 + t]];
+        } else skalieren(o, feld === "breite" ? zahlwert * 100 : null, feld === "tiefe" ? zahlwert * 100 : null);
       }
     });
   }));
+  $$("[data-vorlage]", el).forEach(k => k.onclick = () => aendern(() => formVorlage(o, k.dataset.vorlage)));
+  const hb = $("[data-vorlage-halbrund]", el);
+  if (hb) hb.onchange = () => { if (hb.value) aendern(() => formVorlage(o, "halbrund", hb.value)); };
+  $$("[data-kante-rund]", el).forEach(k => k.onclick = () => {
+    const i = +k.dataset.kanteRund; G.kantenOffen = true;
+    aendern(() => { const l = rundListe(o); l[i] = !l[i]; rundSetzen(o, l); });
+  });
+  $$("[data-kante-zeile]", el).forEach(z => {
+    const an = () => { G.kanteHervor = +z.dataset.kanteZeile; planZeichnen(); };
+    const aus = () => { G.kanteHervor = null; planZeichnen(); };
+    z.addEventListener("mouseenter", an); z.addEventListener("mouseleave", aus);
+    z.addEventListener("focusin", an); z.addEventListener("focusout", aus);
+  });
+  const det = $("#kanten-details", el); if (det) det.addEventListener("toggle", () => { G.kantenOffen = det.open; });
   $$("[data-kante]", el).forEach(f => f.addEventListener("change", () => {
     const l = parseFloat(String(f.value).replace(",", ".")); if (!(l > 0)) return;
     const i = +f.dataset.kante, n = o.punkte.length, a = o.punkte[i], b = o.punkte[(i + 1) % n], alt = abstand(a, b) || 1;
