@@ -36,6 +36,7 @@
   --schatten:0 1px 2px rgba(60,50,20,.06),0 4px 14px rgba(60,50,20,.06);
   --radius:14px;
   --marke:var(--gruen-dunkel);
+  --t-vor:#e0a33a; --t-saat:#8cc63f; --t-pflanz:#3f8a2a; --t-ernte:#c8234a;
 }
 [data-theme="dark"]{
   --bg:#141812; --karte:#1d2219; --karte2:#252b20; --linie:#333b2c;
@@ -45,6 +46,7 @@
   --blau:#7fb5df; --blau-hell:#1d2c38; --gelb:#e2b25c; --gelb-hell:#3a2f1a;
   --schatten:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
   --marke:#a6d98a;
+  --t-vor:#e2b25c; --t-saat:#9bd25a; --t-pflanz:#5fae3e; --t-ernte:#ef6a8b;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -211,6 +213,76 @@ input[type=number],select{
   min-height:40px;padding:6px 10px;border-radius:10px;border:1px solid var(--linie);
   background:var(--karte);color:var(--text);font:inherit;width:100%;
 }
+
+/* ============ WISSEN / LEXIKON ============ */
+.unternav{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.unternav a{padding:8px 14px;border-radius:99px;border:1px solid var(--linie);background:var(--karte);text-decoration:none;color:var(--text);font-weight:550}
+.unternav a.an{background:var(--gruen-hell);border-color:var(--gruen-hell);color:var(--gruen-dunkel)}
+.lex-werkzeug{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
+.lex-werkzeug input[type=search]{flex:1 1 220px;width:auto}
+.schalter-klein{display:inline-flex;align-items:center;gap:6px;font-size:.9rem;cursor:pointer}
+.legende{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.8rem;color:var(--leise);margin:4px 0 10px}
+.legende span{display:inline-flex;align-items:center;gap:5px}
+.legende i,.kal-gruppe-titel i{display:inline-block;width:12px;height:12px;border-radius:3px}
+.lex-raster{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.lex-karte{display:block;background:var(--karte);border:1px solid var(--linie);border-radius:12px;padding:10px 12px;text-decoration:none;color:var(--text);box-shadow:var(--schatten)}
+.lex-karte:hover{border-color:var(--gruen)}
+.lex-karte .kopf{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.p-badge{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;color:#fff;font-weight:700;font-size:.85rem;text-shadow:0 1px 1px rgba(0,0,0,.25)}
+.p-badge.gross{width:52px;height:52px;font-size:1.2rem}
+.jahr{display:grid;grid-template-columns:repeat(12,1fr);gap:2px}
+.jm{display:flex;flex-direction:column;gap:1px;min-height:18px;padding:1px;border-radius:3px;background:var(--karte2)}
+.jm i{flex:1;border-radius:2px;min-height:3px}
+.jm.jetzt{outline:1.5px solid var(--text);outline-offset:0}
+.jahr.klein .jm{min-height:14px}
+.zurueck{display:inline-block;margin:0 0 10px;text-decoration:none;font-weight:550}
+.lex-kopf{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.lex-kopf h2{margin:0}
+.kal-tabelle{display:grid;grid-template-columns:auto repeat(12,1fr);gap:3px;align-items:center}
+.kal-mon{text-align:center;font-size:.75rem;color:var(--leise)}
+.kal-mon.jetzt{color:var(--text);font-weight:700}
+.kal-name{font-size:.82rem;padding-right:6px;white-space:nowrap}
+.kal-zelle{height:20px;border-radius:4px;background:var(--karte2)}
+.kal-zelle.jetzt{outline:1.5px solid var(--text)}
+.kal-text{margin-top:10px;display:grid;gap:2px}
+.steckbrief{display:grid;grid-template-columns:minmax(110px,auto) 1fr;gap:6px 12px;font-size:.92rem}
+.sb-l{color:var(--leise)}
+.chip{display:inline-block;margin:0 6px 6px 0;padding:4px 10px;border-radius:99px;background:var(--karte2);border:1px solid var(--linie);color:var(--text);text-decoration:none;font-size:.88rem}
+.chip:hover{border-color:var(--gruen)}
+.chip.gut{background:var(--gruen-hell);border-color:transparent;color:var(--gruen-dunkel)}
+.chip.schlecht{background:var(--rot-hell);border-color:transparent;color:var(--rot)}
+.chip.umstritten{background:var(--gelb-hell);border-color:transparent;color:var(--gelb)}
+.chip.mehr{font-weight:650}
+.nb-gruppe{margin-bottom:6px}
+.nb-titel{font-size:.82rem;font-weight:650;color:var(--leise);margin-bottom:4px}
+.hinweis-karte{background:var(--gelb-hell);border-color:transparent}
+.hinweis-karte ul{margin:0;padding-left:18px}
+.hinweis-karte li{margin:4px 0}
+ul.quellen{margin:0 0 10px;padding-left:18px}
+ul.quellen li{margin:3px 0}
+textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit;resize:vertical}
+.monatswahl{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.monatswahl h2{min-width:110px;text-align:center}
+.kal-gruppe{margin:8px 0}
+.kal-gruppe-titel{display:flex;align-items:center;gap:6px;font-weight:650;margin-bottom:6px}
+.jahres-tabelle{display:grid;gap:3px}
+.jt-kopf,.jt-zeile{display:grid;grid-template-columns:120px 1fr;gap:8px;align-items:center}
+.jt-kopf{font-size:.72rem;color:var(--leise);text-align:center;position:sticky;top:calc(58px + env(safe-area-inset-top));z-index:2;background:var(--karte);padding:4px 0}
+@media (min-width:900px){.jt-kopf{top:62px}}
+.jt-kopf span.jetzt{color:var(--text);font-weight:700}
+.jt-zeile{text-decoration:none;color:var(--text);padding:2px 0;border-radius:6px}
+.jt-zeile:hover{background:var(--karte2)}
+.jt-name{font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:520px){.jt-kopf,.jt-zeile{grid-template-columns:86px 1fr}.jt-kopf .jahr span{font-size:0}.jt-kopf .jahr span::first-letter{font-size:.72rem}}
+.formular label{display:block;margin:0 0 10px;font-weight:550}
+.zwei-spalten{display:grid;gap:0 14px}
+@media (min-width:640px){.zwei-spalten{grid-template-columns:1fr 1fr}}
+.monatsraster{display:grid;grid-template-columns:auto repeat(12,1fr);gap:3px;align-items:center;margin:4px 0 14px}
+.mcheck{display:block;margin:0!important;cursor:pointer}
+.mcheck input{position:absolute;opacity:0;pointer-events:none}
+.mcheck span{display:block;height:26px;border-radius:5px;background:var(--karte2);border:1px solid var(--linie)}
+.mcheck input:checked + span{background:var(--f);border-color:transparent}
+.mcheck input:focus-visible + span{outline:2px solid var(--gruen)}
 
 /* ============ GARTENPLAN ============ */
 :root{
@@ -461,12 +533,13 @@ dialog .knopfreihe{justify-content:flex-end}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
+<script src="pflanzen.js"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.2.4";
+const APP_VERSION = "0.3.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -496,6 +569,8 @@ function leereDaten() {
     sorten: [],        // eigene Sorten mit Bewertung
     saatgut: [],       // Saatgutvorrat
     rezepte: [],       // eigene Rezeptsammlung
+    eigenePflanzen: [], // selbst angelegte Pflanzen fürs Lexikon
+    pflanzenNotizen: {}, // eigene Notizen je Pflanze (id → Text)
     geaendert: null,
   };
 }
@@ -860,6 +935,304 @@ async function wetterKarte(ziel) {
 /* ============================================================
    SEITEN
    ============================================================ */
+/* ============================================================
+   WISSEN: PFLANZENLEXIKON, KALENDER, QUELLEN
+   Die Pflanzendaten stehen in pflanzen.js (PFLANZEN, FAMILIEN, MISCHKULTUR, QUELLEN).
+   Eigene Pflanzen und Notizen liegen in den Nutzerdaten (D.eigenePflanzen, D.pflanzenNotizen).
+   ============================================================ */
+const LEX_OK = typeof PFLANZEN !== "undefined";
+const MON_KURZ = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
+const TAETIGKEITEN = [
+  { feld: "vorziehen", name: "Vorziehen", kurz: "vorziehen", farbe: "var(--t-vor)" },
+  { feld: "direktsaat", name: "Direkt säen", kurz: "säen", farbe: "var(--t-saat)" },
+  { feld: "pflanzen", name: "Pflanzen / Stecken", kurz: "pflanzen", farbe: "var(--t-pflanz)" },
+  { feld: "ernte", name: "Ernten", kurz: "ernten", farbe: "var(--t-ernte)" },
+];
+const ZEHRER = { stark: "Starkzehrer (hoher Nährstoffbedarf)", mittel: "Mittelzehrer", schwach: "Schwachzehrer (geringer Nährstoffbedarf)" };
+const FROST = { empfindlich: "frostempfindlich – erst nach den Eisheiligen ins Freie", leicht: "verträgt leichten Frost", hart: "winterhart / frosthart" };
+const SAATGUT = {
+  leicht: "leicht – Selbstbefruchter, Sorten kreuzen sich kaum",
+  mittel: "mittel – Fremdbefruchter, Sorten können sich kreuzen",
+  schwer: "schwierig – Fremdbefruchter, meist zweijährige Samenbildung",
+  vegetativ: "wird über Knollen bzw. Zehen vermehrt",
+};
+
+function allePflanzen() {
+  const eigene = (D.eigenePflanzen || []).map(p => Object.assign({ eigen: true, quellen: [], hinweise: [] }, p));
+  return [...(LEX_OK ? PFLANZEN : []), ...eigene].sort((a, b) => a.name.localeCompare(b.name, "de"));
+}
+const pflanzeVon = id => allePflanzen().find(p => p.id === id);
+function familieVon(p) { return (LEX_OK && FAMILIEN[p.familie]) || { name: p.familieText || "–", pause: null, farbe: "#8a8f80" }; }
+function nachbarn(id) {
+  const r = { gut: [], schlecht: [], umstritten: [] };
+  if (!LEX_OK) return r;
+  for (const m of MISCHKULTUR) {
+    const anderer = m.a === id ? m.b : m.b === id ? m.a : null;
+    if (anderer && pflanzeVon(anderer)) r[m.art].push({ id: anderer, notiz: m.notiz, quelle: m.quelle });
+  }
+  for (const k in r) r[k].sort((a, b) => pflanzeVon(a.id).name.localeCompare(pflanzeVon(b.id).name, "de"));
+  return r;
+}
+function pflanzenBadge(p, gross) {
+  const f = familieVon(p);
+  return `<span class="p-badge${gross ? " gross" : ""}" style="background:${f.farbe}" aria-hidden="true">${esc(p.name.slice(0, 2))}</span>`;
+}
+function monateText(liste) {
+  if (!liste || !liste.length) return "–";
+  // zusammenhängende Bereiche bilden, auch über den Jahreswechsel
+  const set = new Set(liste), teile = [];
+  let start = [...Array(12).keys()].map(i => i + 1).find(mo => set.has(mo) && !set.has(mo === 1 ? 12 : mo - 1));
+  if (start === undefined) return "ganzjährig";
+  for (let i = 0, mo = start; i < 12; i++, mo = mo === 12 ? 1 : mo + 1) {
+    if (set.has(mo) && !set.has(mo === 1 ? 12 : mo - 1)) {
+      let ende = mo; while (set.has(ende === 12 ? 1 : ende + 1) && (ende === 12 ? 1 : ende + 1) !== mo) ende = ende === 12 ? 1 : ende + 1;
+      teile.push(ende === mo ? MONATE[mo - 1] : `${MONATE[mo - 1]} bis ${MONATE[ende - 1]}`);
+    }
+  }
+  return teile.join(", ");
+}
+function jahresleiste(p, klein) {
+  const jetzt = new Date().getMonth() + 1;
+  return `<div class="jahr${klein ? " klein" : ""}">${MON_KURZ.map((n, i) => {
+    const mo = i + 1, an = TAETIGKEITEN.filter(t => (p[t.feld] || []).includes(mo));
+    return `<span class="jm${mo === jetzt ? " jetzt" : ""}" title="${MONATE[i]}${an.length ? ": " + an.map(t => t.name).join(", ") : ""}">${an.map(t => `<i style="background:${t.farbe}"></i>`).join("")}</span>`;
+  }).join("")}</div>`;
+}
+function legende() {
+  return `<div class="legende">${TAETIGKEITEN.map(t => `<span><i style="background:${t.farbe}"></i>${t.name}</span>`).join("")}</div>`;
+}
+
+/* ---------- Seite „Wissen“ mit Unterbereichen ---------- */
+function wissenSeite(main) {
+  const teile = location.hash.replace("#", "").split("/");
+  const bereich = teile[1] || "pflanzen";
+  seitentitel(main, "Wissen");
+  if (!LEX_OK) { main.insertAdjacentHTML("beforeend", `<div class="karte"><p>Die Pflanzendaten (Datei <code>pflanzen.js</code>) konnten nicht geladen werden. Liegt die Datei im Repository neben der index.html?</p></div>`); return; }
+  if (bereich === "pflanze") return pflanzenDetail(main, decodeURIComponent(teile[2] || ""));
+  if (bereich === "eigene") return eigenePflanzeForm(main, teile[2] ? decodeURIComponent(teile[2]) : null);
+  main.insertAdjacentHTML("beforeend", `<div class="unternav">
+    ${[["pflanzen", "🌱 Pflanzen"], ["kalender", "🗓️ Kalender"], ["quellen", "📚 Quellen"]].map(([k, n]) => `<a href="#wissen/${k}" class="${bereich === k ? "an" : ""}">${n}</a>`).join("")}
+  </div>`);
+  if (bereich === "kalender") return kalenderAnsicht(main);
+  if (bereich === "quellen") return quellenAnsicht(main);
+  pflanzenListe(main);
+}
+
+let lexFilter = { text: "", gruppe: "alle", jetzt: false };
+function pflanzenListe(main) {
+  main.insertAdjacentHTML("beforeend", `
+    <div class="lex-werkzeug">
+      <input type="search" id="lex-suche" placeholder="Pflanze suchen …" aria-label="Pflanze suchen" value="${esc(lexFilter.text)}">
+      <div class="umschalter" id="lex-gruppe">${["alle", "Gemüse", "Kräuter"].map(g => `<button data-g="${g}" class="${lexFilter.gruppe === g ? "an" : ""}">${g === "alle" ? "Alle" : g}</button>`).join("")}</div>
+      <label class="schalter-klein"><input type="checkbox" id="lex-jetzt" ${lexFilter.jetzt ? "checked" : ""}> Nur was im ${MONATE[new Date().getMonth()]} ansteht</label>
+      <a class="knopf" href="#wissen/eigene">＋ Eigene Pflanze</a>
+    </div>
+    ${legende()}
+    <div class="lex-raster" id="lex-raster"></div>
+    <div style="margin-top:14px">${baldKarte("Kommt noch in „Wissen“", [
+      "Weitere Pflanzen: Obst, Beeren und mehr Kräuter",
+      "Deine Sorten mit Bewertung und Erfahrungen",
+      "Übersichten zu Mischkultur, Fruchtfolge und Saatgut-Gewinnung",
+    ])}</div>`);
+  const zeichnen = () => {
+    const t = lexFilter.text.toLowerCase().trim(), mo = new Date().getMonth() + 1;
+    const liste = allePflanzen().filter(p =>
+      (lexFilter.gruppe === "alle" || p.gruppe === lexFilter.gruppe) &&
+      (!t || p.name.toLowerCase().includes(t) || (p.auch || []).some(a => a.toLowerCase().includes(t))) &&
+      (!lexFilter.jetzt || TAETIGKEITEN.some(x => (p[x.feld] || []).includes(mo))));
+    $("#lex-raster").innerHTML = liste.length ? liste.map(p => `
+      <a class="lex-karte" href="#wissen/pflanze/${encodeURIComponent(p.id)}">
+        <div class="kopf">${pflanzenBadge(p)}<div><b>${esc(p.name)}</b>${p.eigen ? ` <span class="marker">eigene</span>` : ""}<div class="klein leise">${esc(familieVon(p).name.replace(/\s*\(.*\)/, ""))}</div></div></div>
+        ${jahresleiste(p, true)}
+      </a>`).join("") : `<p class="leise">Keine Pflanze gefunden.</p>`;
+  };
+  $("#lex-suche").addEventListener("input", e => { lexFilter.text = e.target.value; zeichnen(); });
+  $$("#lex-gruppe button").forEach(b => b.onclick = () => { lexFilter.gruppe = b.dataset.g; $$("#lex-gruppe button").forEach(x => x.classList.toggle("an", x === b)); zeichnen(); });
+  $("#lex-jetzt").onchange = e => { lexFilter.jetzt = e.target.checked; zeichnen(); };
+  zeichnen();
+}
+
+function pflanzenDetail(main, id) {
+  const p = pflanzeVon(id);
+  if (!p) { main.insertAdjacentHTML("beforeend", `<div class="karte"><p>Diese Pflanze gibt es nicht (mehr).</p><a class="knopf" href="#wissen">← Zum Lexikon</a></div>`); return; }
+  const f = familieVon(p), n = nachbarn(p.id), jetzt = new Date().getMonth() + 1;
+  const pause = p.pause || f.pause;
+  const keim = p.keimJahre ? (p.keimJahre[0] === p.keimJahre[1] ? `${p.keimJahre[0] >= 5 ? "über 5" : p.keimJahre[0]} Jahre` : `${p.keimJahre[0]}–${p.keimJahre[1]} Jahre`) : (p.saatgut === "vegetativ" ? "– (keine Samen)" : "–");
+  const zeile = (l, w) => w ? `<div class="sb-l">${l}</div><div class="sb-w">${w}</div>` : "";
+  const chips = (liste, art) => liste.length ? liste.map(x => `<a class="chip ${art}" href="#wissen/pflanze/${encodeURIComponent(x.id)}" ${x.notiz ? `title="${esc(x.notiz)}"` : ""}>${esc(pflanzeVon(x.id).name)}${x.notiz ? " *" : ""}</a>`).join("") : `<span class="leise klein">keine Angaben</span>`;
+  const notizen = n.gut.concat(n.schlecht, n.umstritten).filter(x => x.notiz);
+  main.insertAdjacentHTML("beforeend", `
+    <a class="zurueck" href="#wissen">← Alle Pflanzen</a>
+    <div class="lex-kopf">${pflanzenBadge(p, true)}<div><h2>${esc(p.name)}${p.eigen ? ` <span class="marker">eigene</span>` : ""}</h2>
+      ${(p.auch || []).length ? `<div class="leise klein">auch: ${esc(p.auch.join(", "))}</div>` : ""}</div>
+      ${p.eigen ? `<a class="knopf" style="margin-left:auto" href="#wissen/eigene/${encodeURIComponent(p.id)}">✏️ Bearbeiten</a>` : ""}</div>
+    <div class="raster zwei">
+      <div>
+        <div class="karte"><h2>🗓️ Anbaukalender</h2>
+          <div class="kal-tabelle">
+            <div></div>${MON_KURZ.map((m, i) => `<div class="kal-mon${i + 1 === jetzt ? " jetzt" : ""}">${m[0]}</div>`).join("")}
+            ${TAETIGKEITEN.map(t => `<div class="kal-name">${t.name}</div>${MON_KURZ.map((_, i) => `<div class="kal-zelle${i + 1 === jetzt ? " jetzt" : ""}" ${(p[t.feld] || []).includes(i + 1) ? `style="background:${t.farbe}"` : ""}></div>`).join("")}`).join("")}
+          </div>
+          <div class="kal-text klein">${TAETIGKEITEN.filter(t => (p[t.feld] || []).length).map(t => `<div><b>${t.name}:</b> ${monateText(p[t.feld])}</div>`).join("")}</div>
+        </div>
+        ${p.anleitung ? `<div class="karte"><h2>🌿 Anbau in Kürze</h2><p style="margin:0">${esc(p.anleitung)}</p></div>` : ""}
+        <div class="karte"><h2>🤝 Nachbarn im Beet</h2>
+          <div class="nb-gruppe"><div class="nb-titel">Gute Nachbarn</div>${chips(n.gut, "gut")}</div>
+          <div class="nb-gruppe"><div class="nb-titel">Schlechte Nachbarn</div>${chips(n.schlecht, "schlecht")}</div>
+          ${n.umstritten.length ? `<div class="nb-gruppe"><div class="nb-titel">Umstritten</div>${chips(n.umstritten, "umstritten")}</div>` : ""}
+          ${notizen.length ? `<div class="klein leise" style="margin-top:8px">${notizen.map(x => `* ${esc(pflanzeVon(x.id).name)}: ${esc(x.notiz)}`).join("<br>")}</div>` : ""}
+          <p class="klein leise" style="margin:8px 0 0">Mischkultur beruht vor allem auf Erfahrungswerten; die Wirkung ist wissenschaftlich kaum belegt. Wichtiger ist genug Abstand.</p>
+        </div>
+      </div>
+      <div>
+        <div class="karte"><h2>📋 Steckbrief</h2>
+          <div class="steckbrief">
+            ${zeile("Gruppe", esc(p.gruppe || "–") + (p.mehrjaehrig ? " · mehrjährig" : ""))}
+            ${zeile("Familie", esc(f.name))}
+            ${zeile("Nährstoffbedarf", esc(ZEHRER[p.zehrer] || "–"))}
+            ${zeile("Standort", esc(p.standort || "–"))}
+            ${zeile("Frost", esc(FROST[p.frost] || "–"))}
+            ${zeile("Abstand", p.abstand ? `${p.abstand[0]} cm zwischen den Reihen, ${p.abstand[1]} cm in der Reihe${p.abstandHinweis ? `<br><span class="leise">${esc(p.abstandHinweis)}</span>` : ""}` : "–")}
+            ${zeile("Saattiefe", esc(p.saattiefe || "–") + (p.keimung ? `<br><span class="leise">${esc(p.keimung)}</span>` : ""))}
+            ${zeile("Anbaupause", pause ? `${esc(pause)} für die ganze Familie (${esc(f.name)})` : "keine Angabe")}
+            ${zeile("Samen keimfähig", esc(keim))}
+            ${zeile("Samen selbst gewinnen", esc(SAATGUT[p.saatgut] || "keine Angabe"))}
+          </div>
+          <p class="klein leise" style="margin:10px 0 0">Saattiefe und Zeiten sind Richtwerte – die Angaben auf der Samentüte haben Vorrang.</p>
+        </div>
+        ${(p.hinweise || []).length ? `<div class="karte hinweis-karte"><h2>⚠️ Unterschiedliche Angaben</h2><ul>${p.hinweise.map(h => `<li>${esc(h)}</li>`).join("")}</ul></div>` : ""}
+        <div class="karte"><h2>📝 Meine Notizen</h2>
+          <textarea id="p-notiz" rows="4" placeholder="Eigene Erfahrungen, Lieblingssorten, Tipps …">${esc((D.pflanzenNotizen || {})[p.id] || "")}</textarea>
+          <p class="klein leise" id="p-notiz-stand" style="margin:4px 0 0"></p>
+        </div>
+        ${(p.quellen || []).length ? `<div class="karte"><h2>📚 Quellen</h2><ul class="quellen">${p.quellen.filter(q => QUELLEN[q]).map(q => `<li><a href="${QUELLEN[q].url}" target="_blank" rel="noopener">${esc(QUELLEN[q].titel)}</a></li>`).join("")}</ul></div>` : ""}
+      </div>
+    </div>`);
+  let t;
+  $("#p-notiz").addEventListener("input", e => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      D.pflanzenNotizen = D.pflanzenNotizen || {};
+      const v = e.target.value.trim();
+      if (v) D.pflanzenNotizen[p.id] = e.target.value; else delete D.pflanzenNotizen[p.id];
+      speichern(); $("#p-notiz-stand").textContent = "Gespeichert.";
+    }, 500);
+  });
+}
+
+/* ---------- Kalender: Monat und Jahresübersicht ---------- */
+let kalMonat = new Date().getMonth() + 1;
+function monatsListen(mo) {
+  return TAETIGKEITEN.map(t => ({ ...t, pflanzen: allePflanzen().filter(p => (p[t.feld] || []).includes(mo)) }));
+}
+function kalenderAnsicht(main) {
+  main.insertAdjacentHTML("beforeend", `
+    <div class="karte">
+      <div class="monatswahl">
+        <button class="knopf" id="kal-zurueck" aria-label="Vormonat">‹</button>
+        <h2 id="kal-titel" style="margin:0"></h2>
+        <button class="knopf" id="kal-vor" aria-label="Nächster Monat">›</button>
+        <button class="knopf text" id="kal-heute">Heute</button>
+      </div>
+      <div id="kal-monat"></div>
+    </div>
+    <div class="karte"><h2>Jahresübersicht</h2>${legende()}
+      <div class="jahres-tabelle">
+        <div class="jt-kopf"><span></span><div class="jahr">${MON_KURZ.map((m, i) => `<span class="${i + 1 === new Date().getMonth() + 1 ? "jetzt" : ""}">${m}</span>`).join("")}</div></div>
+        ${allePflanzen().map(p => `<a class="jt-zeile" href="#wissen/pflanze/${encodeURIComponent(p.id)}"><span class="jt-name">${esc(p.name)}</span>${jahresleiste(p)}</a>`).join("")}
+      </div>
+    </div>`);
+  const zeichnen = () => {
+    $("#kal-titel").textContent = MONATE[kalMonat - 1];
+    $("#kal-monat").innerHTML = monatsListen(kalMonat).map(t => `
+      <div class="kal-gruppe"><div class="kal-gruppe-titel"><i style="background:${t.farbe}"></i>${t.name} <span class="leise">(${t.pflanzen.length})</span></div>
+        ${t.pflanzen.length ? t.pflanzen.map(p => `<a class="chip" href="#wissen/pflanze/${encodeURIComponent(p.id)}">${esc(p.name)}</a>`).join("") : `<span class="leise klein">nichts</span>`}
+      </div>`).join("");
+  };
+  $("#kal-zurueck").onclick = () => { kalMonat = kalMonat === 1 ? 12 : kalMonat - 1; zeichnen(); };
+  $("#kal-vor").onclick = () => { kalMonat = kalMonat === 12 ? 1 : kalMonat + 1; zeichnen(); };
+  $("#kal-heute").onclick = () => { kalMonat = new Date().getMonth() + 1; zeichnen(); };
+  zeichnen();
+}
+
+function quellenAnsicht(main) {
+  main.insertAdjacentHTML("beforeend", `
+    <div class="karte"><h2>📚 Woher die Angaben stammen</h2>
+      <p>Alle Texte im Lexikon sind in eigenen Worten geschrieben. Die Werte stammen aus diesen Quellen und wurden untereinander abgeglichen. Wo sich Quellen widersprechen, steht das bei der jeweiligen Pflanze unter „Unterschiedliche Angaben“.</p>
+      <ul class="quellen">${Object.values(QUELLEN).map(q => `<li><a href="${q.url}" target="_blank" rel="noopener">${esc(q.titel)}</a></li>`).join("")}</ul>
+      <p class="klein leise" style="margin:0">Stand der Pflanzendaten: ${new Date(PFLANZEN_STAND).toLocaleDateString("de-DE")} · ${PFLANZEN.length} Pflanzen. Saattiefen und Keimhinweise sind allgemeine Richtwerte; im Zweifel gilt die Samentüte.</p>
+    </div>
+    <div class="karte"><h2>Gut zu wissen</h2>
+      <ul class="klein" style="margin:0;padding-left:18px">
+        <li><b>Zeiten</b> gelten für durchschnittliche Lagen in Deutschland. In rauen Lagen eher später, im Weinbauklima eher früher beginnen. Frostempfindliches erst nach den Eisheiligen (Mitte Mai) ins Freie.</li>
+        <li><b>Mischkultur:</b> Die Bayerische Gartenakademie weist darauf hin, dass sich die Wirkung guter und schlechter Nachbarn kaum nachweisen lässt und Tabellen sich oft widersprechen. Der häufigste Fehler ist ein zu enger Stand.</li>
+        <li><b>Anbaupause</b> gilt für die ganze Pflanzenfamilie: Nach Tomaten also auch keine Kartoffeln an dieselbe Stelle.</li>
+        <li><b>Keimfähigkeit</b> hängt stark von der Lagerung ab (kühl, trocken, dunkel). Ältere Samen vor der Aussaat mit einer Keimprobe testen.</li>
+      </ul>
+    </div>`);
+}
+
+/* ---------- Eigene Pflanzen ---------- */
+function eigenePflanzeForm(main, id) {
+  const alt = id ? (D.eigenePflanzen || []).find(p => p.id === id) : null;
+  const p = alt || { name: "", gruppe: "Gemüse", familie: "", zehrer: "mittel", abstand: [30, 30], vorziehen: [], direktsaat: [], pflanzen: [], ernte: [], anleitung: "" };
+  main.insertAdjacentHTML("beforeend", `
+    <a class="zurueck" href="${alt ? `#wissen/pflanze/${encodeURIComponent(alt.id)}` : "#wissen"}">← Zurück</a>
+    <div class="karte formular">
+      <h2>${alt ? "Eigene Pflanze bearbeiten" : "Eigene Pflanze anlegen"}</h2>
+      <p class="klein leise">Für Pflanzen, die (noch) nicht im Lexikon stehen. Nur der Name ist Pflicht.</p>
+      <label>Name<input type="text" id="e-name" value="${esc(p.name)}"></label>
+      <div class="zwei-spalten">
+        <label>Gruppe<select id="e-gruppe">${["Gemüse", "Kräuter", "Obst", "Blumen", "Sonstiges"].map(g => `<option ${p.gruppe === g ? "selected" : ""}>${g}</option>`).join("")}</select></label>
+        <label>Familie<select id="e-familie"><option value="">unbekannt</option>${Object.entries(FAMILIEN).map(([k, f]) => `<option value="${k}" ${p.familie === k ? "selected" : ""}>${esc(f.name)}</option>`).join("")}</select></label>
+        <label>Nährstoffbedarf<select id="e-zehrer">${Object.keys(ZEHRER).map(z => `<option value="${z}" ${p.zehrer === z ? "selected" : ""}>${z[0].toUpperCase() + z.slice(1)}zehrer</option>`).join("")}</select></label>
+        <label>Abstand Reihe / Pflanze (cm)<span class="feld-einheit"><input type="number" id="e-ar" min="1" value="${p.abstand[0]}"><input type="number" id="e-ap" min="1" value="${p.abstand[1]}"></span></label>
+      </div>
+      <div class="monatsraster">
+        <div></div>${MON_KURZ.map(m => `<div class="kal-mon">${m[0]}</div>`).join("")}
+        ${TAETIGKEITEN.map(t => `<div class="kal-name">${t.name}</div>${MON_KURZ.map((m, i) => `<label class="mcheck" title="${t.name}: ${MONATE[i]}"><input type="checkbox" data-t="${t.feld}" data-m="${i + 1}" ${(p[t.feld] || []).includes(i + 1) ? "checked" : ""}><span style="--f:${t.farbe}"></span></label>`).join("")}`).join("")}
+      </div>
+      <label>Anbau in Kürze<textarea id="e-text" rows="3">${esc(p.anleitung || "")}</textarea></label>
+      <div class="knopfreihe">
+        <button class="knopf haupt" id="e-speichern">Speichern</button>
+        ${alt ? `<button class="knopf gefahr" id="e-loeschen">Löschen</button>` : ""}
+      </div>
+    </div>`);
+  $("#e-speichern").onclick = () => {
+    const name = $("#e-name").value.trim();
+    if (!name) { melden("Bitte einen Namen eingeben."); return; }
+    const neu = alt || { id: "eigen-" + gid() };
+    Object.assign(neu, {
+      name, gruppe: $("#e-gruppe").value, familie: $("#e-familie").value, zehrer: $("#e-zehrer").value,
+      abstand: [Math.max(1, +$("#e-ar").value || 30), Math.max(1, +$("#e-ap").value || 30)],
+      anleitung: $("#e-text").value.trim(),
+    });
+    TAETIGKEITEN.forEach(t => { neu[t.feld] = $$(`[data-t="${t.feld}"]:checked`).map(c => +c.dataset.m); });
+    D.eigenePflanzen = D.eigenePflanzen || [];
+    if (!alt) D.eigenePflanzen.push(neu);
+    speichern(); melden("Gespeichert.");
+    location.hash = "wissen/pflanze/" + encodeURIComponent(neu.id);
+  };
+  if (alt) $("#e-loeschen").onclick = async () => {
+    if (!await fragen({ titel: "Pflanze löschen?", text: `„${esc(alt.name)}“ wird aus deinem Lexikon entfernt.`, ja: "Löschen", gefahr: true })) return;
+    D.eigenePflanzen = D.eigenePflanzen.filter(x => x.id !== alt.id);
+    if (D.pflanzenNotizen) delete D.pflanzenNotizen[alt.id];
+    speichern(); location.hash = "wissen";
+  };
+}
+
+/* ---------- Startseite: Was steht diesen Monat an ---------- */
+function monatKarteHTML() {
+  if (!LEX_OK) return `<p class="leise">Pflanzendaten nicht geladen.</p>`;
+  const mo = new Date().getMonth() + 1;
+  const gruppen = monatsListen(mo).filter(t => t.pflanzen.length);
+  if (!gruppen.length) return `<p class="leise">In diesem Monat steht laut Lexikon nichts an.</p>`;
+  return gruppen.map(t => `<div class="kal-gruppe"><div class="kal-gruppe-titel"><i style="background:${t.farbe}"></i>${t.name}</div>
+      ${t.pflanzen.slice(0, 8).map(p => `<a class="chip" href="#wissen/pflanze/${encodeURIComponent(p.id)}">${esc(p.name)}</a>`).join("")}${t.pflanzen.length > 8 ? `<a class="chip mehr" href="#wissen/kalender">+${t.pflanzen.length - 8}</a>` : ""}
+    </div>`).join("") + `<a class="knopf text" href="#wissen/kalender" style="padding-left:0">Zum Kalender →</a>`;
+}
+
+
 function seitentitel(main, titel, unter) {
   main.insertAdjacentHTML("beforeend", `<div class="seitentitel"><h1>${esc(titel)}</h1>${unter ? `<p class="leise">${unter}</p>` : ""}</div>`);
 }
@@ -880,7 +1253,7 @@ const SEITEN = {
         <div>
           <div class="karte">
             <h2>🗓️ Im ${MONATE[heute.getMonth()]}</h2>
-            <p class="leise">Sobald das Pflanzenlexikon da ist, siehst du hier, was du diesen Monat säen, vorziehen, pflanzen und ernten kannst.</p>
+            ${monatKarteHTML()}
           </div>
           <div class="karte">
             <h2>🥕 Im Garten</h2>
@@ -927,19 +1300,7 @@ const SEITEN = {
       ])}`);
   },
 
-  wissen(main) {
-    seitentitel(main, "Wissen");
-    main.insertAdjacentHTML("beforeend", `
-      <div class="karte"><p>Nachschlagen statt suchen: alles Wissen rund um deine Pflanzen – sorgfältig mit Quellen geprüft und in eigenen Worten.</p></div>
-      ${baldKarte("Geplant", [
-        "Pflanzenlexikon mit Aussaat-, Vorzieh-, Pflanz- und Erntezeiten, Platzbedarf und Pflanzenfamilie",
-        "Kurze Anbauanleitung je Pflanze und Platz für deine eigenen Notizen",
-        "Deine Sorten mit Bewertung und Erfahrungen",
-        "Mischkultur: gute und schlechte Nachbarn",
-        "Fruchtfolge und Anbaupausen",
-        "Saatgut selbst gewinnen",
-      ])}`);
-  },
+  wissen(main) { wissenSeite(main); },
 
   vorrat(main) {
     seitentitel(main, "Vorrat");
@@ -1053,6 +1414,15 @@ const SEITEN = {
           <p><b>Bewegen im Plan:</b> Mit der Maus ziehen bzw. mit einem Finger wischen verschiebt den Ausschnitt. Zoomen geht mit dem Mausrad, mit zwei Fingern oder mit + und −. „Alles“ zeigt den ganzen Garten.</p>
           <p><b>Bereiche:</b> Einen Ausschnitt mit „📍 Merken“ benennen, zum Beispiel „Vorgarten“. Über „Springe zu …“ kommst du direkt dorthin.</p>
           <p><b>Rückgängig:</b> ↶ und ↷ in der Leiste (am Laptop auch Strg+Z und Strg+Y). Am Laptop verschieben die Pfeiltasten die ausgewählte Fläche um eine Rasterweite, Entf löscht sie, Esc hebt die Auswahl auf.</p>
+        </div></details>
+        <details><summary>Pflanzenlexikon (Wissen)</summary><div>
+          <p>Unter <b>Wissen → Pflanzen</b> stehen gängige Gemüse und Kräuter. Oben suchst du nach Namen (auch nach anderen Namen wie „Paradeiser“ oder „Porree“), filterst nach Gemüse oder Kräutern oder zeigst nur, was im aktuellen Monat ansteht. Die kleine Leiste auf jeder Karte zeigt das Jahr von Januar bis Dezember: <b>gelb</b> vorziehen, <b>hellgrün</b> direkt säen, <b>dunkelgrün</b> pflanzen oder stecken, <b>rot</b> ernten. Der aktuelle Monat ist umrandet. Die Farbe des Kürzels vor dem Namen steht für die Pflanzenfamilie.</p>
+          <p>Ein Klick auf eine Pflanze öffnet ihre Karte mit Anbaukalender, kurzer Anleitung, Steckbrief (Familie, Nährstoffbedarf, Standort, Frost, Abstand, Saattiefe, Anbaupause, Keimfähigkeit der Samen, Saatgut selbst gewinnen) und guten und schlechten Nachbarn. Die Nachbarn kannst du antippen und landest bei deren Karte. Ein Sternchen heißt: Dazu gibt es unten eine Anmerkung.</p>
+          <p><b>Unterschiedliche Angaben:</b> Wenn sich die Quellen widersprechen, steht das offen bei der Pflanze. Saattiefen und Zeiten sind Richtwerte für durchschnittliche Lagen – die Samentüte hat Vorrang.</p>
+          <p><b>Meine Notizen:</b> Auf jeder Pflanzenkarte kannst du eigene Erfahrungen eintragen. Sie werden beim Tippen automatisch gespeichert.</p>
+          <p><b>Eigene Pflanzen:</b> Fehlt etwas, legst du es mit „＋ Eigene Pflanze“ an: Name, Gruppe, Familie, Nährstoffbedarf, Abstand und die Monate zum Antippen. Eigene Pflanzen erscheinen überall wie die anderen und lassen sich bearbeiten oder löschen.</p>
+          <p><b>Kalender:</b> Unter <b>Wissen → Kalender</b> blätterst du durch die Monate und siehst, was jeweils vorgezogen, gesät, gepflanzt und geerntet wird. Darunter steht die Jahresübersicht aller Pflanzen. Auf der Startseite zeigt die Karte „Im …“ dasselbe für den aktuellen Monat.</p>
+          <p><b>Quellen:</b> Unter <b>Wissen → Quellen</b> steht, woher die Angaben stammen. Alle Texte sind in eigenen Worten geschrieben.</p>
         </div></details>
         <details><summary>Startseite und Wetter</summary><div>
           <p>Die Startseite zeigt das Wetter der nächsten 7 Tage für deinen Standort: Höchst- und Tiefstwert, Regenmenge und darunter Hinweise.</p>
@@ -2271,7 +2641,7 @@ function gartenSeite(main) {
       <div class="panel" id="garten-panel"></div>
     </div>
     <div class="karte bald" style="margin-top:14px"><h2>🌱 Als Nächstes</h2>
-      <p class="leise klein" style="margin:0">Pflanzen per Klick in die Beete setzen, ernten und abräumen – sobald das Pflanzenlexikon da ist.</p></div>`);
+      <p class="leise klein" style="margin:0">Pflanzen aus dem Lexikon per Klick in die Beete setzen, mit Farbhinweisen für gute und schlechte Nachbarn, ernten und abräumen – das kommt in der nächsten Version.</p></div>`);
 
   planEreignisse();
   $("#k-bearbeiten").onclick = () => { G.bearbeiten = !G.bearbeiten; G.ecke = null; planZeichnen(); panelZeichnen(); leisteAktualisieren(); };
@@ -2401,6 +2771,7 @@ willkommenPruefen();
 serviceWorkerStarten();
 window.addEventListener("resize", (() => { let breit = matchMedia("(min-width:900px)").matches;
   return () => { const b = matchMedia("(min-width:900px)").matches; if (b !== breit) { breit = b; if (aktuelleSeite() === "start") zeigen(); } }; })());
+
 </script>
 </body>
 </html>

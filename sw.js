@@ -2,10 +2,11 @@
    Die App holt sich neue Versionen automatisch aus dem Netz.
    Diese Datei muss nur geändert werden, wenn neue Dateien
    (z. B. Bilder) dazukommen. */
-const CACHE = "kur-0.1.0";
+const CACHE = "kur-0.3.0";
 const DATEIEN = [
   "./",
   "./index.html",
+  "./pflanzen.js",
   "./manifest.webmanifest",
   "./bilder/ruebe.png",
   "./bilder/favicon.png",
