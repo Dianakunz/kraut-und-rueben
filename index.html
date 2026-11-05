@@ -533,13 +533,13 @@ dialog .knopfreihe{justify-content:flex-end}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js"></script>
+<script src="pflanzen.js?v=0.3.1"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.3.0";
+const APP_VERSION = "0.3.1";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1007,7 +1007,7 @@ function wissenSeite(main) {
   const teile = location.hash.replace("#", "").split("/");
   const bereich = teile[1] || "pflanzen";
   seitentitel(main, "Wissen");
-  if (!LEX_OK) { main.insertAdjacentHTML("beforeend", `<div class="karte"><p>Die Pflanzendaten (Datei <code>pflanzen.js</code>) konnten nicht geladen werden. Liegt die Datei im Repository neben der index.html?</p></div>`); return; }
+  if (!LEX_OK) { main.insertAdjacentHTML("beforeend", `<div class="karte"><p>Die Pflanzendaten (Datei <code>pflanzen.js</code>) konnten nicht geladen werden. Bitte prüfe die Internetverbindung und lade die Seite neu.</p><button class="knopf" id="lex-neu">↻ Neu laden</button></div>`); $("#lex-neu").onclick = () => location.reload(); return; }
   if (bereich === "pflanze") return pflanzenDetail(main, decodeURIComponent(teile[2] || ""));
   if (bereich === "eigene") return eigenePflanzeForm(main, teile[2] ? decodeURIComponent(teile[2]) : null);
   main.insertAdjacentHTML("beforeend", `<div class="unternav">
