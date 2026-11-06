@@ -434,6 +434,7 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 .panel .kanten .kantenart{min-height:32px;min-width:36px;padding:2px 8px;font-size:1rem}
 .panel .kanten .kantenart.an{background:var(--gruen-hell);border-color:var(--gruen);color:var(--gruen-dunkel)}
 .panel .kanten .winkel{min-width:34px;text-align:right}
+#plan .treffer{fill:transparent;stroke:none;pointer-events:all;cursor:move}
 #plan .griff{fill:#fff;stroke:var(--auswahl);stroke-width:2px;vector-effect:non-scaling-stroke;cursor:move}
 #plan .griff.aktiv{fill:var(--auswahl)}
 #plan .neu{fill:var(--auswahl);opacity:.55;cursor:copy}
@@ -563,13 +564,13 @@ dialog .knopfreihe{justify-content:flex-end}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.4.1"></script>
+<script src="pflanzen.js?v=0.4.2"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.4.1";
+const APP_VERSION = "0.4.2";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1404,7 +1405,7 @@ function pflanzungenSVG(s) {
         h += `<text class="pfl-text" x="${p.x + p.w / 2}" y="${p.y + p.h / 2 - (zwei ? fs * 0.55 : 0)}" font-size="${fs}" text-anchor="middle" dominant-baseline="middle">${esc(name)}</text>`;
         if (zwei) h += `<text class="pfl-text zweit" x="${p.x + p.w / 2}" y="${p.y + p.h / 2 + fs * 0.7}" font-size="${fs * 0.85}" text-anchor="middle" dominant-baseline="middle">${anzahlText(p)} Stück</text>`;
       }
-      if (p.id === G.pfl) h += `<circle class="griff" data-rolle="pfl-groesse" cx="${p.x + p.w}" cy="${p.y + p.h}" r="${7 / s}"/>`;
+      if (p.id === G.pfl) h += `<circle class="griff" data-rolle="pfl-groesse" cx="${p.x + p.w}" cy="${p.y + p.h}" r="${(fingerBedienung() ? 10 : 7) / s}"/>`;
     } else {
       const r = platzRadius(pf), kurz = name.slice(0, 2);
       p.punkte.forEach(([x, y], i) => {
@@ -1692,7 +1693,7 @@ function pflZugStart(e, t, w, start) {   // gibt true zurück, wenn der Druck ei
   const rolle = t && t.dataset.rolle;
   if (rolle === "pfl-groesse") {
     const p = pflanzung(G.pfl); if (!p) return false;
-    G.zug = { art: "pfl-groesse", pid: p.id, vorher: stand(), start, bewegt: false };
+    G.zug = { art: "pfl-groesse", pid: p.id, vorher: stand(), start, bewegt: false, versatz: [p.x + p.w - w[0], p.y + p.h - w[1]] };
     return true;
   }
   if (rolle !== "pfl") return false;
@@ -1709,7 +1710,7 @@ function pflZugBewegen(z, w, e) {
   const p = pflanzung(z.pid); if (!p) return;
   const r = Math.min(rasterwert(e), 5);
   if (z.art === "pfl-groesse") {
-    p.w = Math.max(10, einrasten(w[0] - p.x, r)); p.h = Math.max(10, einrasten(w[1] - p.y, r));
+    p.w = Math.max(10, einrasten(w[0] + z.versatz[0] - p.x, r)); p.h = Math.max(10, einrasten(w[1] + z.versatz[1] - p.y, r));
   } else {
     const dx = einrasten(w[0] - z.w0[0], r), dy = einrasten(w[1] - z.w0[1], r);
     if (p.form === "flaeche") { p.x = z.orig.x + dx; p.y = z.orig.y + dy; }
@@ -2427,7 +2428,7 @@ function planZeichnen() {
   // Gewähltes Objekt: Abstände, Hilfslinien, Griffe
   const o = G.auswahl && objekt(G.auswahl);
   if (o && editierbar(o) && !G.pfl && !G.setzen) {
-    const rg = 7 / s;
+    const rg = (fingerBedienung() ? 10 : 7) / s;
     if (o.art !== "garten" && o.form !== "linie") {
       for (const a of abstaende(o)) {
         if (a.laenge * s < 6) continue;
@@ -2446,7 +2447,7 @@ function planZeichnen() {
     if (o.form !== "kreis" && o.art !== "garten") {
       const rr = rahmen(o), cx = (rr.x1 + rr.x2) / 2, gy = rr.y1 - (o.form === "poly" && !istRechteck(o) ? 70 : 34) / s;
       html += `<line class="dreh-stiel" x1="${cx}" y1="${rr.y1}" x2="${cx}" y2="${gy}"/>
-        <g data-rolle="drehen"><circle class="dreh-griff" cx="${cx}" cy="${gy}" r="${11 / s}"/><text class="dreh-symbol" x="${cx}" y="${gy}" font-size="${14 / s}" text-anchor="middle" dominant-baseline="central">↻</text></g>`;
+        <g data-rolle="drehen"><circle class="treffer" cx="${cx}" cy="${gy}" r="${trefferRadius(s)}"/><circle class="dreh-griff" cx="${cx}" cy="${gy}" r="${11 / s}"/><text class="dreh-symbol" x="${cx}" y="${gy}" font-size="${14 / s}" text-anchor="middle" dominant-baseline="central">↻</text></g>`;
       if (G.zug && G.zug.art === "drehen") html += `<text class="winkelmass genau" x="${cx + 16 / s}" y="${gy - 12 / s}" font-size="${12 / s}">${zahl(G.zug.grad || 0, Math.abs((G.zug.grad || 0) % 1) > 0.05 ? 1 : 0)}°${G.kantenFang ? " ∥" : ""}</text>`;
     }
     if (o.form === "kreis") {
@@ -2493,7 +2494,7 @@ function planZeichnen() {
       p.forEach((q, i) => { html += `<circle class="griff${G.ecke === i ? " aktiv" : ""}" data-rolle="griff" data-i="${i}" cx="${q[0]}" cy="${q[1]}" r="${rg}"/>`; });
     }
   }
-  svg.innerHTML = html;
+  svg.innerHTML = trefferZufuegen(html, s);
   massstabZeichnen();
 }
 /* Breite und Tiefe als Maßlinien oben und links neben der Fläche */
@@ -2504,8 +2505,16 @@ function aussenmasse(o, s) {
     <text class="aussenmass-text" x="${(r.x1 + r.x2) / 2}" y="${yo - 6 / s}" font-size="${fs}" text-anchor="middle">${m(r.x2 - r.x1)}</text>
     <text class="aussenmass-text" x="${xl - 6 / s}" y="${(r.y1 + r.y2) / 2}" font-size="${fs}" text-anchor="end" dominant-baseline="middle">${m(r.y2 - r.y1)}</text>`;
 }
+/* Griffe am Handy: größer, und ein unsichtbarer Fangbereich drumherum, damit man sie mit dem Finger trifft */
+const fingerBedienung = () => matchMedia("(pointer: coarse)").matches;
+function trefferRadius(s) { return (fingerBedienung() ? 26 : 13) / s; }
+function trefferZufuegen(html, s) {
+  const r = trefferRadius(s);
+  return html.replace(/<circle class="griff([^"]*)" ((?:data-[a-z-]+="[^"]*" )+)cx="([^"]+)" cy="([^"]+)" r="[^"]+"\/>/g,
+    (ganz, kl, daten, cx, cy) => `<circle class="treffer" ${daten}cx="${cx}" cy="${cy}" r="${r}"/>${ganz}`);
+}
 function plusGriff(rolle, daten, x, y, rg) {
-  return `<g data-rolle="${rolle}" ${daten}><circle class="neu" cx="${x}" cy="${y}" r="${rg * 0.85}"/><path class="neu-plus" d="M${x - rg * 0.45} ${y}H${x + rg * 0.45}M${x} ${y - rg * 0.45}V${y + rg * 0.45}"/></g>`;
+  return `<g data-rolle="${rolle}" ${daten}><circle class="treffer" cx="${x}" cy="${y}" r="${rg * (fingerBedienung() ? 2.2 : 1.6)}"/><circle class="neu" cx="${x}" cy="${y}" r="${rg * 0.85}"/><path class="neu-plus" d="M${x - rg * 0.45} ${y}H${x + rg * 0.45}M${x} ${y - rg * 0.45}V${y + rg * 0.45}"/></g>`;
 }
 function massstabZeichnen() {
   const el = $("#massstab"); if (!el) return;
@@ -2792,7 +2801,8 @@ function planEreignisse() {
     const o = G.auswahl && objekt(G.auswahl), ed = editierbar(o) && !G.pfl;
     if (ed && rolle === "griff") {
       G.ecke = +t.dataset.i;
-      G.zug = { art: "ecke", i: G.ecke, vorher: stand(), start, bewegt: false };
+      const q = o.punkte[G.ecke];   // Abstand Finger–Ecke merken, damit die Ecke nicht zum Finger springt
+      G.zug = { art: "ecke", i: G.ecke, vorher: stand(), start, bewegt: false, versatz: [q[0] - w[0], q[1] - w[1]] };
       planZeichnen(); panelZeichnen();
     } else if (ed && rolle === "neu") {
       const i = +t.dataset.i, r = rasterwert(e), vorher = stand(), mitte = abschnittMitte(o, i);
@@ -2811,7 +2821,7 @@ function planEreignisse() {
       const mitte = schwerpunkt(o);
       G.zug = { art: "drehen", orig: kopie(o), mitte, winkel0: Math.atan2(w[1] - mitte[1], w[0] - mitte[0]), grad: 0, vorher: stand(), start, bewegt: false };
     } else if (ed && rolle === "radius") {
-      G.zug = { art: "radius", vorher: stand(), start, bewegt: false };
+      G.zug = { art: "radius", vorher: stand(), start, bewegt: false, dr: o.r - Math.hypot(w[0] - o.x, w[1] - o.y) };
     } else if (rolle === "obj" && ed && t.dataset.id === G.auswahl) {
       // Nur das bereits gewählte Objekt lässt sich verschieben
       G.zug = { art: "obj", id: o.id, w0: w, orig: kopie(o), vorher: stand(), start, bewegt: false };
@@ -2856,7 +2866,7 @@ function planEreignisse() {
       pflVersetzen(z.pfl, dx, dy);
       planZeichnen();
     } else if (z.art === "ecke") {
-      const o = objekt(G.auswahl); o.punkte[z.i] = eckeFangen(o, z.i, w, e);
+      const o = objekt(G.auswahl); o.punkte[z.i] = eckeFangen(o, z.i, z.versatz ? [w[0] + z.versatz[0], w[1] + z.versatz[1]] : w, e);
       planZeichnen();
     } else if (z.art === "drehen") {
       const o = objekt(G.auswahl), grad = drehFangen(z, w, e), rad = grad * Math.PI / 180, c = Math.cos(rad), sn = Math.sin(rad), [mx, my] = z.mitte;
@@ -2866,7 +2876,7 @@ function planEreignisse() {
       pflDrehen(z.pfl, z.mitte, grad);
       planZeichnen();
     } else if (z.art === "radius") {
-      const o = objekt(G.auswahl); o.r = Math.max(5, einrasten(Math.hypot(w[0] - o.x, w[1] - o.y), Math.min(rasterwert(e), 5)));
+      const o = objekt(G.auswahl); o.r = Math.max(5, einrasten(Math.hypot(w[0] - o.x, w[1] - o.y) + (z.dr || 0), Math.min(rasterwert(e), 5)));
       planZeichnen();
     }
   });
