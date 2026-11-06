@@ -296,20 +296,20 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 .mcheck input:focus-visible + span{outline:2px solid var(--gruen)}
 
 /* ============ PFLANZUNGEN ============ */
-#plan .pfl{fill:var(--pf);fill-opacity:.38;stroke:var(--pf);stroke-width:1.5px;vector-effect:non-scaling-stroke;cursor:pointer}
-#plan .pfl-flaeche{fill-opacity:.42}
-#plan .pfl.gewaehlt{stroke:var(--auswahl);stroke-width:2.5px;fill-opacity:.55}
+:is(#plan,.plan-bild) .pfl{fill:var(--pf);fill-opacity:.38;stroke:var(--pf);stroke-width:1.5px;vector-effect:non-scaling-stroke;cursor:pointer}
+:is(#plan,.plan-bild) .pfl-flaeche{fill-opacity:.42}
+:is(#plan,.plan-bild) .pfl.gewaehlt{stroke:var(--auswahl);stroke-width:2.5px;fill-opacity:.55}
 #pfl-gespeichert.gespeichert{color:var(--gruen);font-weight:650;opacity:1}
 .pl-jahrwahl{display:inline-flex;align-items:center;gap:8px;font-weight:650}
 .pl-ueberschrift{margin:22px 0 10px;font-size:1.15rem}
 .pl-eintrag{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;padding:8px 0;border-bottom:1px dashed var(--linie)}
 .pl-eintrag:last-child{border-bottom:0}
 .warn-text{color:var(--gelb);font-weight:650}
-#plan .pfl.geplant{stroke-dasharray:6 3}
-#plan .pfl.ff{stroke:var(--gelb);stroke-width:3px}
-#plan .vorjahr{fill:none;stroke:var(--pf);stroke-width:1.5px;stroke-dasharray:2 3;vector-effect:non-scaling-stroke;opacity:.8;pointer-events:none}
-#plan .vorjahr-text{fill:var(--leise);font-style:italic;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;pointer-events:none}
-#plan .pfl.bleibt{opacity:.35;stroke-dasharray:none}
+:is(#plan,.plan-bild) .pfl.geplant{stroke-dasharray:6 3}
+:is(#plan,.plan-bild) .pfl.ff{stroke:var(--gelb);stroke-width:3px}
+:is(#plan,.plan-bild) .vorjahr{fill:none;stroke:var(--pf);stroke-width:1.5px;stroke-dasharray:2 3;vector-effect:non-scaling-stroke;opacity:.8;pointer-events:none}
+:is(#plan,.plan-bild) .vorjahr-text{fill:var(--leise);font-style:italic;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;pointer-events:none}
+:is(#plan,.plan-bild) .pfl.bleibt{opacity:.35;stroke-dasharray:none}
 .planungsansicht .plan-rahmen{border:2px dashed var(--blau);background:color-mix(in srgb, var(--plan-bg) 88%, var(--blau))}
 .plan-leiste.planung #k-bearbeiten,.plan-leiste.planung #k-hinzu{display:none!important}
 .plan-banner{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--blau-hell, #e3edf7);border:1px solid var(--blau);border-radius:var(--radius);padding:10px 14px;margin-bottom:10px}
@@ -321,15 +321,15 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
   body.druck-plan .plan-rahmen{height:16cm!important;border:1px solid #999;position:static}
   body.druck-plan .nur-druck{display:block!important;margin-top:12px}
 }
-#plan .pfl.eng{stroke:var(--gelb);stroke-width:2.5px;stroke-dasharray:4 3}
-#plan .pfl.punkt-gewaehlt{stroke-width:4px;stroke-dasharray:none}
-#plan .pfl.konflikt{stroke:var(--rot);stroke-width:2.5px;stroke-dasharray:5 3}
-#plan .pfl-kern{fill:var(--pf);pointer-events:none}
-#plan .pfl-kuerzel{fill:#fff;font-weight:700;pointer-events:none}
-#plan .pfl-text{fill:var(--text);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
-#plan .pfl-text.zweit{font-weight:500}
-#plan .pfl-vorschau{fill:var(--auswahl);fill-opacity:.15;stroke:var(--auswahl);stroke-width:2px;stroke-dasharray:6 4;vector-effect:non-scaling-stroke;pointer-events:none}
-#plan .setz-ziel{fill:none;stroke:var(--auswahl);stroke-width:3px;stroke-dasharray:8 5;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .pfl.eng{stroke:var(--gelb);stroke-width:2.5px;stroke-dasharray:4 3}
+:is(#plan,.plan-bild) .pfl.punkt-gewaehlt{stroke-width:4px;stroke-dasharray:none}
+:is(#plan,.plan-bild) .pfl.konflikt{stroke:var(--rot);stroke-width:2.5px;stroke-dasharray:5 3}
+:is(#plan,.plan-bild) .pfl-kern{fill:var(--pf);pointer-events:none}
+:is(#plan,.plan-bild) .pfl-kuerzel{fill:#fff;font-weight:700;pointer-events:none}
+:is(#plan,.plan-bild) .pfl-text{fill:var(--text);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+:is(#plan,.plan-bild) .pfl-text.zweit{font-weight:500}
+:is(#plan,.plan-bild) .pfl-vorschau{fill:var(--auswahl);fill-opacity:.15;stroke:var(--auswahl);stroke-width:2px;stroke-dasharray:6 4;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .setz-ziel{fill:none;stroke:var(--auswahl);stroke-width:3px;stroke-dasharray:8 5;vector-effect:non-scaling-stroke;pointer-events:none}
 .pw-liste{list-style:none;margin:0;padding:0;max-height:60vh;overflow:auto;border-top:1px solid var(--linie)}
 .pw-liste button{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:8px 6px;border:0;border-bottom:1px solid var(--linie);background:transparent;cursor:pointer;color:var(--text);font:inherit;border-left:4px solid transparent}
 .pw-liste button:hover{background:var(--karte2)}
@@ -423,44 +423,44 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 }
 @media (min-width:900px){ .plan-rahmen{height:calc(100vh - 210px);min-height:460px} }
 #plan{width:100%;height:100%;display:block;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
-#plan.ziehen{cursor:grabbing}
+:is(#plan,.plan-bild).ziehen{cursor:grabbing}
 .massstab{position:absolute;left:12px;bottom:10px;font-size:.75rem;color:var(--leise);pointer-events:none}
 .massstab div{height:6px;border:2px solid var(--leise);border-top:0;margin-bottom:2px}
 .plan-hinweis{position:absolute;right:10px;bottom:8px;font-size:.75rem;color:var(--leise);pointer-events:none;text-align:right}
-#plan .obj{stroke-width:1.5px;vector-effect:non-scaling-stroke;cursor:pointer}
-#plan .obj.gewaehlt{stroke:var(--auswahl);stroke-width:2.5px}
-#plan .art-haus{stroke-width:2px}
-#plan .art-garten{fill:var(--f-garten);stroke:var(--s-garten)}
-#plan .art-rasen{fill:var(--f-rasen);stroke:var(--s-rasen)}
-#plan .art-weg{fill:var(--f-weg);stroke:var(--s-weg)}
-#plan .art-terrasse{fill:var(--f-terrasse);stroke:var(--s-terrasse)}
-#plan .art-haus{fill:var(--f-haus);stroke:var(--s-haus)}
-#plan .art-sonstiges{fill:var(--f-sonstiges);stroke:var(--s-sonstiges)}
-#plan .art-beet{fill:var(--f-beet);stroke:var(--s-beet)}
-#plan .art-hochbeet{fill:var(--f-hochbeet);stroke:var(--s-hochbeet)}
-#plan .art-gewaechshaus{fill:var(--f-gewaechshaus);stroke:var(--s-gewaechshaus)}
-#plan .art-kuebel{fill:var(--f-kuebel);stroke:var(--s-kuebel)}
-#plan .pfad-gruppe{cursor:pointer}
-#plan .pfad-rand{fill:none;stroke:var(--s-weg);stroke-linecap:round;stroke-linejoin:round}
-#plan .pfad-rand.gewaehlt{stroke:var(--auswahl)}
-#plan .pfad-innen{fill:none;stroke:var(--f-weg);stroke-linecap:round;stroke-linejoin:round}
-#plan .abstand{stroke:var(--blau);stroke-width:1.5px;stroke-dasharray:5 4;vector-effect:non-scaling-stroke;pointer-events:none}
-#plan .abstandsmass{fill:var(--blau);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round}
-#plan .fuehrung{stroke:var(--auswahl);stroke-width:1px;stroke-dasharray:3 3;vector-effect:non-scaling-stroke;pointer-events:none;opacity:.8}
-#plan .rechtwinklig{fill:none;stroke:var(--auswahl);stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
-#plan .winkelmass{fill:var(--leise);font-weight:700;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px}
-#plan .winkelmass.genau{fill:var(--auswahl)}
-#plan .zeichnung{fill:var(--auswahl);fill-opacity:.12;stroke:var(--auswahl);stroke-width:2px;stroke-dasharray:6 4;vector-effect:non-scaling-stroke;pointer-events:none}
-#plan .zeichnung-strich{fill:none;stroke:var(--blau);stroke-width:2.5px;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;pointer-events:none}
-#plan .zeichnung-punkt{fill:var(--auswahl);pointer-events:none}
-#plan .zeichnung-start{fill:#fff;stroke:var(--auswahl);stroke-width:2.5px;vector-effect:non-scaling-stroke;pointer-events:none}
-#plan .dreh-stiel{stroke:var(--auswahl);stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
-#plan .dreh-griff{fill:var(--karte);stroke:var(--auswahl);stroke-width:2px;vector-effect:non-scaling-stroke;cursor:grab}
-#plan .dreh-symbol{fill:var(--auswahl);font-weight:700;pointer-events:none}
-#plan .kante-fang{stroke:var(--gelb);stroke-width:8px;stroke-linecap:round;opacity:.65;vector-effect:non-scaling-stroke;pointer-events:none}
-#plan .kante-hervor{fill:none;stroke:var(--gelb);stroke-width:7px;stroke-linecap:round;opacity:.7;vector-effect:non-scaling-stroke;pointer-events:none}
-#plan .aussenmass{fill:none;stroke:var(--leise);stroke-width:1px;vector-effect:non-scaling-stroke;pointer-events:none}
-#plan .aussenmass-text{fill:var(--leise);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round}
+:is(#plan,.plan-bild) .obj{stroke-width:1.5px;vector-effect:non-scaling-stroke;cursor:pointer}
+:is(#plan,.plan-bild) .obj.gewaehlt{stroke:var(--auswahl);stroke-width:2.5px}
+:is(#plan,.plan-bild) .art-haus{stroke-width:2px}
+:is(#plan,.plan-bild) .art-garten{fill:var(--f-garten);stroke:var(--s-garten)}
+:is(#plan,.plan-bild) .art-rasen{fill:var(--f-rasen);stroke:var(--s-rasen)}
+:is(#plan,.plan-bild) .art-weg{fill:var(--f-weg);stroke:var(--s-weg)}
+:is(#plan,.plan-bild) .art-terrasse{fill:var(--f-terrasse);stroke:var(--s-terrasse)}
+:is(#plan,.plan-bild) .art-haus{fill:var(--f-haus);stroke:var(--s-haus)}
+:is(#plan,.plan-bild) .art-sonstiges{fill:var(--f-sonstiges);stroke:var(--s-sonstiges)}
+:is(#plan,.plan-bild) .art-beet{fill:var(--f-beet);stroke:var(--s-beet)}
+:is(#plan,.plan-bild) .art-hochbeet{fill:var(--f-hochbeet);stroke:var(--s-hochbeet)}
+:is(#plan,.plan-bild) .art-gewaechshaus{fill:var(--f-gewaechshaus);stroke:var(--s-gewaechshaus)}
+:is(#plan,.plan-bild) .art-kuebel{fill:var(--f-kuebel);stroke:var(--s-kuebel)}
+:is(#plan,.plan-bild) .pfad-gruppe{cursor:pointer}
+:is(#plan,.plan-bild) .pfad-rand{fill:none;stroke:var(--s-weg);stroke-linecap:round;stroke-linejoin:round}
+:is(#plan,.plan-bild) .pfad-rand.gewaehlt{stroke:var(--auswahl)}
+:is(#plan,.plan-bild) .pfad-innen{fill:none;stroke:var(--f-weg);stroke-linecap:round;stroke-linejoin:round}
+:is(#plan,.plan-bild) .abstand{stroke:var(--blau);stroke-width:1.5px;stroke-dasharray:5 4;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .abstandsmass{fill:var(--blau);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round}
+:is(#plan,.plan-bild) .fuehrung{stroke:var(--auswahl);stroke-width:1px;stroke-dasharray:3 3;vector-effect:non-scaling-stroke;pointer-events:none;opacity:.8}
+:is(#plan,.plan-bild) .rechtwinklig{fill:none;stroke:var(--auswahl);stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .winkelmass{fill:var(--leise);font-weight:700;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px}
+:is(#plan,.plan-bild) .winkelmass.genau{fill:var(--auswahl)}
+:is(#plan,.plan-bild) .zeichnung{fill:var(--auswahl);fill-opacity:.12;stroke:var(--auswahl);stroke-width:2px;stroke-dasharray:6 4;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .zeichnung-strich{fill:none;stroke:var(--blau);stroke-width:2.5px;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .zeichnung-punkt{fill:var(--auswahl);pointer-events:none}
+:is(#plan,.plan-bild) .zeichnung-start{fill:#fff;stroke:var(--auswahl);stroke-width:2.5px;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .dreh-stiel{stroke:var(--auswahl);stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .dreh-griff{fill:var(--karte);stroke:var(--auswahl);stroke-width:2px;vector-effect:non-scaling-stroke;cursor:grab}
+:is(#plan,.plan-bild) .dreh-symbol{fill:var(--auswahl);font-weight:700;pointer-events:none}
+:is(#plan,.plan-bild) .kante-fang{stroke:var(--gelb);stroke-width:8px;stroke-linecap:round;opacity:.65;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .kante-hervor{fill:none;stroke:var(--gelb);stroke-width:7px;stroke-linecap:round;opacity:.7;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .aussenmass{fill:none;stroke:var(--leise);stroke-width:1px;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .aussenmass-text{fill:var(--leise);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round}
 .panel .formen{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
 .panel .formen .knopf{min-height:34px;padding:4px 10px;font-size:.88rem}
 .panel .kanten .kantenart{min-height:32px;min-width:36px;padding:2px 8px;font-size:1rem}
@@ -468,16 +468,16 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 .panel .kanten .winkel{min-width:34px;text-align:right}
 .nur-finger{display:none}
 @media (pointer:coarse){.nur-finger{display:block}}
-#plan .treffer{fill:transparent;stroke:none;pointer-events:all;cursor:move}
-#plan .griff{fill:#fff;stroke:var(--auswahl);stroke-width:2px;vector-effect:non-scaling-stroke;cursor:move}
-#plan .griff.aktiv{fill:var(--auswahl)}
-#plan .neu{fill:var(--auswahl);opacity:.55;cursor:copy}
-#plan .neu:hover{opacity:1}
-#plan .neu-plus{stroke:#fff;stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
-#plan text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;pointer-events:none}
-#plan .beschriftung{fill:var(--beschriftung);font-weight:600}
-#plan .beschriftung.zweit{font-weight:400;opacity:.75}
-#plan .kantenmass{fill:var(--auswahl);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round}
+:is(#plan,.plan-bild) .treffer{fill:transparent;stroke:none;pointer-events:all;cursor:move}
+:is(#plan,.plan-bild) .griff{fill:#fff;stroke:var(--auswahl);stroke-width:2px;vector-effect:non-scaling-stroke;cursor:move}
+:is(#plan,.plan-bild) .griff.aktiv{fill:var(--auswahl)}
+:is(#plan,.plan-bild) .neu{fill:var(--auswahl);opacity:.55;cursor:copy}
+:is(#plan,.plan-bild) .neu:hover{opacity:1}
+:is(#plan,.plan-bild) .neu-plus{stroke:#fff;stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;pointer-events:none}
+:is(#plan,.plan-bild) .beschriftung{fill:var(--beschriftung);font-weight:600}
+:is(#plan,.plan-bild) .beschriftung.zweit{font-weight:400;opacity:.75}
+:is(#plan,.plan-bild) .kantenmass{fill:var(--auswahl);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round}
 .panel .karte{margin-bottom:12px}
 .panel h2{font-size:1.05rem}
 .panel label{display:block;font-size:.85rem;color:var(--leise);margin:8px 0 2px}
@@ -572,6 +572,29 @@ table.mk-tabelle{border-collapse:separate;border-spacing:3px;font-size:.88rem}
 .mk-fazit{margin:12px 0 0;padding:8px 12px;border-radius:10px}
 .mk-fazit.schlecht{background:var(--rot-hell)} .mk-fazit.gut{background:var(--gruen-hell)}
 .ue-tab-rahmen{overflow-x:auto}
+/* Rückblick und Bericht */
+.plan-bild{display:block;width:100%;height:auto;max-height:75vh;background:var(--karte2);border:1px solid var(--linie);border-radius:10px;margin:4px 0 12px}
+.plan-bild .pfl,.plan-bild .obj{cursor:default}
+.rb-zeile{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rb-zeile input[type=date]{min-height:40px;padding:6px 10px;border-radius:10px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit}
+#rb-regler{width:100%;margin:12px 0 6px;accent-color:var(--gruen)}
+.rb-monate{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}
+.rb-monate button{border:1px solid var(--linie);background:var(--karte);border-radius:8px;padding:4px 0;font:inherit;font-size:.8rem;color:var(--text);cursor:pointer}
+.rb-monate button:disabled{opacity:.35;cursor:default}
+@media (max-width:600px){.rb-monate{grid-template-columns:repeat(6,1fr)}}
+.rb-tab td:first-child{white-space:nowrap;font-weight:600;vertical-align:top}
+.rb-pfl{display:inline-flex;align-items:center;gap:5px;margin:2px 14px 2px 0}
+.rb-pfl .p-badge{width:22px;height:22px;font-size:.62rem}
+.be-checks{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:6px}
+.be-checks input[type=date]{min-height:34px;padding:3px 8px;border-radius:8px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit}
+.be-kopf{margin:6px 0 14px}.be-kopf h1{margin:0}
+.be-datum{white-space:nowrap;width:1%;color:var(--leise)}
+@media print{
+  body.bericht-ansicht .ch-werkzeug,body.bericht-ansicht .seitentitel{display:none!important}
+  .plan-bild{max-height:none;background:#fff;break-inside:avoid}
+  .be-plan{break-inside:avoid-page}
+  .bericht .raster.zwei{display:block}
+}
 /* Vorrat */
 .sg-liste{padding-top:6px;padding-bottom:6px}
 .sg-eintrag{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;padding:12px 0;border-top:1px solid var(--linie)}
@@ -750,13 +773,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.10.0"></script>
+<script src="pflanzen.js?v=0.11.0"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.10.0";
+const APP_VERSION = "0.11.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -950,6 +973,7 @@ function aktuelleSeite() {
 
 function zeigen() {
   const seite = aktuelleSeite();
+  document.body.classList.remove("bericht-ansicht");
   if (seite !== "planung" && typeof G !== "undefined") G.planJahr = null;
   const titel = SONDERSEITEN[seite] || REITER.find(r => r.id === seite).name;
   $$("[data-reiter]").forEach(a => a.classList.toggle("aktiv", a.dataset.reiter === seite));
@@ -1514,7 +1538,7 @@ const EINHEITEN = ["kg", "g", "Stück", "Bund", "Kopf", "Korb"];
 const pflanzung = id => D.pflanzungen.find(p => p.id === id);
 /* Im Gartenplan hängt „aktiv“ von der Ansicht ab: jetzt = echte Pflanzungen; Planung = geplante des Jahres plus mehrjährige, die stehen bleiben */
 const istMehrjaehrig = p => !!(pflanzeVon(p.pflanze) || {}).mehrjaehrig;
-const aktivePflanzungen = beetId => D.pflanzungen.filter(p => !p.abgeraeumt && (!beetId || p.beet === beetId) && objekt(p.beet) &&
+const aktivePflanzungen = beetId => G.stichtag ? standAm(G.stichtag).filter(p => !beetId || p.beet === beetId) : D.pflanzungen.filter(p => !p.abgeraeumt && (!beetId || p.beet === beetId) && objekt(p.beet) &&
   (G.planJahr ? (p.geplant === G.planJahr || (!p.geplant && istMehrjaehrig(p))) : !p.geplant));
 const echtAktiv = beetId => D.pflanzungen.filter(p => !p.abgeraeumt && !p.geplant && (!beetId || p.beet === beetId) && objekt(p.beet));
 const echte = () => D.pflanzungen.filter(p => !p.geplant);
@@ -2427,7 +2451,7 @@ function chronikJahre() {
 }
 
 /* ---------- Seite ---------- */
-const CH = { jahr: new Date().getFullYear(), typ: "alle", beet: "", pflanze: "", ansicht: "verlauf" };
+const CH = { jahr: new Date().getFullYear(), typ: "alle", beet: "", pflanze: "", ansicht: "verlauf", tag: null };
 function chronikSeite(main) {
   seitentitel(main, "Chronik");
   const jahre = chronikJahre();
@@ -2435,7 +2459,7 @@ function chronikSeite(main) {
   main.insertAdjacentHTML("beforeend", `
     <div class="ch-werkzeug">
       <select id="ch-jahr" aria-label="Jahr">${jahre.map(j => `<option ${j === CH.jahr ? "selected" : ""}>${j}</option>`).join("")}</select>
-      <div class="umschalter" id="ch-ansicht"><button data-a="verlauf" class="${CH.ansicht === "verlauf" ? "an" : ""}">Verlauf</button><button data-a="auswertung" class="${CH.ansicht === "auswertung" ? "an" : ""}">Auswertung</button></div>
+      <div class="umschalter" id="ch-ansicht">${[["verlauf", "Verlauf"], ["auswertung", "Auswertung"], ["rueckblick", "Rückblick"], ["bericht", "Bericht"]].map(([k, n]) => `<button data-a="${k}" class="${CH.ansicht === k ? "an" : ""}">${n}</button>`).join("")}</div>
       <button class="knopf haupt" id="ch-neu">＋ Tagebuch-Eintrag</button>
       <button class="knopf nicht-drucken" id="ch-drucken" title="Drucken oder als PDF speichern">${icon("i-drucken")}<span class="lang"> Drucken</span></button>
     </div>
@@ -2448,7 +2472,10 @@ function chronikSeite(main) {
 }
 function chronikZeichnen() {
   const el = $("#ch-inhalt"); if (!el) return;
+  document.body.classList.toggle("bericht-ansicht", CH.ansicht === "bericht");
   if (CH.ansicht === "auswertung") { el.innerHTML = auswertungHTML(CH.jahr); return; }
+  if (CH.ansicht === "rueckblick") { el.innerHTML = rueckblickHTML(CH.jahr); rueckblickAktiv(CH.jahr); return; }
+  if (CH.ansicht === "bericht") { el.innerHTML = berichtHTML(CH.jahr); berichtAktiv(CH.jahr); return; }
   const alle = chronikEreignisse(CH.jahr);
   const beete = [...new Map(alle.filter(e => e.beet || e.beetName).map(e => [e.beet || e.beetName, e.beetName || (objekt(e.beet) || {}).name || "?"])).entries()];
   const pflanzen = [...new Set(alle.filter(e => e.pflanze).map(e => e.pflanze))].map(id => [id, (pflanzeVon(id) || { name: "?" }).name]).sort((a, b) => a[1].localeCompare(b[1], "de"));
@@ -2903,6 +2930,7 @@ const HM_QUELLEN = {
   vzs_ferm: ["Verbraucherzentrale Südtirol: Wie kann man Gemüse selbst fermentieren?", "https://consumer.bz.it/de/wie-kann-man-gemuese-selbst-fermentieren"],
   bodensee: ["Landratsamt Bodenseekreis: Fermentieren – Handreichung (BW zu Tisch)", "https://www.bodenseekreis.de/fileadmin/03_umwelt_landnutzung/landwirtschaft/downloads/fachinfo_ernaehrung/Fermentieren_Handreichung_und_Rezepte__BaWue_zu_Tisch.pdf"],
   oeko_tk:  ["Öko-Test: Tiefgekühlte Lebensmittel – was hält sich wie lange (nach BZfE)", "https://oekotest.de/essen-trinken/Tiefgekuehlte-Lebensmittel-Was-haelt-sich-wie-lange_12955_1.html"],
+  topagrar: ["top agrar: Seminar zum Fermentieren – Gemüse aus dem Bauerngarten haltbar machen", "https://www.topagrar.com/landleben/kochen-und-backen/seminar-zum-fermentieren-das-gemuese-aus-dem-bauerngarten-haltbar-machen-13369206.html"],
   test_doe: ["Stiftung Warentest: Obst und Gemüse dörren", "https://www.test.de/Doerrgeraete-im-Test-Korinthenmacher-auf-dem-Pruefstand-5074567-0/"],
   oeko_kart:["Öko-Test: Kartoffeln richtig lagern", "https://www.oekotest.de/essen-trinken/Kartoffeln-richtig-lagern-Keller-Kuehlschrank-oder-Kartoffeltopf_11474_1.html"],
   dpa_lag:  ["dpa/Volksstimme (Okt. 2026): Keller, Erdmiete und mehr – Gemüse richtig lagern", "https://www.volksstimme.de/leben/haus-und-garten/reiche-ernte-wie-lagere-ich-mein-gemuse-richtig-4333703"],
@@ -2950,11 +2978,11 @@ const HM_ABSCHNITTE = [
   { id: "fermentieren", icon: "i-saat", titel: "Fermentieren (Milchsäuregärung)", html: () => `
     <p>Milchsäurebakterien, die ohnehin auf dem Gemüse sind, machen es sauer und damit haltbar – Sauerkraut ist das bekannteste Beispiel.</p>
     <ul>
-      <li><b>Salz:</b> etwa 2 % vom Gemüsegewicht, also 20 g Salz pro kg. Reicht der eigene Saft nicht, mit 2 %iger Lake auffüllen (20 g Salz auf 1 Liter Wasser). ${hmQ("vzs_ferm", "bodensee")}</li>
+      <li><b>Salz:</b> etwa 2–3 % vom Gemüsegewicht, also 20–30 g Salz pro kg. Reicht der eigene Saft nicht, mit Salzlake auffüllen – die Verbraucherzentrale Südtirol und das Landratsamt Bodenseekreis nehmen 20 g Salz auf 1 Liter Wasser (siehe unten). ${hmQ("vzs_ferm", "bodensee")}</li>
       <li>Weiche Gemüse wie Zucchini brauchen eine stärkere Lake, etwa 3,5 %. ${hmQ("bodensee")}</li>
       <li><b>Immer unter der Lake halten</b> und beschweren (Glasgewicht, sauberer Stein, Kohlblatt) – an der Luft bildet sich Schimmel. ${hmQ("vzs_ferm", "bodensee")}</li>
       <li>Oben einige Zentimeter Platz lassen; anfangs bildet sich Gas. ${hmQ("vzs_ferm")}</li>
-      <li>Ablauf: etwa 5–10 Tage bei Raumtemperatur, dann kühl stellen, wo es langsamer weitergärt. ${hmQ("vzs_ferm")}</li>
+      <li>Ablauf: einige Tage (je nach Quelle 3–7 oder 5–10) bei Raumtemperatur, dann kühl und dunkel stellen, wo es langsamer weitergärt. ${hmQ("vzs_ferm")}</li>
       <li>Gut geeignet: feste Gemüse wie Weiß- und Rotkohl, Kohlrabi, Blumenkohl, Wurzelgemüse, Rote Bete, Kürbis. ${hmQ("vzs_ferm")}</li>
     </ul>` },
   { id: "trocknen", icon: "i-trocken", titel: "Trocknen und Dörren", html: () => `
@@ -2987,6 +3015,10 @@ const HM_WIDERSPRUECHE = [
   "Gemüse einkochen: Manche Gesundheitsseiten nennen „zweimal auf 120 °C“. Über 100 °C kommt man aber nur mit einem Druckeinkocher; ohne ihn gilt die BfR-Regel mit zweimal 100 °C.",
   "Kräuter einfrieren: Die Verbraucherzentrale Niedersachsen nennt 3–4 Monate, die Verbraucherzentrale Südtirol (nach BLE) 8–10 Monate für portionierte Küchenkräuter. Im Zweifel die kürzere Zeit nehmen – danach leidet vor allem das Aroma.",
   "Blanchieren: Die Verbraucherzentrale Niedersachsen rät, alle rohen Gemüse außer Spargel vor dem Einfrieren zu blanchieren. Nach den BZfE-Angaben (Öko-Test) können Zucchini und Paprika auch roh eingefroren werden.",
+  "Druckeinkocher: Die Anleitung zu deinem Druckeinkochtopf sagt, säurearme Lebensmittel wie Gemüse ließen sich bei 100 °C nie sicher haltbar machen, nur unter Druck. Das BfR hält zweimaliges Erhitzen auf 100 °C als Ausweichlösung für vertretbar. Wer einen Druckeinkocher hat, nimmt für Gemüse am besten ihn.",
+  "Druck: Laut Topf-Anleitung reichen unter 300 m Höhe 10 PSI (etwa 115 °C); das BfR nennt 121 °C (entspricht 15 PSI). Im Zweifel die Zeiten und den Druck aus geprüften Rezepten für den eigenen Topf nehmen.",
+  "Fermentieren – waschen: Die Wurzelwerk-Checkliste rät, das Gemüse nicht zu waschen, sondern nur trocken abzureiben (wegen der Milchsäurebakterien auf der Oberfläche). Das BfR rät allgemein, alles gründlich zu waschen; ein Fermentier-Kurs (top agrar) hält einmal kurz Abspülen für ausreichend.",
+  "Fermentieren – Salzlake: Wurzelwerk nimmt 30 g Salz pro Liter (3 %), die Verbraucherzentrale Südtirol und das Landratsamt Bodenseekreis 20 g (2 %). Beides ist üblich; mehr Salz bremst Fäulniskeime stärker, das Gemüse wird aber salziger.",
   "Dörrtemperatur: Stiftung Warentest nennt für Obst 60–70 °C, Backofenhersteller teils 80 °C. Höher geht schneller, kostet aber Aroma und Farbe.",
 ];
 
@@ -3269,6 +3301,139 @@ function startVorratHTML() {
     <a class="knopf" href="#vorrat/saatgut">${icon("i-vorrat")} Zum Vorrat</a></div>`;
 }
 
+/* ============================================================
+   RÜCKBLICK UND BERICHT (0.11.0)
+   ============================================================ */
+
+/* Statisches Bild des Gartenplans zu einem Stichtag (oder heute) */
+let PLAN_ZIEL = null;
+let PLAN_BILD_NR = 0;
+function planBild(stichtag, breite = 960) {
+  const ob = D.garten.objekte; if (!ob.length) return "";
+  const rs = ob.map(rahmen);
+  const bw = Math.max(...rs.map(r => r.x2)) - Math.min(...rs.map(r => r.x1)), bh = Math.max(...rs.map(r => r.y2)) - Math.min(...rs.map(r => r.y1));
+  const hoehe = Math.round(Math.min(Math.max(breite * (bh / Math.max(bw, 1)), 260), breite * 1.4));
+  const tmp = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  tmp.setAttribute("preserveAspectRatio", "none");
+  tmp.setAttribute("class", "plan-bild");
+  tmp.style.cssText = `position:fixed;left:-20000px;top:0;width:${breite}px;height:${hoehe}px;visibility:hidden`;
+  document.body.appendChild(tmp);
+  const felder = ["view", "auswahl", "pfl", "zeichnen", "setzen", "planJahr", "stichtag", "ecke", "zug", "fuehrung", "kantenFang"];
+  const alt = Object.fromEntries(felder.map(k => [k, G[k]]));
+  PLAN_ZIEL = tmp;
+  Object.assign(G, { auswahl: null, pfl: null, zeichnen: null, setzen: null, planJahr: null, stichtag: stichtag || null, ecke: null, zug: null, fuehrung: null, kantenFang: null });
+  let vb = "", inner = "";
+  try { allesZeigen(); vb = tmp.getAttribute("viewBox"); inner = tmp.innerHTML; }
+  finally { Object.assign(G, alt); PLAN_ZIEL = null; tmp.remove(); }
+  const n = ++PLAN_BILD_NR;   // eigene IDs je Bild, sonst greifen die Rastermuster des ersten Bildes
+  inner = inner.replace(/id="([^"]+)"/g, `id="$1-b${n}"`).replace(/url\(#([^)]+)\)/g, `url(#$1-b${n})`);
+  return `<svg class="plan-bild" xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Gartenplan${stichtag ? " am " + datumKurz(stichtag) : ""}">${inner}</svg>`;
+}
+
+/* Was am Stichtag im Garten stand, nach Beeten */
+function standAm(tag) {
+  return D.pflanzungen.filter(p => !p.geplant && objekt(p.beet) && (p.gepflanzt || "") <= tag && (!p.abgeraeumt || p.abgeraeumt > tag));
+}
+function standListeHTML(tag) {
+  const l = standAm(tag), beete = new Map();
+  for (const p of l) { const n = pflBeetName(p); if (!beete.has(n)) beete.set(n, []); beete.get(n).push(p); }
+  if (!l.length) return `<p class="leise klein" style="margin:0">An diesem Tag war nichts eingetragen.</p>`;
+  return `<table class="tabelle rb-tab"><thead><tr><th>Beet</th><th>Was wuchs dort</th></tr></thead><tbody>
+    ${[...beete.entries()].sort((a, b) => a[0].localeCompare(b[0], "de")).map(([n, ps]) => `<tr><td>${esc(n)}</td><td>${ps.sort((a, b) => (a.gepflanzt || "").localeCompare(b.gepflanzt || "")).map(p => {
+      const pf = pflanzeVon(p.pflanze);
+      return `<span class="rb-pfl">${pf ? pflanzenBadge(pf) : ""} ${esc(pf ? pf.name : "?")}${p.sorte ? ` <span class="leise">${esc(p.sorte)}</span>` : ""} <span class="leise klein">${p.wie === "gesät" ? "gesät" : p.wie === "gesteckt" ? "gesteckt" : "seit"} ${datumKurz(p.gepflanzt)}</span></span>`; }).join("")}</td></tr>`).join("")}
+  </tbody></table>`;
+}
+
+/* ---------- Rückblick (in der Chronik) ---------- */
+const tagImJahr = iso => Math.round((new Date(iso + "T12:00") - new Date(iso.slice(0, 4) + "-01-01T12:00")) / 864e5);
+const isoAusTag = (jahr, n) => { const d = new Date(jahr, 0, 1 + n, 12); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+function rueckblickHTML(jahr) {
+  const heute = heuteISO(), ende = jahr === +heute.slice(0, 4) ? heute : `${jahr}-12-31`;
+  if (!CH.tag || +CH.tag.slice(0, 4) !== jahr || CH.tag > ende) CH.tag = jahr === +heute.slice(0, 4) ? heute : `${jahr}-07-15`;
+  if (!D.garten.objekte.length) return `<div class="karte"><p class="leise" style="margin:0">Noch kein Gartenplan angelegt.</p></div>`;
+  const max = tagImJahr(ende);
+  return `<div class="karte nicht-drucken rb-steuer">
+      <div class="rb-zeile"><label for="rb-datum"><b>Garten am</b></label><input type="date" id="rb-datum" min="${jahr}-01-01" max="${ende}" value="${CH.tag}">
+        <button class="knopf klein" id="rb-heute">${jahr === +heute.slice(0, 4) ? "Heute" : "31.12."}</button></div>
+      <input type="range" id="rb-regler" min="0" max="${max}" value="${tagImJahr(CH.tag)}" aria-label="Datum verschieben">
+      <div class="rb-monate">${MONATE.map((m, i) => `${jahr}-${String(i + 1).padStart(2, "0")}-15` <= ende ? `<button data-m="${i + 1}">${m.slice(0, 3)}</button>` : `<button disabled>${m.slice(0, 3)}</button>`).join("")}</div>
+      <p class="klein leise" style="margin:6px 0 0">Zeigt, was an diesem Tag gepflanzt und noch nicht abgeräumt war. Beete, Wege und Flächen sind immer im heutigen Zustand – Umbauten merkt sich die App nicht.</p>
+    </div>
+    <div class="karte"><h2 id="rb-titel">${icon("i-garten")} Garten am ${datumText(new Date(CH.tag + "T12:00"))}</h2><div id="rb-bild" class="rb-bild"></div><div id="rb-liste"></div></div>`;
+}
+function rueckblickAktiv(jahr) {
+  const zeichne = () => {
+    $("#rb-titel").innerHTML = `${icon("i-garten")} Garten am ${datumText(new Date(CH.tag + "T12:00"))}`;
+    $("#rb-bild").innerHTML = planBild(CH.tag); $("#rb-liste").innerHTML = standListeHTML(CH.tag);
+    $("#rb-datum").value = CH.tag; $("#rb-regler").value = tagImJahr(CH.tag);
+  };
+  if (!$("#rb-bild")) return;
+  zeichne();
+  let rf = 0;
+  $("#rb-regler").oninput = e => { CH.tag = isoAusTag(jahr, +e.target.value); cancelAnimationFrame(rf); rf = requestAnimationFrame(zeichne); };
+  $("#rb-datum").onchange = e => { if (e.target.value) { CH.tag = e.target.value; zeichne(); } };
+  $("#rb-heute").onclick = () => { CH.tag = jahr === new Date().getFullYear() ? heuteISO() : `${jahr}-12-31`; zeichne(); };
+  $$(".rb-monate button[data-m]").forEach(b => b.onclick = () => { CH.tag = `${jahr}-${String(b.dataset.m).padStart(2, "0")}-15`; zeichne(); });
+}
+
+/* ---------- Jahresbericht ---------- */
+const BERICHT = { zeiten: ["05-15", "07-15", "09-15"], eigen: "", teile: { plaene: true, ueberblick: true, wetter: true, verlauf: true, tagebuch: true } };
+const BERICHT_ZEITEN = [["04-15", "Mitte April"], ["05-15", "Mitte Mai"], ["06-15", "Mitte Juni"], ["07-15", "Mitte Juli"], ["08-15", "Mitte August"], ["09-15", "Mitte September"], ["10-15", "Mitte Oktober"]];
+const BERICHT_TEILE = [["plaene", "Gartenpläne"], ["ueberblick", "Überblick und Ernte"], ["wetter", "Wetter nach Monaten"], ["verlauf", "Was im Garten geschah"], ["tagebuch", "Tagebuch"]];
+
+function wetterMonate(jahr) {
+  const log = D.wetterLog || {}, m = [];
+  for (let i = 1; i <= 12; i++) {
+    const tage = Object.keys(log).filter(t => t.startsWith(`${jahr}-${String(i).padStart(2, "0")}-`)).map(t => log[t]);
+    if (!tage.length) continue;
+    m.push({ monat: i, tage: tage.length, min: Math.min(...tage.map(x => x.min)), max: Math.max(...tage.map(x => x.max)),
+      frost: tage.filter(x => x.min <= GRENZEN.frost).length, hitze: tage.filter(x => x.max >= GRENZEN.hitze).length, regen: tage.reduce((s, x) => s + (x.regen || 0), 0) });
+  }
+  return m;
+}
+function berichtHTML(jahr) {
+  const heute = heuteISO(), T = BERICHT.teile;
+  const tage = [...new Set([...BERICHT.zeiten.map(z => `${jahr}-${z}`), ...(BERICHT.eigen && BERICHT.eigen.startsWith(jahr + "-") ? [BERICHT.eigen] : [])])].filter(t => t <= heute).sort();
+  const ort = D.einstellungen.standort;
+  const ev = chronikEreignisse(jahr).sort((a, b) => a.datum.localeCompare(b.datum));
+  const garten = ev.filter(e => e.typ !== "tagebuch"), tb = ev.filter(e => e.typ === "tagebuch");
+  const wm = wetterMonate(jahr);
+  let h = `<div class="karte nicht-drucken be-optionen">
+      <h2>${icon("i-drucken")} Jahresbericht ${jahr} zusammenstellen</h2>
+      <div class="nb-gruppe"><div class="nb-titel">Gartenplan zeigen am</div>
+        <div class="be-checks">${BERICHT_ZEITEN.map(([z, n]) => `<label class="schalter-klein"><input type="checkbox" data-zeit="${z}" ${BERICHT.zeiten.includes(z) ? "checked" : ""} ${`${jahr}-${z}` > heute ? "disabled" : ""}> ${n}</label>`).join("")}
+        <label class="schalter-klein">eigenes Datum: <input type="date" id="be-eigen" min="${jahr}-01-01" max="${jahr === +heute.slice(0, 4) ? heute : jahr + "-12-31"}" value="${BERICHT.eigen.startsWith(jahr + "-") ? BERICHT.eigen : ""}"></label></div></div>
+      <div class="nb-gruppe"><div class="nb-titel">Abschnitte</div>
+        <div class="be-checks">${BERICHT_TEILE.map(([k, n]) => `<label class="schalter-klein"><input type="checkbox" data-teil="${k}" ${T[k] ? "checked" : ""}> ${n}</label>`).join("")}</div></div>
+      <button class="knopf haupt" id="be-drucken">${icon("i-drucken")} Bericht drucken oder als PDF speichern</button>
+    </div>
+    <div class="bericht">
+    <div class="be-kopf"><h1>Gartenbericht ${jahr}</h1><p class="leise">${ort && ort.name ? esc(ort.name) + " · " : ""}erstellt am ${datumKurz(heute)} mit Kraut und Rüben</p></div>`;
+  if (T.plaene) {
+    if (!D.garten.objekte.length) h += `<div class="karte"><p class="leise" style="margin:0">Noch kein Gartenplan angelegt.</p></div>`;
+    else if (!tage.length) h += `<div class="karte nicht-drucken"><p class="leise" style="margin:0">Kein Zeitpunkt für den Gartenplan gewählt.</p></div>`;
+    else h += tage.map(t => `<div class="karte be-plan"><h2>${icon("i-garten")} Garten am ${datumText(new Date(t + "T12:00"))}</h2>${planBild(t)}${standListeHTML(t)}</div>`).join("");
+  }
+  if (T.ueberblick) h += auswertungHTML(jahr);
+  if (T.wetter) h += `<div class="karte be-wetter"><h2>${icon("i-w-teils")} Wetter ${jahr} nach Monaten</h2>
+    ${wm.length ? `<table class="tabelle"><thead><tr><th>Monat</th><th>Tiefstwert</th><th>Höchstwert</th><th>Frostnächte</th><th>Hitzetage</th><th>Regen</th><th class="leise">Tage erfasst</th></tr></thead><tbody>
+      ${wm.map(m => `<tr><td>${MONATE[m.monat - 1]}</td><td>${zahl(m.min, 1)} °C</td><td>${zahl(m.max, 0)} °C</td><td>${m.frost}</td><td>${m.hitze}</td><td>${zahl(m.regen, 0)} mm</td><td class="leise">${m.tage}</td></tr>`).join("")}
+    </tbody></table><p class="klein leise" style="margin:8px 0 0">Frostnacht: Tiefstwert ${GRENZEN.frost} °C oder darunter · Hitzetag: ab ${GRENZEN.hitze} °C · Wetterdaten: Open-Meteo.com. Fehlen Tage, war die App länger als eine Woche nicht geöffnet.</p>`
+      : `<p class="leise klein" style="margin:0">Für ${jahr} ist kein Wetter aufgezeichnet.</p>`}</div>`;
+  if (T.verlauf) h += `<div class="karte be-liste"><h2>${icon("i-liste")} Was im Garten geschah</h2>
+    ${garten.length ? `<table class="tabelle"><tbody>${garten.map(e => `<tr><td class="be-datum">${datumKurz(e.datum)}</td><td>${esc(e.text)}${e.zusatz ? ` <span class="leise klein">${esc(e.zusatz)}</span>` : ""}</td></tr>`).join("")}</tbody></table>` : `<p class="leise klein" style="margin:0">Keine Einträge.</p>`}</div>`;
+  if (T.tagebuch) h += `<div class="karte be-liste"><h2>${icon("i-notiz")} Tagebuch</h2>
+    ${tb.length ? `<table class="tabelle"><tbody>${tb.map(e => `<tr><td class="be-datum">${datumKurz(e.datum)}</td><td><div class="rz-text">${esc(e.text)}</div>${e.zusatz ? `<span class="leise klein">${esc(e.zusatz)}</span>` : ""}</td></tr>`).join("")}</tbody></table>` : `<p class="leise klein" style="margin:0">Keine Tagebuch-Einträge.</p>`}</div>`;
+  return h + `</div>`;
+}
+function berichtAktiv(jahr) {
+  $$("[data-zeit]").forEach(c => c.onchange = () => { BERICHT.zeiten = $$("[data-zeit]").filter(x => x.checked).map(x => x.dataset.zeit); chronikZeichnen(); });
+  $$("[data-teil]").forEach(c => c.onchange = () => { BERICHT.teile[c.dataset.teil] = c.checked; chronikZeichnen(); });
+  const e = $("#be-eigen"); if (e) e.onchange = () => { BERICHT.eigen = e.value || ""; chronikZeichnen(); };
+  const d = $("#be-drucken"); if (d) d.onclick = () => window.print();
+}
+
 function seitentitel(main, titel, unter) {
   main.insertAdjacentHTML("beforeend", `<div class="seitentitel"><h1>${esc(titel)}</h1>${unter ? `<p class="leise">${unter}</p>` : ""}</div>`);
 }
@@ -3472,6 +3637,8 @@ const SEITEN = {
             <li><b>Filter:</b> Jahr, Art (Garten, Ernte, Tagebuch, Wetter), Beet und Pflanze. „Im Plan“ springt zur Pflanzung im Gartenplan.</li>
             <li><b>Wetter:</b> Die App merkt sich das Wetter der vergangenen Tage, sobald die Startseite mit Standort das Wetter lädt (es reicht, die App mindestens einmal pro Woche zu öffnen). Daraus entstehen Einträge für Frostnächte (ab 0 °C), Hitzetage (ab 30 °C), Starkregen (ab 20 mm) und Trockenphasen (mindestens 10 Tage mit zusammen unter 5 mm).</li>
             <li><b>Auswertung:</b> Pflanzungen und Ernten des Jahres, Erntemengen je Pflanze im Vergleich zum Vorjahr, letzter Frost im Frühjahr und erster Frost im Herbst, Frostnächte, Hitzetage und Regenmenge.</li>
+            <li><b>Rückblick:</b> zeigt den Gartenplan an einem früheren Tag – mit Datumsfeld, Schieberegler oder den Monatsknöpfen (jeweils der 15.). Darunter steht, was an dem Tag in welchem Beet wuchs. Beete und Wege sind immer im heutigen Zustand, weil sich die App Umbauten nicht merkt.</li>
+            <li><b>Bericht:</b> stellt einen Jahresbericht zum Drucken oder als PDF zusammen: Gartenpläne zu wählbaren Zeitpunkten (z. B. Mitte Mai, Juli, September oder ein eigenes Datum), Überblick und Ernte, Wetter nach Monaten, was im Garten geschah, und das Tagebuch. Abschnitte lassen sich abwählen.</li>
             <li><b>Drucken:</b> „${icon("i-drucken")} Drucken“ druckt die aktuelle Ansicht oder speichert sie als PDF.</li>
           </ul>
         </div></details>
@@ -3541,6 +3708,7 @@ const formVon = art => (ARTEN[art].kreis ? "kreis" : ARTEN[art].linie ? "linie" 
 
 const G = {               // Zustand des Plans (nicht gespeichert)
   planJahr: null,         // null = jetzt; sonst Jahr der Planungsansicht
+  stichtag: null,         // nur für Rückblick-Bilder: Stand an diesem Tag
   view: null,             // sichtbarer Ausschnitt {x, y, w} in cm
   auswahl: null,          // id des gewählten Objekts
   ecke: null,             // Index der gewählten Ecke
@@ -3726,7 +3894,7 @@ function rueckgaengig() { if (!G.zurueck.length) return; G.vor.push(stand()); wi
 function wiederholen() { if (!G.vor.length) return; G.zurueck.push(stand()); wiederherstellen(G.vor.pop()); }
 
 /* ---------- Ansicht ---------- */
-function planGroesse() { const r = $("#plan").getBoundingClientRect(); return { b: r.width || 1, h: r.height || 1, l: r.left, o: r.top }; }
+function planGroesse() { const r = (PLAN_ZIEL || $("#plan")).getBoundingClientRect(); return { b: r.width || 1, h: r.height || 1, l: r.left, o: r.top }; }
 function viewHoehe() { const g = planGroesse(); return G.view.w * g.h / g.b; }
 function massstab() { return planGroesse().b / G.view.w; } // Pixel pro cm
 function welt(cx, cy) {
@@ -3911,7 +4079,7 @@ function formElement(o, kl, s) {
 }
 
 function planZeichnen() {
-  const svg = $("#plan"); if (!svg || !G.view) return;
+  const svg = PLAN_ZIEL || $("#plan"); if (!svg || !G.view) return;
   const vh = viewHoehe(), s = massstab(), v = G.view;
   svg.setAttribute("viewBox", `${v.x} ${v.y} ${v.w} ${vh}`);
   const linie = 1 / s;
@@ -4053,7 +4221,7 @@ function plusGriff(rolle, daten, x, y, rg) {
   return `<g data-rolle="${rolle}" ${daten}><circle class="treffer" cx="${x}" cy="${y}" r="${rg * (fingerBedienung() ? 2.2 : 1.6)}"/><circle class="neu" cx="${x}" cy="${y}" r="${rg * 0.85}"/><path class="neu-plus" d="M${x - rg * 0.45} ${y}H${x + rg * 0.45}M${x} ${y - rg * 0.45}V${y + rg * 0.45}"/></g>`;
 }
 function massstabZeichnen() {
-  const el = $("#massstab"); if (!el) return;
+  const el = $("#massstab"); if (!el || PLAN_ZIEL) return;
   const s = massstab();
   const stufen = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000];
   const l = stufen.find(x => x >= 90 / s) || 10000;
