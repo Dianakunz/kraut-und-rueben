@@ -288,11 +288,14 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 #plan .pfl{fill:var(--pf);fill-opacity:.38;stroke:var(--pf);stroke-width:1.5px;vector-effect:non-scaling-stroke;cursor:pointer}
 #plan .pfl-flaeche{fill-opacity:.42}
 #plan .pfl.gewaehlt{stroke:var(--auswahl);stroke-width:2.5px;fill-opacity:.55}
+#pfl-gespeichert.gespeichert{color:var(--gruen);font-weight:650;opacity:1}
+#plan .pfl.eng{stroke:var(--gelb);stroke-width:2.5px;stroke-dasharray:4 3}
+#plan .pfl.punkt-gewaehlt{stroke-width:4px;stroke-dasharray:none}
 #plan .pfl.konflikt{stroke:var(--rot);stroke-width:2.5px;stroke-dasharray:5 3}
 #plan .pfl-kern{fill:var(--pf);pointer-events:none}
 #plan .pfl-kuerzel{fill:#fff;font-weight:700;pointer-events:none}
 #plan .pfl-text{fill:var(--text);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
-#plan .pfl-text.klein{font-weight:500}
+#plan .pfl-text.zweit{font-weight:500}
 #plan .pfl-vorschau{fill:var(--auswahl);fill-opacity:.15;stroke:var(--auswahl);stroke-width:2px;stroke-dasharray:6 4;vector-effect:non-scaling-stroke;pointer-events:none}
 #plan .setz-ziel{fill:none;stroke:var(--auswahl);stroke-width:3px;stroke-dasharray:8 5;vector-effect:non-scaling-stroke;pointer-events:none}
 .pw-liste{list-style:none;margin:0;padding:0;max-height:60vh;overflow:auto;border-top:1px solid var(--linie)}
@@ -438,7 +441,7 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 #plan .neu-plus{stroke:#fff;stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
 #plan text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;pointer-events:none}
 #plan .beschriftung{fill:var(--beschriftung);font-weight:600}
-#plan .beschriftung.klein{font-weight:400;opacity:.75}
+#plan .beschriftung.zweit{font-weight:400;opacity:.75}
 #plan .kantenmass{fill:var(--auswahl);font-weight:650;paint-order:stroke;stroke:var(--plan-bg);stroke-width:3px;stroke-linejoin:round}
 .panel .karte{margin-bottom:12px}
 .panel h2{font-size:1.05rem}
@@ -560,13 +563,13 @@ dialog .knopfreihe{justify-content:flex-end}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.4.0"></script>
+<script src="pflanzen.js?v=0.4.1"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.4.0";
+const APP_VERSION = "0.4.1";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1320,6 +1323,28 @@ function nachbarnImBeet(p) {
   return erg;
 }
 const hatKonflikt = p => nachbarnImBeet(p).some(n => n.art === "schlecht");
+/* Zu eng: Platzkreise bzw. Flächen überschneiden sich deutlich. Ergebnis: Set mit "pid" (Fläche) bzw. "pid:i" (Einzelpflanze) */
+const ENG_TOLERANZ = 0.85;   // 15 % Überschneidung sind noch in Ordnung
+function zuEng() {
+  const teile = [];
+  for (const p of aktivePflanzungen()) {
+    if (p.form === "flaeche") teile.push({ key: p.id, pid: p.id, rect: { x1: p.x, y1: p.y, x2: p.x + p.w, y2: p.y + p.h } });
+    else { const r = platzRadius(pflanzeVon(p.pflanze)); p.punkte.forEach(([x, y], i) => teile.push({ key: p.id + ":" + i, pid: p.id, x, y, r })); }
+  }
+  const eng = new Set();
+  const kreisRect = (k, q) => Math.hypot(Math.max(q.x1 - k.x, 0, k.x - q.x2), Math.max(q.y1 - k.y, 0, k.y - q.y2)) < k.r * ENG_TOLERANZ;
+  for (let i = 0; i < teile.length; i++) for (let j = i + 1; j < teile.length; j++) {
+    const a = teile[i], b = teile[j];
+    let zu = false;
+    if (a.rect && b.rect) zu = Math.min(a.rect.x2, b.rect.x2) - Math.max(a.rect.x1, b.rect.x1) > 2 && Math.min(a.rect.y2, b.rect.y2) - Math.max(a.rect.y1, b.rect.y1) > 2;
+    else if (a.rect) zu = kreisRect(b, a.rect);
+    else if (b.rect) zu = kreisRect(a, b.rect);
+    else zu = Math.hypot(a.x - b.x, a.y - b.y) < (a.r + b.r) * ENG_TOLERANZ;
+    if (zu) { eng.add(a.key); eng.add(b.key); }
+  }
+  return eng;
+}
+const pflZuEng = (p, eng) => p.form === "flaeche" ? eng.has(p.id) : p.punkte.some((_, i) => eng.has(p.id + ":" + i));
 function pauseJahre(pf) {
   const t = pf && (pf.pause || familieVon(pf).pause);
   const z = t && parseInt(t, 10);
@@ -1366,24 +1391,24 @@ function pflDrehen(liste, mitte, grad) {
 function pflanzungenSVG(s) {
   let h = "";
   const liste = aktivePflanzungen();
-  const konflikte = new Set(liste.filter(hatKonflikt).map(p => p.id));
+  const konflikte = new Set(liste.filter(hatKonflikt).map(p => p.id)), eng = zuEng();
   for (const p of liste) {
     const pf = pflanzeVon(p.pflanze), farbe = pf ? familieVon(pf).farbe : "#8a8f80";
     const kl = `pfl${p.id === G.pfl ? " gewaehlt" : ""}${konflikte.has(p.id) ? " konflikt" : ""}`;
     const name = pf ? pf.name : "?";
     if (p.form === "flaeche") {
-      h += `<rect class="${kl} pfl-flaeche" data-rolle="pfl" data-pid="${p.id}" x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="${Math.min(6, p.w / 4, p.h / 4)}" style="--pf:${farbe}"/>`;
+      h += `<rect class="${kl}${eng.has(p.id) ? " eng" : ""} pfl-flaeche" data-rolle="pfl" data-pid="${p.id}" x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="${Math.min(6, p.w / 4, p.h / 4)}" style="--pf:${farbe}"/>`;
       const fs = Math.min(12 / s, p.h / 2.6, p.w / Math.max(4, name.length * 0.62));
       if (fs * s >= 8) {
         const zwei = p.h * s > 34;
         h += `<text class="pfl-text" x="${p.x + p.w / 2}" y="${p.y + p.h / 2 - (zwei ? fs * 0.55 : 0)}" font-size="${fs}" text-anchor="middle" dominant-baseline="middle">${esc(name)}</text>`;
-        if (zwei) h += `<text class="pfl-text klein" x="${p.x + p.w / 2}" y="${p.y + p.h / 2 + fs * 0.7}" font-size="${fs * 0.85}" text-anchor="middle" dominant-baseline="middle">${anzahlText(p)} Stück</text>`;
+        if (zwei) h += `<text class="pfl-text zweit" x="${p.x + p.w / 2}" y="${p.y + p.h / 2 + fs * 0.7}" font-size="${fs * 0.85}" text-anchor="middle" dominant-baseline="middle">${anzahlText(p)} Stück</text>`;
       }
       if (p.id === G.pfl) h += `<circle class="griff" data-rolle="pfl-groesse" cx="${p.x + p.w}" cy="${p.y + p.h}" r="${7 / s}"/>`;
     } else {
       const r = platzRadius(pf), kurz = name.slice(0, 2);
       p.punkte.forEach(([x, y], i) => {
-        h += `<circle class="${kl} pfl-punkt" data-rolle="pfl" data-pid="${p.id}" data-pi="${i}" cx="${x}" cy="${y}" r="${r}" style="--pf:${farbe}"/>`;
+        h += `<circle class="${kl}${eng.has(p.id + ":" + i) ? " eng" : ""}${p.id === G.pfl && G.pflPunkt === i ? " punkt-gewaehlt" : ""} pfl-punkt" data-rolle="pfl" data-pid="${p.id}" data-pi="${i}" cx="${x}" cy="${y}" r="${r}" style="--pf:${farbe}"/>`;
         h += `<circle class="pfl-kern" cx="${x}" cy="${y}" r="${Math.min(r * 0.45, 9 / s)}" style="--pf:${farbe}"/>`;
         if (r * s >= 14) h += `<text class="pfl-kuerzel" x="${x}" y="${y}" font-size="${Math.min(r * 0.5, 10 / s)}" text-anchor="middle" dominant-baseline="central">${esc(kurz)}</text>`;
       });
@@ -1468,9 +1493,10 @@ function setzenKlick(w, e) {      // Tippen ohne Ziehen
   const r = Math.min(rasterwert(e), 5), pt = [einrasten(w[0], r), einrasten(w[1], r)];
   const vorher = stand();
   if (z.form === "punkt") {
-    const g = z.gruppe && pflanzung(z.gruppe);
-    if (g) g.punkte.push(pt);
-    else { const p = neuePflanzung(z, { form: "punkt", punkte: [pt] }); z.gruppe = p.id; G.pfl = p.id; }
+    let p = z.gruppe && pflanzung(z.gruppe);
+    if (p) p.punkte.push(pt);
+    else { p = neuePflanzung(z, { form: "punkt", punkte: [pt] }); z.gruppe = p.id; G.pfl = p.id; }
+    if (zuEng().has(p.id + ":" + (p.punkte.length - 1))) melden(`Etwas eng: ${pflanzeVon(z.pflanze).name} braucht etwa ${pflAbstand(pflanzeVon(z.pflanze))[1]} cm Abstand.`);
     merken(vorher); setzenHinweis(); planZeichnen(); panelZeichnen();
   } else {
     const pf = pflanzeVon(z.pflanze), [reihe] = pflAbstand(pf), br = rahmen(ziel);
@@ -1544,12 +1570,13 @@ function pflanzenWahlEreignisse(el, beet) {
 function bepflanzungHTML(beet) {
   const liste = aktivePflanzungen(beet.id);
   const frueher = D.pflanzungen.filter(p => p.beet === beet.id && p.abgeraeumt).sort((a, b) => (b.gepflanzt || "").localeCompare(a.gepflanzt || ""));
-  const konflikte = [];
+  const konflikte = [], engSet = zuEng();
   for (const p of liste) for (const n of nachbarnImBeet(p)) if (n.art === "schlecht" && p.id < n.p.id) konflikte.push(`${pflanzeVon(p.pflanze).name} und ${pflanzeVon(n.p.pflanze).name}`);
   return `<div class="karte"><h2>🌱 Bepflanzung</h2>
     ${liste.length ? `<ul class="objliste">${liste.map(p => { const pf = pflanzeVon(p.pflanze) || { name: "?" };
       return `<li data-pfl="${p.id}">${pflanzenBadge(pf)}<span>${esc(pf.name)}${p.sorte ? ` <span class="leise">‚${esc(p.sorte)}‘</span>` : ""}</span><span class="leise">${anzahlText(p)} St.</span></li>`; }).join("")}</ul>`
       : `<p class="klein leise" style="margin:0 0 6px">Hier wächst gerade nichts.</p>`}
+    ${liste.some(p => pflZuEng(p, engSet)) ? `<div class="hinweis warn" style="margin-top:8px"><span class="sym">⚠️</span><div><b>Zu eng</b><span class="klein">${esc([...new Set(liste.filter(p => pflZuEng(p, engSet)).map(p => pflanzeVon(p.pflanze).name))].join(", "))}: Platzbedarf überschneidet sich (gelb gestrichelt).</span></div></div>` : ""}
     ${konflikte.length ? `<div class="hinweis warn" style="margin-top:8px"><span class="sym">⚠️</span><div><b>Schlechte Nachbarn</b><span class="klein">${esc(konflikte.join("; "))} stehen dicht beieinander.</span></div></div>` : ""}
     <div class="knopfreihe"><button class="knopf haupt" data-tun="pflanze-setzen">＋ Pflanze setzen</button></div>
     ${frueher.length ? `<details style="margin-top:10px"><summary class="klein"><b>Früher hier</b> (${frueher.length})</summary><ul class="klein" style="margin:6px 0 0;padding-left:18px">${frueher.slice(0, 12).map(p =>
@@ -1565,7 +1592,8 @@ function bepflanzungEreignisse(el, beet) {
 /* ---------- Panel einer Pflanzung ---------- */
 function pflanzungPanelHTML(p) {
   const pf = pflanzeVon(p.pflanze) || { name: "Unbekannte Pflanze", id: "" }, beet = objekt(p.beet);
-  const nb = nachbarnImBeet(p), mo = new Date().getMonth() + 1;
+  const nb = nachbarnImBeet(p), mo = new Date().getMonth() + 1, eng = pflZuEng(p, zuEng());
+  const einzelnGewaehlt = p.form === "punkt" && G.pflPunkt !== null && G.pflPunkt !== undefined && p.punkte[G.pflPunkt] && p.punkte.length > 1;
   const ernteZeit = (pf.ernte || []).includes(mo);
   const summe = {};
   for (const e of p.ernten || []) if (e.menge) summe[e.einheit] = (summe[e.einheit] || 0) + e.menge;
@@ -1576,12 +1604,15 @@ function pflanzungPanelHTML(p) {
     <label>Wann</label>
     <div class="feld-einheit"><select data-pf="wie" aria-label="Wie" style="flex:0 0 auto;width:auto">${["gepflanzt", "gesät", "gesteckt"].map(w => `<option ${p.wie === w ? "selected" : ""}>${w}</option>`).join("")}</select><span>am</span><input type="date" data-pf="gepflanzt" value="${esc(p.gepflanzt || "")}"></div>
     <label>Sorte</label><input type="text" data-pf="sorte" value="${esc(p.sorte || "")}" placeholder="z. B. Ochsenherz">
+    <p class="klein leise" style="margin:4px 0 0">Datum, Sorte, Notiz und Ernte gelten für die ganze Pflanzung. Für eine zweite Sorte die Pflanze einfach noch einmal setzen.</p>
     ${p.form === "flaeche" ? `<div class="zwei">
       <div><label>Breite</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-pf="w" value="${(p.w / 100).toFixed(2)}"><span>m</span></div></div>
       <div><label>Tiefe</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-pf="h" value="${(p.h / 100).toFixed(2)}"><span>m</span></div></div></div>
       <label>Anzahl</label><div class="feld-einheit"><input type="number" step="1" min="1" inputmode="numeric" data-pf="anzahl" value="${p.anzahl || ""}" placeholder="ca. ${autoAnzahl(pf, p.w, p.h)} (geschätzt)"><span>Stück</span></div>` : ""}
     <label>Notiz</label><textarea data-pf="notiz" rows="2" placeholder="z. B. mit Vlies abgedeckt">${esc(p.notiz || "")}</textarea>
+    <p class="klein leise" id="pfl-gespeichert" style="margin:6px 0 0">Änderungen werden automatisch gespeichert.</p>
   </div>
+  ${eng ? `<div class="hinweis warn" style="margin:0 0 14px"><span class="sym">⚠️</span><div><b>Zu eng</b><span class="klein">${p.form === "punkt" ? `Die gelb gestrichelten Pflanzen überschneiden sich mit ihren Nachbarn. ${esc(pf.name)} braucht etwa ${pflAbstand(pf)[1]} cm Abstand – der Kreis zeigt den Platzbedarf.` : "Diese Fläche überschneidet sich mit einer anderen Pflanzung."}</span></div></div>` : ""}
   ${nb.length ? `<div class="karte"><h2>🤝 Nachbarn hier</h2>${nb.map(n => `<span class="chip ${n.art}">${n.art === "gut" ? "✓" : n.art === "schlecht" ? "✗" : "?"} ${esc(pflanzeVon(n.p.pflanze).name)}</span>`).join("")}
     ${nb.some(n => n.art === "schlecht") ? `<p class="klein leise" style="margin:6px 0 0">Rot heißt: Diese Kombination gilt als ungünstig. Mehr Abstand (über ${NACHBAR_NAEHE} cm) oder ein anderes Beet hilft.</p>` : ""}</div>` : ""}
   <div class="karte"><h2>🧺 Ernte</h2>
@@ -1592,10 +1623,11 @@ function pflanzungPanelHTML(p) {
   </div>
   <div class="karte"><div class="knopfreihe" style="margin:0">
     ${p.form === "punkt" ? `<button class="knopf" data-tun="mehr-setzen">＋ Weitere setzen</button>` : ""}
+    ${einzelnGewaehlt ? `<button class="knopf" data-tun="punkt-weg">✕ Nur diese eine Pflanze entfernen</button>` : ""}
     <button class="knopf" data-tun="abraeumen">🧹 Abräumen</button>
     <button class="knopf gefahr" data-tun="pfl-loeschen">🗑️ Löschen</button>
   </div>
-  <p class="klein leise" style="margin:8px 0 0">${p.form === "punkt" ? "Pflanzen lassen sich einzeln verschieben. Doppelklick auf eine Pflanze entfernt sie." : "Ziehen verschiebt die Fläche, der Punkt unten rechts ändert die Größe."}
+  <p class="klein leise" style="margin:8px 0 0">${p.form === "punkt" ? "Pflanzen lassen sich einzeln verschieben. Um eine einzelne zu entfernen, sie im Plan antippen (sie wird dicker umrandet) und dann „Nur diese eine Pflanze entfernen“." : "Ziehen verschiebt die Fläche, der Punkt unten rechts ändert die Größe."}
     <b>Abräumen</b>, wenn das Beet frei wird: Die Pflanzung bleibt für Chronik und Fruchtfolge gespeichert. <b>Löschen</b> nur bei einem falschen Eintrag.</p></div>
   <div class="knopfreihe" style="margin:0 0 14px"><a class="knopf text" href="#wissen/pflanze/${encodeURIComponent(pf.id)}">Im Lexikon ansehen →</a><button class="knopf text" data-tun="zum-beet">← Zum Beet</button></div>`;
 }
@@ -1603,6 +1635,7 @@ function pflanzungPanelEreignisse(el, p) {
   const aendern = fn => { const vorher = stand(); fn(); merken(vorher); planZeichnen(); panelZeichnen(); };
   $$("[data-pf]", el).forEach(f => f.addEventListener("change", () => {
     const feld = f.dataset.pf, v = f.value, zw = parseFloat(String(v).replace(",", "."));
+    setTimeout(() => { const g = $("#pfl-gespeichert"); if (g) { g.textContent = "✓ Gespeichert"; g.classList.add("gespeichert"); } }, 0);
     aendern(() => {
       if (feld === "gepflanzt") p.gepflanzt = v || heuteISO();
       else if (feld === "wie" || feld === "sorte" || feld === "notiz") p[feld] = v.trim ? (feld === "notiz" ? v : v.trim()) : v;
@@ -1614,6 +1647,11 @@ function pflanzungPanelEreignisse(el, p) {
   $$("[data-tun]", el).forEach(k => k.onclick = async () => {
     const t = k.dataset.tun, pf = pflanzeVon(p.pflanze) || { name: "?" };
     if (t === "zum-beet") { G.pfl = null; planZeichnen(); panelZeichnen(); }
+    if (t === "punkt-weg" && G.pflPunkt !== null && p.punkte.length > 1) {
+      const vorher = stand(); p.punkte.splice(G.pflPunkt, 1); G.pflPunkt = null;
+      merken(vorher); planZeichnen(); panelZeichnen();
+      melden("Pflanze entfernt.", { text: "Rückgängig", tun: rueckgaengig });
+    }
     if (t === "mehr-setzen") setzenStarten(p.pflanze, p.beet, p.id);
     if (t === "ernten") {
       const w = await eingabe({ titel: `${pf.name} ernten`, text: "Die Menge ist freiwillig.", ja: "Eintragen", felder: [
@@ -1660,9 +1698,11 @@ function pflZugStart(e, t, w, start) {   // gibt true zurück, wenn der Druck ei
   if (rolle !== "pfl") return false;
   const p = pflanzung(t.dataset.pid); if (!p) return false;
   const neu = G.pfl !== p.id;
-  G.pfl = p.id; G.auswahl = p.beet; G.ecke = null; G.auswahlPflanze = null;
+  const punktNeu = t.dataset.pi !== undefined ? +t.dataset.pi : null;
+  const anders = G.pflPunkt !== punktNeu;
+  G.pfl = p.id; G.pflPunkt = punktNeu; G.auswahl = p.beet; G.ecke = null; G.auswahlPflanze = null;
   G.zug = { art: "pfl", pid: p.id, pi: t.dataset.pi !== undefined ? +t.dataset.pi : null, w0: w, orig: kopie(p), vorher: stand(), start, bewegt: false };
-  if (neu) { planZeichnen(); panelZeichnen(); leisteAktualisieren(); }
+  if (neu || anders) { planZeichnen(); panelZeichnen(); leisteAktualisieren(); }
   return true;
 }
 function pflZugBewegen(z, w, e) {
@@ -1678,18 +1718,6 @@ function pflZugBewegen(z, w, e) {
   planZeichnen();
 }
 function pflZugEnde(z) {
-  if (z.art === "pfl" && !z.bewegt && z.pi !== null) {   // Doppelklick auf eine Pflanze entfernt sie
-    const jetzt = Date.now(), l = G.letzterPunkt;
-    G.letzterPunkt = { t: jetzt, pid: z.pid, pi: z.pi };
-    if (l && l.pid === z.pid && l.pi === z.pi && jetzt - l.t < 400) {
-      G.letzterPunkt = null;
-      const p = pflanzung(z.pid), vorher = stand();
-      p.punkte.splice(z.pi, 1);
-      if (!p.punkte.length) { D.pflanzungen = D.pflanzungen.filter(x => x.id !== p.id); G.pfl = null; }
-      merken(vorher); planZeichnen(); panelZeichnen();
-      return;
-    }
-  }
   if (z.bewegt) merken(z.vorher);
   planZeichnen(); panelZeichnen();
 }
@@ -1921,8 +1949,9 @@ const SEITEN = {
             <li><b>Fläche</b> (Reihen-Gemüse wie Möhren, Salat, Zwiebeln): Im Beet die Fläche aufziehen. Ein kurzes Tippen setzt eine Fläche in Standardgröße. Die App schätzt aus den Abständen, wie viele Pflanzen hineinpassen. Du kannst die Zahl auch selbst eintragen.</li>
             <li>Oben über dem Plan lässt sich vor dem Setzen zwischen „Einzeln“ und „Fläche“ umschalten.</li>
           </ul>
-          <p><b>Ändern:</b> Eine Pflanzung antippen. Rechts (am Handy darunter) trägst du Datum, gepflanzt/gesät/gesteckt, Sorte und eine Notiz ein. Einzelne Pflanzen und Flächen lassen sich verschieben, Flächen über den Punkt unten rechts vergrößern. Doppelklick auf eine einzelne Pflanze entfernt sie. „＋ Weitere setzen“ fügt zur selben Pflanzung neue hinzu.</p>
-          <p><b>Nachbarn im Plan:</b> Stehen zwei schlechte Nachbarn näher als 50 cm beieinander, bekommen beide einen <b>rot gestrichelten Rand</b>. Beim Beet steht dann ein Hinweis.</p>
+          <p><b>Ändern:</b> Eine Pflanzung antippen. Rechts (am Handy darunter) trägst du Datum, gepflanzt/gesät/gesteckt, Sorte und eine Notiz ein. Einzelne Pflanzen und Flächen lassen sich verschieben, Flächen über den Punkt unten rechts vergrößern. „＋ Weitere setzen“ fügt zur selben Pflanzung neue hinzu. Eine einzelne Pflanze entfernst du, indem du sie antippst (sie wird dicker umrandet) und dann „Nur diese eine Pflanze entfernen“ wählst.</p>
+          <p><b>Eine Pflanzung = ein Satz:</b> Alles, was du in einem Durchgang setzt, gehört zusammen. Datum, Sorte, Notiz und Ernte gelten für die ganze Pflanzung. Für eine zweite Sorte oder einen späteren Satz die Pflanze einfach noch einmal setzen.</p>
+          <p><b>Warnungen im Plan:</b> Stehen zwei schlechte Nachbarn näher als 50 cm beieinander, bekommen beide einen <b>rot gestrichelten Rand</b>. Überschneiden sich Platzkreise oder Flächen deutlich (mehr als etwa 15 %), ist der Rand <b>gelb gestrichelt</b>: Die Pflanzen stehen zu eng. Beim Beet und bei der Pflanzung steht dann jeweils ein Hinweis.</p>
           <p><b>Ernten:</b> „🧺 Ernte eintragen“ – Datum, auf Wunsch Menge und Einheit. Du kannst so oft ernten, wie du willst; die Summe steht darunter.</p>
           <p><b>Abräumen:</b> Wenn das Beet frei wird. Die Pflanzung verschwindet vom Plan, bleibt aber gespeichert. Daraus entstehen die Fruchtfolge-Hinweise, und beim Beet steht sie unter „Früher hier“. <b>Löschen</b> ist nur für falsche Einträge gedacht.</p>
           <p><b>Beet verschieben oder drehen:</b> Die Pflanzen wandern mit. Wird ein Beet gelöscht, verschwindet, was gerade darin wächst; Abgeräumtes bleibt erhalten.</p>
@@ -2385,7 +2414,7 @@ function planZeichnen() {
     const [cx, cy] = pos;
     belegt.push([cx, cy, bw, bh]);
     html += `<text class="beschriftung" x="${cx}" y="${zweite ? cy - fs * 0.45 : cy}" font-size="${fs}" text-anchor="middle" dominant-baseline="middle">${esc(o.name)}${o.fest ? " 🔒" : ""}</text>`;
-    if (zweite) html += `<text class="beschriftung klein" x="${cx}" y="${cy + fs * 0.8}" font-size="${fs * 0.85}" text-anchor="middle" dominant-baseline="middle">${zweite}</text>`;
+    if (zweite) html += `<text class="beschriftung zweit" x="${cx}" y="${cy + fs * 0.8}" font-size="${fs * 0.85}" text-anchor="middle" dominant-baseline="middle">${zweite}</text>`;
   }
 
   if (G.zeichnen) {
