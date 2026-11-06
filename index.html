@@ -572,6 +572,45 @@ table.mk-tabelle{border-collapse:separate;border-spacing:3px;font-size:.88rem}
 .mk-fazit{margin:12px 0 0;padding:8px 12px;border-radius:10px}
 .mk-fazit.schlecht{background:var(--rot-hell)} .mk-fazit.gut{background:var(--gruen-hell)}
 .ue-tab-rahmen{overflow-x:auto}
+/* Vorrat */
+.sg-liste{padding-top:6px;padding-bottom:6px}
+.sg-eintrag{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;padding:12px 0;border-top:1px solid var(--linie)}
+.sg-eintrag:first-child{border-top:0}
+.sg-eintrag.leer{opacity:.55}
+.sg-text a{color:var(--text);text-decoration:none}
+.sg-eintrag .sg-status,.sg-eintrag .sg-knoepfe{grid-column:2}
+@media (min-width:900px){.sg-eintrag{grid-template-columns:auto minmax(0,1fr) auto auto}.sg-eintrag .sg-status,.sg-eintrag .sg-knoepfe{grid-column:auto}}
+.sg-status{display:inline-block;border:0!important;outline:0;justify-self:start;font-size:.82rem;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--karte2);color:var(--leise)}
+.sg-status.gut{background:var(--gruen-hell);color:var(--gruen-dunkel)}
+.sg-status.bald{background:var(--gelb-hell);color:var(--gelb)}
+.sg-status.alt{background:var(--rot-hell);color:var(--rot)}
+.sg-knoepfe{display:flex;gap:6px;flex-wrap:wrap}
+.knopf.klein{min-height:34px;padding:4px 10px;font-size:.86rem}
+.hm-warn{border-left:5px solid var(--rot)}
+.hm-abschnitt>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+.hm-abschnitt>summary::-webkit-details-marker{display:none}
+.hm-abschnitt>summary h2{margin:0;flex:1}
+.hm-abschnitt>summary::after{content:"＋";color:var(--leise);font-weight:600}
+.hm-abschnitt[open]>summary::after{content:"−"}
+.hm-inhalt{margin-top:10px}
+.hm-inhalt li{margin:6px 0}
+.hm-q{font-size:.8rem;color:var(--leise);white-space:nowrap}
+.hm-q a{color:var(--leise)}
+.hm-tab{border-collapse:collapse;margin:8px 0;font-size:.92rem}
+.hm-tab th,.hm-tab td{text-align:left;padding:5px 14px 5px 0;border-bottom:1px solid var(--linie)}
+.vr-tipps{margin:0 0 10px;padding-left:18px}.vr-tipps li{margin:4px 0}
+.rz-karte>summary{cursor:pointer;list-style:none}
+.rz-karte>summary::-webkit-details-marker{display:none}
+.rz-kopf{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rz-kopf h2{margin:0}
+.rz-pfl{margin-top:8px}
+.rz-inhalt{margin-top:12px;border-top:1px solid var(--linie);padding-top:12px}
+.rz-spalten{display:grid;gap:14px}
+@media (min-width:760px){.rz-spalten{grid-template-columns:1fr 1.6fr}}
+.rz-spalten h3{margin:0 0 6px;font-size:1rem}
+.rz-text{white-space:pre-wrap}
+.rz-warn{background:var(--gelb-hell);color:var(--text);padding:8px 12px;border-radius:10px;margin:0 0 10px}
+@media print{ body.druck-rezept .seitentitel,body.druck-rezept .unternav,body.druck-rezept .rz-karte:not(.wird-gedruckt),body.druck-rezept .ch-werkzeug{display:none!important} }
 .zurueck-reihe{display:flex;gap:6px 22px;flex-wrap:wrap;align-items:baseline}
 .sg-zeile{display:grid;gap:6px 16px;padding:12px 0;border-top:1px solid var(--linie)}
 .sg-zeile:first-child{border-top:0;padding-top:4px}
@@ -711,13 +750,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.9.2"></script>
+<script src="pflanzen.js?v=0.10.0"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.9.2";
+const APP_VERSION = "0.10.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -859,7 +898,7 @@ function eingabe({ titel, text = "", felder, ja = "OK", extra = null }) {
           <span class="feld-einheit">${f.typ === "select"
             ? `<select name="${f.id}">${f.optionen.map(o => { const w = typeof o === "object" ? o.wert : o, t = typeof o === "object" ? o.text : o; return `<option value="${esc(w)}" ${w === f.wert ? "selected" : ""}>${esc(t)}</option>`; }).join("")}</select>`
             : f.typ === "textarea" ? `<textarea name="${f.id}" rows="4">${esc(f.wert ?? "")}</textarea>`
-            : `<input name="${f.id}" type="${f.typ || "text"}" ${f.typ === "number" ? `step="${f.schritt || "any"}" min="${f.min ?? ""}" inputmode="decimal"` : ""} value="${esc(f.wert ?? "")}">`}${f.einheit ? `<span>${esc(f.einheit)}</span>` : ""}</span></label>`).join("")}
+            : `<input name="${f.id}" type="${f.typ || "text"}" ${f.typ === "number" ? `step="${f.schritt || "any"}" min="${f.min ?? ""}" inputmode="decimal"` : ""} ${f.platzhalter ? `placeholder="${esc(f.platzhalter)}"` : ""} ${f.vorschlaege ? `list="dl-${f.id}"` : ""} value="${esc(f.wert ?? "")}">${f.vorschlaege ? `<datalist id="dl-${f.id}">${f.vorschlaege.map(v => `<option value="${esc(v)}">`).join("")}</datalist>` : ""}`}${f.einheit ? `<span>${esc(f.einheit)}</span>` : ""}</span></label>`).join("")}
         <div class="knopfreihe">
           ${extra ? `<button type="button" class="knopf ${extra.gefahr ? "gefahr" : ""}" data-a="x" style="margin-right:auto">${esc(extra.text)}</button>` : ""}
           <button type="button" class="knopf" data-a="0">Abbrechen</button>
@@ -935,6 +974,7 @@ function herkunftName(h) {
     if (t[1] === "eigene") return null;
     return "Alle Pflanzen";
   }
+  if (t[0] === "vorrat") return "Vorrat" + ({ saatgut: ": Saatgut", haltbar: ": Haltbarmachen", rezepte: ": Rezepte" }[(t[1] || "saatgut").split("?")[0]] || "");
   const r = REITER.find(x => x.id === t[0]);
   return r ? r.name : null;
 }
@@ -1323,6 +1363,7 @@ function pflanzenDetail(main, id) {
         ${(p.hinweise || []).length ? `<div class="karte hinweis-karte"><h2>${icon("i-warnung")} Unterschiedliche Angaben</h2><ul>${p.hinweise.map(h => `<li>${esc(h)}</li>`).join("")}</ul></div>` : ""}
         ${lexikonGartenHTML(p)}
         ${sortenKarteHTML(p)}
+        ${vorratKarteHTML(p)}
         <div class="karte"><h2>${icon("i-notiz")} Meine Notizen</h2>
           <textarea id="p-notiz" rows="4" placeholder="Eigene Erfahrungen, Lieblingssorten, Tipps …">${esc((D.pflanzenNotizen || {})[p.id] || "")}</textarea>
           <p class="klein leise" id="p-notiz-stand" style="margin:4px 0 0"></p>
@@ -1331,6 +1372,7 @@ function pflanzenDetail(main, id) {
       </div>
     </div>`);
   $("#so-neu-pf").onclick = () => sorteBearbeiten(null, { pflanze: p.id });
+  $("#vr-saat-pf").onclick = () => saatBearbeiten(null, { pflanze: p.id });
   let t;
   $("#p-notiz").addEventListener("input", e => {
     clearTimeout(t);
@@ -2845,6 +2887,388 @@ function sortenDatalist(pflanzeId) {
   return `<datalist id="sorten-vorschlag">${l.map(s => `<option value="${esc(s.name)}">`).join("")}</datalist>`;
 }
 
+/* ============================================================
+   VORRAT: Saatgut, Haltbarmachen, eigene Rezepte (0.10.0)
+   ============================================================ */
+
+/* ---------- Quellen fürs Haltbarmachen ---------- */
+const HM_QUELLEN = {
+  bfr_hm:   ["BfR: Haltbarmachen selbstgemacht (Verbraucherinformation)", "https://bfr.bund.de/cm/429/05_haltbarmachen_selbstgemacht.pdf"],
+  bfr_bot:  ["BfR: Selten, aber vermeidbar – Fragen und Antworten zum Botulismus", "https://www.bfr.bund.de/fragen-und-antworten/thema/selten-aber-vermeidbar-fragen-und-antworten-zum-botulismus"],
+  bfr_oel:  ["BfR-Mitteilung 001/2016: Selbst hergestellte Kräuteröle und in Öl eingelegtes Gemüse", "https://www.bfr.bund.de/cm/343/selbst-hergestellte-kraeuteroele-und-in-oel-eingelegte-gemuese-bergen-gesundheitliche-risiken.pdf"],
+  laves:    ["LAVES Niedersachsen: Clostridium botulinum (Merkblatt)", "https://www.laves.niedersachsen.de/download/118347/Clostridium_botulinum.pdf"],
+  vzn_ein:  ["Verbraucherzentrale Niedersachsen: Einkochen und Einmachen", "https://www.verbraucherzentrale-niedersachsen.de/wissen/lebensmittel/gesund-ernaehren/einkochen-und-einmachen-jahreszeiten-im-glas-120378"],
+  vzn_tk:   ["Verbraucherzentrale Niedersachsen: Tipps beim Einfrieren und Auftauen", "https://www.verbraucherzentrale-niedersachsen.de/wissen/lebensmittel/gesund-ernaehren/tipps-und-tricks-beim-einfrieren-und-auftauen-120371"],
+  vzs_tk:   ["Verbraucherzentrale Südtirol: Lebensmittel richtig einfrieren (Lagerdauern nach BLE)", "https://www.consumer.bz.it/de/print/pdf/node/35173"],
+  vzs_ferm: ["Verbraucherzentrale Südtirol: Wie kann man Gemüse selbst fermentieren?", "https://consumer.bz.it/de/wie-kann-man-gemuese-selbst-fermentieren"],
+  bodensee: ["Landratsamt Bodenseekreis: Fermentieren – Handreichung (BW zu Tisch)", "https://www.bodenseekreis.de/fileadmin/03_umwelt_landnutzung/landwirtschaft/downloads/fachinfo_ernaehrung/Fermentieren_Handreichung_und_Rezepte__BaWue_zu_Tisch.pdf"],
+  oeko_tk:  ["Öko-Test: Tiefgekühlte Lebensmittel – was hält sich wie lange (nach BZfE)", "https://oekotest.de/essen-trinken/Tiefgekuehlte-Lebensmittel-Was-haelt-sich-wie-lange_12955_1.html"],
+  test_doe: ["Stiftung Warentest: Obst und Gemüse dörren", "https://www.test.de/Doerrgeraete-im-Test-Korinthenmacher-auf-dem-Pruefstand-5074567-0/"],
+  oeko_kart:["Öko-Test: Kartoffeln richtig lagern", "https://www.oekotest.de/essen-trinken/Kartoffeln-richtig-lagern-Keller-Kuehlschrank-oder-Kartoffeltopf_11474_1.html"],
+  dpa_lag:  ["dpa/Volksstimme (Okt. 2026): Keller, Erdmiete und mehr – Gemüse richtig lagern", "https://www.volksstimme.de/leben/haus-und-garten/reiche-ernte-wie-lagere-ich-mein-gemuse-richtig-4333703"],
+};
+const hmQ = (...k) => `<span class="hm-q">(${k.map(x => `<a href="${HM_QUELLEN[x][1]}" target="_blank" rel="noopener">${esc(HM_QUELLEN[x][0].split(":")[0])}</a>`).join(", ")})</span>`;
+
+/* ---------- Haltbarmachen: Inhalte (eigene Worte, Werte aus den Quellen) ---------- */
+const HM_ABSCHNITTE = [
+  { id: "hygiene", icon: "i-check", titel: "Grundregeln für alle Verfahren", html: () => `
+    <ul>
+      <li>Nur einwandfreies Obst und Gemüse verwenden – nichts Überreifes, Angefaultes oder Schimmeliges, auch nicht aus dem eigenen Garten. ${hmQ("bfr_hm")}</li>
+      <li>Alles gründlich waschen, auch Bio-Ware. Hände, Arbeitsflächen und Geräte sauber halten. ${hmQ("bfr_hm")}</li>
+      <li>Gläser, Deckel und Ringe mit kochendem Wasser übergießen oder bei möglichst hoher Temperatur in der Spülmaschine spülen. ${hmQ("bfr_hm")}</li>
+      <li>Gläser beschriften: Inhalt und Datum.</li>
+    </ul>` },
+  { id: "einfrieren", icon: "i-frost", titel: "Einfrieren", html: () => `
+    <p>Die einfachste Methode für die meisten Gemüse, Kräuter und Beeren. Bei −18 °C werden Keime und Enzyme stark gebremst, aber nicht abgetötet.</p>
+    <ul>
+      <li><b>Blanchieren:</b> Die meisten Gemüse vor dem Einfrieren kurz in sprudelnd kochendes Wasser geben und sofort in Eiswasser abschrecken. So bleiben Farbe und Vitamine besser erhalten. ${hmQ("vzn_tk", "oeko_tk")}</li>
+      <li><b>Beeren</b> einzeln auf einem Tablett vorfrieren, dann in Beutel füllen – so kleben sie nicht zusammen. ${hmQ("vzn_tk")}</li>
+      <li>In kleinen Portionen einfrieren, damit es schnell durchfriert. ${hmQ("bfr_hm")}</li>
+      <li><b>Schlecht geeignet</b> sind sehr wasserreiche Gemüse wie Salat und rohe Gurken; rohe Kartoffeln werden beim Einfrieren süß. ${hmQ("oeko_tk")}</li>
+    </ul>
+    <table class="hm-tab"><thead><tr><th>Bei −18 °C</th><th>ungefähr haltbar</th></tr></thead><tbody>
+      <tr><td>Gemüse allgemein</td><td>6–12 Monate</td></tr>
+      <tr><td>Bohnen, Brokkoli</td><td>9–15 Monate</td></tr>
+      <tr><td>Spinat, Mangold, Blumenkohl (blanchiert)</td><td>8–12 Monate</td></tr>
+      <tr><td>Zucchini, Fenchel</td><td>4–8 Monate</td></tr>
+      <tr><td>Beeren</td><td>10–12 Monate</td></tr>
+      <tr><td>Kräuter</td><td>3–4 bzw. 8–10 Monate (siehe unten)</td></tr>
+      <tr><td>Selbstgekochtes</td><td>1–3 Monate</td></tr>
+    </tbody></table>
+    <p class="klein leise">Werte nach ${hmQ("vzn_tk", "vzs_tk")}</p>` },
+  { id: "einkochen", icon: "i-hitze", titel: "Einkochen (Einwecken)", html: () => `
+    <p>Gläser werden verschlossen erhitzt. Beim Abkühlen entsteht ein Vakuum, das den Deckel festhält.</p>
+    <ul>
+      <li><b>Obst:</b> Meist reichen 20–30 Minuten bei 80–90 °C. ${hmQ("vzn_ein")} Die Zeit zählt erst, wenn die Temperatur erreicht ist – ein Thermometer hilft.</li>
+      <li><b>Gemüse</b> (vor allem Bohnen, Erbsen) ist säurearm. Darin können Sporen des Botulismus-Erregers überleben, die erst über 100 °C abgetötet werden. ${hmQ("bfr_hm")}
+        Das BfR empfiehlt deshalb, Gemüse <b>am besten unter Druck bei 121 °C</b> einzukochen. Geht das nicht: <b>zweimal auf 100 °C erhitzen, im Abstand von 1–2 Tagen</b>, dazwischen bei Raumtemperatur stehen lassen. ${hmQ("bfr_bot", "laves")}</li>
+      <li><b>Tomaten</b> sind meist sauer genug (pH unter 4,6); die BfR-Regel für Gemüse nimmt die meisten Tomaten ausdrücklich aus. ${hmQ("bfr_bot")}</li>
+      <li><b>Kontrolle:</b> Lässt sich der Deckel abheben, fehlt das Vakuum oder zischt es beim Öffnen nicht, den Inhalt nicht essen. Aufgewölbte Deckel: Glas ungeöffnet entsorgen. ${hmQ("bfr_bot")}</li>
+      <li>Fehlt direkt nach dem Einkochen das Vakuum, kann man mit neuem Ring bzw. Deckel noch einmal einkochen – oder den Inhalt am nächsten Tag (auf 100 °C erhitzt) essen. ${hmQ("bfr_bot")}</li>
+      <li>Weil Gift nicht immer zu sehen, zu riechen oder zu schmecken ist: Eingekochtes Gemüse vor dem Essen <b>vollständig auf 100 °C erhitzen</b>. ${hmQ("bfr_bot")}</li>
+    </ul>` },
+  { id: "fermentieren", icon: "i-saat", titel: "Fermentieren (Milchsäuregärung)", html: () => `
+    <p>Milchsäurebakterien, die ohnehin auf dem Gemüse sind, machen es sauer und damit haltbar – Sauerkraut ist das bekannteste Beispiel.</p>
+    <ul>
+      <li><b>Salz:</b> etwa 2 % vom Gemüsegewicht, also 20 g Salz pro kg. Reicht der eigene Saft nicht, mit 2 %iger Lake auffüllen (20 g Salz auf 1 Liter Wasser). ${hmQ("vzs_ferm", "bodensee")}</li>
+      <li>Weiche Gemüse wie Zucchini brauchen eine stärkere Lake, etwa 3,5 %. ${hmQ("bodensee")}</li>
+      <li><b>Immer unter der Lake halten</b> und beschweren (Glasgewicht, sauberer Stein, Kohlblatt) – an der Luft bildet sich Schimmel. ${hmQ("vzs_ferm", "bodensee")}</li>
+      <li>Oben einige Zentimeter Platz lassen; anfangs bildet sich Gas. ${hmQ("vzs_ferm")}</li>
+      <li>Ablauf: etwa 5–10 Tage bei Raumtemperatur, dann kühl stellen, wo es langsamer weitergärt. ${hmQ("vzs_ferm")}</li>
+      <li>Gut geeignet: feste Gemüse wie Weiß- und Rotkohl, Kohlrabi, Blumenkohl, Wurzelgemüse, Rote Bete, Kürbis. ${hmQ("vzs_ferm")}</li>
+    </ul>` },
+  { id: "trocknen", icon: "i-trocken", titel: "Trocknen und Dörren", html: () => `
+    <ul>
+      <li>Richtwerte im Dörrgerät oder Backofen: <b>Kräuter 30–40 °C, Gemüse 50–60 °C, Obst 60–70 °C</b>. Im Backofen die Tür einen Spalt offen lassen, damit Feuchtigkeit entweicht. ${hmQ("test_doe")}</li>
+      <li>Weil die Temperatur niedrig ist, ist Sauberkeit besonders wichtig. ${hmQ("test_doe")}</li>
+      <li>Fertig ist es, wenn kein Saft mehr austritt; Pilze sollen brechen. Das Wasser soll schnell und weitgehend entzogen werden. ${hmQ("test_doe", "bfr_hm")}</li>
+      <li>Trocken und luftdicht lagern – Feuchtigkeit führt zu Schimmel. ${hmQ("bfr_hm")}</li>
+      <li>Kräuter kann man auch gebündelt kopfüber an einem luftigen, schattigen Ort trocknen.</li>
+    </ul>` },
+  { id: "essig", icon: "i-vorrat", titel: "Einlegen in Essig", html: () => `
+    <ul>
+      <li>Essig allein reicht nach dem BfR nicht sicher aus: Erreger sterben erst bei so viel Säure, dass es meist zu sauer schmeckt. Besser mit <b>Einkochen</b>, Zucker oder Salz kombinieren. ${hmQ("bfr_hm")}</li>
+      <li>Als Grenze gilt ein pH-Wert unter 4,6. pH-Angaben aus Tabellen sind laut BfR aber unzuverlässig, weil die Werte stark schwanken. ${hmQ("bfr_bot")}</li>
+    </ul>` },
+  { id: "lagern", icon: "i-ernte", titel: "Frisch lagern (Keller, Erdmiete)", html: () => `
+    <ul>
+      <li><b>Kartoffeln:</b> dunkel, kühl, trocken und luftig – und nicht neben Äpfeln oder Birnen, deren Reifegas (Ethylen) sie austreiben lässt. Sehr frühe Sorten sind nicht lagerfähig. ${hmQ("oeko_kart")}</li>
+      <li><b>Möhren, Pastinaken, Rettich, Kohlrabi</b> vertragen Temperaturen bis etwa −1 °C. Grün vorher abschneiden. ${hmQ("dpa_lag")}</li>
+      <li><b>Erdmiete</b>, wenn kein Keller da ist: Wurzelgemüse lagenweise in Sand in eine Grube oder Kiste, gegen Frost und Nässe abdecken. ${hmQ("dpa_lag")}</li>
+      <li>Nur unbeschädigtes Gemüse einlagern und regelmäßig nachsehen. ${hmQ("oeko_kart")}</li>
+    </ul>` },
+];
+
+const HM_WARNUNG = () => `<div class="karte hm-warn"><h2>${icon("i-warnung")} Nicht auf Vorrat: Gemüse, Knoblauch oder Kräuter in Öl</h2>
+  <p style="margin:0">Unter Öl ist kein Sauerstoff – dort kann sich der Botulismus-Erreger vermehren und sein Gift bilden, ohne dass man es sieht, riecht oder schmeckt. Das BfR rät deshalb davon ab, Gemüse in Öl, Knoblauch- oder Kräuteröl im Haushalt <b>auf Vorrat</b> herzustellen. Selbst gemacht: im Kühlschrank aufbewahren und spätestens am Tag nach der Herstellung verbrauchen. ${hmQ("bfr_oel", "bfr_bot")}</p></div>`;
+
+const HM_WIDERSPRUECHE = [
+  "Gemüse einkochen: Viele Rezepte und Backofen-Anleitungen kochen Gemüse nur einmal ein. Das BfR, das LAVES und die Verbraucherzentralen empfehlen ohne Druckeinkocher zweimal im Abstand von 1–2 Tagen. Die App folgt dem BfR.",
+  "Gemüse einkochen: Manche Gesundheitsseiten nennen „zweimal auf 120 °C“. Über 100 °C kommt man aber nur mit einem Druckeinkocher; ohne ihn gilt die BfR-Regel mit zweimal 100 °C.",
+  "Kräuter einfrieren: Die Verbraucherzentrale Niedersachsen nennt 3–4 Monate, die Verbraucherzentrale Südtirol (nach BLE) 8–10 Monate für portionierte Küchenkräuter. Im Zweifel die kürzere Zeit nehmen – danach leidet vor allem das Aroma.",
+  "Blanchieren: Die Verbraucherzentrale Niedersachsen rät, alle rohen Gemüse außer Spargel vor dem Einfrieren zu blanchieren. Nach den BZfE-Angaben (Öko-Test) können Zucchini und Paprika auch roh eingefroren werden.",
+  "Dörrtemperatur: Stiftung Warentest nennt für Obst 60–70 °C, Backofenhersteller teils 80 °C. Höher geht schneller, kostet aber Aroma und Farbe.",
+];
+
+/* Hinweise je Pflanze (kurz, mit Quelle) */
+const HM_PFLANZE = {
+  buschbohne: [["Nie roh essen: Gartenbohnen enthalten Phasin, das erst durch Hitze zerstört wird.", "bfr_hm"], ["Einfrieren: blanchiert ca. 9–15 Monate.", "vzs_tk"], ["Einkochen nur unter Druck oder zweimal (1–2 Tage Abstand).", "bfr_bot"]],
+  stangenbohne: [["Nie roh essen: Gartenbohnen enthalten Phasin, das erst durch Hitze zerstört wird.", "bfr_hm"], ["Einfrieren: blanchiert ca. 9–15 Monate.", "vzs_tk"], ["Einkochen nur unter Druck oder zweimal (1–2 Tage Abstand).", "bfr_bot"]],
+  erbse: [["Einkochen nur unter Druck oder zweimal (1–2 Tage Abstand).", "bfr_bot"], ["Einfrieren: blanchiert.", "vzn_tk"]],
+  knoblauch: [["Nicht in Öl auf Vorrat einlegen (Botulismus-Gefahr).", "bfr_oel"], ["Trocken, kühl und dunkel lagern."]],
+  kartoffel: [["Dunkel, kühl, trocken lagern, nicht neben Äpfeln oder Birnen.", "oeko_kart"], ["Roh nicht einfrieren – sie werden süß.", "oeko_tk"]],
+  moehre: [["Lagern im Keller oder in Sand bis ca. −1 °C, Grün abschneiden.", "dpa_lag"], ["Fermentieren gut möglich.", "vzs_ferm"]],
+  pastinake: [["Lagern im Keller oder in Sand bis ca. −1 °C.", "dpa_lag"]],
+  rettich: [["Lagern im Keller oder in Sand bis ca. −1 °C.", "dpa_lag"]],
+  kohlrabi: [["Kühl lagern bis ca. −1 °C, Blätter abschneiden.", "dpa_lag"], ["Fermentieren gut möglich.", "vzs_ferm"]],
+  rote_bete: [["Fermentieren gut möglich.", "vzs_ferm"], ["Einkochen nur unter Druck oder zweimal (Gemüse).", "bfr_bot"]],
+  kopfkohl: [["Klassisch für Sauerkraut: ca. 20 g Salz pro kg Kohl.", "vzs_ferm"]],
+  blumenkohl: [["Einfrieren: blanchiert ca. 8–12 Monate.", "vzs_tk"], ["Fermentieren gut möglich.", "vzs_ferm"]],
+  brokkoli: [["Einfrieren: blanchiert ca. 9–15 Monate.", "vzs_tk"]],
+  spinat: [["Einfrieren: blanchiert ca. 8–12 Monate.", "vzs_tk"]],
+  mangold: [["Einfrieren: blanchiert ca. 8–12 Monate.", "vzs_tk"]],
+  zucchini: [["Einfrieren: ca. 4–8 Monate, auch roh möglich.", "oeko_tk"], ["Fermentieren: stärkere Lake (ca. 3,5 %).", "bodensee"]],
+  fenchel: [["Einfrieren: blanchiert ca. 4–8 Monate.", "vzs_tk"]],
+  paprika: [["Einfrieren: roh oder blanchiert, ca. 6 Monate.", "oeko_tk"], ["Nicht in Öl auf Vorrat einlegen.", "bfr_oel"]],
+  aubergine: [["Einfrieren: blanchiert ca. 8–9 Monate.", "oeko_tk"], ["Nicht in Öl auf Vorrat einlegen.", "bfr_oel"]],
+  kuerbis: [["Fermentieren gut möglich.", "vzs_ferm"]],
+  tomate: [["Einkochen: meist sauer genug; die BfR-Regel für säurearmes Gemüse nimmt die meisten Tomaten aus.", "bfr_bot"]],
+  gurke: [["Roh schlecht zum Einfrieren (zu wasserreich).", "oeko_tk"]],
+  kopfsalat: [["Nicht zum Einfrieren geeignet.", "oeko_tk"]],
+};
+const HM_KRAEUTER = [["Einfrieren portioniert (3–4 bzw. 8–10 Monate, Angaben unterschiedlich).", "vzn_tk"], ["Trocknen bei 30–40 °C.", "test_doe"], ["Nicht in Öl auf Vorrat einlegen.", "bfr_oel"]];
+const HM_BEEREN = [["Einfrieren: einzeln vorfrieren, ca. 10–12 Monate.", "vzs_tk"], ["Einkochen: meist 20–30 Min. bei 80–90 °C.", "vzn_ein"]];
+function hmHinweise(p) {
+  if (HM_PFLANZE[p.id]) return HM_PFLANZE[p.id];
+  if (p.gruppe === "Kräuter") return HM_KRAEUTER;
+  if (["erdbeere", "himbeere", "brombeere", "johannisbeere", "stachelbeere", "heidelbeere"].includes(p.id)) return HM_BEEREN;
+  return [];
+}
+
+/* ---------- Seite ---------- */
+const VR_TEILE = [["saatgut", "i-saat", "Saatgut"], ["haltbar", "i-vorrat", "Haltbarmachen"], ["rezepte", "i-notiz", "Rezepte"]];
+let VR = { filter: "alle", leere: false, rText: "", rArt: "alle", offen: null };
+
+function vorratSeite(main) {
+  const teil = (location.hash.replace("#", "").split("?")[0].split("/")[1]) || "saatgut";
+  seitentitel(main, "Vorrat");
+  main.insertAdjacentHTML("beforeend", `<div class="unternav">${VR_TEILE.map(([k, ic, n]) => `<a href="#vorrat/${k}" class="${teil === k ? "an" : ""}">${icon(ic)} ${n}</a>`).join("")}</div>`);
+  if (teil === "haltbar") return haltbarSeite(main);
+  if (teil === "rezepte") return rezeptSeite(main);
+  saatgutSeite(main);
+}
+
+/* ---------- Saatgut ---------- */
+function saatAktiv() { return (D.saatgut || []).filter(s => !s.leer); }
+const saatMonate = p => [...(p.vorziehen || []), ...(p.direktsaat || [])];
+function keimStatus(s) {
+  const jetzt = new Date().getFullYear(), p = pflanzeVon(s.pflanze);
+  if (s.probe && s.probe.prozent != null && +s.probe.datum.slice(0, 4) >= jetzt - 1) {
+    const pz = s.probe.prozent;
+    return pz >= 50 ? { stufe: "gut", text: `Keimprobe ${pz} %` } : { stufe: "alt", text: `Keimprobe nur ${pz} % – dichter säen oder ersetzen` };
+  }
+  if (s.bis) {
+    if (jetzt < s.bis) return { stufe: "gut", text: `keimfähig bis ${s.bis}` };
+    if (jetzt === s.bis) return { stufe: "bald", text: `läuft ${s.bis} ab – bald aufbrauchen` };
+    return { stufe: "alt", text: `seit ${s.bis} abgelaufen – Keimprobe machen` };
+  }
+  if (!s.jahr || !p || !p.keimJahre) return { stufe: "unbekannt", text: s.jahr ? "keine Angabe zur Keimfähigkeit" : "Jahr fehlt" };
+  const alter = jetzt - s.jahr, b = p.keimJahre[1], a = p.keimBis ? b : p.keimJahre[0];
+  if (alter < a && !(a === b && a > 1 && alter === a - 1)) return { stufe: "gut", text: alter <= 0 ? "frisch" : `${alter} Jahr${alter > 1 ? "e" : ""} alt – keimt gut` };
+  const jt = `${alter} Jahr${alter === 1 ? "" : "e"} alt`;
+  if (alter < b || (a === b && alter === a - 1)) return { stufe: "bald", text: `${jt} – vor der Aussaat Keimprobe` };
+  return { stufe: "alt", text: `${jt} – vermutlich zu alt, Keimprobe machen` };
+}
+const STUFE_RANG = { alt: 0, bald: 1, unbekannt: 2, gut: 3 };
+
+function saatgutSeite(main) {
+  const monat = new Date().getMonth() + 1, alle = (D.saatgut || []);
+  const testen = saatAktiv().filter(s => ["alt", "bald"].includes(keimStatus(s).stufe));
+  const jetztSaen = saatAktiv().filter(s => { const p = pflanzeVon(s.pflanze); return p && saatMonate(p).includes(monat); });
+  let liste = alle.filter(s => VR.leere || !s.leer);
+  if (VR.filter === "testen") liste = liste.filter(s => !s.leer && ["alt", "bald"].includes(keimStatus(s).stufe));
+  if (VR.filter === "jetzt") liste = liste.filter(s => jetztSaen.includes(s));
+  liste.sort((x, y) => (pflanzeVon(x.pflanze)?.name || "").localeCompare(pflanzeVon(y.pflanze)?.name || "", "de") || (x.sorte || "").localeCompare(y.sorte || "", "de"));
+  main.insertAdjacentHTML("beforeend", `
+    <div class="ch-werkzeug">
+      <button class="knopf haupt" id="sg-neu">${icon("i-plus")} Saatgut eintragen</button>
+      <div class="umschalter" id="sg-filter">
+        <button data-f="alle" class="${VR.filter === "alle" ? "an" : ""}">Alle (${saatAktiv().length})</button>
+        <button data-f="jetzt" class="${VR.filter === "jetzt" ? "an" : ""}">Im ${MONATE[monat - 1]} säen (${jetztSaen.length})</button>
+        <button data-f="testen" class="${VR.filter === "testen" ? "an" : ""}">Keimprobe empfohlen (${testen.length})</button>
+      </div>
+      <label class="schalter-klein"><input type="checkbox" id="sg-leere" ${VR.leere ? "checked" : ""}> Aufgebrauchte zeigen</label>
+    </div>
+    ${alle.length ? `<div class="karte sg-liste">${liste.length ? liste.map(saatZeile).join("") : `<p class="leise" style="margin:0">Nichts in dieser Auswahl.</p>`}</div>`
+      : `<div class="karte"><h2>${icon("i-saat")} Dein Saatgutvorrat</h2><p>Trag hier deine Samentüten ein – gekaufte und selbst gewonnene. Die App zeigt dann, was du in diesem Monat säen kannst, und warnt, wenn Samen so alt sind, dass sie schlechter keimen.</p><p class="klein leise" style="margin:0">Als Jahr zählt das Erntejahr bzw. das Jahr auf der Tüte („abgepackt für …“). Steht auf der Tüte ein „keimfähig bis“, trag das zusätzlich ein – es hat dann Vorrang.</p></div>`}
+    <div class="karte"><h2>${icon("i-info")} Keimprobe</h2><p class="klein" style="margin:0">10 Samen auf feuchtes Küchenpapier legen, abdecken und warm stellen. Nach der üblichen Keimdauer zählen, wie viele gekeimt sind. Keimen weniger als die Hälfte, lieber neues Saatgut nehmen oder dichter säen. Wie lange die einzelnen Arten keimfähig bleiben, steht unter <a href="#wissen/uebersichten" id="sg-zu-ue">Wissen → Übersichten → Saatgut</a>.</p></div>`);
+  $("#sg-neu").onclick = () => saatBearbeiten();
+  $$("#sg-filter button").forEach(b => b.onclick = () => { VR.filter = b.dataset.f; zeigen(); });
+  $("#sg-leere").onchange = e => { VR.leere = e.target.checked; zeigen(); };
+  $("#sg-zu-ue").onclick = () => { UE.teil = "saatgut"; };
+  $$("[data-sg-bearb]").forEach(b => b.onclick = () => saatBearbeiten(D.saatgut.find(s => s.id === b.dataset.sgBearb)));
+  $$("[data-sg-probe]").forEach(b => b.onclick = () => keimprobe(D.saatgut.find(s => s.id === b.dataset.sgProbe)));
+  $$("[data-sg-leer]").forEach(b => b.onclick = () => {
+    const s = D.saatgut.find(x => x.id === b.dataset.sgLeer); s.leer = !s.leer; speichern(); zeigen();
+    melden(s.leer ? "Als aufgebraucht markiert." : "Wieder im Vorrat.", s.leer ? { text: "Rückgängig", tun: () => { s.leer = false; speichern(); zeigen(); } } : null);
+  });
+}
+function saatZeile(s) {
+  const p = pflanzeVon(s.pflanze) || { name: s.pflanze || "?", id: s.pflanze }, st = keimStatus(s);
+  const meta = [s.menge, s.jahr ? `Jahr ${s.jahr}` : "", { gekauft: "gekauft", selbst: "selbst gewonnen", getauscht: "getauscht/geschenkt" }[s.herkunft] || ""].filter(Boolean).join(" · ");
+  return `<div class="sg-eintrag ${s.leer ? "leer" : ""}">
+    ${pflanzenBadge(p)}
+    <div class="sg-text"><a href="#wissen/pflanze/${encodeURIComponent(p.id)}"><b>${esc(p.name)}</b></a>${s.sorte ? ` <span>${esc(s.sorte)}</span>` : ""}
+      <div class="klein leise">${esc(meta)}${s.notiz ? ` · ${esc(s.notiz)}` : ""}</div></div>
+    ${s.leer ? `<span class="sg-status">aufgebraucht</span>` : `<span class="sg-status ${st.stufe}">${esc(st.text)}</span>`}
+    <div class="sg-knoepfe">
+      ${s.leer ? "" : `<button class="knopf klein" data-sg-probe="${s.id}" title="Keimprobe eintragen">Keimprobe</button>`}
+      <button class="knopf klein" data-sg-leer="${s.id}">${s.leer ? "Wieder da" : "Aufgebraucht"}</button>
+      <button class="knopf klein symbol" data-sg-bearb="${s.id}" title="Bearbeiten" aria-label="Bearbeiten">${icon("i-bearbeiten")}</button>
+    </div></div>`;
+}
+async function saatBearbeiten(alt, vorgabe = {}) {
+  const jahr = new Date().getFullYear();
+  const w = await eingabe({
+    titel: alt ? "Saatgut bearbeiten" : "Saatgut eintragen", ja: "Speichern",
+    felder: [
+      { id: "pflanze", label: "Pflanze", typ: "select", optionen: allePflanzen().slice().sort((a, b) => a.name.localeCompare(b.name, "de")).map(p => ({ wert: p.id, text: p.name })), wert: alt?.pflanze || vorgabe.pflanze || "tomate" },
+      { id: "sorte", label: "Sorte (optional)", wert: alt?.sorte || "", vorschlaege: [...new Set(alleSorten().map(s => s.name))] },
+      { id: "menge", label: "Menge (optional)", wert: alt?.menge || "", platzhalter: "z. B. 1 Tüte, halbvoll, ca. 30 Samen" },
+      { id: "jahr", label: "Erntejahr bzw. „abgepackt für“", typ: "number", schritt: 1, wert: alt?.jahr ?? jahr },
+      { id: "bis", label: "„Keimfähig bis“ laut Tüte (optional)", typ: "number", schritt: 1, wert: alt?.bis ?? "" },
+      { id: "herkunft", label: "Herkunft", typ: "select", optionen: [{ wert: "gekauft", text: "gekauft" }, { wert: "selbst", text: "selbst gewonnen" }, { wert: "getauscht", text: "getauscht/geschenkt" }], wert: alt?.herkunft || "gekauft" },
+      { id: "notiz", label: "Notiz (optional)", typ: "textarea", wert: alt?.notiz || "" },
+    ],
+    extra: alt ? { text: "Löschen", gefahr: true } : null,
+  });
+  if (w === "extra") {
+    const i = D.saatgut.indexOf(alt); D.saatgut.splice(i, 1); speichern(); zeigen();
+    melden("Saatgut gelöscht.", { text: "Rückgängig", tun: () => { D.saatgut.splice(i, 0, alt); speichern(); zeigen(); } }); return;
+  }
+  if (!w) return;
+  const daten = { pflanze: w.pflanze, sorte: w.sorte, menge: w.menge, jahr: isNaN(w.jahr) ? null : Math.round(w.jahr), bis: isNaN(w.bis) ? null : Math.round(w.bis), herkunft: w.herkunft, notiz: w.notiz };
+  if (alt) Object.assign(alt, daten); else { D.saatgut = D.saatgut || []; D.saatgut.push({ id: gid(), leer: false, probe: null, ...daten }); }
+  speichern(); zeigen(); melden("Saatgut gespeichert.");
+}
+async function keimprobe(s) {
+  const w = await eingabe({
+    titel: "Keimprobe eintragen", text: `${esc(pflanzeVon(s.pflanze)?.name || "")}${s.sorte ? " – " + esc(s.sorte) : ""}`, ja: "Speichern",
+    felder: [
+      { id: "datum", label: "Datum", typ: "date", wert: s.probe?.datum || heuteISO() },
+      { id: "gelegt", label: "Ausgelegte Samen", typ: "number", schritt: 1, min: 1, wert: s.probe?.gelegt ?? 10 },
+      { id: "gekeimt", label: "Davon gekeimt", typ: "number", schritt: 1, min: 0, wert: s.probe?.gekeimt ?? "" },
+    ],
+  });
+  if (!w) return;
+  if (isNaN(w.gelegt) || isNaN(w.gekeimt) || w.gelegt < 1) { melden("Bitte beide Zahlen eintragen."); return; }
+  const prozent = Math.round(Math.min(w.gekeimt, w.gelegt) / w.gelegt * 100);
+  s.probe = { datum: w.datum || heuteISO(), gelegt: w.gelegt, gekeimt: w.gekeimt, prozent };
+  speichern(); zeigen(); melden(`Keimprobe: ${prozent} % gekeimt.`);
+}
+
+/* ---------- Haltbarmachen ---------- */
+function haltbarSeite(main) {
+  main.insertAdjacentHTML("beforeend", `
+    <div class="karte"><p style="margin:0">Grundlagen und Sicherheitsregeln zum Haltbarmachen der Ernte. Rezepte sammelst du unter <a href="#vorrat/rezepte">Rezepte</a>. Die Werte stammen von Behörden und Verbraucherzentralen; die Quelle steht jeweils dahinter.</p></div>
+    ${HM_WARNUNG()}
+    <div class="hm-abschnitte">${HM_ABSCHNITTE.map(a => `<details class="karte hm-abschnitt" data-hm="${a.id}" ${VR.offen === a.id ? "open" : ""}><summary><h2>${icon(a.icon)} ${a.titel}</h2></summary><div class="hm-inhalt">${a.html()}</div></details>`).join("")}</div>
+    <div class="karte hinweis-karte"><h2>${icon("i-warnung")} Unterschiedliche Angaben</h2><ul>${HM_WIDERSPRUECHE.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
+    <div class="karte"><h2>${icon("i-quellen")} Quellen</h2><ul class="quellen">${Object.values(HM_QUELLEN).map(([t, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a></li>`).join("")}</ul></div>`);
+  $$(".hm-abschnitt").forEach(d => d.addEventListener("toggle", () => { if (d.open) VR.offen = d.dataset.hm; }));
+}
+
+/* ---------- Rezepte ---------- */
+const REZEPT_ARTEN = ["Einkochen", "Einfrieren", "Fermentieren", "Trocknen", "Einlegen", "Marmelade & Gelee", "Saft & Sirup", "Kochen & Backen", "Sonstiges"];
+const REZ_EXTRA = { buschbohne: ["bohne"], stangenbohne: ["bohne"], kopfkohl: ["weißkohl", "weisskohl", "rotkohl", "sauerkraut"], pfluecksalat: ["pflücksalat", "blattsalat"], rote_bete: ["rote bete", "rote beete", "rote rübe"], moehre: ["karotte"], kuerbis: ["kürbis"], fruehlingszwiebel: ["lauchzwiebel"] };
+function rezeptPflanzen(r) {
+  const text = ` ${(r.titel + " " + r.zutaten).toLowerCase()} `;
+  return allePflanzen().filter(p => {
+    const begriffe = [p.name, ...(p.auch || []), ...(REZ_EXTRA[p.id] || [])].map(x => x.toLowerCase()).filter(x => !x.includes(" und "));
+    return begriffe.some(b => { const stamm = b.length > 4 && b.endsWith("e") ? b.slice(0, -1) : b; return new RegExp(`(^|[^a-zäöüß])${stamm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`).test(text); });
+  });
+}
+function rezeptHinweise(r, pfl) {
+  const t = (r.titel + " " + r.zutaten + " " + r.zubereitung).toLowerCase(), h = [];
+  if (/(^|[^a-zäöüß])öl([^a-zäöüß]|$)|olivenöl|rapsöl|sonnenblumenöl/.test(t) && /einleg|eingelegt|aufgegossen|bedeck/.test(t)) h.push(`Enthält Gemüse oder Kräuter unter Öl: laut BfR nicht auf Vorrat, im Kühlschrank aufbewahren und am Tag nach der Herstellung verbrauchen.`);
+  if (r.art === "Einkochen" && pfl.some(p => p.gruppe === "Gemüse" && p.id !== "tomate") && !/essig/.test(t)) h.push(`Gemüse einkochen: laut BfR am besten unter Druck (121 °C), sonst zweimal auf 100 °C im Abstand von 1–2 Tagen.`);
+  if (pfl.some(p => ["buschbohne", "stangenbohne"].includes(p.id)) && /\broh\b/.test(t)) h.push(`Gartenbohnen nie roh essen (Phasin).`);
+  return h;
+}
+function rezeptSeite(main) {
+  const alle = (D.rezepte || []).slice().sort((a, b) => a.titel.localeCompare(b.titel, "de"));
+  const arten = REZEPT_ARTEN.filter(a => alle.some(r => r.art === a));
+  const q = VR.rText.toLowerCase();
+  const liste = alle.filter(r => (VR.rArt === "alle" || r.art === VR.rArt) && (!q || (r.titel + " " + r.zutaten + " " + r.notiz).toLowerCase().includes(q)));
+  main.insertAdjacentHTML("beforeend", `
+    <div class="ch-werkzeug nicht-drucken">
+      <button class="knopf haupt" id="rz-neu">${icon("i-plus")} Rezept eintragen</button>
+      ${alle.length ? `<input type="search" id="rz-suche" placeholder="Rezept oder Zutat suchen …" value="${esc(VR.rText)}" style="max-width:260px">
+      ${arten.length > 1 ? `<select id="rz-art"><option value="alle">Alle Arten</option>${arten.map(a => `<option ${VR.rArt === a ? "selected" : ""}>${esc(a)}</option>`).join("")}</select>` : ""}` : ""}
+    </div>
+    ${alle.length ? (liste.length ? liste.map(rezeptKarte).join("") : `<div class="karte"><p class="leise" style="margin:0">Kein Rezept gefunden.</p></div>`)
+      : `<div class="karte"><h2>${icon("i-notiz")} Deine Rezeptsammlung</h2><p>Hier sammelst du eigene Rezepte – zum Haltbarmachen und zum Verwerten der Ernte. Pflanzen aus dem Lexikon, die in Titel oder Zutaten vorkommen, werden automatisch erkannt; das Rezept erscheint dann auch auf der Pflanzenkarte.</p><p class="klein leise" style="margin:0">Rezepte liegen nur in deinen eigenen Daten (und im privaten Abgleich), nicht im öffentlichen Code der App.</p></div>`}`);
+  $("#rz-neu").onclick = () => rezeptBearbeiten();
+  const suche = $("#rz-suche"); if (suche) suche.oninput = () => { VR.rText = suche.value; const pos = suche.selectionStart; zeigen(); const s2 = $("#rz-suche"); s2.focus(); s2.setSelectionRange(pos, pos); };
+  const art = $("#rz-art"); if (art) art.onchange = () => { VR.rArt = art.value; zeigen(); };
+  $$("[data-rz-bearb]").forEach(b => b.onclick = () => rezeptBearbeiten(D.rezepte.find(r => r.id === b.dataset.rzBearb)));
+  $$("[data-rz-druck]").forEach(b => b.onclick = () => {
+    const el = b.closest(".rz-karte"); el.open = true; el.classList.add("wird-gedruckt"); document.body.classList.add("druck-rezept");
+    window.print(); document.body.classList.remove("druck-rezept"); el.classList.remove("wird-gedruckt");
+  });
+  const ziel = location.hash.split("?r=")[1];
+  if (ziel) { const el = $(`.rz-karte[data-rz="${CSS.escape(ziel)}"]`); if (el) { el.open = true; setTimeout(() => el.scrollIntoView({ block: "start", behavior: "smooth" }), 50); } }
+}
+function rezeptKarte(r) {
+  const pfl = rezeptPflanzen(r), hinw = rezeptHinweise(r, pfl);
+  return `<details class="karte rz-karte" data-rz="${r.id}">
+    <summary><div class="rz-kopf"><h2>${esc(r.titel)}</h2><span class="marker">${esc(r.art)}</span></div>
+      ${pfl.length ? `<div class="rz-pfl">${pfl.map(p => `<span class="chip">${esc(p.name)}</span>`).join("")}</div>` : ""}</summary>
+    <div class="rz-inhalt">
+      ${hinw.map(h => `<p class="rz-warn">${icon("i-warnung")} ${esc(h)}</p>`).join("")}
+      <div class="rz-spalten">
+        ${r.zutaten ? `<div><h3>Zutaten</h3><div class="rz-text">${esc(r.zutaten)}</div></div>` : ""}
+        ${r.zubereitung ? `<div><h3>Zubereitung</h3><div class="rz-text">${esc(r.zubereitung)}</div></div>` : ""}
+      </div>
+      ${r.haltbar ? `<p><b>Haltbarkeit:</b> ${esc(r.haltbar)}</p>` : ""}
+      ${r.notiz ? `<p><b>Notizen:</b> <span class="rz-text">${esc(r.notiz)}</span></p>` : ""}
+      ${r.quelle ? `<p class="klein leise"><b>Quelle:</b> ${/^https?:\/\//.test(r.quelle) ? `<a href="${esc(r.quelle)}" target="_blank" rel="noopener">${esc(r.quelle)}</a>` : esc(r.quelle)}</p>` : ""}
+      <div class="knopfreihe nicht-drucken" style="justify-content:flex-start">
+        <button class="knopf" data-rz-bearb="${r.id}">${icon("i-bearbeiten")} Bearbeiten</button>
+        <button class="knopf" data-rz-druck="${r.id}">${icon("i-drucken")} Drucken</button>
+      </div>
+    </div></details>`;
+}
+async function rezeptBearbeiten(alt) {
+  const w = await eingabe({
+    titel: alt ? "Rezept bearbeiten" : "Rezept eintragen", ja: "Speichern",
+    felder: [
+      { id: "titel", label: "Titel", wert: alt?.titel || "" },
+      { id: "art", label: "Art", typ: "select", optionen: REZEPT_ARTEN, wert: alt?.art || "Einkochen" },
+      { id: "zutaten", label: "Zutaten (eine pro Zeile)", typ: "textarea", wert: alt?.zutaten || "" },
+      { id: "zubereitung", label: "Zubereitung", typ: "textarea", wert: alt?.zubereitung || "" },
+      { id: "haltbar", label: "Haltbarkeit (optional)", wert: alt?.haltbar || "", platzhalter: "z. B. kühl und dunkel ca. 1 Jahr" },
+      { id: "quelle", label: "Quelle (optional)", wert: alt?.quelle || "", platzhalter: "Buch, Webseite oder „von Oma“" },
+      { id: "notiz", label: "Eigene Notizen (optional)", typ: "textarea", wert: alt?.notiz || "" },
+    ],
+    extra: alt ? { text: "Löschen", gefahr: true } : null,
+  });
+  if (w === "extra") {
+    if (!await fragen({ titel: "Rezept löschen?", text: `„${esc(alt.titel)}“ wird gelöscht.`, ja: "Löschen", gefahr: true })) return;
+    const i = D.rezepte.indexOf(alt); D.rezepte.splice(i, 1); speichern(); zeigen();
+    melden("Rezept gelöscht.", { text: "Rückgängig", tun: () => { D.rezepte.splice(i, 0, alt); speichern(); zeigen(); } }); return;
+  }
+  if (!w) return;
+  if (!w.titel) { melden("Bitte einen Titel eintragen."); return; }
+  let r = alt;
+  if (alt) Object.assign(alt, w, { geaendert: heuteISO() });
+  else { r = { id: gid(), ...w, geaendert: heuteISO() }; D.rezepte = D.rezepte || []; D.rezepte.push(r); }
+  speichern();
+  if (!location.hash.startsWith("#vorrat/rezepte")) location.hash = `#vorrat/rezepte?r=${r.id}`; else { zeigen(); const el = $(`.rz-karte[data-rz="${r.id}"]`); if (el) el.open = true; }
+  melden("Rezept gespeichert.");
+}
+
+/* ---------- Pflanzenkarte und Startseite ---------- */
+function vorratKarteHTML(p) {
+  const tipps = hmHinweise(p), saat = (D.saatgut || []).filter(s => s.pflanze === p.id && !s.leer), rez = (D.rezepte || []).filter(r => rezeptPflanzen(r).some(x => x.id === p.id));
+  return `<div class="karte"><h2>${icon("i-vorrat")} Vorrat und Haltbarmachen</h2>
+    ${tipps.length ? `<ul class="vr-tipps">${tipps.map(([t, q]) => `<li>${esc(t)}${q ? ` ${hmQ(q)}` : ""}</li>`).join("")}</ul>` : ""}
+    <div class="nb-gruppe"><div class="nb-titel">Mein Saatgut</div>${saat.length ? saat.map(s => { const st = keimStatus(s); return `<div class="klein">${s.sorte ? `<b>${esc(s.sorte)}</b> · ` : ""}${s.jahr || "?"} · <span class="sg-status ${st.stufe}">${esc(st.text)}</span></div>`; }).join("") : `<span class="klein leise">keins eingetragen</span>`}</div>
+    ${rez.length ? `<div class="nb-gruppe"><div class="nb-titel">Meine Rezepte</div>${rez.map(r => `<a class="chip" href="#vorrat/rezepte?r=${r.id}">${esc(r.titel)}</a>`).join("")}</div>` : ""}
+    <div class="knopfreihe" style="justify-content:flex-start"><button class="knopf" id="vr-saat-pf">${icon("i-plus")} Saatgut eintragen</button><a class="knopf text" href="#vorrat/haltbar">Haltbarmachen →</a></div></div>`;
+}
+function startVorratHTML() {
+  const aktiv = saatAktiv(); if (!aktiv.length) return "";
+  const monat = new Date().getMonth() + 1;
+  const jetzt = [...new Set(aktiv.filter(s => { const p = pflanzeVon(s.pflanze); return p && saatMonate(p).includes(monat); }).map(s => s.pflanze))].map(pflanzeVon);
+  const testen = aktiv.filter(s => ["alt", "bald"].includes(keimStatus(s).stufe)).length;
+  if (!jetzt.length && !testen) return "";
+  return `<div class="karte"><h2>${icon("i-saat")} Aus dem Saatgutvorrat</h2>
+    ${jetzt.length ? `<div class="nb-gruppe"><div class="nb-titel">Im ${MONATE[monat - 1]} säen oder vorziehen</div>${jetzt.map(p => `<a class="chip" href="#wissen/pflanze/${encodeURIComponent(p.id)}">${esc(p.name)}</a>`).join("")}</div>` : ""}
+    ${testen ? `<p class="klein" style="margin:4px 0 8px">${icon("i-warnung")} Bei ${testen} Saatgut-Eintr${testen > 1 ? "ägen" : "ag"} ist eine Keimprobe sinnvoll.</p>` : ""}
+    <a class="knopf" href="#vorrat/saatgut">${icon("i-vorrat")} Zum Vorrat</a></div>`;
+}
+
 function seitentitel(main, titel, unter) {
   main.insertAdjacentHTML("beforeend", `<div class="seitentitel"><h1>${esc(titel)}</h1>${unter ? `<p class="leise">${unter}</p>` : ""}</div>`);
 }
@@ -2872,6 +3296,7 @@ const SEITEN = {
             ${startGartenHTML()}${startPlanungHTML()}
             <a class="knopf" href="#garten">${icon("i-garten")} Zum Gartenplan</a>
           </div>
+          ${startVorratHTML()}
         </div>
       </div>`);
     if (window.matchMedia("(min-width:900px)").matches) $(".seitentitel", main)?.remove(); else $("#datum-gross").remove();
@@ -2886,16 +3311,7 @@ const SEITEN = {
 
   wissen(main) { wissenSeite(main); },
 
-  vorrat(main) {
-    seitentitel(main, "Vorrat");
-    main.insertAdjacentHTML("beforeend", `
-      <div class="karte"><p>Was du an Samen im Schrank und an Ernte im Glas hast.</p></div>
-      ${baldKarte("Geplant", [
-        "Saatgutvorrat: welche Samen du hast und wie lange sie noch gut keimen",
-        "Haltbarmachen: Grundlagen und wichtige Sicherheitsregeln (z. B. Einkochen, Fermentieren, Trocknen)",
-        "Deine eigene Rezeptsammlung",
-      ])}`);
-  },
+  vorrat(main) { vorratSeite(main); },
 
   einstellungen(main) {
     seitentitel(main, "Einstellungen");
@@ -3025,6 +3441,16 @@ const SEITEN = {
           <p><b>Übersichten:</b> Unter <b>Wissen → Übersichten</b> stehen dieselben Daten nach Themen statt nach Pflanzen: <b>Fruchtfolge</b> (alle Pflanzenfamilien mit Anbaupause und Mitgliedern), <b>Nährstoffbedarf</b> (Stark-, Mittel-, Schwachzehrer), <b>Mischkultur</b> (Pflanzen auswählen oder „aus Beet übernehmen“ – eine Tabelle zeigt für jedes Paar ✓ gut, ✗ schlecht, ? umstritten), <b>Saatgut</b> (wie lange Samen keimfähig sind und wie leicht man selbst Samen gewinnt) und <b>alle Pflanzen als Tabelle</b> (filtern, z. B. nach „halbschattig“ oder „winterhart“, und durch Tippen auf eine Spalte sortieren). Ein Tipp auf eine Pflanze öffnet ihre Karte; oben führt <b>„← Zurück zu …“</b> wieder genau dorthin, wo du warst.</p>
           <p><b>Sorten:</b> Unter <b>Wissen → Sorten</b> sammelst du deine Sorten mit Sternen (0–5) und Erfahrungen. Sorten, die du im Gartenplan bei einer Pflanzung einträgst, erscheinen dort automatisch – mit den Jahren, in denen sie angebaut wurden, und der Erntemenge. Beim Eintragen einer Sorte im Gartenplan schlägt die App deine bekannten Sorten vor. Auf jeder Pflanzenkarte steht „Meine Sorten“.</p>
           <p><b>Quellen:</b> Unter <b>Wissen → Quellen</b> steht, woher die Angaben stammen. Alle Texte sind in eigenen Worten geschrieben.</p>
+        </div></details>
+        <details><summary>Vorrat: Saatgut, Haltbarmachen, Rezepte</summary><div>
+          <p><b>Saatgut:</b> Unter <b>Vorrat → Saatgut</b> trägst du deine Samentüten ein: Pflanze, Sorte, Menge, Jahr und Herkunft. Als Jahr gilt das Erntejahr oder das Jahr auf der Tüte („abgepackt für …“). Steht auf der Tüte „keimfähig bis“, trag das zusätzlich ein – es hat dann Vorrang. Aus dem Alter und der Keimfähigkeit im Lexikon zeigt die App: <b>grün</b> keimt gut, <b>gelb</b> vor der Aussaat besser eine Keimprobe machen, <b>rot</b> vermutlich zu alt.</p>
+          <ul>
+            <li><b>Keimprobe:</b> 10 Samen auf feuchtes Küchenpapier, nach der Keimdauer zählen und unter „Keimprobe“ eintragen. Eine Probe aus diesem oder dem letzten Jahr ersetzt die Schätzung.</li>
+            <li><b>Filter:</b> „Im … säen“ zeigt, was du diesen Monat vorziehen oder säen kannst; „Keimprobe empfohlen“ die gelben und roten Einträge. Leere Tüten mit „Aufgebraucht“ ausblenden.</li>
+            <li>Die <b>Startseite</b> zeigt, was du aus deinem Vorrat diesen Monat säen kannst. Auf jeder <b>Pflanzenkarte</b> steht unter „Vorrat und Haltbarmachen“ dein Saatgut dieser Pflanze.</li>
+          </ul>
+          <p><b>Haltbarmachen:</b> Grundlagen und Sicherheitsregeln zu Einfrieren, Einkochen, Fermentieren, Trocknen, Essig und Lagern, mit Quellen (BfR, Verbraucherzentralen). Wo sich Quellen widersprechen, steht es unten. Wichtig: Gemüse am besten unter Druck oder zweimal einkochen, und Gemüse oder Kräuter in Öl nicht auf Vorrat herstellen. Kurze Hinweise je Pflanze stehen auch auf der Pflanzenkarte.</p>
+          <p><b>Rezepte:</b> „＋ Rezept eintragen“ mit Titel, Art, Zutaten, Zubereitung, Haltbarkeit, Quelle und Notizen. Ein Tipp auf ein Rezept klappt es auf; dort kannst du es bearbeiten oder einzeln drucken. Pflanzen aus dem Lexikon, die in Titel oder Zutaten vorkommen, erkennt die App selbst – das Rezept steht dann auch auf der Pflanzenkarte. Bei Gemüse in Öl oder Gemüse zum Einkochen erscheint ein Sicherheitshinweis. Rezepte liegen nur in deinen Daten, nicht im öffentlichen Code.</p>
         </div></details>
         <details><summary>Planung</summary><div>
           <p>Im Reiter <b>Planung</b> entwirfst du die nächste Saison auf deinem Gartenplan – zum Beispiel im Winter für das kommende Jahr. Dein echter Garten im Reiter <b>Garten</b> bleibt dabei unverändert. Wenn es so weit ist, übernimmst du Geplantes mit einem Klick als gepflanzt.</p>
