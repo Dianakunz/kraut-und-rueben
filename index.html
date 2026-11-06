@@ -566,13 +566,13 @@ dialog .knopfreihe{justify-content:flex-end}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.4.4"></script>
+<script src="pflanzen.js?v=0.4.5"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.4.4";
+const APP_VERSION = "0.4.5";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -989,7 +989,7 @@ const SAATGUT = {
   leicht: "leicht – Selbstbefruchter, Sorten kreuzen sich kaum",
   mittel: "mittel – Fremdbefruchter, Sorten können sich kreuzen",
   schwer: "schwierig – Fremdbefruchter, meist zweijährige Samenbildung",
-  vegetativ: "wird über Knollen bzw. Zehen vermehrt",
+  vegetativ: "wird vegetativ vermehrt (Knollen, Zehen, Ableger, Stecklinge oder Teilung)",
 };
 
 function allePflanzen() {
@@ -1058,14 +1058,14 @@ function pflanzenListe(main) {
   main.insertAdjacentHTML("beforeend", `
     <div class="lex-werkzeug">
       <input type="search" id="lex-suche" placeholder="Pflanze suchen …" aria-label="Pflanze suchen" value="${esc(lexFilter.text)}">
-      <div class="umschalter" id="lex-gruppe">${["alle", "Gemüse", "Kräuter"].map(g => `<button data-g="${g}" class="${lexFilter.gruppe === g ? "an" : ""}">${g === "alle" ? "Alle" : g}</button>`).join("")}</div>
+      <div class="umschalter" id="lex-gruppe">${["alle", "Gemüse", "Kräuter", "Obst", "Blumen"].map(g => `<button data-g="${g}" class="${lexFilter.gruppe === g ? "an" : ""}">${g === "alle" ? "Alle" : g}</button>`).join("")}</div>
       <label class="schalter-klein"><input type="checkbox" id="lex-jetzt" ${lexFilter.jetzt ? "checked" : ""}> Nur was im ${MONATE[new Date().getMonth()]} ansteht</label>
       <a class="knopf" href="#wissen/eigene">＋ Eigene Pflanze</a>
     </div>
     ${legende()}
     <div class="lex-raster" id="lex-raster"></div>
     <div style="margin-top:14px">${baldKarte("Kommt noch in „Wissen“", [
-      "Weitere Pflanzen: Obst, Beeren und mehr Kräuter",
+      "Obstbäume wie Apfel, Birne, Kirsche und Pflaume (mit Krone im Gartenplan)",
       "Deine Sorten mit Bewertung und Erfahrungen",
       "Übersichten zu Mischkultur, Fruchtfolge und Saatgut-Gewinnung",
     ])}</div>`);
@@ -1092,7 +1092,7 @@ function pflanzenDetail(main, id) {
   if (!p) { main.insertAdjacentHTML("beforeend", `<div class="karte"><p>Diese Pflanze gibt es nicht (mehr).</p><a class="knopf" href="#wissen">← Zum Lexikon</a></div>`); return; }
   const f = familieVon(p), n = nachbarn(p.id), jetzt = new Date().getMonth() + 1;
   const pause = p.pause || f.pause;
-  const keim = p.keimJahre ? (p.keimJahre[0] === p.keimJahre[1] ? `${p.keimJahre[0] >= 5 ? "über 5" : p.keimJahre[0]} Jahre` : `${p.keimJahre[0]}–${p.keimJahre[1]} Jahre`) : (p.saatgut === "vegetativ" ? "– (keine Samen)" : "–");
+  const keim = p.keimJahre && p.keimBis ? `bis zu ${p.keimJahre[1]} Jahre` : p.keimJahre ? (p.keimJahre[0] === p.keimJahre[1] ? `${p.keimJahre[0] >= 5 ? "über 5" : p.keimJahre[0]} Jahre` : `${p.keimJahre[0]}–${p.keimJahre[1]} Jahre`) : (p.saatgut === "vegetativ" ? "– (keine Samen)" : "keine verlässliche Angabe gefunden");
   const zeile = (l, w) => w ? `<div class="sb-l">${l}</div><div class="sb-w">${w}</div>` : "";
   const chips = (liste, art) => liste.length ? liste.map(x => `<a class="chip ${art}" href="#wissen/pflanze/${encodeURIComponent(x.id)}" ${x.notiz ? `title="${esc(x.notiz)}"` : ""}>${esc(pflanzeVon(x.id).name)}${x.notiz ? " *" : ""}</a>`).join("") : `<span class="leise klein">keine Angaben</span>`;
   const notizen = n.gut.concat(n.schlecht, n.umstritten).filter(x => x.notiz);
@@ -1115,7 +1115,7 @@ function pflanzenDetail(main, id) {
           <div class="nb-gruppe"><div class="nb-titel">Gute Nachbarn</div>${chips(n.gut, "gut")}</div>
           <div class="nb-gruppe"><div class="nb-titel">Schlechte Nachbarn</div>${chips(n.schlecht, "schlecht")}</div>
           ${n.umstritten.length ? `<div class="nb-gruppe"><div class="nb-titel">Umstritten</div>${chips(n.umstritten, "umstritten")}</div>` : ""}
-          ${notizen.length ? `<div class="klein leise" style="margin-top:8px">${notizen.map(x => `* ${esc(pflanzeVon(x.id).name)}: ${esc(x.notiz)}`).join("<br>")}</div>` : ""}
+          ${notizen.length ? `<div class="klein leise" style="margin-top:8px">${[...new Set(notizen.map(x => x.notiz))].map(t => `* ${esc(notizen.filter(x => x.notiz === t).map(x => pflanzeVon(x.id).name).join(", "))}: ${esc(t)}`).join("<br>")}</div>` : ""}
           <p class="klein leise" style="margin:8px 0 0">Mischkultur beruht vor allem auf Erfahrungswerten; die Wirkung ist wissenschaftlich kaum belegt. Wichtiger ist genug Abstand.</p>
         </div>
       </div>
@@ -1131,7 +1131,7 @@ function pflanzenDetail(main, id) {
             ${zeile("Im Plan", p.einzeln ? "als Einzelpflanzen setzen" : "als Fläche bzw. Reihen setzen")}
             ${zeile("Abstand", p.abstand ? `${p.abstand[0]} cm zwischen den Reihen, ${p.abstand[1]} cm in der Reihe${p.abstandHinweis ? `<br><span class="leise">${esc(p.abstandHinweis)}</span>` : ""}` : "–")}
             ${zeile("Saattiefe", esc(p.saattiefe || "–") + (p.keimung ? `<br><span class="leise">${esc(p.keimung)}</span>` : ""))}
-            ${zeile("Anbaupause", pause ? `${esc(pause)} für die ganze Familie (${esc(f.name)})` : "keine Angabe")}
+            ${zeile("Anbaupause", p.pause && !f.pause ? `${esc(p.pause)} ohne ${esc(p.name)} an derselben Stelle` : pause ? `${esc(pause)} für die ganze Familie (${esc(f.name.replace(/\s*\(.*\)/, ""))})` : (p.mehrjaehrig ? "entfällt (bleibt mehrere Jahre stehen)" : "keine Angabe"))}
             ${zeile("Samen keimfähig", esc(keim))}
             ${zeile("Samen selbst gewinnen", esc(SAATGUT[p.saatgut] || "keine Angabe"))}
           </div>
@@ -1357,7 +1357,7 @@ function fruchtfolgeHinweis(beetId, pflanzeId, jahr) {
   const pf = pflanzeVon(pflanzeId); if (!pf || !pf.familie) return null;
   const pause = pauseJahre(pf); if (!pause) return null;
   const frueher = D.pflanzungen.filter(q => q.beet === beetId && q.abgeraeumt && jahrVon(q) > jahr - pause && jahrVon(q) <= jahr)
-    .filter(q => { const x = pflanzeVon(q.pflanze); return x && x.familie === pf.familie; })
+    .filter(q => { const x = pflanzeVon(q.pflanze); return x && (pf.pause && !familieVon(pf).pause ? x.id === pf.id : x.familie === pf.familie); })
     .sort((a, b) => jahrVon(b) - jahrVon(a));
   if (!frueher.length) return null;
   const q = frueher[0], name = (pflanzeVon(q.pflanze) || {}).name || "?";
@@ -1961,7 +1961,7 @@ const SEITEN = {
           <p>Rückgängig (↶) gilt auch für alles rund ums Pflanzen. Die Startseite und die Pflanzenkarten im Lexikon zeigen, was gerade wo im Garten steht.</p>
         </div></details>
         <details><summary>Pflanzenlexikon (Wissen)</summary><div>
-          <p>Unter <b>Wissen → Pflanzen</b> stehen gängige Gemüse und Kräuter. Oben suchst du nach Namen (auch nach anderen Namen wie „Paradeiser“ oder „Porree“), filterst nach Gemüse oder Kräutern oder zeigst nur, was im aktuellen Monat ansteht. Die kleine Leiste auf jeder Karte zeigt das Jahr von Januar bis Dezember: <b>gelb</b> vorziehen, <b>hellgrün</b> direkt säen, <b>dunkelgrün</b> pflanzen oder stecken, <b>rot</b> ernten. Der aktuelle Monat ist umrandet. Die Farbe des Kürzels vor dem Namen steht für die Pflanzenfamilie.</p>
+          <p>Unter <b>Wissen → Pflanzen</b> stehen gängige Gemüse, Kräuter, Beerenobst und Blumen fürs Gemüsebeet. Oben suchst du nach Namen (auch nach anderen Namen wie „Paradeiser“ oder „Porree“), filterst nach Gemüse, Kräutern, Obst oder Blumen oder zeigst nur, was im aktuellen Monat ansteht. Die kleine Leiste auf jeder Karte zeigt das Jahr von Januar bis Dezember: <b>gelb</b> vorziehen, <b>hellgrün</b> direkt säen, <b>dunkelgrün</b> pflanzen oder stecken, <b>rot</b> ernten. Der aktuelle Monat ist umrandet. Die Farbe des Kürzels vor dem Namen steht für die Pflanzenfamilie.</p>
           <p>Ein Klick auf eine Pflanze öffnet ihre Karte mit Anbaukalender, kurzer Anleitung, Steckbrief (Familie, Nährstoffbedarf, Standort, Frost, Wuchshöhe, Abstand, Saattiefe, Anbaupause, Keimfähigkeit der Samen, Saatgut selbst gewinnen) und guten und schlechten Nachbarn. Die Nachbarn kannst du antippen und landest bei deren Karte. Ein Sternchen heißt: Dazu gibt es unten eine Anmerkung.</p>
           <p><b>Unterschiedliche Angaben:</b> Wenn sich die Quellen widersprechen, steht das offen bei der Pflanze. Saattiefen und Zeiten sind Richtwerte für durchschnittliche Lagen – die Samentüte hat Vorrang.</p>
           <p><b>Meine Notizen:</b> Auf jeder Pflanzenkarte kannst du eigene Erfahrungen eintragen. Sie werden beim Tippen automatisch gespeichert.</p>

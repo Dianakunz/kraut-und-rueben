@@ -1,7 +1,7 @@
-/* Kraut und Rüben – Pflanzendaten (Etappe 1)
+/* Kraut und Rüben – Pflanzendaten (Etappen 1 und 2)
    Alle Texte in eigenen Worten; Werte aus den unter QUELLEN genannten Fachquellen.
    Diese Datei wird automatisch erzeugt. */
-const PFLANZEN_STAND = "2026-11-05";
+const PFLANZEN_STAND = "2026-11-06";
 const QUELLEN = {
  "bzfe": {
   "titel": "BZfE/aid: Tabelle Aussaat- und Pflanzzeiten (Abstände, Anzucht, Pflanzung, Direktsaat, Ernte)",
@@ -38,6 +38,62 @@ const QUELLEN = {
  "samenhaus": {
   "titel": "Samenhaus: Keimfähigkeit von Gemüse- und Kräutersamen",
   "url": "https://www.samenhaus.de/gartenblog/?p=10692"
+ },
+ "plantura_misch": {
+  "titel": "Plantura: Mischkultur – Pflanzen mit Schutzwirkung (Tabelle)",
+  "url": "https://www.plantura.garden/gartenpraxis/mischkultur/mischkultur"
+ },
+ "plantura_kraeuter": {
+  "titel": "Plantura: Welche Kräuter passen zusammen?",
+  "url": "https://www.plantura.garden/kraeuter/kraeuter-anbauen/welche-kraeuter-passen-zusammen"
+ },
+ "plantura_kombi": {
+  "titel": "Plantura: Pflanzenkombinationen für Mischkulturen (u. a. Gurke, Dill, Borretsch)",
+  "url": "https://www.plantura.garden/gartenpraxis/mischkultur/pflanzenkombinationen-fuer-mischkulturen"
+ },
+ "hornbach2": {
+  "titel": "Hornbach: Beetnachbarn-Tabelle (Tomate, Kartoffel, Zucchini, Kürbis, Karotte)",
+  "url": "https://media.hornbach.lu/cmsm/lu/de-lu/lu-2.pdf"
+ },
+ "samenhaus_misch": {
+  "titel": "Samenhaus: Pflanzenschutz durch Mischkultur (Tagetes, Ringelblume an Erdbeeren)",
+  "url": "https://www.samenhaus.de/gartenblog/?p=825"
+ },
+ "samenhaus2": {
+  "titel": "Samenhaus: Saatgut-Keimfähigkeit (Chinakohl, Rettich u. a.)",
+  "url": "https://www.samenhaus.de/gartenblog/?p=179"
+ },
+ "lwg_erdbeere": {
+  "titel": "Bayerische Gartenakademie, Merkblatt 3182: Erdbeeren",
+  "url": "https://www.lwg.bayern.de/mam/cms06/gartenakademie/dateien/erdbeeren_infoschrift_3182.pdf"
+ },
+ "plantura_erdbeere": {
+  "titel": "Plantura: Erdbeeren pflanzen (Nachbau, Abstand)",
+  "url": "https://www.plantura.garden/obst/erdbeeren/erdbeeren-pflanzen"
+ },
+ "obi_erdbeere": {
+  "titel": "OBI Magazin: Erdbeeren (Anbaupause mindestens vier Jahre)",
+  "url": "https://www.obi.at/magazin/garten/pflanzen/gemuesepflanzen/erdbeeren"
+ },
+ "plantura_schalotte": {
+  "titel": "Plantura: Schalotten pflanzen und ernten",
+  "url": "https://www.plantura.garden/gemuese/schalotten/schalotten-pflanzen"
+ },
+ "gartenjournal_schalotte": {
+  "titel": "Gartenjournal: Schalotten ernten (ab Juli bis August)",
+  "url": "https://www.gartenjournal.net/schalotten-ernten"
+ },
+ "oebz": {
+  "titel": "ÖBZ Saatgutvielfalt: Salat und essbare Blüten (Ringelblume, Borretsch ab April ins Freiland)",
+  "url": "https://saatgutvielfalt.oebz.de/wp-content/uploads/2022/02/Annette-Hollaender_2022-02-24_3x3_Salat-essbareBlueten.pdf"
+ },
+ "bingenheim_tagetes": {
+  "titel": "Bingenheimer Saatgut: Tagetes (Wuchshöhe, Blütezeit Juni–Oktober)",
+  "url": "https://www.bingenheimersaatgut.de/en/organic-seeds/flowers/summer-flowers/french-marigold-b415"
+ },
+ "kiepenkerl_ringelblume": {
+  "titel": "Kiepenkerl (bei OBI): Bio-Ringelblume, Aussaat April–Juni",
+  "url": "https://www.obi.at/p/4652723/kiepenkerl-saatgut-bio-ringelblume-oranja"
  }
 };
 const FAMILIEN = {
@@ -95,6 +151,36 @@ const FAMILIEN = {
   "name": "Baldriangewächse",
   "pause": null,
   "farbe": "#5f9e4a"
+ },
+ "rosen": {
+  "name": "Rosengewächse",
+  "pause": null,
+  "farbe": "#b83b5e"
+ },
+ "stachelbeer": {
+  "name": "Stachelbeergewächse",
+  "pause": null,
+  "farbe": "#6d3fa0"
+ },
+ "heide": {
+  "name": "Heidekrautgewächse",
+  "pause": null,
+  "farbe": "#3d5a9e"
+ },
+ "knoeterich": {
+  "name": "Knöterichgewächse",
+  "pause": null,
+  "farbe": "#9c2f2f"
+ },
+ "raublatt": {
+  "name": "Raublattgewächse",
+  "pause": null,
+  "farbe": "#4a78c2"
+ },
+ "kapuziner": {
+  "name": "Kapuzinerkressengewächse",
+  "pause": null,
+  "farbe": "#e0702a"
  }
 };
 const PFLANZEN = [
@@ -1972,6 +2058,1630 @@ const PFLANZEN = [
    120
   ],
   "einzeln": false
+ },
+ {
+  "id": "rucola",
+  "name": "Rucola",
+  "auch": [
+   "Rauke",
+   "Salatrauke"
+  ],
+  "gruppe": "Gemüse",
+  "familie": "kreuz",
+  "zehrer": "schwach",
+  "standort": "sonnig bis halbschattig",
+  "frost": "leicht",
+  "abstand": [
+   15,
+   0.5
+  ],
+  "abstandHinweis": "sehr dicht gesät; die Stückzahl ist nur grob",
+  "saattiefe": "ca. 1 cm (Richtwert)",
+  "keimung": "keimt schnell",
+  "direktsaat": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "ernte": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": null,
+  "hoehe": [
+   20,
+   40
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "sbb"
+  ],
+  "anleitung": "Von April bis September in Reihen säen, am besten alle drei bis vier Wochen ein neuer Satz. Nach vier bis sechs Wochen die Blätter schneiden, sie wachsen nach. Im Hochsommer blüht Rucola schnell und wird scharf; Vlies und feuchter Boden halten Erdflöhe fern.",
+  "hinweise": [
+   "Keimfähigkeit: In den genutzten Quellen nicht angegeben."
+  ],
+  "vorziehen": [],
+  "pflanzen": []
+ },
+ {
+  "id": "endivie",
+  "name": "Endivie",
+  "auch": [
+   "Frisée",
+   "Escariol",
+   "Winterendivie"
+  ],
+  "gruppe": "Gemüse",
+  "familie": "korb",
+  "zehrer": "mittel",
+  "standort": "sonnig",
+  "frost": "leicht",
+  "abstand": [
+   40,
+   30
+  ],
+  "saattiefe": "ca. 0,5 cm (Richtwert)",
+  "keimung": "",
+  "vorziehen": [
+   4,
+   5,
+   6,
+   7
+  ],
+  "pflanzen": [
+   5,
+   6,
+   7,
+   8
+  ],
+  "ernte": [
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "keimJahre": [
+   4,
+   5
+  ],
+  "saatgut": null,
+  "hoehe": [
+   30,
+   40
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "sbb",
+   "bingenheim",
+   "bund"
+  ],
+  "anleitung": "Für die Herbsternte ab Mitte Juni vorziehen und im Juli oder August pflanzen, nicht zu tief setzen. Gleichmäßig feucht halten. Wer mildere Blätter möchte, bindet die Köpfe ein bis zwei Wochen vor der Ernte zusammen (Bleichen). Verträgt leichten Frost.",
+  "hinweise": [
+   "BZfE unterscheidet Sommerendivie (35 × 30 cm, Ernte Juli–August) und Herbstendivie (40 × 30 cm, Ernte September–November). Hier sind beide zusammengefasst.",
+   "Nachbarn: Die BUND-Tabelle nennt „Bohnen“ als schlechte, Stangenbohnen aber als gute Nachbarn. Hier gilt deshalb nur die Buschbohne als ungünstig."
+  ],
+  "direktsaat": []
+ },
+ {
+  "id": "chinakohl",
+  "name": "Chinakohl",
+  "gruppe": "Gemüse",
+  "familie": "kreuz",
+  "zehrer": "mittel",
+  "standort": "sonnig bis halbschattig, gleichmäßig feucht",
+  "frost": "leicht",
+  "abstand": [
+   40,
+   30
+  ],
+  "saattiefe": "ca. 1 cm (Richtwert)",
+  "keimung": "",
+  "vorziehen": [
+   4,
+   5,
+   6,
+   7
+  ],
+  "pflanzen": [
+   5,
+   6,
+   7,
+   8
+  ],
+  "direktsaat": [
+   7,
+   8
+  ],
+  "ernte": [
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "keimJahre": [
+   4,
+   6
+  ],
+  "saatgut": null,
+  "hoehe": [
+   30,
+   50
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "sbb",
+   "samenhaus",
+   "samenhaus2",
+   "bund"
+  ],
+  "anleitung": "Am sichersten ab Mitte Juli direkt säen oder vorgezogen pflanzen. Im Frühjahr gesät, bildet Chinakohl bei langen Tagen leicht Blüten statt Köpfen (er „schießt“). Gleichmäßig gießen und gegen Erdflöhe mit Vlies abdecken.",
+  "hinweise": [
+   "Keimfähigkeit: Samenhaus nennt an einer Stelle bis zu 5, an anderer 4–6 Jahre.",
+   "Nachbarn: Die BUND-Tabelle führt Chinakohl nicht einzeln; die Angaben zu „Kohlgewächsen“ sind übernommen."
+  ],
+  "auch": []
+ },
+ {
+  "id": "rosenkohl",
+  "name": "Rosenkohl",
+  "gruppe": "Gemüse",
+  "familie": "kreuz",
+  "zehrer": "stark",
+  "standort": "sonnig, nährstoffreicher, fester Boden",
+  "frost": "hart",
+  "abstand": [
+   60,
+   60
+  ],
+  "saattiefe": "ca. 1 cm (Richtwert)",
+  "keimung": "",
+  "vorziehen": [
+   3,
+   4
+  ],
+  "pflanzen": [
+   4,
+   5,
+   6
+  ],
+  "ernte": [
+   1,
+   2,
+   10,
+   11,
+   12
+  ],
+  "keimJahre": [
+   5,
+   5
+  ],
+  "saatgut": "schwer",
+  "hoehe": [
+   60,
+   100
+  ],
+  "einzeln": true,
+  "quellen": [
+   "bzfe",
+   "sbb",
+   "bingenheim",
+   "bund",
+   "psr"
+  ],
+  "anleitung": "Mitte März bis Mitte April vorziehen und ab Ende April bis Juni pflanzen. Rosenkohl steht lange im Beet und braucht viel Nährstoffe. Die Röschen werden von unten nach oben geerntet, von Oktober bis in den Winter; Frost macht sie milder.",
+  "hinweise": [
+   "Nachbarn: Die BUND-Tabelle führt Rosenkohl nicht einzeln; die Angaben zu „Kohlgewächsen“ sind übernommen."
+  ],
+  "auch": [],
+  "direktsaat": []
+ },
+ {
+  "id": "wirsing",
+  "name": "Wirsing",
+  "auch": [
+   "Welschkohl"
+  ],
+  "gruppe": "Gemüse",
+  "familie": "kreuz",
+  "zehrer": "stark",
+  "standort": "sonnig, nährstoffreich",
+  "frost": "hart",
+  "abstand": [
+   50,
+   50
+  ],
+  "saattiefe": "ca. 1 cm (Richtwert)",
+  "keimung": "",
+  "vorziehen": [
+   2,
+   3,
+   4,
+   5
+  ],
+  "pflanzen": [
+   4,
+   5,
+   6,
+   7
+  ],
+  "direktsaat": [
+   3,
+   4
+  ],
+  "ernte": [
+   1,
+   2,
+   3,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "keimJahre": [
+   4,
+   5
+  ],
+  "saatgut": "schwer",
+  "hoehe": [
+   30,
+   50
+  ],
+  "einzeln": true,
+  "quellen": [
+   "bzfe",
+   "sbb",
+   "bingenheim",
+   "bund",
+   "psr"
+  ],
+  "anleitung": "Je nach Sorte gibt es frühen Wirsing (Ernte Juni/Juli), Herbstwirsing (August bis Dezember) und späten Wirsing, der bis ins Frühjahr im Beet stehen bleibt. Vorziehen, mit 50–60 cm Abstand pflanzen und gleichmäßig feucht halten.",
+  "hinweise": [
+   "BZfE nennt drei Sätze (früh, Herbst, spät) mit 50 × 50 bis 60 × 60 cm; die Monate hier fassen sie zusammen.",
+   "Keimfähigkeit: Bingenheimer Saatgut nennt nur allgemein „Kohl“ (4–5 Jahre)."
+  ]
+ },
+ {
+  "id": "rettich",
+  "name": "Rettich",
+  "gruppe": "Gemüse",
+  "familie": "kreuz",
+  "zehrer": "mittel",
+  "standort": "sonnig bis halbschattig, tiefgründig, gleichmäßig feucht",
+  "frost": "leicht",
+  "abstand": [
+   30,
+   15
+  ],
+  "saattiefe": "ca. 1–2 cm (Richtwert)",
+  "keimung": "",
+  "direktsaat": [
+   4,
+   5,
+   6,
+   7,
+   8
+  ],
+  "ernte": [
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "keimJahre": [
+   4,
+   5
+  ],
+  "saatgut": "mittel",
+  "hoehe": [
+   20,
+   40
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "sbb",
+   "samenhaus",
+   "samenhaus2",
+   "bund",
+   "psr"
+  ],
+  "anleitung": "Sommerrettich von April bis Mitte Juni, Winterrettich von Mitte Juni bis Mitte August direkt säen. Gleichmäßig feucht halten, sonst wird er holzig und sehr scharf. Winterrettich vor stärkerem Frost ernten und kühl lagern.",
+  "hinweise": [
+   "Keimfähigkeit: Samenhaus nennt an einer Stelle bis zu 5, an anderer 3–4 Jahre.",
+   "Nährstoffbedarf: In den genutzten Fachquellen nicht eingestuft; der Wert ist ein Richtwert.",
+   "Nachbarn: Die BUND-Tabelle fasst „Radieschen/Rettich“ in einer Zeile zusammen; die Angaben gelten deshalb für beide."
+  ],
+  "auch": [],
+  "vorziehen": [],
+  "pflanzen": []
+ },
+ {
+  "id": "puffbohne",
+  "name": "Puffbohne",
+  "auch": [
+   "Dicke Bohne",
+   "Ackerbohne",
+   "Saubohne"
+  ],
+  "gruppe": "Gemüse",
+  "familie": "huelsen",
+  "zehrer": "schwach",
+  "standort": "sonnig, auch schwerer Boden",
+  "frost": "leicht",
+  "abstand": [
+   60,
+   12
+  ],
+  "saattiefe": "ca. 5 cm (Richtwert)",
+  "keimung": "keimt schon bei kühlem Boden",
+  "direktsaat": [
+   2,
+   3,
+   4
+  ],
+  "ernte": [
+   6,
+   7
+  ],
+  "keimJahre": [
+   5,
+   5
+  ],
+  "keimBis": true,
+  "saatgut": null,
+  "hoehe": [
+   80,
+   120
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "samenhaus"
+  ],
+  "anleitung": "Sehr früh direkt säen, ab Mitte Februar bis Anfang April – Puffbohnen vertragen Kälte. Bei Blattläusen die Triebspitzen auskneifen. Ernten, solange die Kerne noch grün und weich sind.",
+  "hinweise": [
+   "Familie, Zehrer und Anbaupause: Das SBB-Merkblatt nennt die Puffbohne nicht. Als Hülsenfrüchtler gilt sie üblicherweise als Schwachzehrer; die Anbaupause der Familie (3–6 Jahre) ist übernommen.",
+   "Nachbarn: In den genutzten Fachquellen keine Angaben."
+  ],
+  "vorziehen": [],
+  "pflanzen": []
+ },
+ {
+  "id": "fruehlingszwiebel",
+  "name": "Frühlingszwiebel",
+  "auch": [
+   "Lauchzwiebel",
+   "Bundzwiebel"
+  ],
+  "gruppe": "Gemüse",
+  "familie": "lauch",
+  "zehrer": "mittel",
+  "standort": "sonnig",
+  "frost": "leicht",
+  "abstand": [
+   30,
+   3
+  ],
+  "saattiefe": "ca. 1 cm (Richtwert)",
+  "keimung": "",
+  "direktsaat": [
+   3,
+   4
+  ],
+  "pflanzen": [
+   4,
+   5
+  ],
+  "ernte": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "keimJahre": [
+   2,
+   3
+  ],
+  "saatgut": null,
+  "hoehe": [
+   30,
+   50
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "sbb",
+   "bingenheim",
+   "bund"
+  ],
+  "anleitung": "Von Anfang März bis Anfang April dicht in Reihen säen oder ab Mitte April Jungpflanzen setzen. Geerntet wird frisch mit Laub, sobald die Schäfte bleistift- bis daumendick sind, von Juni bis in den Herbst.",
+  "hinweise": [
+   "Die BZfE-Tabelle führt sie als „Zwiebeln, Bund-“.",
+   "Zehrer, Anbaupause, Keimfähigkeit und Nachbarn: Die Quellen nennen nur allgemein Zwiebeln; die Werte sind von der Küchenzwiebel übernommen."
+  ],
+  "vorziehen": []
+ },
+ {
+  "id": "schalotte",
+  "name": "Schalotte",
+  "gruppe": "Gemüse",
+  "familie": "lauch",
+  "zehrer": "mittel",
+  "standort": "sonnig, warm, durchlässig",
+  "frost": "leicht",
+  "abstand": [
+   25,
+   15
+  ],
+  "abstandHinweis": "Plantura: 15–20 cm in der Reihe; Reihen 25–30 cm",
+  "saattiefe": "so stecken, dass die Spitze knapp herausschaut",
+  "keimung": "",
+  "pflanzen": [
+   3,
+   4
+  ],
+  "ernte": [
+   7,
+   8
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   30,
+   50
+  ],
+  "einzeln": false,
+  "quellen": [
+   "plantura_schalotte",
+   "gartenjournal_schalotte",
+   "sbb",
+   "bund"
+  ],
+  "anleitung": "Im März oder April die Zwiebelchen mit der Spitze nach oben in lockeren Boden stecken. Nur bei großer Trockenheit gießen, kurz vor der Ernte gar nicht. Aus jeder gesteckten Schalotte wächst ein Nest aus mehreren neuen. Ernten, wenn das Laub welkt, und vor dem Lagern gut trocknen lassen.",
+  "hinweise": [
+   "Erntebeginn: Plantura nennt August (90–120 Tage nach dem Stecken), Gartenjournal schon Juli.",
+   "Zehrer, Anbaupause und Nachbarn: Die Quellen nennen nur allgemein Zwiebeln; die Werte sind von der Küchenzwiebel übernommen."
+  ],
+  "auch": [],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "rhabarber",
+  "name": "Rhabarber",
+  "gruppe": "Gemüse",
+  "familie": "knoeterich",
+  "zehrer": "stark",
+  "mehrjaehrig": true,
+  "standort": "sonnig bis halbschattig, nährstoffreich, feucht",
+  "frost": "hart",
+  "abstand": [
+   120,
+   120
+  ],
+  "saattiefe": "–",
+  "keimung": "wird meist durch Teilung vermehrt",
+  "pflanzen": [
+   3,
+   10,
+   11
+  ],
+  "ernte": [
+   4,
+   5,
+   6
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   60,
+   100
+  ],
+  "hoeheHinweis": "Blattstiele und Blätter; Blütenstände werden über 2 m hoch und sollten früh entfernt werden.",
+  "einzeln": true,
+  "quellen": [
+   "bzfe",
+   "bund"
+  ],
+  "anleitung": "Im Oktober/November oder im März pflanzen und im ersten Jahr nicht ernten. Ab dem zweiten Jahr von Ende April bis Ende Juni die Stiele abdrehen, nie mehr als etwa die Hälfte. Danach die Pflanze in Ruhe lassen, damit sie Kraft fürs nächste Jahr sammelt.",
+  "hinweise": [
+   "Nährstoffbedarf: In den genutzten Fachquellen nicht eingestuft; der Wert ist ein Richtwert. Rhabarber gilt allgemein als Starkzehrer.",
+   "Rhabarber bleibt viele Jahre am selben Platz; eine Fruchtfolge entfällt."
+  ],
+  "auch": [],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "topinambur",
+  "name": "Topinambur",
+  "auch": [
+   "Erdbirne"
+  ],
+  "gruppe": "Gemüse",
+  "familie": "korb",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "standort": "sonnig bis halbschattig, anspruchslos",
+  "frost": "hart",
+  "abstand": [
+   60,
+   40
+  ],
+  "saattiefe": "Knollen ca. 10 cm tief legen (Richtwert)",
+  "keimung": "",
+  "pflanzen": [
+   3,
+   4,
+   10,
+   11
+  ],
+  "ernte": [
+   1,
+   2,
+   3,
+   9,
+   10,
+   11,
+   12
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   200,
+   300
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "sbb"
+  ],
+  "anleitung": "Knollen im März/April oder Oktober/November legen. Topinambur wird zwei bis drei Meter hoch und breitet sich stark aus – jede vergessene Knolle treibt wieder aus. Am besten einen festen Platz am Rand geben oder eine Wurzelsperre setzen. Geerntet wird ab September bis zum Frühjahr, wann immer der Boden offen ist.",
+  "hinweise": [
+   "Nährstoffbedarf: In den genutzten Fachquellen nicht eingestuft; der Wert ist ein Richtwert."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "thymian",
+  "name": "Thymian",
+  "gruppe": "Kräuter",
+  "familie": "lippen",
+  "zehrer": "schwach",
+  "mehrjaehrig": true,
+  "standort": "sonnig, trocken, durchlässig",
+  "frost": "hart",
+  "abstand": [
+   20,
+   20
+  ],
+  "saattiefe": "nicht bedecken, nur andrücken",
+  "keimung": "Lichtkeimer",
+  "direktsaat": [
+   4,
+   5,
+   6,
+   7,
+   8
+  ],
+  "pflanzen": [
+   4,
+   5,
+   9,
+   10
+  ],
+  "ernte": [
+   5,
+   6,
+   7,
+   8
+  ],
+  "keimJahre": null,
+  "saatgut": null,
+  "hoehe": [
+   10,
+   30
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "plantura_misch"
+  ],
+  "anleitung": "Am einfachsten als Jungpflanze im Frühjahr oder Herbst setzen. Thymian mag es mager und trocken; Staunässe im Winter schadet ihm mehr als Kälte. Nach der Blüte leicht zurückschneiden, damit er nicht verholzt.",
+  "hinweise": [
+   "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine Einordnung; der Wert ist ein Richtwert.",
+   "Keimfähigkeit: In den genutzten Quellen nicht angegeben."
+  ],
+  "auch": [],
+  "vorziehen": []
+ },
+ {
+  "id": "salbei",
+  "name": "Salbei",
+  "gruppe": "Kräuter",
+  "familie": "lippen",
+  "zehrer": "schwach",
+  "mehrjaehrig": true,
+  "standort": "sonnig, warm, durchlässig",
+  "frost": "hart",
+  "abstand": [
+   30,
+   40
+  ],
+  "saattiefe": "ca. 1 cm (Richtwert)",
+  "keimung": "",
+  "vorziehen": [
+   4,
+   5
+  ],
+  "pflanzen": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "direktsaat": [
+   5,
+   6,
+   7
+  ],
+  "ernte": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": null,
+  "hoehe": [
+   40,
+   70
+  ],
+  "einzeln": true,
+  "quellen": [
+   "bzfe",
+   "bund",
+   "plantura_misch"
+  ],
+  "anleitung": "Vorziehen oder als Jungpflanze ab Mitte Mai setzen. Salbei braucht Sonne und durchlässigen Boden. Im Frühjahr kräftig zurückschneiden, aber nicht ins alte Holz. Vor Winternässe schützen.",
+  "hinweise": [
+   "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine Einordnung; der Wert ist ein Richtwert.",
+   "Keimfähigkeit: In den genutzten Quellen nicht angegeben."
+  ],
+  "auch": []
+ },
+ {
+  "id": "rosmarin",
+  "name": "Rosmarin",
+  "gruppe": "Kräuter",
+  "familie": "lippen",
+  "zehrer": "schwach",
+  "mehrjaehrig": true,
+  "standort": "vollsonnig, warm, geschützt, durchlässig",
+  "frost": "leicht",
+  "abstand": [
+   50,
+   50
+  ],
+  "saattiefe": "–",
+  "keimung": "meist als Jungpflanze gekauft",
+  "pflanzen": [
+   4,
+   5,
+   6,
+   7
+  ],
+  "ernte": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "keimJahre": null,
+  "saatgut": null,
+  "hoehe": [
+   50,
+   100
+  ],
+  "einzeln": true,
+  "quellen": [
+   "bzfe",
+   "plantura_misch",
+   "hornbach2"
+  ],
+  "anleitung": "Ab Ende April an einen sonnigen, geschützten Platz pflanzen. Rosmarin ist nur bedingt winterhart: In rauen Lagen besser im Kübel ziehen und hell und kühl, aber frostfrei überwintern. Wenig gießen.",
+  "hinweise": [
+   "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine Einordnung; der Wert ist ein Richtwert.",
+   "Keimfähigkeit: In den genutzten Quellen nicht angegeben.",
+   "Winterhärte: Je nach Sorte und Lage unterschiedlich; hier vorsichtig als „verträgt leichten Frost“ eingestuft."
+  ],
+  "auch": [],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "oregano",
+  "name": "Oregano",
+  "auch": [
+   "Dost",
+   "Wilder Majoran"
+  ],
+  "gruppe": "Kräuter",
+  "familie": "lippen",
+  "zehrer": "schwach",
+  "mehrjaehrig": true,
+  "standort": "sonnig, trocken",
+  "frost": "hart",
+  "abstand": [
+   20,
+   15
+  ],
+  "saattiefe": "nicht bedecken, nur andrücken",
+  "keimung": "Lichtkeimer",
+  "vorziehen": [
+   2,
+   3
+  ],
+  "pflanzen": [
+   5,
+   6
+  ],
+  "direktsaat": [
+   4,
+   5
+  ],
+  "ernte": [
+   6,
+   7,
+   8
+  ],
+  "keimJahre": null,
+  "saatgut": null,
+  "hoehe": [
+   30,
+   60
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe"
+  ],
+  "anleitung": "Im Februar/März vorziehen oder ab April direkt säen; die feinen Samen nur andrücken. Zur Blütezeit hat Oregano das meiste Aroma, dann zum Trocknen ernten. Breitet sich mit der Zeit aus.",
+  "hinweise": [
+   "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine Einordnung; der Wert ist ein Richtwert.",
+   "Keimfähigkeit: In den genutzten Quellen nicht angegeben."
+  ]
+ },
+ {
+  "id": "minze",
+  "name": "Minze",
+  "auch": [
+   "Pfefferminze"
+  ],
+  "gruppe": "Kräuter",
+  "familie": "lippen",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "standort": "halbschattig, feucht",
+  "frost": "hart",
+  "abstand": [
+   30,
+   30
+  ],
+  "saattiefe": "–",
+  "keimung": "Pfefferminze wird über Ausläufer vermehrt",
+  "pflanzen": [
+   4,
+   5,
+   9,
+   10
+  ],
+  "ernte": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   30,
+   80
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "bund",
+   "plantura_kraeuter"
+  ],
+  "anleitung": "Im Frühjahr oder Herbst pflanzen, am besten mit Wurzelsperre oder in einen eingegrabenen Topf – Minze wuchert stark über Ausläufer. Laufend die Triebspitzen ernten. Alle paar Jahre an einen neuen Platz setzen.",
+  "hinweise": [
+   "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine Einordnung; der Wert ist ein Richtwert."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "zitronenmelisse",
+  "name": "Zitronenmelisse",
+  "auch": [
+   "Melisse"
+  ],
+  "gruppe": "Kräuter",
+  "familie": "lippen",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "standort": "sonnig bis halbschattig",
+  "frost": "hart",
+  "abstand": [
+   30,
+   30
+  ],
+  "saattiefe": "nicht bedecken",
+  "keimung": "Lichtkeimer",
+  "pflanzen": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "ernte": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "keimJahre": null,
+  "saatgut": null,
+  "hoehe": [
+   50,
+   80
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "plantura_kraeuter"
+  ],
+  "anleitung": "Als Jungpflanze ab Mitte Mai setzen. Vor der Blüte ernten, dann ist das Aroma am besten. Regelmäßig zurückschneiden; Melisse sät sich gern selbst aus.",
+  "hinweise": [
+   "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine Einordnung; der Wert ist ein Richtwert.",
+   "Keimfähigkeit: In den genutzten Quellen nicht angegeben."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "bohnenkraut",
+  "name": "Bohnenkraut",
+  "auch": [
+   "Pfefferkraut"
+  ],
+  "gruppe": "Kräuter",
+  "familie": "lippen",
+  "zehrer": "schwach",
+  "standort": "sonnig, warm",
+  "frost": "empfindlich",
+  "abstand": [
+   25,
+   25
+  ],
+  "saattiefe": "nicht bedecken, nur andrücken",
+  "keimung": "Lichtkeimer",
+  "vorziehen": [
+   3,
+   4
+  ],
+  "pflanzen": [
+   5,
+   6
+  ],
+  "direktsaat": [
+   5,
+   6
+  ],
+  "ernte": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "keimJahre": null,
+  "saatgut": null,
+  "hoehe": [
+   20,
+   40
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "plantura_misch"
+  ],
+  "anleitung": "Einjähriges Sommer-Bohnenkraut ab März unter Glas vorziehen oder ab Mitte Mai direkt säen. Gern zwischen die Bohnen setzen. Kurz vor der Blüte ernten und zum Trocknen bündeln.",
+  "hinweise": [
+   "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine Einordnung; der Wert ist ein Richtwert.",
+   "Keimfähigkeit: In den genutzten Quellen nicht angegeben.",
+   "Gemeint ist das einjährige Sommer-Bohnenkraut; das mehrjährige Bergbohnenkraut ist winterhart."
+  ]
+ },
+ {
+  "id": "koriander",
+  "name": "Koriander",
+  "gruppe": "Kräuter",
+  "familie": "dolden",
+  "zehrer": "mittel",
+  "standort": "sonnig",
+  "frost": "leicht",
+  "abstand": [
+   30,
+   15
+  ],
+  "saattiefe": "ca. 1–2 cm (Richtwert)",
+  "keimung": "Dunkelkeimer",
+  "direktsaat": [
+   4,
+   5
+  ],
+  "ernte": [
+   6,
+   7,
+   8
+  ],
+  "keimJahre": null,
+  "saatgut": null,
+  "hoehe": [
+   40,
+   60
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "sbb",
+   "bund"
+  ],
+  "anleitung": "Im April/Mai direkt säen, Koriander lässt sich schlecht verpflanzen. Die Blätter nach etwa sechs Wochen ernten, bevor er blüht; im Hochsommer schießt er schnell. Die Samen reifen im Juli und August.",
+  "hinweise": [
+   "Ernte: Die BZfE-Tabelle nennt Mitte Juli bis Ende August (Samen); Blätter gibt es schon früher.",
+   "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine Einordnung; der Wert ist ein Richtwert.",
+   "Keimfähigkeit: In den genutzten Quellen nicht angegeben."
+  ],
+  "auch": [],
+  "vorziehen": [],
+  "pflanzen": []
+ },
+ {
+  "id": "kerbel",
+  "name": "Kerbel",
+  "gruppe": "Kräuter",
+  "familie": "dolden",
+  "zehrer": "schwach",
+  "standort": "halbschattig, feucht",
+  "frost": "leicht",
+  "abstand": [
+   10,
+   1
+  ],
+  "abstandHinweis": "dicht gesät; die Stückzahl ist nur grob",
+  "saattiefe": "nicht bedecken, nur andrücken",
+  "keimung": "Lichtkeimer",
+  "direktsaat": [
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "ernte": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "keimJahre": [
+   4,
+   4
+  ],
+  "keimBis": true,
+  "saatgut": null,
+  "hoehe": [
+   30,
+   60
+  ],
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "samenhaus",
+   "plantura_misch",
+   "plantura_kraeuter"
+  ],
+  "anleitung": "Von Mitte März bis Ende Juli alle paar Wochen direkt säen. Kerbel mag es halbschattig und feucht, in der Sonne blüht er schnell. Nach vier bis sechs Wochen die Blätter schneiden.",
+  "hinweise": [
+   "Ernte: BZfE nennt „ab Mitte April“ ohne Ende; hier bis Oktober angenommen.",
+   "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine Einordnung; der Wert ist ein Richtwert."
+  ],
+  "auch": [],
+  "vorziehen": [],
+  "pflanzen": []
+ },
+ {
+  "id": "liebstoeckel",
+  "name": "Liebstöckel",
+  "auch": [
+   "Maggikraut"
+  ],
+  "gruppe": "Kräuter",
+  "familie": "dolden",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "standort": "sonnig bis halbschattig, nährstoffreich, feucht",
+  "frost": "hart",
+  "abstand": [
+   50,
+   50
+  ],
+  "saattiefe": "–",
+  "keimung": "meist als Jungpflanze gekauft",
+  "pflanzen": [
+   3,
+   4,
+   9,
+   10
+  ],
+  "ernte": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": null,
+  "hoehe": [
+   100,
+   200
+  ],
+  "einzeln": true,
+  "quellen": [
+   "bzfe"
+  ],
+  "anleitung": "Im Frühjahr oder Herbst eine einzelne Pflanze setzen – eine reicht für die Küche, sie wird mit den Jahren sehr groß. Laufend junge Blätter ernten; stark würzig, sparsam verwenden.",
+  "hinweise": [
+   "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine Einordnung; der Wert ist ein Richtwert.",
+   "Keimfähigkeit: In den genutzten Quellen nicht angegeben."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "borretsch",
+  "name": "Borretsch",
+  "auch": [
+   "Gurkenkraut"
+  ],
+  "gruppe": "Kräuter",
+  "familie": "raublatt",
+  "zehrer": "mittel",
+  "standort": "sonnig bis halbschattig",
+  "frost": "leicht",
+  "abstand": [
+   40,
+   30
+  ],
+  "abstandHinweis": "keine Angabe in der BZfE-Tabelle; Richtwert",
+  "saattiefe": "ca. 1–2 cm (Richtwert)",
+  "keimung": "Dunkelkeimer",
+  "direktsaat": [
+   4,
+   5,
+   6
+  ],
+  "ernte": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "keimJahre": [
+   3,
+   3
+  ],
+  "keimBis": true,
+  "saatgut": null,
+  "hoehe": [
+   50,
+   80
+  ],
+  "einzeln": false,
+  "quellen": [
+   "oebz",
+   "samenhaus",
+   "plantura_kombi"
+  ],
+  "anleitung": "Ab April direkt ins Beet säen. Borretsch wird ausladend und sät sich gern selbst aus. Junge Blätter und die blauen Blüten sind essbar; die Blüten locken viele Bienen und Hummeln an – gut neben Gurken und Zucchini.",
+  "hinweise": [
+   "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine Einordnung; der Wert ist ein Richtwert.",
+   "Zeiten: Borretsch steht nicht in der BZfE-Tabelle; Aussaat ab April nach ÖBZ Saatgutvielfalt."
+  ],
+  "vorziehen": [],
+  "pflanzen": []
+ },
+ {
+  "id": "ringelblume",
+  "name": "Ringelblume",
+  "auch": [
+   "Calendula"
+  ],
+  "gruppe": "Blumen",
+  "familie": "korb",
+  "zehrer": "schwach",
+  "standort": "sonnig bis halbschattig",
+  "frost": "leicht",
+  "abstand": [
+   25,
+   20
+  ],
+  "saattiefe": "ca. 1 cm (Richtwert)",
+  "keimung": "",
+  "direktsaat": [
+   3,
+   4,
+   5,
+   6
+  ],
+  "ernte": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": null,
+  "hoehe": [
+   30,
+   60
+  ],
+  "einzeln": false,
+  "quellen": [
+   "oebz",
+   "kiepenkerl_ringelblume",
+   "plantura_misch",
+   "hornbach2",
+   "samenhaus_misch"
+  ],
+  "anleitung": "Ab März bis Juni direkt säen und auf etwa 20–25 cm vereinzeln. Blüht von Juni bis in den Herbst; Verblühtes abschneiden verlängert die Blüte. Die Blütenblätter sind essbar. Sät sich gern selbst aus.",
+  "hinweise": [
+   "„Ernten“ meint hier die Blüten (Juni bis Oktober).",
+   "Aussaatzeit: Die Angaben schwanken – Kiepenkerl nennt April bis Juni, andere Saatgutanbieter März bis August.",
+   "Schutzwirkung: Plantura nennt die Ringelblume gegen Nematoden bei Kartoffeln und Kohl; belegt ist das eher als Erfahrungswert.",
+   "Nährstoffbedarf: Richtwert.",
+   "Keimfähigkeit: In den genutzten Quellen nicht angegeben."
+  ],
+  "vorziehen": [],
+  "pflanzen": []
+ },
+ {
+  "id": "tagetes",
+  "name": "Tagetes",
+  "auch": [
+   "Studentenblume",
+   "Samtblume"
+  ],
+  "gruppe": "Blumen",
+  "familie": "korb",
+  "zehrer": "schwach",
+  "standort": "sonnig",
+  "frost": "empfindlich",
+  "abstand": [
+   30,
+   25
+  ],
+  "abstandHinweis": "Richtwert; je nach Sorte",
+  "saattiefe": "dünn bedecken (Richtwert)",
+  "keimung": "",
+  "vorziehen": [
+   3,
+   4
+  ],
+  "pflanzen": [
+   5,
+   6
+  ],
+  "direktsaat": [
+   5,
+   6
+  ],
+  "ernte": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": null,
+  "hoehe": [
+   30,
+   80
+  ],
+  "hoeheHinweis": "Kleinblütige Sorten (Tagetes tenuifolia) 30–40 cm, hohe Sorten (Tagetes erecta) um 80 cm.",
+  "einzeln": false,
+  "quellen": [
+   "bingenheim_tagetes",
+   "plantura_misch",
+   "hornbach2",
+   "samenhaus_misch"
+  ],
+  "anleitung": "Im März/April vorziehen oder nach den Eisheiligen direkt säen; Tagetes ist frostempfindlich. Blüht von Juni bis Oktober. Wird gern zwischen Gemüse gesetzt – die Wurzeln sollen Nematoden im Boden zurückdrängen. Schnecken fressen Tagetes gern, sie kann deshalb auch als Ablenkung dienen.",
+  "hinweise": [
+   "„Ernten“ meint hier die Blüte.",
+   "Schutzwirkung gegen Nematoden: Plantura und Samenhaus nennen sie; die Wirkung ist vor allem bei dichter Aussaat von Tagetes patula beschrieben.",
+   "Nährstoffbedarf: Richtwert.",
+   "Keimfähigkeit: In den genutzten Quellen nicht angegeben."
+  ]
+ },
+ {
+  "id": "kapuzinerkresse",
+  "name": "Kapuzinerkresse",
+  "gruppe": "Blumen",
+  "familie": "kapuziner",
+  "zehrer": "schwach",
+  "standort": "sonnig bis halbschattig, eher mager",
+  "frost": "empfindlich",
+  "abstand": [
+   20,
+   10
+  ],
+  "saattiefe": "ca. 2 cm (Richtwert)",
+  "keimung": "große Samen, keimen zuverlässig",
+  "direktsaat": [
+   4,
+   5,
+   6
+  ],
+  "ernte": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "keimJahre": [
+   5,
+   5
+  ],
+  "keimBis": true,
+  "saatgut": "leicht",
+  "hoehe": [
+   20,
+   30
+  ],
+  "hoeheHinweis": "Rankende Sorten werden mehrere Meter lang.",
+  "einzeln": false,
+  "quellen": [
+   "bzfe",
+   "samenhaus",
+   "bund",
+   "hornbach2"
+  ],
+  "anleitung": "Ab April direkt säen, frostempfindlich. Auf magerem Boden blüht sie reicher, auf fettem bildet sie vor allem Blätter. Blätter, Blüten und junge Samen sind essbar und schmecken kresseartig scharf.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert.",
+   "Samen selbst gewinnen: Die großen Samen lassen sich leicht sammeln; eine Einstufung in den genutzten Samenbau-Quellen fehlt."
+  ],
+  "auch": [],
+  "vorziehen": [],
+  "pflanzen": []
+ },
+ {
+  "id": "erdbeere",
+  "name": "Erdbeere",
+  "gruppe": "Obst",
+  "familie": "rosen",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "pause": "3–4 Jahre",
+  "standort": "sonnig, humos, keine Staunässe",
+  "frost": "hart",
+  "abstand": [
+   90,
+   30
+  ],
+  "abstandHinweis": "Plantura: im Hausgarten 3-reihige Beete mit 40–45 cm Reihenabstand",
+  "saattiefe": "–",
+  "keimung": "Wird als Pflanze gekauft bzw. über Ableger oder Stecklinge vermehrt.",
+  "pflanzen": [
+   7,
+   8
+  ],
+  "ernte": [
+   6,
+   7
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   15,
+   30
+  ],
+  "einzeln": true,
+  "quellen": [
+   "bzfe",
+   "lwg_erdbeere",
+   "plantura_erdbeere",
+   "obi_erdbeere",
+   "bund"
+  ],
+  "anleitung": "Im Juli und August pflanzen, dann tragen die Pflanzen schon im nächsten Juni. Das Herz der Pflanze darf nicht mit Erde bedeckt sein. Nach etwa zwei bis drei Jahren lässt der Ertrag nach; dann ein neues Beet an anderer Stelle anlegen.",
+  "hinweise": [
+   "Standzeit: Die Bayerische Gartenakademie empfiehlt, ein Erdbeerbeet nur zwei Jahre zu nutzen; Plantura nennt etwa drei Jahre.",
+   "Anbaupause: Plantura nennt 3–4 Jahre, OBI mindestens 4 Jahre ohne Erdbeeren an derselben Stelle.",
+   "Abstand: BZfE nennt 90 × 30 cm, Plantura für Beete 40–45 cm zwischen den Reihen.",
+   "Nachbarn: Die BUND-Tabelle nennt bei den Erdbeeren Kohl als schlechten, bei den Kohlgewächsen Erdbeeren als guten Nachbarn. Hier gilt die vorsichtigere Angabe (schlecht)."
+  ],
+  "auch": [],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "himbeere",
+  "name": "Himbeere",
+  "gruppe": "Obst",
+  "familie": "rosen",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "standort": "sonnig bis halbschattig, humos, locker, keine Staunässe",
+  "frost": "hart",
+  "abstand": [
+   150,
+   40
+  ],
+  "abstandHinweis": "Herbsthimbeeren: 200 × 40 cm",
+  "saattiefe": "–",
+  "keimung": "Wird als Pflanze gekauft bzw. über Ableger oder Stecklinge vermehrt.",
+  "pflanzen": [
+   5,
+   6,
+   10,
+   11
+  ],
+  "ernte": [
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   150,
+   200
+  ],
+  "einzeln": true,
+  "quellen": [
+   "bzfe",
+   "bund"
+  ],
+  "anleitung": "Im Oktober/November oder Mai/Juni flach pflanzen und ein Gerüst mit Drähten bauen. Sommerhimbeeren tragen am vorjährigen Holz (Ernte Mitte Juni bis Ende Juli), Herbsthimbeeren an den neuen Ruten (August bis November) – diese im Winter bodennah abschneiden.",
+  "hinweise": [
+   "Die Erntemonate fassen Sommer- und Herbsthimbeeren zusammen.",
+   "Nährstoffbedarf: Richtwert."
+  ],
+  "auch": [],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "brombeere",
+  "name": "Brombeere",
+  "gruppe": "Obst",
+  "familie": "rosen",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "standort": "sonnig, warm",
+  "frost": "hart",
+  "abstand": [
+   200,
+   200
+  ],
+  "saattiefe": "–",
+  "keimung": "Wird als Pflanze gekauft bzw. über Ableger oder Stecklinge vermehrt.",
+  "pflanzen": [
+   4,
+   5,
+   10,
+   11
+  ],
+  "ernte": [
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   150,
+   300
+  ],
+  "einzeln": true,
+  "quellen": [
+   "bzfe"
+  ],
+  "anleitung": "Im Frühjahr oder Herbst an ein Spalier oder einen Zaun pflanzen. Brombeeren tragen an den Ruten des Vorjahres; abgeerntete Ruten nach der Ernte bodennah entfernen und die neuen anbinden. Dornenlose Sorten erleichtern die Arbeit.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert."
+  ],
+  "auch": [],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "johannisbeere",
+  "name": "Johannisbeere",
+  "auch": [
+   "Ribisel"
+  ],
+  "gruppe": "Obst",
+  "familie": "stachelbeer",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "standort": "sonnig bis halbschattig, humos",
+  "frost": "hart",
+  "abstand": [
+   150,
+   100
+  ],
+  "saattiefe": "–",
+  "keimung": "Wird als Pflanze gekauft bzw. über Ableger oder Stecklinge vermehrt.",
+  "pflanzen": [
+   3,
+   4,
+   10,
+   11
+  ],
+  "ernte": [
+   7,
+   8
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   100,
+   150
+  ],
+  "einzeln": true,
+  "quellen": [
+   "bzfe"
+  ],
+  "anleitung": "Im Herbst oder zeitigen Frühjahr etwas tiefer pflanzen als im Topf. Rote und Weiße tragen am zwei- bis dreijährigen Holz, Schwarze vor allem an den einjährigen Trieben; alte Triebe regelmäßig bodennah herausschneiden.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "stachelbeere",
+  "name": "Stachelbeere",
+  "gruppe": "Obst",
+  "familie": "stachelbeer",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "standort": "sonnig bis halbschattig, luftig",
+  "frost": "hart",
+  "abstand": [
+   200,
+   150
+  ],
+  "saattiefe": "–",
+  "keimung": "Wird als Pflanze gekauft bzw. über Ableger oder Stecklinge vermehrt.",
+  "pflanzen": [
+   10,
+   11
+  ],
+  "ernte": [
+   6,
+   7
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   100,
+   150
+  ],
+  "einzeln": true,
+  "quellen": [
+   "bzfe"
+  ],
+  "anleitung": "Im Oktober/November pflanzen. Einen luftigen Strauch mit acht bis zehn Haupttrieben aufbauen; ein lichter Schnitt beugt dem Mehltau vor. Mehltau-widerstandsfähige Sorten wählen.",
+  "hinweise": [
+   "Abstand: Die BZfE-Tabelle nennt 150 × 200 cm (Reihe × Pflanze). Hier gespeichert als 2 m zwischen den Reihen und 1,5 m zwischen den Sträuchern, damit der Platzkreis nicht zu groß wird.",
+   "Nährstoffbedarf: Richtwert."
+  ],
+  "auch": [],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "heidelbeere",
+  "name": "Heidelbeere",
+  "auch": [
+   "Kulturheidelbeere",
+   "Blaubeere"
+  ],
+  "gruppe": "Obst",
+  "familie": "heide",
+  "zehrer": "schwach",
+  "mehrjaehrig": true,
+  "standort": "sonnig, saurer Boden (Moorbeet- bzw. Rhododendronerde)",
+  "frost": "hart",
+  "abstand": [
+   200,
+   150
+  ],
+  "saattiefe": "–",
+  "keimung": "Wird als Pflanze gekauft bzw. über Ableger oder Stecklinge vermehrt.",
+  "pflanzen": [
+   3,
+   4,
+   10,
+   11
+  ],
+  "ernte": [
+   7,
+   8,
+   9
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   100,
+   200
+  ],
+  "einzeln": true,
+  "quellen": [
+   "bzfe"
+  ],
+  "anleitung": "Kulturheidelbeeren brauchen sauren, humosen Boden; in normale Gartenerde gepflanzt kümmern sie. Deshalb ein Pflanzloch mit Rhododendronerde füllen oder im großen Kübel ziehen und mit Regenwasser gießen. Zwei Sorten nebeneinander verbessern den Ertrag.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
  }
 ];
-const MISCHKULTUR = [{"a": "basilikum", "b": "tomate", "art": "gut", "quelle": "hornbach"}, {"a": "blumenkohl", "b": "brokkoli", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "buschbohne", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "erbse", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "gruenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "blumenkohl", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "blumenkohl", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "brokkoli", "b": "buschbohne", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "erbse", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "gruenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "brokkoli", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "brokkoli", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "brokkoli", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "brokkoli", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "erbse", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "fenchel", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "gruenkohl", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kartoffel", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "kohlrabi", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kopfkohl", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kuerbis", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "lauch", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "dill", "b": "erbse", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "fenchel", "art": "schlecht", "quelle": "bund"}, {"a": "dill", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "kartoffel", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "fenchel", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "gruenkohl", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "erbse", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "erbse", "b": "kohlrabi", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kopfkohl", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kuerbis", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "lauch", "art": "schlecht", "quelle": "bund"}, {"a": "erbse", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "stangenbohne", "art": "schlecht", "quelle": "bund", "notiz": "In der BUND-Tabelle bei der Stangenbohne als gut und schlecht genannt, bei der Erbse als schlecht."}, {"a": "erbse", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "fenchel", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "fenchel", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "fenchel", "b": "paprika", "art": "schlecht", "quelle": "bund"}, {"a": "fenchel", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "fenchel", "b": "stangenbohne", "art": "schlecht", "quelle": "bund"}, {"a": "fenchel", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "gruenkohl", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "gruenkohl", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "gruenkohl", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "gruenkohl", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "gurke", "b": "knoblauch", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "kopfkohl", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "kuerbis", "art": "schlecht", "quelle": "bund"}, {"a": "gurke", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "paprika", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "radieschen", "art": "schlecht", "quelle": "bund"}, {"a": "gurke", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "tomate", "art": "schlecht", "quelle": "hornbach"}, {"a": "gurke", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "kohlrabi", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "kopfkohl", "art": "schlecht", "quelle": "bund"}, {"a": "kartoffel", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "rote_bete", "art": "schlecht", "quelle": "bund", "notiz": "In der BUND-Tabelle bei der Roten Bete als gut und schlecht genannt, bei der Kartoffel als schlecht."}, {"a": "kartoffel", "b": "sellerie", "art": "schlecht", "quelle": "bund"}, {"a": "kartoffel", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "knoblauch", "b": "kopfkohl", "art": "schlecht", "quelle": "bund"}, {"a": "knoblauch", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "knoblauch", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "knoblauch", "b": "stangenbohne", "art": "schlecht", "quelle": "bund"}, {"a": "knoblauch", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "kuerbis", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "kopfsalat", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "petersilie", "art": "schlecht", "quelle": "bund"}, {"a": "kopfsalat", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "kuerbis", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "kuerbis", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kuerbis", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "kuerbis", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "paprika", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "rote_bete", "art": "schlecht", "quelle": "bund"}, {"a": "lauch", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "stangenbohne", "art": "schlecht", "quelle": "bund"}, {"a": "lauch", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "mais", "b": "rote_bete", "art": "schlecht", "quelle": "bund"}, {"a": "mais", "b": "sellerie", "art": "schlecht", "quelle": "bund"}, {"a": "mais", "b": "tomate", "art": "umstritten", "quelle": "bund", "notiz": "BUND-Tabelle widersprüchlich: bei der Tomate guter, beim Mais schlechter Nachbar."}, {"a": "mangold", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "mangold", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "mangold", "b": "spinat", "art": "schlecht", "quelle": "bund"}, {"a": "moehre", "b": "paprika", "art": "gut", "quelle": "bund"}, {"a": "moehre", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "moehre", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "moehre", "b": "zwiebel", "art": "umstritten", "quelle": "bund,lwg", "notiz": "BUND: gute Nachbarn. Bayerische Gartenakademie: nicht empfehlenswert (unterschiedlicher Nährstoff- und Wasserbedarf, Schutz vor Möhren-/Zwiebelfliege klappt nur selten)."}, {"a": "paprika", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "petersilie", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "petersilie", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "radieschen", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "radieschen", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "radieschen", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "rote_bete", "b": "spinat", "art": "schlecht", "quelle": "bund"}, {"a": "rote_bete", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "sellerie", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "sellerie", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "sellerie", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "spinat", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "spinat", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "stangenbohne", "b": "zucchini", "art": "gut", "quelle": "bund"}, {"a": "stangenbohne", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "zucchini", "b": "zwiebel", "art": "gut", "quelle": "bund"}];
+const MISCHKULTUR = [{"a": "basilikum", "b": "minze", "art": "schlecht", "quelle": "plantura_kraeuter"}, {"a": "basilikum", "b": "tomate", "art": "gut", "quelle": "hornbach"}, {"a": "basilikum", "b": "zitronenmelisse", "art": "schlecht", "quelle": "plantura_kraeuter"}, {"a": "blumenkohl", "b": "brokkoli", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "buschbohne", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "chinakohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "endivie", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "erbse", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "erdbeere", "art": "schlecht", "quelle": "bund", "notiz": "BUND-Tabelle: bei den Erdbeeren schlecht, bei den Kohlgewächsen gut genannt."}, {"a": "blumenkohl", "b": "fruehlingszwiebel", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "blumenkohl", "b": "gruenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "blumenkohl", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "blumenkohl", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "rhabarber", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "ringelblume", "art": "gut", "quelle": "plantura_misch", "notiz": "soll Nematoden zurückdrängen"}, {"a": "blumenkohl", "b": "rosenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "rosmarin", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "blumenkohl", "b": "salbei", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "blumenkohl", "b": "schalotte", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "blumenkohl", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "tagetes", "art": "gut", "quelle": "plantura_misch"}, {"a": "blumenkohl", "b": "thymian", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "blumenkohl", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "wirsing", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "bohnenkraut", "b": "buschbohne", "art": "gut", "quelle": "plantura_misch", "notiz": "soll Bohnen vor der Schwarzen Bohnenlaus schützen"}, {"a": "bohnenkraut", "b": "stangenbohne", "art": "gut", "quelle": "plantura_misch", "notiz": "soll Bohnen vor der Schwarzen Bohnenlaus schützen"}, {"a": "borretsch", "b": "gurke", "art": "gut", "quelle": "plantura_kombi", "notiz": "lockt Bestäuber an"}, {"a": "brokkoli", "b": "buschbohne", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "chinakohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "brokkoli", "b": "endivie", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "erbse", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "erdbeere", "art": "schlecht", "quelle": "bund", "notiz": "BUND-Tabelle: bei den Erdbeeren schlecht, bei den Kohlgewächsen gut genannt."}, {"a": "brokkoli", "b": "fruehlingszwiebel", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "brokkoli", "b": "gruenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "brokkoli", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "brokkoli", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "brokkoli", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "brokkoli", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "rhabarber", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "ringelblume", "art": "gut", "quelle": "plantura_misch", "notiz": "soll Nematoden zurückdrängen"}, {"a": "brokkoli", "b": "rosenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "brokkoli", "b": "rosmarin", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "brokkoli", "b": "salbei", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "brokkoli", "b": "schalotte", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "brokkoli", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "tagetes", "art": "gut", "quelle": "plantura_misch"}, {"a": "brokkoli", "b": "thymian", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "brokkoli", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "wirsing", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "brokkoli", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "chinakohl", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "endivie", "art": "schlecht", "quelle": "bund", "notiz": "BUND nennt bei der Endivie „Bohnen“ als schlecht, die Stangenbohne aber als gut."}, {"a": "buschbohne", "b": "erbse", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "erdbeere", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "fenchel", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "fruehlingszwiebel", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "buschbohne", "b": "gruenkohl", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kartoffel", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "kohlrabi", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kopfkohl", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kuerbis", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "lauch", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "rhabarber", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "rosenkohl", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "schalotte", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "buschbohne", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "chinakohl", "b": "endivie", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "erbse", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "erdbeere", "art": "schlecht", "quelle": "bund", "notiz": "BUND-Tabelle: bei den Erdbeeren schlecht, bei den Kohlgewächsen gut genannt."}, {"a": "chinakohl", "b": "fruehlingszwiebel", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "chinakohl", "b": "gruenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "chinakohl", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "chinakohl", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "chinakohl", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "chinakohl", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "rhabarber", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "rosenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "chinakohl", "b": "rosmarin", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "chinakohl", "b": "salbei", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "chinakohl", "b": "schalotte", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "chinakohl", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "thymian", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "chinakohl", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "chinakohl", "b": "wirsing", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "chinakohl", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "dill", "b": "erbse", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "fenchel", "art": "schlecht", "quelle": "bund"}, {"a": "dill", "b": "fruehlingszwiebel", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "dill", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "kartoffel", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "koriander", "art": "schlecht", "quelle": "bund"}, {"a": "dill", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "schalotte", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "dill", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "endivie", "b": "fenchel", "art": "gut", "quelle": "bund"}, {"a": "endivie", "b": "gruenkohl", "art": "gut", "quelle": "bund"}, {"a": "endivie", "b": "kohlrabi", "art": "schlecht", "quelle": "bund"}, {"a": "endivie", "b": "kopfkohl", "art": "gut", "quelle": "bund"}, {"a": "endivie", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "endivie", "b": "paprika", "art": "schlecht", "quelle": "bund"}, {"a": "endivie", "b": "rosenkohl", "art": "gut", "quelle": "bund"}, {"a": "endivie", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "endivie", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "endivie", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "fenchel", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "gruenkohl", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "erbse", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "erbse", "b": "kohlrabi", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kopfkohl", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kuerbis", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "lauch", "art": "schlecht", "quelle": "bund"}, {"a": "erbse", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "rosenkohl", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "stangenbohne", "art": "schlecht", "quelle": "bund", "notiz": "In der BUND-Tabelle bei der Stangenbohne als gut und schlecht genannt, bei der Erbse als schlecht."}, {"a": "erbse", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "erbse", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "erdbeere", "b": "fruehlingszwiebel", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "erdbeere", "b": "gruenkohl", "art": "schlecht", "quelle": "bund", "notiz": "BUND-Tabelle: bei den Erdbeeren schlecht, bei den Kohlgewächsen gut genannt."}, {"a": "erdbeere", "b": "himbeere", "art": "schlecht", "quelle": "bund"}, {"a": "erdbeere", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "erdbeere", "b": "knoblauch", "art": "gut", "quelle": "bund"}, {"a": "erdbeere", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "BUND-Tabelle: bei den Erdbeeren schlecht, bei den Kohlgewächsen gut genannt."}, {"a": "erdbeere", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "erdbeere", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "erdbeere", "b": "petersilie", "art": "gut", "quelle": "bund"}, {"a": "erdbeere", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "erdbeere", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "erdbeere", "b": "ringelblume", "art": "gut", "quelle": "samenhaus_misch"}, {"a": "erdbeere", "b": "rosenkohl", "art": "schlecht", "quelle": "bund", "notiz": "BUND-Tabelle: bei den Erdbeeren schlecht, bei den Kohlgewächsen gut genannt."}, {"a": "erdbeere", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "erdbeere", "b": "schalotte", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "erdbeere", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "erdbeere", "b": "tagetes", "art": "gut", "quelle": "plantura_misch"}, {"a": "erdbeere", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "erdbeere", "b": "wirsing", "art": "schlecht", "quelle": "bund", "notiz": "BUND-Tabelle: bei den Erdbeeren schlecht, bei den Kohlgewächsen gut genannt."}, {"a": "erdbeere", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "fenchel", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "fenchel", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "fenchel", "b": "paprika", "art": "schlecht", "quelle": "bund"}, {"a": "fenchel", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "fenchel", "b": "salbei", "art": "gut", "quelle": "bund"}, {"a": "fenchel", "b": "stangenbohne", "art": "schlecht", "quelle": "bund"}, {"a": "fenchel", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "fruehlingszwiebel", "b": "gruenkohl", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "fruehlingszwiebel", "b": "gurke", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "fruehlingszwiebel", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "fruehlingszwiebel", "b": "kopfsalat", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "fruehlingszwiebel", "b": "kuerbis", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "fruehlingszwiebel", "b": "paprika", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "fruehlingszwiebel", "b": "rosenkohl", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "fruehlingszwiebel", "b": "rote_bete", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "fruehlingszwiebel", "b": "stangenbohne", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "fruehlingszwiebel", "b": "wirsing", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "fruehlingszwiebel", "b": "zucchini", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "gruenkohl", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "gruenkohl", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "gruenkohl", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "gruenkohl", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "rhabarber", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "ringelblume", "art": "gut", "quelle": "plantura_misch", "notiz": "soll Nematoden zurückdrängen"}, {"a": "gruenkohl", "b": "rosenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "gruenkohl", "b": "rosmarin", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "gruenkohl", "b": "salbei", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "gruenkohl", "b": "schalotte", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "gruenkohl", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "tagetes", "art": "gut", "quelle": "plantura_misch"}, {"a": "gruenkohl", "b": "thymian", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "gruenkohl", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "wirsing", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "gruenkohl", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "gurke", "b": "knoblauch", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "kopfkohl", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "kuerbis", "art": "schlecht", "quelle": "bund"}, {"a": "gurke", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "paprika", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "radieschen", "art": "schlecht", "quelle": "bund"}, {"a": "gurke", "b": "rettich", "art": "schlecht", "quelle": "bund"}, {"a": "gurke", "b": "rosenkohl", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "schalotte", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "gurke", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "tomate", "art": "schlecht", "quelle": "hornbach"}, {"a": "gurke", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "kapuzinerkresse", "b": "kartoffel", "art": "gut", "quelle": "hornbach2"}, {"a": "kapuzinerkresse", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "kapuzinerkresse", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "kapuzinerkresse", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kapuzinerkresse", "b": "tomate", "art": "gut", "quelle": "hornbach2"}, {"a": "kartoffel", "b": "kohlrabi", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "kopfkohl", "art": "schlecht", "quelle": "bund"}, {"a": "kartoffel", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "minze", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "ringelblume", "art": "gut", "quelle": "plantura_misch", "notiz": "soll Nematoden zurückdrängen"}, {"a": "kartoffel", "b": "rosenkohl", "art": "schlecht", "quelle": "bund"}, {"a": "kartoffel", "b": "rote_bete", "art": "schlecht", "quelle": "bund", "notiz": "In der BUND-Tabelle bei der Roten Bete als gut und schlecht genannt, bei der Kartoffel als schlecht."}, {"a": "kartoffel", "b": "sellerie", "art": "schlecht", "quelle": "bund"}, {"a": "kartoffel", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "tagetes", "art": "gut", "quelle": "plantura_misch"}, {"a": "kartoffel", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "kartoffel", "b": "wirsing", "art": "schlecht", "quelle": "bund"}, {"a": "kerbel", "b": "kopfsalat", "art": "gut", "quelle": "plantura_misch", "notiz": "soll Salat vor Blattläusen schützen"}, {"a": "kerbel", "b": "petersilie", "art": "schlecht", "quelle": "plantura_kraeuter"}, {"a": "kerbel", "b": "pfluecksalat", "art": "gut", "quelle": "plantura_misch", "notiz": "soll Salat vor Blattläusen schützen"}, {"a": "knoblauch", "b": "kopfkohl", "art": "schlecht", "quelle": "bund"}, {"a": "knoblauch", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "knoblauch", "b": "rosenkohl", "art": "schlecht", "quelle": "bund"}, {"a": "knoblauch", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "knoblauch", "b": "stangenbohne", "art": "schlecht", "quelle": "bund"}, {"a": "knoblauch", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "knoblauch", "b": "wirsing", "art": "schlecht", "quelle": "bund"}, {"a": "kohlrabi", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "kuerbis", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "rhabarber", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "ringelblume", "art": "gut", "quelle": "plantura_misch", "notiz": "soll Nematoden zurückdrängen"}, {"a": "kopfkohl", "b": "rosenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "kopfkohl", "b": "rosmarin", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "kopfkohl", "b": "salbei", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "kopfkohl", "b": "schalotte", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "kopfkohl", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "tagetes", "art": "gut", "quelle": "plantura_misch"}, {"a": "kopfkohl", "b": "thymian", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "kopfkohl", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "wirsing", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "kopfkohl", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "kopfsalat", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "minze", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "petersilie", "art": "schlecht", "quelle": "bund"}, {"a": "kopfsalat", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "rhabarber", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "rosenkohl", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "schalotte", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "kopfsalat", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "kuerbis", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "kuerbis", "b": "ringelblume", "art": "gut", "quelle": "hornbach2"}, {"a": "kuerbis", "b": "schalotte", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "kuerbis", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kuerbis", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "kuerbis", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "paprika", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "rosenkohl", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "rote_bete", "art": "schlecht", "quelle": "bund"}, {"a": "lauch", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "stangenbohne", "art": "schlecht", "quelle": "bund"}, {"a": "lauch", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "mais", "b": "rote_bete", "art": "schlecht", "quelle": "bund"}, {"a": "mais", "b": "sellerie", "art": "schlecht", "quelle": "bund"}, {"a": "mais", "b": "tomate", "art": "umstritten", "quelle": "bund", "notiz": "BUND-Tabelle widersprüchlich: bei der Tomate guter, beim Mais schlechter Nachbar."}, {"a": "mangold", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "mangold", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "mangold", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "mangold", "b": "rosenkohl", "art": "gut", "quelle": "bund"}, {"a": "mangold", "b": "spinat", "art": "schlecht", "quelle": "bund"}, {"a": "mangold", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "minze", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "minze", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "moehre", "b": "paprika", "art": "gut", "quelle": "bund"}, {"a": "moehre", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "moehre", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "moehre", "b": "rosmarin", "art": "gut", "quelle": "hornbach2"}, {"a": "moehre", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "moehre", "b": "zwiebel", "art": "umstritten", "quelle": "bund,lwg", "notiz": "BUND: gute Nachbarn. Bayerische Gartenakademie: nicht empfehlenswert (unterschiedlicher Nährstoff- und Wasserbedarf, Schutz vor Möhren-/Zwiebelfliege klappt nur selten)."}, {"a": "paprika", "b": "schalotte", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "paprika", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "petersilie", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "petersilie", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "petersilie", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "rettich", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "rhabarber", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "rosenkohl", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "radieschen", "b": "rosenkohl", "art": "gut", "quelle": "bund"}, {"a": "radieschen", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "radieschen", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "radieschen", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "radieschen", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "rettich", "b": "rosenkohl", "art": "gut", "quelle": "bund"}, {"a": "rettich", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "rettich", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "rettich", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "rettich", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "rettich", "b": "zucchini", "art": "schlecht", "quelle": "hornbach2"}, {"a": "rhabarber", "b": "rosenkohl", "art": "gut", "quelle": "bund"}, {"a": "rhabarber", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "rhabarber", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "ringelblume", "b": "rosenkohl", "art": "gut", "quelle": "plantura_misch", "notiz": "soll Nematoden zurückdrängen"}, {"a": "ringelblume", "b": "wirsing", "art": "gut", "quelle": "plantura_misch", "notiz": "soll Nematoden zurückdrängen"}, {"a": "rosenkohl", "b": "rosmarin", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "rosenkohl", "b": "salbei", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "rosenkohl", "b": "schalotte", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "rosenkohl", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "rosenkohl", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "rosenkohl", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "rosenkohl", "b": "tagetes", "art": "gut", "quelle": "plantura_misch"}, {"a": "rosenkohl", "b": "thymian", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "rosenkohl", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "rosenkohl", "b": "wirsing", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "rosenkohl", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "rosmarin", "b": "wirsing", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "rote_bete", "b": "schalotte", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "rote_bete", "b": "spinat", "art": "schlecht", "quelle": "bund"}, {"a": "rote_bete", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "salbei", "b": "wirsing", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "schalotte", "b": "stangenbohne", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "schalotte", "b": "wirsing", "art": "schlecht", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "schalotte", "b": "zucchini", "art": "gut", "quelle": "bund", "notiz": "von der Küchenzwiebel übernommen"}, {"a": "sellerie", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "sellerie", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "sellerie", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "sellerie", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "spinat", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "spinat", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "spinat", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "stangenbohne", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "stangenbohne", "b": "zucchini", "art": "gut", "quelle": "bund"}, {"a": "stangenbohne", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "tagetes", "b": "tomate", "art": "gut", "quelle": "plantura_misch"}, {"a": "tagetes", "b": "wirsing", "art": "gut", "quelle": "plantura_misch"}, {"a": "tagetes", "b": "zucchini", "art": "gut", "quelle": "hornbach2"}, {"a": "thymian", "b": "wirsing", "art": "gut", "quelle": "plantura_misch", "notiz": "soll den Kohlweißling fernhalten"}, {"a": "tomate", "b": "wirsing", "art": "gut", "quelle": "bund"}, {"a": "wirsing", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "zucchini", "b": "zwiebel", "art": "gut", "quelle": "bund"}];
