@@ -544,6 +544,46 @@ dialog .knopfreihe{justify-content:flex-end}
 .ch-sym.sym-i-frost,.ch-sym.sym-i-starkregen{color:var(--blau)}
 .ch-sym.sym-i-hitze{color:#d9822b}
 .ch-sym.sym-i-trocken{color:var(--gelb)}
+.ue-teile{flex-wrap:wrap;margin-bottom:14px}
+.ue-familien{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));margin-bottom:14px}
+.ue-familie{border-top:5px solid var(--pf);margin:0}
+.ue-fkopf{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;margin-bottom:8px}
+.ue-punkt{width:14px;height:14px;border-radius:50%;background:var(--pf);flex:none}
+.ue-pause{margin-left:auto;font-size:.85rem;font-weight:650;color:var(--gruen-dunkel);background:var(--gruen-hell);padding:2px 8px;border-radius:99px;white-space:nowrap}
+.raster.drei{display:grid;gap:14px}
+@media (min-width:760px){.raster.drei{grid-template-columns:repeat(3,1fr)}}
+.mk-wahl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mk-wahl input{flex:1 1 220px;width:auto}
+.mk-wahl select{min-height:44px;padding:6px 10px;border-radius:10px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit;width:auto}
+.mk-chips{margin:10px 0}
+.mk-chips .chip .x{border:0;background:none;color:var(--leise);cursor:pointer;padding:0 0 0 4px;font:inherit}
+.mk-rahmen{overflow-x:auto}
+table.mk-tabelle{border-collapse:separate;border-spacing:3px;font-size:.88rem}
+.mk-tabelle th{font-weight:600;text-align:right;padding:2px 6px;white-space:nowrap}
+.mk-tabelle thead th{text-align:center;vertical-align:bottom;height:110px}
+.mk-tabelle thead th span{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg)}
+.mk-tabelle td,.mk-bsp{width:34px;height:30px;text-align:center;border-radius:6px;font-weight:700}
+.mk-bsp{display:inline-block;width:26px;height:22px;line-height:22px}
+.mk-gut{background:var(--gruen-hell);color:var(--gruen-dunkel)}
+.mk-schlecht{background:var(--rot-hell);color:var(--rot)}
+.mk-umstritten{background:var(--gelb-hell);color:var(--gelb)}
+.mk-leer{background:var(--karte2);color:var(--leise);font-weight:400}
+.mk-gleich{background:repeating-linear-gradient(45deg,var(--karte2),var(--karte2) 3px,transparent 3px,transparent 6px)}
+.mk-fazit{margin:12px 0 0;padding:8px 12px;border-radius:10px}
+.mk-fazit.schlecht{background:var(--rot-hell)} .mk-fazit.gut{background:var(--gruen-hell)}
+.ue-tab-rahmen{overflow-x:auto}
+.ue-tab th button{background:none;border:0;font:inherit;font-weight:650;color:var(--leise);cursor:pointer;padding:0;white-space:nowrap}
+.ue-tab th button.an{color:var(--text)}
+.ue-tab td a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--text);white-space:nowrap}
+.ue-tab .p-badge{width:24px;height:24px;font-size:.68rem}
+.so-liste{list-style:none;margin:0;padding:0}
+.so-liste li{padding:8px 0;border-bottom:1px dashed var(--linie)}
+.so-liste li:last-child{border-bottom:0}
+.so-kopf{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sterne button{background:none;border:0;padding:0 1px;font-size:1.15rem;line-height:1;cursor:pointer;color:var(--linie)}
+.sterne button.an{color:var(--gelb)}
+.sterne-text{color:var(--gelb)}
+h2 .p-badge{width:28px;height:28px;font-size:.75rem;vertical-align:middle}
 .familien-legende{margin:0 0 10px}
 .ch-datum{font-weight:650;text-align:right;color:var(--leise)}
 .ch-eintrag.typ-tagebuch .ch-notiz{font-style:italic}
@@ -663,13 +703,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.8.0"></script>
+<script src="pflanzen.js?v=0.9.0"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.8.0";
+const APP_VERSION = "0.9.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1151,9 +1191,11 @@ function wissenSeite(main) {
   if (bereich === "pflanze") return pflanzenDetail(main, decodeURIComponent(teile[2] || ""));
   if (bereich === "eigene") return eigenePflanzeForm(main, teile[2] ? decodeURIComponent(teile[2]) : null);
   main.insertAdjacentHTML("beforeend", `<div class="unternav">
-    ${[["pflanzen", `${icon("i-garten")} Pflanzen`], ["kalender", `${icon("i-kalender")} Kalender`], ["quellen", `${icon("i-quellen")} Quellen`]].map(([k, n]) => `<a href="#wissen/${k}" class="${bereich === k ? "an" : ""}">${n}</a>`).join("")}
+    ${[["pflanzen", `${icon("i-garten")} Pflanzen`], ["kalender", `${icon("i-kalender")} Kalender`], ["uebersichten", `${icon("i-liste")} Übersichten`], ["sorten", `${icon("i-steckbrief")} Sorten`], ["quellen", `${icon("i-quellen")} Quellen`]].map(([k, n]) => `<a href="#wissen/${k}" class="${bereich === k ? "an" : ""}">${n}</a>`).join("")}
   </div>`);
   if (bereich === "kalender") return kalenderAnsicht(main);
+  if (bereich === "uebersichten") return uebersichtSeite(main);
+  if (bereich === "sorten") return sortenSeite(main);
   if (bereich === "quellen") return quellenAnsicht(main);
   pflanzenListe(main);
 }
@@ -1175,8 +1217,7 @@ function pflanzenListe(main) {
     <div class="lex-raster" id="lex-raster"></div>
     <div style="margin-top:14px">${baldKarte("Kommt noch in „Wissen“", [
       "Obstbäume wie Apfel, Birne, Kirsche und Pflaume (mit Krone im Gartenplan)",
-      "Deine Sorten mit Bewertung und Erfahrungen",
-      "Übersichten zu Mischkultur, Fruchtfolge und Saatgut-Gewinnung",
+      "Physalis, Feige und Melone",
     ])}</div>`);
   const zeichnen = () => {
     const t = lexFilter.text.toLowerCase().trim(), mo = new Date().getMonth() + 1;
@@ -1248,6 +1289,7 @@ function pflanzenDetail(main, id) {
         </div>
         ${(p.hinweise || []).length ? `<div class="karte hinweis-karte"><h2>${icon("i-warnung")} Unterschiedliche Angaben</h2><ul>${p.hinweise.map(h => `<li>${esc(h)}</li>`).join("")}</ul></div>` : ""}
         ${lexikonGartenHTML(p)}
+        ${sortenKarteHTML(p)}
         <div class="karte"><h2>${icon("i-notiz")} Meine Notizen</h2>
           <textarea id="p-notiz" rows="4" placeholder="Eigene Erfahrungen, Lieblingssorten, Tipps …">${esc((D.pflanzenNotizen || {})[p.id] || "")}</textarea>
           <p class="klein leise" id="p-notiz-stand" style="margin:4px 0 0"></p>
@@ -1255,6 +1297,7 @@ function pflanzenDetail(main, id) {
         ${(p.quellen || []).length ? `<div class="karte"><h2>${icon("i-quellen")} Quellen</h2><ul class="quellen">${p.quellen.filter(q => QUELLEN[q]).map(q => `<li><a href="${QUELLEN[q].url}" target="_blank" rel="noopener">${esc(QUELLEN[q].titel)}</a></li>`).join("")}</ul></div>` : ""}
       </div>
     </div>`);
+  $("#so-neu-pf").onclick = () => sorteBearbeiten(null, { pflanze: p.id });
   let t;
   $("#p-notiz").addEventListener("input", e => {
     clearTimeout(t);
@@ -1734,7 +1777,7 @@ function geplantPanelHTML(p) {
     <label>Geplant</label>
     <div class="feld-einheit"><select data-pf="wie" aria-label="Wie" style="flex:0 0 auto;width:auto">${["gepflanzt", "gesät", "gesteckt"].map(w => `<option ${p.wie === w ? "selected" : ""}>${w === "gepflanzt" ? "pflanzen" : w === "gesät" ? "säen" : "stecken"}</option>`).join("")}</select><span>ab</span><input type="date" data-pf="gepflanzt" value="${esc(p.gepflanzt || "")}"></div>
     <p class="klein leise" style="margin:4px 0 0">Laut Lexikon: ${[["vorziehen", "vorziehen"], ["direktsaat", "säen"], ["pflanzen", "pflanzen"]].filter(([k]) => (pf[k] || []).length).map(([k, n]) => `${n} ${monateText(pf[k])}`).join(" · ") || "keine Angabe"}</p>
-    <label>Sorte</label><input type="text" data-pf="sorte" value="${esc(p.sorte || "")}" placeholder="z. B. Ochsenherz">
+    <label>Sorte</label><input type="text" data-pf="sorte" list="sorten-vorschlag" value="${esc(p.sorte || "")}" placeholder="z. B. Ochsenherz">${sortenDatalist(p.pflanze)}
     ${p.form === "flaeche" ? `<div class="zwei">
       <div><label>Breite</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-pf="w" value="${(p.w / 100).toFixed(2)}"><span>m</span></div></div>
       <div><label>Tiefe</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-pf="h" value="${(p.h / 100).toFixed(2)}"><span>m</span></div></div></div>
@@ -1781,7 +1824,7 @@ function pflanzungPanelHTML(p) {
       <div class="klein leise">in „${esc(beet ? beet.name : pflBeetName(p))}“ · ${anzahlText(p)} ${anzahlVon(p) === 1 ? "Pflanze" : "Pflanzen"}</div></div></div>
     <label>Wann</label>
     <div class="feld-einheit"><select data-pf="wie" aria-label="Wie" style="flex:0 0 auto;width:auto">${["gepflanzt", "gesät", "gesteckt"].map(w => `<option ${p.wie === w ? "selected" : ""}>${w}</option>`).join("")}</select><span>am</span><input type="date" data-pf="gepflanzt" value="${esc(p.gepflanzt || "")}"></div>
-    <label>Sorte</label><input type="text" data-pf="sorte" value="${esc(p.sorte || "")}" placeholder="z. B. Ochsenherz">
+    <label>Sorte</label><input type="text" data-pf="sorte" list="sorten-vorschlag" value="${esc(p.sorte || "")}" placeholder="z. B. Ochsenherz">${sortenDatalist(p.pflanze)}
     <p class="klein leise" style="margin:4px 0 0">Datum, Sorte, Notiz und Ernte gelten für die ganze Pflanzung. Für eine zweite Sorte die Pflanze einfach noch einmal setzen.</p>
     ${p.form === "flaeche" ? `<div class="zwei">
       <div><label>Breite</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-pf="w" value="${(p.w / 100).toFixed(2)}"><span>m</span></div></div>
@@ -2547,6 +2590,224 @@ function startPlanungHTML() {
     <a href="#planung">Zur Planung →</a></p>`;
 }
 
+/* ============================================================
+   WISSEN: ÜBERSICHTEN (Fruchtfolge, Nährstoffbedarf, Mischkultur, Saatgut, Tabelle) und SORTEN
+   ============================================================ */
+const UE_TEILE = [["fruchtfolge", "Fruchtfolge"], ["naehrstoffe", "Nährstoffbedarf"], ["mischkultur", "Mischkultur"], ["saatgut", "Saatgut"], ["tabelle", "Alle Pflanzen als Tabelle"]];
+let UE = { teil: "fruchtfolge", misch: [], sort: "name", ab: true, text: "" };
+const famName = f => f.name.replace(/\s*\(.*\)/, "");
+const pfLink = p => `<a class="chip" href="#wissen/pflanze/${encodeURIComponent(p.id)}">${esc(p.name)}</a>`;
+
+function uebersichtSeite(main) {
+  main.insertAdjacentHTML("beforeend", `<div class="umschalter ue-teile" id="ue-teile">${UE_TEILE.map(([k, n]) => `<button data-t="${k}" class="${UE.teil === k ? "an" : ""}">${n}</button>`).join("")}</div><div id="ue-inhalt"></div>`);
+  $$("#ue-teile button").forEach(b => b.onclick = () => { UE.teil = b.dataset.t; $$("#ue-teile button").forEach(x => x.classList.toggle("an", x === b)); ueZeichnen(); });
+  ueZeichnen();
+}
+function ueZeichnen() {
+  const el = $("#ue-inhalt"); if (!el) return;
+  ({ fruchtfolge: ueFruchtfolge, naehrstoffe: ueNaehrstoffe, mischkultur: ueMischkultur, saatgut: ueSaatgut, tabelle: ueTabelle })[UE.teil](el);
+}
+
+/* ---------- Fruchtfolge nach Familien ---------- */
+function ueFruchtfolge(el) {
+  const alle = allePflanzen(), fam = new Map();
+  for (const p of alle) { const f = familieVon(p); if (!fam.has(f)) fam.set(f, []); fam.get(f).push(p); }
+  const reihen = [...fam.entries()].sort((a, b) => (pauseZahl(b[0].pause) - pauseZahl(a[0].pause)) || famName(a[0]).localeCompare(famName(b[0]), "de"));
+  const eigen = alle.filter(p => p.pause && p.pause !== familieVon(p).pause);
+  el.innerHTML = `<div class="karte"><h2>${icon("i-fruchtfolge")} Fruchtfolge nach Pflanzenfamilien</h2>
+      <p>Pflanzen derselben Familie haben ähnliche Krankheiten und Schädlinge im Boden. Deshalb sollte an dieselbe Stelle erst nach einer <b>Anbaupause</b> wieder etwas aus derselben Familie kommen. Die Farbe ist dieselbe wie bei den Kürzeln im Lexikon und im Plan.</p>
+      <p class="klein leise" style="margin:0">Quelle der Anbaupausen: Südtiroler Bauernbund, Merkblatt Fruchtfolge. Mehrjährige Pflanzen stehen ohnehin mehrere Jahre am selben Platz.</p></div>
+    <div class="ue-familien">${reihen.map(([f, liste]) => `<div class="karte ue-familie" style="--pf:${f.farbe}">
+      <div class="ue-fkopf"><span class="ue-punkt"></span><b>${esc(famName(f))}</b><span class="ue-pause">${f.pause ? `${esc(f.pause)} Pause` : "keine Angabe"}</span></div>
+      <div>${liste.sort((a, b) => a.name.localeCompare(b.name, "de")).map(pfLink).join("")}</div></div>`).join("")}</div>
+    ${eigen.length ? `<div class="karte"><h2>${icon("i-warnung")} Eigene Anbaupausen einzelner Pflanzen</h2><ul>${eigen.map(p => `<li><b>${esc(p.name)}</b>: ${esc(p.pause)} (abweichend von der Familie)</li>`).join("")}</ul></div>` : ""}`;
+}
+function pauseZahl(t) { const z = parseInt(t || "", 10); return isNaN(z) ? -1 : z; }
+
+/* ---------- Nährstoffbedarf ---------- */
+function ueNaehrstoffe(el) {
+  const gruppen = [["stark", "Starkzehrer", "brauchen viel Kompost bzw. Dünger"], ["mittel", "Mittelzehrer", "mäßig düngen"], ["schwach", "Schwachzehrer", "kommen mit wenig aus"]];
+  const alle = allePflanzen();
+  el.innerHTML = `<div class="karte"><h2>${icon("i-garten")} Nährstoffbedarf</h2>
+      <p style="margin:0">Eine bewährte Faustregel für die Fruchtfolge in einem Beet: <b>Starkzehrer → Mittelzehrer → Schwachzehrer</b>, danach eine Gründüngung oder wieder Kompost. So wird der Boden gleichmäßig genutzt. Bei Kräutern und Blumen sind die Einstufungen Richtwerte (siehe Hinweise in den Pflanzenkarten).</p></div>
+    <div class="raster drei">${gruppen.map(([k, n, t]) => { const l = alle.filter(p => p.zehrer === k).sort((a, b) => a.name.localeCompare(b.name, "de"));
+      return `<div class="karte"><h2>${n} <span class="leise klein" style="font-weight:400">(${l.length})</span></h2><p class="klein leise">${t}</p>${l.map(pfLink).join("")}</div>`; }).join("")}</div>`;
+}
+
+/* ---------- Mischkultur-Matrix ---------- */
+function ueMischkultur(el) {
+  const alle = allePflanzen(), name = id => (pflanzeVon(id) || { name: "?" }).name;
+  const sel = UE.misch.filter(id => pflanzeVon(id));
+  const zelle = (a, b) => {
+    if (a === b) return `<td class="mk-gleich"></td>`;
+    const m = nachbarArt(a, b);
+    if (!m) return `<td class="mk-leer" title="${esc(name(a))} + ${esc(name(b))}: keine Angabe">·</td>`;
+    const z = m.art === "gut" ? "✓" : m.art === "schlecht" ? "✗" : "?";
+    return `<td class="mk-${m.art}" title="${esc(name(a))} + ${esc(name(b))}: ${m.art}${m.notiz ? " – " + esc(m.notiz) : ""}">${z}</td>`;
+  };
+  el.innerHTML = `<div class="karte"><h2>${icon("i-nachbarn")} Mischkultur: Wer passt zu wem?</h2>
+      <p>Wähle die Pflanzen aus, die du zusammen in ein Beet setzen möchtest. Die Tabelle zeigt für jedes Paar: <span class="mk-bsp mk-gut">✓</span> gute Nachbarn, <span class="mk-bsp mk-schlecht">✗</span> schlechte Nachbarn, <span class="mk-bsp mk-umstritten">?</span> umstritten, <span class="mk-bsp mk-leer">·</span> keine Angabe.</p>
+      <div class="mk-wahl">
+        <input type="search" id="mk-suche" list="mk-liste" placeholder="Pflanze hinzufügen …" aria-label="Pflanze hinzufügen">
+        <datalist id="mk-liste">${alle.filter(p => !sel.includes(p.id)).map(p => `<option value="${esc(p.name)}">`).join("")}</datalist>
+        ${D.garten.objekte.some(o => ARTEN[o.art]?.pflanzbar) ? `<select id="mk-beet" aria-label="Pflanzen aus einem Beet übernehmen"><option value="">aus Beet übernehmen …</option>${D.garten.objekte.filter(o => ARTEN[o.art]?.pflanzbar).map(o => `<option value="${o.id}">${esc(o.name)}</option>`).join("")}</select>` : ""}
+        ${sel.length ? `<button class="knopf text" id="mk-leeren">Alle entfernen</button>` : ""}
+      </div>
+      <div class="mk-chips">${sel.map(id => `<span class="chip">${esc(name(id))} <button class="x" data-mk-weg="${id}" aria-label="${esc(name(id))} entfernen">✕</button></span>`).join("")}</div>
+      ${sel.length >= 2 ? `<div class="mk-rahmen"><table class="mk-tabelle"><thead><tr><th></th>${sel.map(id => `<th><span>${esc(name(id))}</span></th>`).join("")}</tr></thead>
+        <tbody>${sel.map(a => `<tr><th>${esc(name(a))}</th>${sel.map(b => zelle(a, b)).join("")}</tr>`).join("")}</tbody></table></div>
+        ${(() => { const schlecht = []; sel.forEach((a, i) => sel.slice(i + 1).forEach(b => { if (nachbarArt(a, b)?.art === "schlecht") schlecht.push(`${name(a)} + ${name(b)}`); }));
+          return schlecht.length ? `<p class="mk-fazit schlecht"><b>Nicht zusammen setzen:</b> ${esc(schlecht.join(", "))}</p>` : `<p class="mk-fazit gut"><b>Keine schlechten Nachbarn</b> in dieser Auswahl.</p>`; })()}`
+      : `<p class="leise klein" style="margin:8px 0 0">${sel.length ? "Noch mindestens eine weitere Pflanze auswählen." : "Noch keine Pflanzen ausgewählt."}</p>`}
+      <p class="klein leise" style="margin:10px 0 0">Mischkultur beruht vor allem auf Erfahrungswerten (Quellen: BUND, Bayerische Gartenakademie u. a.). Wichtiger als jede Tabelle ist genug Abstand.</p>
+    </div>`;
+  const suche = $("#mk-suche");
+  suche.addEventListener("change", () => {
+    const p = alle.find(x => x.name.toLowerCase() === suche.value.trim().toLowerCase());
+    if (p && !UE.misch.includes(p.id)) { UE.misch.push(p.id); ueZeichnen(); $("#mk-suche")?.focus(); }
+  });
+  const beet = $("#mk-beet");
+  if (beet) beet.onchange = () => {
+    const ids = [...new Set(D.pflanzungen.filter(p => p.beet === beet.value && !p.abgeraeumt && !p.geplant).map(p => p.pflanze))];
+    if (!ids.length) { melden("In diesem Beet wächst gerade nichts."); beet.value = ""; return; }
+    UE.misch = [...new Set([...UE.misch, ...ids])]; ueZeichnen();
+  };
+  const l = $("#mk-leeren"); if (l) l.onclick = () => { UE.misch = []; ueZeichnen(); };
+  $$("[data-mk-weg]").forEach(k => k.onclick = () => { UE.misch = UE.misch.filter(x => x !== k.dataset.mkWeg); ueZeichnen(); });
+}
+
+/* ---------- Saatgut ---------- */
+function keimText(p) {
+  if (!p.keimJahre) return p.saatgut === "vegetativ" ? "– (keine Samen)" : "keine Angabe";
+  if (p.keimBis) return `bis zu ${p.keimJahre[1]} Jahre`;
+  return p.keimJahre[0] === p.keimJahre[1] ? `${p.keimJahre[0] >= 5 ? "über 5" : p.keimJahre[0]} Jahre` : `${p.keimJahre[0]}–${p.keimJahre[1]} Jahre`;
+}
+function ueSaatgut(el) {
+  const alle = allePflanzen().filter(p => p.saatgut !== "vegetativ");
+  const stufen = [[0, 1, "höchstens 1 Jahr"], [2, 3, "2–3 Jahre"], [3.5, 4, "3–4 Jahre"], [4.5, 5, "4–5 Jahre"], [5.5, 99, "über 5 Jahre"]];
+  const jahre = p => p.keimJahre ? (p.keimJahre[0] + p.keimJahre[1]) / 2 : null;
+  const gruppe = p => { const j = jahre(p); if (j === null) return null; return stufen.find(([a, b]) => j <= b) || stufen[stufen.length - 1]; };
+  const ohne = alle.filter(p => !p.keimJahre);
+  el.innerHTML = `<div class="karte"><h2>${icon("i-saat")} Wie lange sind Samen keimfähig?</h2>
+      <p>Richtwerte bei kühler, trockener und dunkler Lagerung. Ältere Samen vor der Aussaat mit einer Keimprobe testen: 10 Samen auf feuchtes Küchenpapier – keimen weniger als die Hälfte, lieber neues Saatgut nehmen oder dichter säen.</p>
+      <p class="klein leise" style="margin:0">Quellen: Bingenheimer Saatgut, Samenhaus. „bis zu“ heißt: Die Quelle nennt nur eine Obergrenze.</p></div>
+    <div class="raster zwei">${stufen.map(st => { const l = alle.filter(p => gruppe(p) === st).sort((a, b) => a.name.localeCompare(b.name, "de"));
+      return l.length ? `<div class="karte"><h2>${st[2]}</h2>${l.map(p => `<a class="chip" href="#wissen/pflanze/${encodeURIComponent(p.id)}" title="${esc(keimText(p))}">${esc(p.name)}${p.keimBis ? " *" : ""}</a>`).join("")}</div>` : ""; }).join("")}</div>
+    ${ohne.length ? `<div class="karte"><h2>Keine verlässliche Angabe gefunden</h2>${ohne.map(pfLink).join("")}</div>` : ""}
+    <div class="karte"><h2>${icon("i-saat")} Saatgut selbst gewinnen</h2>
+      <p class="klein leise">Nach ProSpecieRara: Selbstbefruchter kreuzen sich kaum mit anderen Sorten – ideal für den Anfang. Bei Fremdbefruchtern muss man Abstand zwischen Sorten halten oder nur eine Sorte blühen lassen. Bei zweijährigen Pflanzen bilden sich Samen erst im zweiten Jahr. Nur samenfeste Sorten verwenden, keine F1-Hybriden.</p>
+      ${[["leicht", "Leicht"], ["mittel", "Mittel"], ["schwer", "Schwierig"]].map(([k, n]) => { const l = allePflanzen().filter(p => p.saatgut === k).sort((a, b) => a.name.localeCompare(b.name, "de"));
+        return l.length ? `<div class="nb-gruppe"><div class="nb-titel">${n}</div>${l.map(pfLink).join("")}</div>` : ""; }).join("")}
+    </div>`;
+}
+
+/* ---------- Tabelle aller Pflanzen ---------- */
+const UE_SPALTEN = [
+  ["name", "Pflanze", p => p.name],
+  ["gruppe", "Gruppe", p => p.gruppe || ""],
+  ["familie", "Familie", p => famName(familieVon(p))],
+  ["zehrer", "Nährstoffe", p => ({ stark: "stark", mittel: "mittel", schwach: "schwach" })[p.zehrer] || "", p => ({ stark: 0, mittel: 1, schwach: 2 })[p.zehrer] ?? 3],
+  ["standort", "Standort", p => p.standort || ""],
+  ["frost", "Frost", p => ({ empfindlich: "empfindlich", leicht: "leichter Frost", hart: "winterhart" })[p.frost] || "", p => ({ empfindlich: 0, leicht: 1, hart: 2 })[p.frost] ?? 3],
+  ["hoehe", "Höhe (cm)", p => p.hoehe ? (p.hoehe[0] === p.hoehe[1] ? `${p.hoehe[0]}` : `${p.hoehe[0]}–${p.hoehe[1]}`) : "", p => p.hoehe ? p.hoehe[1] : -1],
+  ["abstand", "Abstand (cm)", p => p.abstand ? `${p.abstand[0]} × ${p.abstand[1]}` : "", p => p.abstand ? p.abstand[0] * p.abstand[1] : -1],
+];
+function ueTabelle(el) {
+  const sp = UE_SPALTEN.find(s => s[0] === UE.sort) || UE_SPALTEN[0];
+  const wert = sp[3] || sp[2], t = UE.text.toLowerCase().trim();
+  const liste = allePflanzen().filter(p => !t || UE_SPALTEN.some(s => String(s[2](p)).toLowerCase().includes(t)))
+    .sort((a, b) => { const x = wert(a), y = wert(b); const r = typeof x === "number" ? x - y : String(x).localeCompare(String(y), "de"); return (UE.ab ? r : -r) || a.name.localeCompare(b.name, "de"); });
+  el.innerHTML = `<div class="karte">
+      <input type="search" id="ue-filter" placeholder="Filtern, z. B. „halbschattig“, „winterhart“ oder „Kreuzblütler“ …" value="${esc(UE.text)}" aria-label="Tabelle filtern">
+      <p class="klein leise" style="margin:6px 0 10px">${liste.length} Pflanzen · auf eine Spaltenüberschrift tippen, um danach zu sortieren.</p>
+      <div class="ue-tab-rahmen"><table class="tabelle ue-tab"><thead><tr>${UE_SPALTEN.map(s => `<th><button data-sort="${s[0]}" class="${s[0] === UE.sort ? "an" : ""}">${s[1]}${s[0] === UE.sort ? (UE.ab ? " ▲" : " ▼") : ""}</button></th>`).join("")}</tr></thead>
+      <tbody>${liste.map(p => `<tr>${UE_SPALTEN.map((s, i) => i === 0 ? `<td><a href="#wissen/pflanze/${encodeURIComponent(p.id)}">${pflanzenBadge(p)} ${esc(p.name)}</a></td>` : `<td>${esc(s[2](p))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+    </div>`;
+  const f = $("#ue-filter");
+  f.addEventListener("input", () => { UE.text = f.value; const pos = f.selectionStart; ueTabelle(el); const n = $("#ue-filter"); n.focus(); n.setSelectionRange(pos, pos); });
+  $$("[data-sort]", el).forEach(b => b.onclick = () => { if (UE.sort === b.dataset.sort) UE.ab = !UE.ab; else { UE.sort = b.dataset.sort; UE.ab = true; } ueTabelle(el); });
+}
+
+/* ============================================================
+   SORTEN: eigene Sorten mit Bewertung
+   D.sorten = [{ id, pflanze, name, bewertung (0–5), notiz }]
+   Sorten aus Pflanzungen (Feld „Sorte“) erscheinen automatisch.
+   ============================================================ */
+const sortenKey = (pflanze, name) => pflanze + "|" + name.trim().toLowerCase();
+function alleSorten() {
+  const m = new Map();
+  for (const s of D.sorten || []) m.set(sortenKey(s.pflanze, s.name), { ...s, nutzungen: [] });
+  for (const p of echte()) {
+    if (!p.sorte || !p.sorte.trim()) continue;
+    const k = sortenKey(p.pflanze, p.sorte);
+    if (!m.has(k)) m.set(k, { id: null, pflanze: p.pflanze, name: p.sorte.trim(), bewertung: 0, notiz: "", nutzungen: [] });
+    m.get(k).nutzungen.push(p);
+  }
+  return [...m.values()];
+}
+function sterne(n, id) {
+  return `<span class="sterne" ${id ? `data-sterne="${esc(id)}"` : ""} role="group" aria-label="Bewertung">${[1, 2, 3, 4, 5].map(i => `<button class="${i <= n ? "an" : ""}" data-stern="${i}" aria-label="${i} von 5">★</button>`).join("")}</span>`;
+}
+function sortenSeite(main) {
+  const liste = alleSorten().sort((a, b) => (pflanzeVon(a.pflanze)?.name || "").localeCompare(pflanzeVon(b.pflanze)?.name || "", "de") || b.bewertung - a.bewertung || a.name.localeCompare(b.name, "de"));
+  const gruppen = new Map(); liste.forEach(s => { if (!gruppen.has(s.pflanze)) gruppen.set(s.pflanze, []); gruppen.get(s.pflanze).push(s); });
+  main.insertAdjacentHTML("beforeend", `<div class="ch-werkzeug"><button class="knopf haupt" id="so-neu">${icon("i-plus")} Sorte eintragen</button></div>
+    ${liste.length ? [...gruppen.entries()].map(([pid, l]) => { const pf = pflanzeVon(pid) || { name: "?", id: pid };
+      return `<div class="karte"><h2>${pflanzenBadge(pf)} ${esc(pf.name)}</h2><ul class="so-liste">${l.map(s => {
+        const jahre = [...new Set(s.nutzungen.map(jahrVon))].sort(), menge = {};
+        s.nutzungen.flatMap(p => p.ernten || []).forEach(e => { if (e.menge) menge[e.einheit] = (menge[e.einheit] || 0) + e.menge; });
+        return `<li class="so-eintrag" data-so="${esc(sortenKey(s.pflanze, s.name))}">
+          <div class="so-kopf"><b>${esc(s.name)}</b>${sterne(s.bewertung, sortenKey(s.pflanze, s.name))}</div>
+          ${s.notiz ? `<div class="klein">${esc(s.notiz)}</div>` : ""}
+          <div class="klein leise">${jahre.length ? `angebaut ${jahre.join(", ")}` : "noch nicht im Garten"}${Object.keys(menge).length ? ` · geerntet ${mengenText(menge)}` : ""}</div>
+          <button class="knopf text klein" data-so-bearb="${esc(sortenKey(s.pflanze, s.name))}">Bearbeiten</button></li>`; }).join("")}</ul></div>`; }).join("")
+      : `<div class="karte"><p style="margin:0">Hier sammelst du deine Sorten mit Bewertung und Erfahrungen. Sorten, die du im Gartenplan bei einer Pflanzung einträgst, erscheinen automatisch. Mit „Sorte eintragen“ kannst du auch Sorten festhalten, die du noch anbauen möchtest.</p></div>`}`);
+  $("#so-neu").onclick = () => sorteBearbeiten();
+  $$("[data-so-bearb]").forEach(k => k.onclick = () => sorteBearbeiten(alleSorten().find(s => sortenKey(s.pflanze, s.name) === k.dataset.soBearb)));
+  $$("[data-sterne]").forEach(g => $$("button", g).forEach(b => b.onclick = () => {
+    const s = alleSorten().find(x => sortenKey(x.pflanze, x.name) === g.dataset.sterne); if (!s) return;
+    const n = +b.dataset.stern === s.bewertung ? 0 : +b.dataset.stern;
+    sorteSpeichern(s, { bewertung: n }); zeigen();
+  }));
+}
+function sorteSpeichern(s, aenderung) {
+  D.sorten = D.sorten || [];
+  let e = D.sorten.find(x => sortenKey(x.pflanze, x.name) === sortenKey(s.pflanze, s.name));
+  if (!e) { e = { id: gid(), pflanze: s.pflanze, name: s.name, bewertung: 0, notiz: "" }; D.sorten.push(e); }
+  Object.assign(e, aenderung); speichern();
+}
+async function sorteBearbeiten(alt, vorgabe = {}) {
+  const w = await eingabe({
+    titel: alt ? `Sorte „${alt.name}“` : "Sorte eintragen", ja: "Speichern",
+    felder: [
+      { id: "pflanze", label: "Pflanze", typ: "select", optionen: allePflanzen().map(p => ({ wert: p.id, text: p.name })), wert: alt?.pflanze || vorgabe.pflanze || "tomate" },
+      { id: "name", label: "Sorte", wert: alt?.name || "" },
+      { id: "bewertung", label: "Bewertung (0–5 Sterne)", typ: "select", optionen: ["0", "1", "2", "3", "4", "5"].map(x => ({ wert: x, text: x === "0" ? "keine" : "★".repeat(+x) })), wert: String(alt?.bewertung || 0) },
+      { id: "notiz", label: "Erfahrungen", typ: "textarea", wert: alt?.notiz || "" },
+    ],
+    extra: alt && alt.id ? { text: "Löschen", gefahr: true } : null,
+  });
+  if (w === "extra") {
+    D.sorten = D.sorten.filter(x => x.id !== alt.id); speichern(); zeigen();
+    melden(alt.nutzungen.length ? "Bewertung gelöscht – die Sorte bleibt sichtbar, weil sie im Garten eingetragen ist." : "Sorte gelöscht."); return;
+  }
+  if (!w) return;
+  if (!w.name) { melden("Bitte einen Sortennamen eintragen."); return; }
+  if (alt && alt.id && sortenKey(alt.pflanze, alt.name) !== sortenKey(w.pflanze, w.name)) D.sorten = D.sorten.filter(x => x.id !== alt.id);
+  sorteSpeichern({ pflanze: w.pflanze, name: w.name }, { name: w.name, bewertung: +w.bewertung || 0, notiz: w.notiz });
+  zeigen(); melden("Sorte gespeichert.");
+}
+function sortenKarteHTML(pf) {
+  const l = alleSorten().filter(s => s.pflanze === pf.id).sort((a, b) => b.bewertung - a.bewertung);
+  return `<div class="karte"><h2>${icon("i-steckbrief")} Meine Sorten</h2>
+    ${l.length ? `<ul class="so-liste">${l.map(s => `<li><b>${esc(s.name)}</b> ${s.bewertung ? `<span class="sterne-text">${"★".repeat(s.bewertung)}</span>` : ""}${s.notiz ? `<div class="klein leise">${esc(s.notiz)}</div>` : ""}</li>`).join("")}</ul>` : `<p class="klein leise" style="margin:0">Noch keine Sorten eingetragen.</p>`}
+    <div class="knopfreihe"><button class="knopf" id="so-neu-pf">${icon("i-plus")} Sorte eintragen</button><a class="knopf text" href="#wissen/sorten">Alle Sorten →</a></div></div>`;
+}
+function sortenDatalist(pflanzeId) {
+  const l = alleSorten().filter(s => s.pflanze === pflanzeId);
+  return `<datalist id="sorten-vorschlag">${l.map(s => `<option value="${esc(s.name)}">`).join("")}</datalist>`;
+}
+
 function seitentitel(main, titel, unter) {
   main.insertAdjacentHTML("beforeend", `<div class="seitentitel"><h1>${esc(titel)}</h1>${unter ? `<p class="leise">${unter}</p>` : ""}</div>`);
 }
@@ -2724,6 +2985,8 @@ const SEITEN = {
           <p><b>Meine Notizen:</b> Auf jeder Pflanzenkarte kannst du eigene Erfahrungen eintragen. Sie werden beim Tippen automatisch gespeichert.</p>
           <p><b>Eigene Pflanzen:</b> Fehlt etwas, legst du es mit „＋ Eigene Pflanze“ an: Name, Gruppe, Familie, Nährstoffbedarf, Abstand, Wuchshöhe, ob sie einzeln gesetzt wird, und die Monate zum Antippen. Eigene Pflanzen erscheinen überall wie die anderen und lassen sich bearbeiten oder löschen.</p>
           <p><b>Kalender:</b> Unter <b>Wissen → Kalender</b> blätterst du durch die Monate und siehst, was jeweils vorgezogen, gesät, gepflanzt und geerntet wird. Darunter steht die Jahresübersicht aller Pflanzen. Auf der Startseite zeigt die Karte „Im …“ dasselbe für den aktuellen Monat.</p>
+          <p><b>Übersichten:</b> Unter <b>Wissen → Übersichten</b> stehen dieselben Daten nach Themen statt nach Pflanzen: <b>Fruchtfolge</b> (alle Pflanzenfamilien mit Anbaupause und Mitgliedern), <b>Nährstoffbedarf</b> (Stark-, Mittel-, Schwachzehrer), <b>Mischkultur</b> (Pflanzen auswählen oder „aus Beet übernehmen“ – eine Tabelle zeigt für jedes Paar ✓ gut, ✗ schlecht, ? umstritten), <b>Saatgut</b> (wie lange Samen keimfähig sind und wie leicht man selbst Samen gewinnt) und <b>alle Pflanzen als Tabelle</b> (filtern, z. B. nach „halbschattig“ oder „winterhart“, und durch Tippen auf eine Spalte sortieren).</p>
+          <p><b>Sorten:</b> Unter <b>Wissen → Sorten</b> sammelst du deine Sorten mit Sternen (0–5) und Erfahrungen. Sorten, die du im Gartenplan bei einer Pflanzung einträgst, erscheinen dort automatisch – mit den Jahren, in denen sie angebaut wurden, und der Erntemenge. Beim Eintragen einer Sorte im Gartenplan schlägt die App deine bekannten Sorten vor. Auf jeder Pflanzenkarte steht „Meine Sorten“.</p>
           <p><b>Quellen:</b> Unter <b>Wissen → Quellen</b> steht, woher die Angaben stammen. Alle Texte sind in eigenen Worten geschrieben.</p>
         </div></details>
         <details><summary>Planung</summary><div>
