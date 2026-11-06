@@ -497,7 +497,25 @@ dialog .knopfreihe{justify-content:flex-end}
 [data-theme="dark"] #meldung{background:#3d6e2a}
 #meldung button{background:transparent;border:1px solid rgba(255,255,255,.6);color:#fff;border-radius:8px;padding:4px 10px;cursor:pointer}
 @media (min-width:900px){ #meldung{bottom:24px} }
-@media print{ #kopf,#leiste,#seitenleiste,.seitenkopf .kopf-knoepfe{display:none!important} body{display:block} }
+@media print{ #kopf,#leiste,#seitenleiste,.seitenkopf .kopf-knoepfe,.nicht-drucken,#meldung{display:none!important} body{display:block}
+  .karte{box-shadow:none;break-inside:avoid} .ch-filter .umschalter,#ch-ansicht,#ch-neu{display:none!important} }
+.ch-werkzeug{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.ch-werkzeug select,.ch-filter select{width:auto;max-width:100%;min-height:40px;padding:6px 10px;border-radius:10px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit}
+.ch-filter{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+#ch-typ{flex-wrap:wrap;max-width:100%}
+#ch-typ button{white-space:nowrap;flex:1 1 auto}
+.ch-monat{font-size:1rem;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--linie)}
+.ch-monat:first-child{margin-top:0}
+.ch-liste{list-style:none;margin:0;padding:0}
+.ch-eintrag{display:grid;grid-template-columns:2.2em 1.8em 1fr auto;gap:6px;align-items:start;padding:7px 0;border-bottom:1px dashed var(--linie)}
+.ch-eintrag:last-child{border-bottom:0}
+.ch-datum{font-weight:650;text-align:right;color:var(--leise)}
+.ch-eintrag.typ-tagebuch .ch-notiz{font-style:italic}
+.ch-eintrag.typ-wetter{color:var(--leise)}
+table.tabelle{width:100%;border-collapse:collapse;font-size:.92rem}
+table.tabelle th,table.tabelle td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--linie);vertical-align:top}
+table.tabelle th{font-weight:650;color:var(--leise)}
+.felder textarea{width:100%}
 </style>
 </head>
 <body>
@@ -572,13 +590,13 @@ dialog .knopfreihe{justify-content:flex-end}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.5.0"></script>
+<script src="pflanzen.js?v=0.6.0"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.5.0";
+const APP_VERSION = "0.6.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -610,6 +628,8 @@ function leereDaten() {
     rezepte: [],       // eigene Rezeptsammlung
     eigenePflanzen: [], // selbst angelegte Pflanzen fürs Lexikon
     pflanzenNotizen: {}, // eigene Notizen je Pflanze (id → Text)
+    tagebuch: [],      // eigene Chronik-Einträge
+    wetterLog: {},     // Tageswerte vergangener Tage (Datum → min, max, regen)
     geaendert: null,
   };
 }
@@ -709,16 +729,18 @@ function fragen({ titel, text, ja = "OK", nein = "Abbrechen", gefahr = false }) 
 }
 
 /* Dialog mit Eingabefeldern. Liefert die Werte oder null (Abbrechen). */
-function eingabe({ titel, text = "", felder, ja = "OK" }) {
+function eingabe({ titel, text = "", felder, ja = "OK", extra = null }) {
   return new Promise(fertig => {
     const dlg = $("#dialog");
     dlg.innerHTML = `<h2 tabindex="-1" autofocus>${esc(titel)}</h2>${text ? `<p>${text}</p>` : ""}
       <form method="dialog" class="felder">
         ${felder.map(f => `<label>${esc(f.label)}
           <span class="feld-einheit">${f.typ === "select"
-            ? `<select name="${f.id}">${f.optionen.map(o => `<option ${o === f.wert ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>`
+            ? `<select name="${f.id}">${f.optionen.map(o => { const w = typeof o === "object" ? o.wert : o, t = typeof o === "object" ? o.text : o; return `<option value="${esc(w)}" ${w === f.wert ? "selected" : ""}>${esc(t)}</option>`; }).join("")}</select>`
+            : f.typ === "textarea" ? `<textarea name="${f.id}" rows="4">${esc(f.wert ?? "")}</textarea>`
             : `<input name="${f.id}" type="${f.typ || "text"}" ${f.typ === "number" ? `step="${f.schritt || "any"}" min="${f.min ?? ""}" inputmode="decimal"` : ""} value="${esc(f.wert ?? "")}">`}${f.einheit ? `<span>${esc(f.einheit)}</span>` : ""}</span></label>`).join("")}
         <div class="knopfreihe">
+          ${extra ? `<button type="button" class="knopf ${extra.gefahr ? "gefahr" : ""}" data-a="x" style="margin-right:auto">${esc(extra.text)}</button>` : ""}
           <button type="button" class="knopf" data-a="0">Abbrechen</button>
           <button type="submit" class="knopf haupt" data-a="1">${esc(ja)}</button>
         </div>
@@ -730,6 +752,7 @@ function eingabe({ titel, text = "", felder, ja = "OK" }) {
       dlg.close(); fertig(ok ? werte : null);
     };
     $('[data-a="0"]', dlg).onclick = () => zu(false);
+    if (extra) $('[data-a="x"]', dlg).onclick = () => { dlg.close(); fertig("extra"); };
     form.onsubmit = e => { e.preventDefault(); zu(true); };
     dlg.oncancel = e => { e.preventDefault(); zu(false); };
     dlg.showModal();
@@ -954,6 +977,7 @@ async function wetterKarte(ziel) {
       <p class="klein leise">Technischer Grund: ${esc(e.message)}</p>`;
     return;
   }
+  wetterLogFuellen(w);
   const auf = wetterAufbereiten(w);
   const { hinweise, regenVorher } = wetterHinweise(auf);
   const tage = auf.kommend.slice(0, 7).map(t => {
@@ -1588,13 +1612,14 @@ function bepflanzungHTML(beet) {
       : `<p class="klein leise" style="margin:0 0 6px">Hier wächst gerade nichts.</p>`}
     ${liste.some(p => pflZuEng(p, engSet)) ? `<div class="hinweis warn" style="margin-top:8px"><span class="sym">⚠️</span><div><b>Zu eng</b><span class="klein">${esc([...new Set(liste.filter(p => pflZuEng(p, engSet)).map(p => pflanzeVon(p.pflanze).name))].join(", "))}: Platzbedarf überschneidet sich (gelb gestrichelt).</span></div></div>` : ""}
     ${konflikte.length ? `<div class="hinweis warn" style="margin-top:8px"><span class="sym">⚠️</span><div><b>Schlechte Nachbarn</b><span class="klein">${esc(konflikte.join("; "))} stehen dicht beieinander.</span></div></div>` : ""}
-    <div class="knopfreihe"><button class="knopf haupt" data-tun="pflanze-setzen">＋ Pflanze setzen</button></div>
+    <div class="knopfreihe"><button class="knopf haupt" data-tun="pflanze-setzen">＋ Pflanze setzen</button><button class="knopf" data-tun="beet-tagebuch">📝 Tagebuch</button></div>
     ${frueher.length ? `<details style="margin-top:10px"><summary class="klein"><b>Früher hier</b> (${frueher.length})</summary><ul class="klein" style="margin:6px 0 0;padding-left:18px">${frueher.slice(0, 12).map(p =>
       `<li>${jahrVon(p)}: ${esc((pflanzeVon(p.pflanze) || { name: "?" }).name)} <span class="leise">(${datumKurz(p.gepflanzt)} bis ${datumKurz(p.abgeraeumt)})</span></li>`).join("")}</ul></details>` : ""}
   </div>`;
 }
 function bepflanzungEreignisse(el, beet) {
   $$("[data-pfl]", el).forEach(li => li.onclick = () => { G.pfl = li.dataset.pfl; planZeichnen(); panelZeichnen(); });
+  const tb = $('[data-tun="beet-tagebuch"]', el); if (tb) tb.onclick = e => { e.stopPropagation(); tagebuchBearbeiten(null, { beet: beet.id }); };
   const k = $('[data-tun="pflanze-setzen"]', el);
   if (k) k.onclick = e => { e.stopPropagation(); G.auswahlPflanze = beet.id; pflSuche = ""; panelZeichnen(); const s = $("#pw-suche"); if (s && matchMedia("(min-width:900px)").matches) s.focus(); };
 }
@@ -1634,6 +1659,7 @@ function pflanzungPanelHTML(p) {
   <div class="karte"><div class="knopfreihe" style="margin:0">
     ${p.form === "punkt" ? `<button class="knopf" data-tun="mehr-setzen">＋ Weitere setzen</button>` : ""}
     ${einzelnGewaehlt ? `<button class="knopf" data-tun="punkt-weg">✕ Nur diese eine Pflanze entfernen</button>` : ""}
+    <button class="knopf" data-tun="tagebuch">📝 Tagebuch</button>
     <button class="knopf" data-tun="abraeumen">🧹 Abräumen</button>
     <button class="knopf gefahr" data-tun="pfl-loeschen">🗑️ Löschen</button>
   </div>
@@ -1674,6 +1700,7 @@ function pflanzungPanelEreignisse(el, p) {
       melden("Ernte eingetragen.", { text: "Jetzt abräumen", tun: () => abraeumen(p.id) });
     }
     if (t === "abraeumen") abraeumen(p.id);
+    if (t === "tagebuch") tagebuchBearbeiten(null, { beet: p.beet, pflanze: p.pflanze });
     if (t === "pfl-loeschen") {
       if (!await fragen({ titel: "Pflanzung löschen?", text: `„${esc(pf.name)}“ wird ganz entfernt, auch aus Chronik und Fruchtfolge. Wenn das Beet nur frei wird, nimm lieber „Abräumen“.`, ja: "Löschen", gefahr: true })) return;
       const vorher = stand();
@@ -1865,7 +1892,7 @@ function abgleichUebernehmen(cfg, entfernt) {
   designAnwenden(); zeigen();
 }
 const datenLeer = d => !d.garten.objekte.length && !d.pflanzungen.length && !d.planungen.length && !d.sorten.length &&
-  !d.saatgut.length && !d.rezepte.length && !(d.eigenePflanzen || []).length && !Object.keys(d.pflanzenNotizen || {}).length;
+  !d.saatgut.length && !d.rezepte.length && !(d.eigenePflanzen || []).length && !Object.keys(d.pflanzenNotizen || {}).length && !(d.tagebuch || []).length;
 
 /* ---------- Der eigentliche Abgleich ---------- */
 async function abgleichen({ still = true } = {}) {
@@ -2048,6 +2075,246 @@ function abgleichStarten() {
 }
 
 
+/* ============================================================
+   CHRONIK: was im Garten passiert ist
+   Quellen: Pflanzungen (gepflanzt, geerntet, abgeräumt), eigene Tagebuch-Einträge (D.tagebuch)
+   und das Wetter-Logbuch (D.wetterLog, wird beim Laden des Wetters für vergangene Tage gefüllt).
+   ============================================================ */
+const STARKREGEN = 20;   // mm an einem Tag
+
+/* ---------- Wetter-Logbuch ---------- */
+function wetterLogFuellen(w) {
+  if (!w || !w.daily) return;
+  const heute = heuteISO(), d = w.daily;
+  D.wetterLog = D.wetterLog || {};
+  let neu = false;
+  d.time.forEach((t, i) => {
+    if (t >= heute || d.temperature_2m_min[i] == null) return;
+    const e = { min: d.temperature_2m_min[i], max: d.temperature_2m_max[i], regen: d.precipitation_sum[i] ?? 0 };
+    const alt = D.wetterLog[t];
+    if (!alt || alt.min !== e.min || alt.max !== e.max || alt.regen !== e.regen) { D.wetterLog[t] = e; neu = true; }
+  });
+  if (neu) speichern();
+}
+function wetterEreignisse(jahr) {
+  const log = D.wetterLog || {}, tage = Object.keys(log).filter(t => t.startsWith(jahr + "-")).sort();
+  const ev = [];
+  for (const t of tage) {
+    const w = log[t];
+    if (w.min <= GRENZEN.frost) ev.push({ datum: t, typ: "wetter", sym: "❄️", text: `Frost: Tiefstwert ${zahl(w.min, 1)} °C` });
+    if (w.max >= GRENZEN.hitze) ev.push({ datum: t, typ: "wetter", sym: "🔥", text: `Hitze: bis ${zahl(w.max, 0)} °C` });
+    if (w.regen >= STARKREGEN) ev.push({ datum: t, typ: "wetter", sym: "🌧️", text: `Starkregen: ${zahl(w.regen, 0)} mm` });
+  }
+  // Trockenphasen: mindestens 10 aufeinanderfolgende aufgezeichnete Tage mit zusammen unter 5 mm, im Schnitt warm
+  let start = null, summe = 0, waerme = 0, n = 0, vorher = null;
+  const abschliessen = () => {
+    if (start && n >= 10 && waerme / n >= GRENZEN.trockenWaerme)
+      ev.push({ datum: start, bis: vorher, typ: "wetter", sym: "💧", text: `Trockenphase: ${n} Tage mit zusammen ${zahl(summe, 1)} mm Regen (bis ${datumKurz(vorher)})` });
+    start = null; summe = 0; waerme = 0; n = 0;
+  };
+  for (const t of tage) {
+    const w = log[t], folgetag = vorher && (new Date(t) - new Date(vorher)) / 864e5 === 1;
+    if (!folgetag) abschliessen();
+    if (summe + w.regen < 5) { if (!start) start = t; summe += w.regen; waerme += w.max; n++; }
+    else { abschliessen(); }
+    vorher = t;
+  }
+  abschliessen();
+  return ev;
+}
+function wetterJahr(jahr) {
+  const log = D.wetterLog || {}, tage = Object.keys(log).filter(t => t.startsWith(jahr + "-")).sort();
+  if (!tage.length) return null;
+  const frost = tage.filter(t => log[t].min <= GRENZEN.frost);
+  const fruehjahr = frost.filter(t => t.slice(5) < "07-01"), herbst = frost.filter(t => t.slice(5) >= "07-01");
+  return {
+    tage: tage.length, frost: frost.length, hitze: tage.filter(t => log[t].max >= GRENZEN.hitze).length,
+    regen: tage.reduce((s, t) => s + (log[t].regen || 0), 0),
+    letzterFrost: fruehjahr[fruehjahr.length - 1] || null, ersterFrost: herbst[0] || null,
+    kaeltester: tage.reduce((a, t) => (log[t].min < log[a].min ? t : a)), heissester: tage.reduce((a, t) => (log[t].max > log[a].max ? t : a)),
+  };
+}
+
+/* ---------- Ereignisse sammeln ---------- */
+function chronikEreignisse(jahr) {
+  const ev = [];
+  for (const p of D.pflanzungen) {
+    const pf = pflanzeVon(p.pflanze) || { name: "Unbekannte Pflanze" };
+    const name = pf.name + (p.sorte ? ` ‚${p.sorte}‘` : ""), beet = pflBeetName(p);
+    const basis = { pid: p.id, pflanze: p.pflanze, beet: p.beet, beetName: beet };
+    if (p.gepflanzt) ev.push({ ...basis, datum: p.gepflanzt, typ: "garten", sym: p.wie === "gesät" ? "🌰" : "🌱",
+      text: `${name} ${p.wie || "gepflanzt"} in ${beet}`, zusatz: `${anzahlText(p)} ${anzahlVon(p) === 1 ? "Pflanze" : "Pflanzen"}` });
+    for (const e of p.ernten || []) ev.push({ ...basis, datum: e.datum, typ: "ernte", sym: "🧺", text: `${name} geerntet (${beet})`,
+      zusatz: e.menge ? `${zahl(e.menge, e.menge % 1 ? 1 : 0)} ${e.einheit}` : "" });
+    if (p.abgeraeumt) ev.push({ ...basis, datum: p.abgeraeumt, typ: "garten", sym: "🧹", text: `${name} abgeräumt (${beet})` });
+  }
+  for (const t of D.tagebuch || []) {
+    const pf = t.pflanze && pflanzeVon(t.pflanze), b = t.beet && (objekt(t.beet) || null);
+    ev.push({ datum: t.datum, typ: "tagebuch", sym: "📝", text: t.text, tid: t.id, pflanze: t.pflanze, beet: t.beet,
+      beetName: b ? b.name : t.beetName, zusatz: [b ? b.name : t.beetName, pf ? pf.name : ""].filter(Boolean).join(" · ") });
+  }
+  return ev.filter(e => e.datum && e.datum.startsWith(jahr + "-")).concat(wetterEreignisse(jahr));
+}
+function chronikJahre() {
+  const j = new Set([new Date().getFullYear()]);
+  for (const p of D.pflanzungen) { [p.gepflanzt, p.abgeraeumt, ...(p.ernten || []).map(e => e.datum)].forEach(d => d && j.add(+d.slice(0, 4))); }
+  for (const t of D.tagebuch || []) j.add(+t.datum.slice(0, 4));
+  for (const t of Object.keys(D.wetterLog || {})) j.add(+t.slice(0, 4));
+  return [...j].sort((a, b) => b - a);
+}
+
+/* ---------- Seite ---------- */
+const CH = { jahr: new Date().getFullYear(), typ: "alle", beet: "", pflanze: "", ansicht: "verlauf" };
+function chronikSeite(main) {
+  seitentitel(main, "Chronik");
+  const jahre = chronikJahre();
+  if (!jahre.includes(CH.jahr)) CH.jahr = jahre[0];
+  main.insertAdjacentHTML("beforeend", `
+    <div class="ch-werkzeug">
+      <select id="ch-jahr" aria-label="Jahr">${jahre.map(j => `<option ${j === CH.jahr ? "selected" : ""}>${j}</option>`).join("")}</select>
+      <div class="umschalter" id="ch-ansicht"><button data-a="verlauf" class="${CH.ansicht === "verlauf" ? "an" : ""}">Verlauf</button><button data-a="auswertung" class="${CH.ansicht === "auswertung" ? "an" : ""}">Auswertung</button></div>
+      <button class="knopf haupt" id="ch-neu">＋ Tagebuch-Eintrag</button>
+      <button class="knopf nicht-drucken" id="ch-drucken" title="Drucken oder als PDF speichern">🖨️<span class="lang"> Drucken</span></button>
+    </div>
+    <div id="ch-inhalt"></div>`);
+  $("#ch-jahr").onchange = e => { CH.jahr = +e.target.value; chronikZeichnen(); };
+  $$("#ch-ansicht button").forEach(b => b.onclick = () => { CH.ansicht = b.dataset.a; $$("#ch-ansicht button").forEach(x => x.classList.toggle("an", x === b)); chronikZeichnen(); });
+  $("#ch-neu").onclick = () => tagebuchBearbeiten();
+  $("#ch-drucken").onclick = () => window.print();
+  chronikZeichnen();
+}
+function chronikZeichnen() {
+  const el = $("#ch-inhalt"); if (!el) return;
+  if (CH.ansicht === "auswertung") { el.innerHTML = auswertungHTML(CH.jahr); return; }
+  const alle = chronikEreignisse(CH.jahr);
+  const beete = [...new Map(alle.filter(e => e.beet || e.beetName).map(e => [e.beet || e.beetName, e.beetName || (objekt(e.beet) || {}).name || "?"])).entries()];
+  const pflanzen = [...new Set(alle.filter(e => e.pflanze).map(e => e.pflanze))].map(id => [id, (pflanzeVon(id) || { name: "?" }).name]).sort((a, b) => a[1].localeCompare(b[1], "de"));
+  const liste = alle.filter(e =>
+    (CH.typ === "alle" || e.typ === CH.typ) &&
+    (!CH.beet || e.beet === CH.beet || e.beetName === CH.beet) &&
+    (!CH.pflanze || e.pflanze === CH.pflanze))
+    .sort((a, b) => b.datum.localeCompare(a.datum) || (a.typ === "wetter") - (b.typ === "wetter"));
+  const zaehle = t => alle.filter(e => t === "alle" || e.typ === t).length;
+  let html = `<div class="ch-filter">
+      <div class="umschalter" id="ch-typ">${[["alle", "Alles"], ["garten", "🌱 Garten"], ["ernte", "🧺 Ernte"], ["tagebuch", "📝 Tagebuch"], ["wetter", "🌦️ Wetter"]]
+        .map(([k, n]) => `<button data-t="${k}" class="${CH.typ === k ? "an" : ""}">${n} <span class="leise">${zaehle(k)}</span></button>`).join("")}</div>
+      <select id="ch-beet" aria-label="Beet"><option value="">Alle Beete</option>${beete.map(([k, n]) => `<option value="${esc(k)}" ${CH.beet === k ? "selected" : ""}>${esc(n)}</option>`).join("")}</select>
+      <select id="ch-pflanze" aria-label="Pflanze"><option value="">Alle Pflanzen</option>${pflanzen.map(([k, n]) => `<option value="${esc(k)}" ${CH.pflanze === k ? "selected" : ""}>${esc(n)}</option>`).join("")}</select>
+    </div>`;
+  if (!liste.length) {
+    html += `<div class="karte"><p class="leise" style="margin:0">${alle.length ? "Für diese Auswahl gibt es keine Einträge." :
+      `Für ${CH.jahr} gibt es noch keine Einträge. Sie entstehen von selbst, wenn du im Gartenplan pflanzt, erntest oder abräumst. Eigene Beobachtungen trägst du mit „＋ Tagebuch-Eintrag“ ein. Wetterereignisse (Frost, Hitze, Starkregen, Trockenphasen) kommen dazu, sobald die Startseite mit Standort das Wetter geladen hat.`}</p></div>`;
+  } else {
+    let monat = null;
+    html += `<div class="karte ch-verlauf">`;
+    for (const e of liste) {
+      const m = +e.datum.slice(5, 7);
+      if (m !== monat) { if (monat !== null) html += `</ul>`; monat = m; html += `<h2 class="ch-monat">${MONATE[m - 1]} ${CH.jahr}</h2><ul class="ch-liste">`; }
+      html += `<li class="ch-eintrag typ-${e.typ}">
+        <span class="ch-datum">${+e.datum.slice(8)}.</span><span class="ch-sym" aria-hidden="true">${e.sym}</span>
+        <div class="ch-text">${e.typ === "tagebuch" ? `<div class="ch-notiz">${esc(e.text).replace(/\n/g, "<br>")}</div>` : `<div>${esc(e.text)}</div>`}
+          ${e.zusatz ? `<div class="klein leise">${esc(e.zusatz)}</div>` : ""}</div>
+        ${e.tid ? `<button class="knopf text klein nicht-drucken" data-tb="${e.tid}">Bearbeiten</button>` : e.pid && pflanzung(e.pid) && !pflanzung(e.pid).abgeraeumt ? `<button class="knopf text klein nicht-drucken" data-zeig="${e.pid}">Im Plan</button>` : ""}
+      </li>`;
+    }
+    html += `</ul></div>`;
+  }
+  el.innerHTML = html;
+  $$("#ch-typ button").forEach(b => b.onclick = () => { CH.typ = b.dataset.t; chronikZeichnen(); });
+  $("#ch-beet").onchange = e => { CH.beet = e.target.value; chronikZeichnen(); };
+  $("#ch-pflanze").onchange = e => { CH.pflanze = e.target.value; chronikZeichnen(); };
+  $$("[data-tb]", el).forEach(k => k.onclick = () => tagebuchBearbeiten((D.tagebuch || []).find(t => t.id === k.dataset.tb)));
+  $$("[data-zeig]", el).forEach(k => k.onclick = () => {
+    const p = pflanzung(k.dataset.zeig); if (!p) return;
+    G.pfl = p.id; G.auswahl = p.beet; G.view = null; G.zeigeNach = p.id;
+    location.hash = "garten";
+  });
+}
+
+/* ---------- Auswertung ---------- */
+function ernteSummen(jahr) {
+  const s = new Map();   // pflanze → { einheit → menge }, anzahl
+  for (const p of D.pflanzungen) for (const e of p.ernten || []) {
+    if (!e.datum || !e.datum.startsWith(jahr + "-")) continue;
+    const x = s.get(p.pflanze) || { mengen: {}, anzahl: 0, ohne: 0 };
+    x.anzahl++;
+    if (e.menge) x.mengen[e.einheit] = (x.mengen[e.einheit] || 0) + e.menge; else x.ohne++;
+    s.set(p.pflanze, x);
+  }
+  return s;
+}
+const mengenText = m => Object.entries(m).map(([e, v]) => `${zahl(v, v % 1 ? 1 : 0)} ${e}`).join(", ");
+function auswertungHTML(jahr) {
+  const ernte = ernteSummen(jahr), vor = ernteSummen(jahr - 1);
+  const gesetzt = D.pflanzungen.filter(p => (p.gepflanzt || "").startsWith(jahr + "-"));
+  const arten = new Set(gesetzt.map(p => p.pflanze));
+  const w = wetterJahr(jahr), wv = wetterJahr(jahr - 1);
+  const zeilen = [...ernte.entries()].sort((a, b) => (pflanzeVon(a[0])?.name || "").localeCompare(pflanzeVon(b[0])?.name || "", "de"));
+  return `<div class="raster zwei">
+    <div>
+      <div class="karte"><h2>🌱 ${jahr} im Überblick</h2>
+        <div class="steckbrief">
+          <div class="sb-l">Pflanzungen</div><div class="sb-w">${gesetzt.length} (${arten.size} verschiedene Pflanzen)</div>
+          <div class="sb-l">Ernten eingetragen</div><div class="sb-w">${[...ernte.values()].reduce((s, x) => s + x.anzahl, 0)}</div>
+          <div class="sb-l">Abgeräumt</div><div class="sb-w">${D.pflanzungen.filter(p => (p.abgeraeumt || "").startsWith(jahr + "-")).length}</div>
+          <div class="sb-l">Tagebuch-Einträge</div><div class="sb-w">${(D.tagebuch || []).filter(t => t.datum.startsWith(jahr + "-")).length}</div>
+        </div></div>
+      <div class="karte"><h2>🧺 Ernte ${jahr}</h2>
+        ${zeilen.length ? `<table class="tabelle"><thead><tr><th>Pflanze</th><th>Menge</th><th>Ernten</th><th>${jahr - 1}</th></tr></thead><tbody>
+          ${zeilen.map(([id, x]) => { const v = vor.get(id); return `<tr><td>${esc(pflanzeVon(id)?.name || "?")}</td><td>${mengenText(x.mengen) || "–"}${x.ohne ? ` <span class="leise klein">(+${x.ohne}× ohne Menge)</span>` : ""}</td><td>${x.anzahl}</td><td class="leise">${v ? mengenText(v.mengen) || `${v.anzahl}×` : "–"}</td></tr>`; }).join("")}
+        </tbody></table>` : `<p class="leise klein" style="margin:0">Für ${jahr} sind noch keine Ernten eingetragen. Ernten trägst du im Gartenplan bei der Pflanzung ein (🧺 Ernte eintragen).</p>`}
+      </div>
+    </div>
+    <div>
+      <div class="karte"><h2>🌦️ Wetter ${jahr}</h2>
+        ${w ? `<div class="steckbrief">
+          <div class="sb-l">Letzter Frost im Frühjahr</div><div class="sb-w">${w.letzterFrost ? datumKurz(w.letzterFrost) : "–"}${wv && wv.letzterFrost ? ` <span class="leise klein">(${jahr - 1}: ${datumKurz(wv.letzterFrost)})</span>` : ""}</div>
+          <div class="sb-l">Erster Frost im Herbst</div><div class="sb-w">${w.ersterFrost ? datumKurz(w.ersterFrost) : "–"}${wv && wv.ersterFrost ? ` <span class="leise klein">(${jahr - 1}: ${datumKurz(wv.ersterFrost)})</span>` : ""}</div>
+          <div class="sb-l">Frostnächte</div><div class="sb-w">${w.frost}</div>
+          <div class="sb-l">Hitzetage (ab ${GRENZEN.hitze} °C)</div><div class="sb-w">${w.hitze}</div>
+          <div class="sb-l">Kältester Tag</div><div class="sb-w">${datumKurz(w.kaeltester)}: ${zahl((D.wetterLog[w.kaeltester]).min, 1)} °C</div>
+          <div class="sb-l">Heißester Tag</div><div class="sb-w">${datumKurz(w.heissester)}: ${zahl((D.wetterLog[w.heissester]).max, 0)} °C</div>
+          <div class="sb-l">Regen</div><div class="sb-w">${zahl(w.regen, 0)} mm</div>
+        </div>
+        <p class="klein leise" style="margin:10px 0 0">Aufgezeichnet an ${w.tage} Tagen. Die App merkt sich das Wetter der letzten 7 Tage, sobald die Startseite es lädt – wird die App länger als eine Woche nicht geöffnet, entstehen Lücken.</p>`
+        : `<p class="leise klein" style="margin:0">Für ${jahr} ist noch kein Wetter aufgezeichnet. Das passiert von selbst, sobald ein Standort eingetragen ist und die Startseite das Wetter lädt.</p>`}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ---------- Tagebuch-Eintrag ---------- */
+async function tagebuchBearbeiten(alt, vorgabe = {}) {
+  const beete = D.garten.objekte.filter(o => ARTEN[o.art]?.pflanzbar).sort((a, b) => a.name.localeCompare(b.name, "de"));
+  const pflanzen = allePflanzen();
+  const w = await eingabe({
+    titel: alt ? "Tagebuch-Eintrag bearbeiten" : "Neuer Tagebuch-Eintrag",
+    ja: "Speichern",
+    felder: [
+      { id: "datum", label: "Datum", typ: "date", wert: alt?.datum || vorgabe.datum || heuteISO() },
+      { id: "text", label: "Was ist passiert?", typ: "textarea", wert: alt?.text || "" },
+      { id: "beet", label: "Beet (freiwillig)", typ: "select", optionen: [{ wert: "", text: "–" }, ...beete.map(b => ({ wert: b.id, text: b.name }))], wert: alt?.beet || vorgabe.beet || "" },
+      { id: "pflanze", label: "Pflanze (freiwillig)", typ: "select", optionen: [{ wert: "", text: "–" }, ...pflanzen.map(p => ({ wert: p.id, text: p.name }))], wert: alt?.pflanze || vorgabe.pflanze || "" },
+    ],
+    extra: alt ? { text: "Löschen", gefahr: true } : null,
+  });
+  if (w === "extra") {
+    if (!await fragen({ titel: "Eintrag löschen?", text: "Der Tagebuch-Eintrag wird entfernt.", ja: "Löschen", gefahr: true })) return;
+    D.tagebuch = D.tagebuch.filter(t => t.id !== alt.id); speichern(); zeigen(); melden("Eintrag gelöscht."); return;
+  }
+  if (!w) return;
+  if (!w.text) { melden("Bitte etwas eintragen."); return; }
+  D.tagebuch = D.tagebuch || [];
+  const e = alt || { id: gid() };
+  Object.assign(e, { datum: w.datum || heuteISO(), text: w.text, beet: w.beet || null, pflanze: w.pflanze || null,
+    beetName: w.beet ? (objekt(w.beet) || {}).name : null });
+  if (!alt) D.tagebuch.push(e);
+  speichern();
+  if (aktuelleSeite() === "chronik") { CH.jahr = +e.datum.slice(0, 4); zeigen(); }
+  melden(alt ? "Eintrag gespeichert." : "Ins Tagebuch eingetragen.");
+}
+
+
 function seitentitel(main, titel, unter) {
   main.insertAdjacentHTML("beforeend", `<div class="seitentitel"><h1>${esc(titel)}</h1>${unter ? `<p class="leise">${unter}</p>` : ""}</div>`);
 }
@@ -2095,18 +2362,7 @@ const SEITEN = {
       ])}`);
   },
 
-  chronik(main) {
-    seitentitel(main, "Chronik");
-    main.insertAdjacentHTML("beforeend", `
-      <div class="karte"><p>Die Chronik hält fest, was in deinem Garten passiert ist.</p></div>
-      ${baldKarte("Geplant", [
-        "Alles Gepflanzte, Geerntete und Abgeräumte mit Datum und Ort",
-        "Filter nach Zeitraum, Beet und Pflanze",
-        "Notizen-Verlauf und Erntemengen",
-        "Auswertungen und ein Wetter-Rückblick",
-        "Druckbarer Bericht für einen Zeitraum (als PDF speicherbar)",
-      ])}`);
-  },
+  chronik(main) { chronikSeite(main); },
 
   wissen(main) { wissenSeite(main); },
 
@@ -2247,6 +2503,16 @@ const SEITEN = {
           <p><b>Eigene Pflanzen:</b> Fehlt etwas, legst du es mit „＋ Eigene Pflanze“ an: Name, Gruppe, Familie, Nährstoffbedarf, Abstand, Wuchshöhe, ob sie einzeln gesetzt wird, und die Monate zum Antippen. Eigene Pflanzen erscheinen überall wie die anderen und lassen sich bearbeiten oder löschen.</p>
           <p><b>Kalender:</b> Unter <b>Wissen → Kalender</b> blätterst du durch die Monate und siehst, was jeweils vorgezogen, gesät, gepflanzt und geerntet wird. Darunter steht die Jahresübersicht aller Pflanzen. Auf der Startseite zeigt die Karte „Im …“ dasselbe für den aktuellen Monat.</p>
           <p><b>Quellen:</b> Unter <b>Wissen → Quellen</b> steht, woher die Angaben stammen. Alle Texte sind in eigenen Worten geschrieben.</p>
+        </div></details>
+        <details><summary>Chronik und Tagebuch</summary><div>
+          <p>Die <b>Chronik</b> sammelt von selbst, was im Garten passiert: gepflanzt, gesät, gesteckt, geerntet (mit Menge) und abgeräumt – jeweils mit Datum und Beet. Dazu kommen deine <b>Tagebuch-Einträge</b> und <b>Wetterereignisse</b>.</p>
+          <ul>
+            <li><b>Tagebuch-Eintrag:</b> „＋ Tagebuch-Eintrag“ oben in der Chronik, oder im Gartenplan beim Beet bzw. bei einer Pflanzung auf „📝 Tagebuch“ (dann sind Beet und Pflanze schon ausgewählt). Datum, Text und – freiwillig – Beet und Pflanze. Antippen von „Bearbeiten“ ändert oder löscht einen Eintrag.</li>
+            <li><b>Filter:</b> Jahr, Art (Garten, Ernte, Tagebuch, Wetter), Beet und Pflanze. „Im Plan“ springt zur Pflanzung im Gartenplan.</li>
+            <li><b>Wetter:</b> Die App merkt sich das Wetter der vergangenen Tage, sobald die Startseite mit Standort das Wetter lädt (es reicht, die App mindestens einmal pro Woche zu öffnen). Daraus entstehen Einträge für Frostnächte (ab 0 °C), Hitzetage (ab 30 °C), Starkregen (ab 20 mm) und Trockenphasen (mindestens 10 Tage mit zusammen unter 5 mm).</li>
+            <li><b>Auswertung:</b> Pflanzungen und Ernten des Jahres, Erntemengen je Pflanze im Vergleich zum Vorjahr, letzter Frost im Frühjahr und erster Frost im Herbst, Frostnächte, Hitzetage und Regenmenge.</li>
+            <li><b>Drucken:</b> „🖨️ Drucken“ druckt die aktuelle Ansicht oder speichert sie als PDF.</li>
+          </ul>
         </div></details>
         <details><summary>Abgleich zwischen Laptop und Handy</summary><div>
           <p>Damit deine Gartendaten auf allen Geräten gleich sind, speichert die App sie zusätzlich in einem <b>privaten GitHub-Repository</b>. Das ist kostenlos. Eine ausführliche Schritt-für-Schritt-Anleitung gibt es als Word-Dokument; kurz:</p>
@@ -3614,6 +3880,10 @@ function gartenSeite(main) {
   leisteAktualisieren();
   requestAnimationFrame(() => {
     if (!G.view) allesZeigen(); else planZeichnen();
+    if (G.zeigeNach) {   // aus der Chronik: zur Pflanzung springen
+      const p = pflanzung(G.zeigeNach), b = p && objekt(p.beet); G.zeigeNach = null;
+      if (b) { const r = rahmen(b); zeigeBereich(r.x1, r.y1, r.x2 - r.x1, r.y2 - r.y1); }
+    }
     panelZeichnen();
   });
 }
