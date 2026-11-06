@@ -572,6 +572,13 @@ table.mk-tabelle{border-collapse:separate;border-spacing:3px;font-size:.88rem}
 .mk-fazit{margin:12px 0 0;padding:8px 12px;border-radius:10px}
 .mk-fazit.schlecht{background:var(--rot-hell)} .mk-fazit.gut{background:var(--gruen-hell)}
 .ue-tab-rahmen{overflow-x:auto}
+.sg-zeile{display:grid;gap:6px 16px;padding:12px 0;border-top:1px solid var(--linie)}
+.sg-zeile:first-child{border-top:0;padding-top:4px}
+@media (min-width:700px){.sg-zeile{grid-template-columns:230px 1fr;align-items:start}}
+.sg-kopf{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:4px}
+.sg-balken{display:inline-flex;gap:3px}
+.sg-balken i{width:12px;height:8px;border-radius:2px;background:var(--linie)}
+.sg-balken i.an{background:var(--gruen)}
 .ue-tab th button{background:none;border:0;font:inherit;font-weight:650;color:var(--leise);cursor:pointer;padding:0;white-space:nowrap}
 .ue-tab th button.an{color:var(--text)}
 .ue-tab td a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--text);white-space:nowrap}
@@ -703,13 +710,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.9.0"></script>
+<script src="pflanzen.js?v=0.9.1"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.9.0";
+const APP_VERSION = "0.9.1";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -2631,7 +2638,7 @@ function ueNaehrstoffe(el) {
   el.innerHTML = `<div class="karte"><h2>${icon("i-garten")} Nährstoffbedarf</h2>
       <p style="margin:0">Eine bewährte Faustregel für die Fruchtfolge in einem Beet: <b>Starkzehrer → Mittelzehrer → Schwachzehrer</b>, danach eine Gründüngung oder wieder Kompost. So wird der Boden gleichmäßig genutzt. Bei Kräutern und Blumen sind die Einstufungen Richtwerte (siehe Hinweise in den Pflanzenkarten).</p></div>
     <div class="raster drei">${gruppen.map(([k, n, t]) => { const l = alle.filter(p => p.zehrer === k).sort((a, b) => a.name.localeCompare(b.name, "de"));
-      return `<div class="karte"><h2>${n} <span class="leise klein" style="font-weight:400">(${l.length})</span></h2><p class="klein leise">${t}</p>${l.map(pfLink).join("")}</div>`; }).join("")}</div>`;
+      return `<div class="karte"><h2>${n} <span class="leise klein" style="font-weight:400">(${l.length})</span></h2><p class="klein leise">${t}</p><div>${l.map(pfLink).join("")}</div></div>`; }).join("")}</div>`;
 }
 
 /* ---------- Mischkultur-Matrix ---------- */
@@ -2691,9 +2698,13 @@ function ueSaatgut(el) {
   el.innerHTML = `<div class="karte"><h2>${icon("i-saat")} Wie lange sind Samen keimfähig?</h2>
       <p>Richtwerte bei kühler, trockener und dunkler Lagerung. Ältere Samen vor der Aussaat mit einer Keimprobe testen: 10 Samen auf feuchtes Küchenpapier – keimen weniger als die Hälfte, lieber neues Saatgut nehmen oder dichter säen.</p>
       <p class="klein leise" style="margin:0">Quellen: Bingenheimer Saatgut, Samenhaus. „bis zu“ heißt: Die Quelle nennt nur eine Obergrenze.</p></div>
-    <div class="raster zwei">${stufen.map(st => { const l = alle.filter(p => gruppe(p) === st).sort((a, b) => a.name.localeCompare(b.name, "de"));
-      return l.length ? `<div class="karte"><h2>${st[2]}</h2>${l.map(p => `<a class="chip" href="#wissen/pflanze/${encodeURIComponent(p.id)}" title="${esc(keimText(p))}">${esc(p.name)}${p.keimBis ? " *" : ""}</a>`).join("")}</div>` : ""; }).join("")}</div>
-    ${ohne.length ? `<div class="karte"><h2>Keine verlässliche Angabe gefunden</h2>${ohne.map(pfLink).join("")}</div>` : ""}
+    <div class="karte"><h2>Keimfähigkeit nach Jahren</h2>
+      <div class="sg-zeilen">${stufen.map((st, i) => { const l = alle.filter(p => gruppe(p) === st).sort((a, b) => a.name.localeCompare(b.name, "de"));
+        return l.length ? `<div class="sg-zeile"><div class="sg-kopf"><b>${st[2]}</b><span class="sg-balken" aria-hidden="true">${[0,1,2,3,4].map(k => `<i class="${k <= i ? "an" : ""}"></i>`).join("")}</span></div>
+          <div>${l.map(p => `<a class="chip" href="#wissen/pflanze/${encodeURIComponent(p.id)}" title="${esc(keimText(p))}">${esc(p.name)}${p.keimBis ? " *" : ""}</a>`).join("")}</div></div>` : ""; }).join("")}
+        ${ohne.length ? `<div class="sg-zeile"><div class="sg-kopf"><b class="leise">keine verlässliche Angabe</b></div><div>${ohne.map(pfLink).join("")}</div></div>` : ""}
+      </div>
+      <p class="klein leise" style="margin:10px 0 0">* nur Obergrenze bekannt („bis zu“). Mit der Maus über einer Pflanze siehst du den genauen Wert.</p></div>
     <div class="karte"><h2>${icon("i-saat")} Saatgut selbst gewinnen</h2>
       <p class="klein leise">Nach ProSpecieRara: Selbstbefruchter kreuzen sich kaum mit anderen Sorten – ideal für den Anfang. Bei Fremdbefruchtern muss man Abstand zwischen Sorten halten oder nur eine Sorte blühen lassen. Bei zweijährigen Pflanzen bilden sich Samen erst im zweiten Jahr. Nur samenfeste Sorten verwenden, keine F1-Hybriden.</p>
       ${[["leicht", "Leicht"], ["mittel", "Mittel"], ["schwer", "Schwierig"]].map(([k, n]) => { const l = allePflanzen().filter(p => p.saatgut === k).sort((a, b) => a.name.localeCompare(b.name, "de"));
