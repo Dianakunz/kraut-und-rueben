@@ -629,13 +629,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.7.1"></script>
+<script src="pflanzen.js?v=0.7.2"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.7.1";
+const APP_VERSION = "0.7.2";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1478,7 +1478,7 @@ function pflanzungenSVG(s) {
   let h = "";
   const liste = aktivePflanzungen();
   const konflikte = new Set(liste.filter(hatKonflikt).map(p => p.id)), eng = zuEng();
-  if (G.planJahr) {   // Was im Vorjahr wo stand – hilft bei der Fruchtfolge
+  if (G.planJahr && vorjahrZeigen()) {   // Was im Vorjahr wo stand – hilft bei der Fruchtfolge
     for (const q of echte().filter(q => jahrVon(q) === G.planJahr - 1 && objekt(q.beet) && !(istMehrjaehrig(q) && !q.abgeraeumt))) {
       const pf = pflanzeVon(q.pflanze), farbe = pf ? familieVon(pf).farbe : "#8a8f80", r = pflRahmen(q);
       h += q.form === "flaeche" ? `<rect class="vorjahr" x="${q.x}" y="${q.y}" width="${q.w}" height="${q.h}" style="--pf:${farbe}"/>`
@@ -2431,6 +2431,7 @@ async function tagebuchBearbeiten(alt, vorgabe = {}) {
    Geplantes liegt in D.pflanzungen mit p.geplant = Jahr; gezeichnet wird im Gartenplan (Ansicht „Planung“).
    ============================================================ */
 let PL_JAHR = null;
+function vorjahrZeigen() { try { return localStorage.getItem("kur-vorjahr") !== "aus"; } catch (e) { return true; } }
 function planWarnungen(p) {
   const alt = G.planJahr; G.planJahr = p.geplant;   // Nachbarn/Enge im Planungsjahr prüfen
   const w = [];
@@ -2449,7 +2450,8 @@ function planungSeite(main) {
   const beete = D.garten.objekte.filter(o => ARTEN[o.art]?.pflanzbar);
   main.insertAdjacentHTML("beforeend", `<div class="ch-werkzeug nicht-drucken">
       <label class="pl-jahrwahl">Planung für <select id="pl-jahr" aria-label="Jahr">${jahre.map(x => `<option ${x === PL_JAHR ? "selected" : ""}>${x}</option>`).join("")}</select></label>
-      ${beete.length ? `<button class="knopf" id="pl-drucken">🖨️<span class="lang"> Plan drucken</span></button>` : ""}
+      ${beete.length ? `<label class="schalter-klein"><input type="checkbox" id="pl-vorjahr" ${vorjahrZeigen() ? "checked" : ""}> ${PL_JAHR - 1} einblenden</label>
+      <button class="knopf" id="pl-drucken">🖨️<span class="lang"> Plan drucken</span></button>` : ""}
     </div>`);
   $("#pl-jahr").onchange = e => { PL_JAHR = +e.target.value; G.view = G.view; zeigen(); };
   if (!beete.length) {
@@ -2458,6 +2460,7 @@ function planungSeite(main) {
   }
   gartenSeite(main, PL_JAHR);
   $("#pl-drucken").onclick = planDrucken;
+  $("#pl-vorjahr").onchange = e => { try { localStorage.setItem("kur-vorjahr", e.target.checked ? "an" : "aus"); } catch (x) {} planZeichnen(); leisteAktualisieren(); };
   const box = document.createElement("div"); box.id = "pl-liste"; box.className = "nicht-drucken";
   main.appendChild(box);
   planListeFuellen();
@@ -2694,7 +2697,7 @@ const SEITEN = {
           <ul>
             <li><b>Jahr wählen:</b> oben „Planung für …“ (dieses oder nächstes Jahr). Der Plan hat einen blau gestrichelten Rahmen.</li>
             <li><b>Planen:</b> Beet antippen → „＋ Pflanze setzen“, wie im Garten. Geplantes hat einen gestrichelten Rand. Beete selbst zeichnest und änderst du im Reiter Garten.</li>
-            <li><b>Was stand letztes Jahr wo?</b> Gepunktete Umrisse mit Namen zeigen die Pflanzungen des Vorjahres. So siehst du direkt, wohin etwas für die Fruchtfolge besser nicht kommt.</li>
+            <li><b>Was stand letztes Jahr wo?</b> Gepunktete Umrisse mit Namen zeigen die Pflanzungen des Vorjahres. So siehst du direkt, wohin etwas für die Fruchtfolge besser nicht kommt. Wird es zu unübersichtlich, schaltest du sie oben mit „… einblenden“ aus; die Fruchtfolge-Warnungen gibt es trotzdem.</li>
             <li><b>Fruchtfolge:</b> Die Auswahlliste nennt, was in den letzten Jahren in diesem Beet stand. Ob es wirklich passt, prüft die App nach dem Setzen <b>nach der Stelle</b>: Nur wenn sich die neue Pflanzung mit einer früheren derselben Familie überschneidet, bekommt sie einen gelben Rand und einen Hinweis. In einem großen Beet kann man also gut nebeneinander wechseln.</li>
             <li><b>Mehrjährige Pflanzen</b> (Rhabarber, Erdbeeren, Beeren, Kräuter) bleiben stehen und sind blass zu sehen.</li>
             <li><b>Datum:</b> Die App schlägt den ersten Pflanz- bzw. Säemonat aus dem Lexikon vor; darunter steht zum Vergleich, was das Lexikon empfiehlt.</li>
@@ -3797,7 +3800,7 @@ function leisteAktualisieren() {
     bn.classList.toggle("verborgen", !G.planJahr);
     if (G.planJahr) {
       const n = D.pflanzungen.filter(p => p.geplant === G.planJahr && !p.abgeraeumt).length;
-      bn.innerHTML = `<div class="klein">Beet antippen → „＋ Pflanze setzen“. Geplantes hat einen gestrichelten Rand. <span class="vj-muster"></span> Gepunktet: was ${G.planJahr - 1} wo stand (für die Fruchtfolge). Blass: mehrjährige Pflanzen, die stehen bleiben. Beete selbst änderst du im Reiter Garten.</div>`;
+      bn.innerHTML = `<div class="klein">Beet antippen → „＋ Pflanze setzen“. Geplantes hat einen gestrichelten Rand. <span class="vj-muster"></span> ${vorjahrZeigen() ? `Gepunktet: was ${G.planJahr - 1} wo stand (für die Fruchtfolge; oben ausblendbar).` : `Was ${G.planJahr - 1} wo stand, ist ausgeblendet.`} Blass: mehrjährige Pflanzen, die stehen bleiben. Beete selbst änderst du im Reiter Garten.</div>`;
     }
   }
   const sel = $("#k-bereich");
