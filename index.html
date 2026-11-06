@@ -572,6 +572,7 @@ table.mk-tabelle{border-collapse:separate;border-spacing:3px;font-size:.88rem}
 .mk-fazit{margin:12px 0 0;padding:8px 12px;border-radius:10px}
 .mk-fazit.schlecht{background:var(--rot-hell)} .mk-fazit.gut{background:var(--gruen-hell)}
 .ue-tab-rahmen{overflow-x:auto}
+.zurueck-reihe{display:flex;gap:6px 22px;flex-wrap:wrap;align-items:baseline}
 .sg-zeile{display:grid;gap:6px 16px;padding:12px 0;border-top:1px solid var(--linie)}
 .sg-zeile:first-child{border-top:0;padding-top:4px}
 @media (min-width:700px){.sg-zeile{grid-template-columns:230px 1fr;align-items:start}}
@@ -710,13 +711,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.9.1"></script>
+<script src="pflanzen.js?v=0.9.2"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.9.1";
+const APP_VERSION = "0.9.2";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -921,7 +922,32 @@ function zeigen() {
   (SEITEN[seite] || SEITEN.start)(main);
   window.scrollTo(0, 0);
 }
-window.addEventListener("hashchange", zeigen);
+/* Herkunft merken: von der Pflanzenkarte zurück dorthin, wo man herkam */
+let HERKUNFT = null, ZURUECK_SCROLL = null;
+const istPflanzenSeite = h => /^#?wissen\/pflanze\//.test(h);
+function herkunftName(h) {
+  const t = h.replace(/^#/, "").split("/");
+  if (t[0] === "wissen") {
+    if (t[1] === "uebersichten") { const u = (typeof UE_TEILE !== "undefined" && UE_TEILE.find(x => x[0] === UE.teil)); return "Übersichten" + (u ? ": " + u[1] : ""); }
+    if (t[1] === "sorten") return "Sorten";
+    if (t[1] === "kalender") return "Kalender";
+    if (t[1] === "quellen") return "Quellen";
+    if (t[1] === "eigene") return null;
+    return "Alle Pflanzen";
+  }
+  const r = REITER.find(x => x.id === t[0]);
+  return r ? r.name : null;
+}
+window.addEventListener("hashchange", e => {
+  const alt = "#" + (e.oldURL.split("#")[1] || ""), neu = location.hash;
+  if (istPflanzenSeite(neu) && !istPflanzenSeite(alt)) {
+    const name = herkunftName(alt);
+    HERKUNFT = name ? { hash: alt, name, scroll: window.scrollY } : null;
+  }
+  ZURUECK_SCROLL = (istPflanzenSeite(alt) && HERKUNFT && neu === HERKUNFT.hash) ? HERKUNFT.scroll : null;
+  zeigen();
+  if (ZURUECK_SCROLL !== null) window.scrollTo(0, ZURUECK_SCROLL);
+});
 
 function begruessung() {
   const h = new Date().getHours();
@@ -1254,7 +1280,7 @@ function pflanzenDetail(main, id) {
   const chips = (liste, art) => liste.length ? liste.map(x => `<a class="chip ${art}" href="#wissen/pflanze/${encodeURIComponent(x.id)}" ${x.notiz ? `title="${esc(x.notiz)}"` : ""}>${esc(pflanzeVon(x.id).name)}${x.notiz ? " *" : ""}</a>`).join("") : `<span class="leise klein">keine Angaben</span>`;
   const notizen = n.gut.concat(n.schlecht, n.umstritten).filter(x => x.notiz);
   main.insertAdjacentHTML("beforeend", `
-    <a class="zurueck" href="#wissen">← Alle Pflanzen</a>
+    ${HERKUNFT && HERKUNFT.name !== "Alle Pflanzen" ? `<div class="zurueck-reihe"><a class="zurueck" href="${HERKUNFT.hash}">← Zurück zu ${esc(HERKUNFT.name)}</a><a class="zurueck leise" href="#wissen">Alle Pflanzen</a></div>` : `<a class="zurueck" href="#wissen">← Alle Pflanzen</a>`}
     <div class="lex-kopf">${pflanzenBadge(p, true)}<div><h2>${esc(p.name)}${p.eigen ? ` <span class="marker">eigene</span>` : ""}</h2>
       ${(p.auch || []).length ? `<div class="leise klein">auch: ${esc(p.auch.join(", "))}</div>` : ""}</div>
       ${p.eigen ? `<a class="knopf" style="margin-left:auto" href="#wissen/eigene/${encodeURIComponent(p.id)}">${icon("i-bearbeiten")} Bearbeiten</a>` : ""}</div>
@@ -2996,7 +3022,7 @@ const SEITEN = {
           <p><b>Meine Notizen:</b> Auf jeder Pflanzenkarte kannst du eigene Erfahrungen eintragen. Sie werden beim Tippen automatisch gespeichert.</p>
           <p><b>Eigene Pflanzen:</b> Fehlt etwas, legst du es mit „＋ Eigene Pflanze“ an: Name, Gruppe, Familie, Nährstoffbedarf, Abstand, Wuchshöhe, ob sie einzeln gesetzt wird, und die Monate zum Antippen. Eigene Pflanzen erscheinen überall wie die anderen und lassen sich bearbeiten oder löschen.</p>
           <p><b>Kalender:</b> Unter <b>Wissen → Kalender</b> blätterst du durch die Monate und siehst, was jeweils vorgezogen, gesät, gepflanzt und geerntet wird. Darunter steht die Jahresübersicht aller Pflanzen. Auf der Startseite zeigt die Karte „Im …“ dasselbe für den aktuellen Monat.</p>
-          <p><b>Übersichten:</b> Unter <b>Wissen → Übersichten</b> stehen dieselben Daten nach Themen statt nach Pflanzen: <b>Fruchtfolge</b> (alle Pflanzenfamilien mit Anbaupause und Mitgliedern), <b>Nährstoffbedarf</b> (Stark-, Mittel-, Schwachzehrer), <b>Mischkultur</b> (Pflanzen auswählen oder „aus Beet übernehmen“ – eine Tabelle zeigt für jedes Paar ✓ gut, ✗ schlecht, ? umstritten), <b>Saatgut</b> (wie lange Samen keimfähig sind und wie leicht man selbst Samen gewinnt) und <b>alle Pflanzen als Tabelle</b> (filtern, z. B. nach „halbschattig“ oder „winterhart“, und durch Tippen auf eine Spalte sortieren).</p>
+          <p><b>Übersichten:</b> Unter <b>Wissen → Übersichten</b> stehen dieselben Daten nach Themen statt nach Pflanzen: <b>Fruchtfolge</b> (alle Pflanzenfamilien mit Anbaupause und Mitgliedern), <b>Nährstoffbedarf</b> (Stark-, Mittel-, Schwachzehrer), <b>Mischkultur</b> (Pflanzen auswählen oder „aus Beet übernehmen“ – eine Tabelle zeigt für jedes Paar ✓ gut, ✗ schlecht, ? umstritten), <b>Saatgut</b> (wie lange Samen keimfähig sind und wie leicht man selbst Samen gewinnt) und <b>alle Pflanzen als Tabelle</b> (filtern, z. B. nach „halbschattig“ oder „winterhart“, und durch Tippen auf eine Spalte sortieren). Ein Tipp auf eine Pflanze öffnet ihre Karte; oben führt <b>„← Zurück zu …“</b> wieder genau dorthin, wo du warst.</p>
           <p><b>Sorten:</b> Unter <b>Wissen → Sorten</b> sammelst du deine Sorten mit Sternen (0–5) und Erfahrungen. Sorten, die du im Gartenplan bei einer Pflanzung einträgst, erscheinen dort automatisch – mit den Jahren, in denen sie angebaut wurden, und der Erntemenge. Beim Eintragen einer Sorte im Gartenplan schlägt die App deine bekannten Sorten vor. Auf jeder Pflanzenkarte steht „Meine Sorten“.</p>
           <p><b>Quellen:</b> Unter <b>Wissen → Quellen</b> steht, woher die Angaben stammen. Alle Texte sind in eigenen Worten geschrieben.</p>
         </div></details>
