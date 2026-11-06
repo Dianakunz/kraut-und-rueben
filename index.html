@@ -294,6 +294,21 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 #plan .pfl-flaeche{fill-opacity:.42}
 #plan .pfl.gewaehlt{stroke:var(--auswahl);stroke-width:2.5px;fill-opacity:.55}
 #pfl-gespeichert.gespeichert{color:var(--gruen);font-weight:650;opacity:1}
+.pl-eintrag{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;padding:8px 0;border-bottom:1px dashed var(--linie)}
+.pl-eintrag:last-child{border-bottom:0}
+.warn-text{color:var(--gelb);font-weight:650}
+#plan .pfl.geplant{stroke-dasharray:6 3}
+#plan .pfl.bleibt{opacity:.35;stroke-dasharray:none}
+.planungsansicht .plan-rahmen{border:2px dashed var(--blau);background:color-mix(in srgb, var(--plan-bg) 88%, var(--blau))}
+.plan-banner{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--blau-hell, #e3edf7);border:1px solid var(--blau);border-radius:var(--radius);padding:10px 14px;margin-bottom:10px}
+.geplant-karte{border-left:4px solid var(--blau)}
+.nur-druck{display:none}
+@media print{
+  body.druck-plan .plan-leiste,body.druck-plan .panel,body.druck-plan .plan-banner,body.druck-plan .zeichnen-leiste,body.druck-plan .nur-finger,body.druck-plan .seitentitel{display:none!important}
+  body.druck-plan .garten-layout{display:block!important}
+  body.druck-plan .plan-rahmen{height:16cm!important;border:1px solid #999;position:static}
+  body.druck-plan .nur-druck{display:block!important;margin-top:12px}
+}
 #plan .pfl.eng{stroke:var(--gelb);stroke-width:2.5px;stroke-dasharray:4 3}
 #plan .pfl.punkt-gewaehlt{stroke-width:4px;stroke-dasharray:none}
 #plan .pfl.konflikt{stroke:var(--rot);stroke-width:2.5px;stroke-dasharray:5 3}
@@ -509,6 +524,15 @@ dialog .knopfreihe{justify-content:flex-end}
 .ch-liste{list-style:none;margin:0;padding:0}
 .ch-eintrag{display:grid;grid-template-columns:2.2em 1.8em 1fr auto;gap:6px;align-items:start;padding:7px 0;border-bottom:1px dashed var(--linie)}
 .ch-eintrag:last-child{border-bottom:0}
+.ch-sym .icon{width:20px;height:20px}
+.ch-sym{color:var(--gruen)}
+.ch-sym.sym-i-ernte{color:var(--gelb)}
+.ch-sym.sym-i-abraeumen{color:var(--leise)}
+.ch-sym.sym-i-notiz{color:var(--text)}
+.ch-sym.sym-i-frost,.ch-sym.sym-i-regen{color:var(--blau)}
+.ch-sym.sym-i-hitze{color:#d9822b}
+.ch-sym.sym-i-trocken{color:var(--gelb)}
+.familien-legende{margin:0 0 10px}
 .ch-datum{font-weight:650;text-align:right;color:var(--leise)}
 .ch-eintrag.typ-tagebuch .ch-notiz{font-style:italic}
 .ch-eintrag.typ-wetter{color:var(--leise)}
@@ -531,6 +555,15 @@ table.tabelle th{font-weight:650;color:var(--leise)}
     <symbol id="i-vorrat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8v3H8z"/><path d="M7 6h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M5 11.5h14"/><path d="M9 15.5h6"/></g></symbol>
     <symbol id="i-hilfe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.3-2.5 3.8"/><path d="M12 17.2v.1"/></g></symbol>
     <symbol id="i-zahnrad" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4.3a2 2 0 0 1-2 0l-.2-.1a2 2 0 0 0-2.7.7l-.2.4a2 2 0 0 0 .7 2.7l.2.1a2 2 0 0 1 1 1.7v.5a2 2 0 0 1-1 1.8l-.2.1a2 2 0 0 0-.7 2.7l.2.4a2 2 0 0 0 2.7.7l.2-.1a2 2 0 0 1 2 0l.4.3a2 2 0 0 1 1 1.7v.2a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.2a2 2 0 0 1 1-1.7l.4-.3a2 2 0 0 1 2 0l.2.1a2 2 0 0 0 2.7-.7l.2-.4a2 2 0 0 0-.7-2.7l-.2-.1a2 2 0 0 1-1-1.8v-.5a2 2 0 0 1 1-1.7l.2-.1a2 2 0 0 0 .7-2.7l-.2-.4a2 2 0 0 0-2.7-.7l-.2.1a2 2 0 0 1-2 0l-.4-.3a2 2 0 0 1-1-1.7V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></g></symbol>
+    <symbol id="i-saat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18H6z"/><path d="M6 8h12"/><path d="M12 11v6"/><path d="M12 14c0-2 1.5-3 3-3 0 2-1.5 3-3 3z"/><path d="M12 15c0-1.6-1.2-2.5-2.5-2.5 0 1.6 1.2 2.5 2.5 2.5z"/></g></symbol>
+    <symbol id="i-pflanz" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-8"/><path d="M12 13c0-3 2.5-5 6-5 0 3.5-2.5 5-6 5z"/><path d="M12 11C12 8 9.8 6 6.5 6c0 3 2.2 5 5.5 5z"/><path d="M5 20h14"/></g></symbol>
+    <symbol id="i-ernte" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-1.6 9a1.5 1.5 0 0 1-1.5 1.2H7.1A1.5 1.5 0 0 1 5.6 19z"/><path d="M8 10a4 4 0 0 1 8 0"/><path d="M9 14v3M12 14v3M15 14v3"/></g></symbol>
+    <symbol id="i-abraeumen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l-6 10"/><path d="M5 12l6 3.5-2.5 5.5L2.5 17z"/><path d="M6.5 18.5l1.5-3M4.5 16.5l2-2.5"/><path d="M15 21h6"/></g></symbol>
+    <symbol id="i-notiz" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 15.5h8M8 19h5"/></g></symbol>
+    <symbol id="i-frost" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M9.5 4.5L12 6l2.5-1.5M9.5 19.5L12 18l2.5 1.5"/></g></symbol>
+    <symbol id="i-hitze" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></g></symbol>
+    <symbol id="i-regen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15a4 4 0 0 1-.3-8 5.5 5.5 0 0 1 10.6 1.3A3.5 3.5 0 0 1 17 15z"/><path d="M8 18l-1 2.5M12 18l-1 2.5M16 18l-1 2.5"/></g></symbol>
+    <symbol id="i-trocken" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s5.5 6.3 5.5 10.2a5.5 5.5 0 0 1-11 0C6.5 9.3 12 3 12 3z"/><path d="M4 4l16 16"/></g></symbol>
     <symbol id="i-ort" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></g></symbol>
 </svg>
 
@@ -590,13 +623,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.6.0"></script>
+<script src="pflanzen.js?v=0.7.0"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.6.0";
+const APP_VERSION = "0.7.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1041,7 +1074,7 @@ function nachbarn(id) {
 }
 function pflanzenBadge(p, gross) {
   const f = familieVon(p);
-  return `<span class="p-badge${gross ? " gross" : ""}" style="background:${f.farbe}" aria-hidden="true">${esc(p.name.slice(0, 2))}</span>`;
+  return `<span class="p-badge${gross ? " gross" : ""}" style="background:${f.farbe}" title="${esc(p.name)} – ${esc(f.name.replace(/\s*\(.*\)/, ""))}" aria-hidden="true">${esc(p.name.slice(0, 2))}</span>`;
 }
 function monateText(liste) {
   if (!liste || !liste.length) return "–";
@@ -1094,6 +1127,10 @@ function pflanzenListe(main) {
       <a class="knopf" href="#wissen/eigene">＋ Eigene Pflanze</a>
     </div>
     ${legende()}
+    <details class="familien-legende"><summary class="klein">Was bedeuten die Farben der Kürzel?</summary>
+      <p class="klein leise" style="margin:6px 0">Die Farbe zeigt die <b>Pflanzenfamilie</b>, nicht die Farbe der Pflanze. Pflanzen derselben Familie sollten wegen der Fruchtfolge nicht direkt nacheinander ins selbe Beet. Die Buchstaben sind die ersten beiden des Namens.</p>
+      <div class="legende">${Object.values(FAMILIEN).filter(f => allePflanzen().some(p => familieVon(p) === f)).map(f => `<span><i style="background:${f.farbe};border-radius:50%"></i>${esc(f.name.replace(/\s*\(.*\)/, ""))}${f.pause ? ` (${esc(f.pause)})` : ""}</span>`).join("")}</div>
+    </details>
     <div class="lex-raster" id="lex-raster"></div>
     <div style="margin-top:14px">${baldKarte("Kommt noch in „Wissen“", [
       "Obstbäume wie Apfel, Birne, Kirsche und Pflaume (mit Krone im Gartenplan)",
@@ -1316,7 +1353,12 @@ function monatKarteHTML() {
    ============================================================ */
 const EINHEITEN = ["kg", "g", "Stück", "Bund", "Kopf", "Korb"];
 const pflanzung = id => D.pflanzungen.find(p => p.id === id);
-const aktivePflanzungen = beetId => D.pflanzungen.filter(p => !p.abgeraeumt && (!beetId || p.beet === beetId) && objekt(p.beet));
+/* Im Gartenplan hängt „aktiv“ von der Ansicht ab: jetzt = echte Pflanzungen; Planung = geplante des Jahres plus mehrjährige, die stehen bleiben */
+const istMehrjaehrig = p => !!(pflanzeVon(p.pflanze) || {}).mehrjaehrig;
+const aktivePflanzungen = beetId => D.pflanzungen.filter(p => !p.abgeraeumt && (!beetId || p.beet === beetId) && objekt(p.beet) &&
+  (G.planJahr ? (p.geplant === G.planJahr || (!p.geplant && istMehrjaehrig(p))) : !p.geplant));
+const echtAktiv = beetId => D.pflanzungen.filter(p => !p.abgeraeumt && !p.geplant && (!beetId || p.beet === beetId) && objekt(p.beet));
+const echte = () => D.pflanzungen.filter(p => !p.geplant);
 function jahrVon(p) { return +(p.gepflanzt || "").slice(0, 4) || new Date().getFullYear(); }
 function datumKurz(iso) { if (!iso) return "–"; const [j, mo, t] = iso.split("-"); return `${+t}.${+mo}.${j}`; }
 function platzRadius(pf) { return Math.max(5, ((pf && pf.abstand && pf.abstand[1]) || 30) / 2); }
@@ -1387,7 +1429,7 @@ function pauseJahre(pf) {
 function fruchtfolgeHinweis(beetId, pflanzeId, jahr) {
   const pf = pflanzeVon(pflanzeId); if (!pf || !pf.familie) return null;
   const pause = pauseJahre(pf); if (!pause) return null;
-  const frueher = D.pflanzungen.filter(q => q.beet === beetId && q.abgeraeumt && jahrVon(q) > jahr - pause && jahrVon(q) <= jahr)
+  const frueher = D.pflanzungen.filter(q => q.beet === beetId && !q.geplant && (q.abgeraeumt || jahr > jahrVon(q)) && jahrVon(q) > jahr - pause && jahrVon(q) <= jahr)
     .filter(q => { const x = pflanzeVon(q.pflanze); return x && (pf.pause && !familieVon(pf).pause ? x.id === pf.id : x.familie === pf.familie); })
     .sort((a, b) => jahrVon(b) - jahrVon(a));
   if (!frueher.length) return null;
@@ -1397,8 +1439,8 @@ function fruchtfolgeHinweis(beetId, pflanzeId, jahr) {
 function pflBeetName(p) { const b = objekt(p.beet); return b ? b.name : (p.beetName || "gelöschtes Beet"); }
 
 /* ---------- Mit dem Beet mitbewegen ---------- */
-function pflMitnehmen(beetId) {   // Ausgangslage für das Verschieben/Drehen merken
-  return aktivePflanzungen(beetId).map(p => ({ id: p.id, orig: kopie(p) }));
+function pflMitnehmen(beetId) {   // Ausgangslage für das Verschieben/Drehen merken (echte und geplante)
+  return D.pflanzungen.filter(p => !p.abgeraeumt && p.beet === beetId).map(p => ({ id: p.id, orig: kopie(p) }));
 }
 function pflVersetzen(liste, dx, dy) {
   for (const { id, orig } of liste) {
@@ -1428,7 +1470,7 @@ function pflanzungenSVG(s) {
   const konflikte = new Set(liste.filter(hatKonflikt).map(p => p.id)), eng = zuEng();
   for (const p of liste) {
     const pf = pflanzeVon(p.pflanze), farbe = pf ? familieVon(pf).farbe : "#8a8f80";
-    const kl = `pfl${p.id === G.pfl ? " gewaehlt" : ""}${konflikte.has(p.id) ? " konflikt" : ""}`;
+    const kl = `pfl${p.id === G.pfl ? " gewaehlt" : ""}${konflikte.has(p.id) ? " konflikt" : ""}${G.planJahr && !p.geplant ? " bleibt" : ""}${p.geplant ? " geplant" : ""}`;
     const name = pf ? pf.name : "?";
     if (p.form === "flaeche") {
       h += `<rect class="${kl}${eng.has(p.id) ? " eng" : ""} pfl-flaeche" data-rolle="pfl" data-pid="${p.id}" x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="${Math.min(6, p.w / 4, p.h / 4)}" style="--pf:${farbe}"/>`;
@@ -1517,6 +1559,11 @@ function neuePflanzung(z, daten) {
   const p = Object.assign({ id: gid(), pflanze: z.pflanze, beet: z.beet, beetName: b ? b.name : "", gepflanzt: heuteISO(), wie: "gepflanzt", sorte: "", notiz: "", ernten: [], abgeraeumt: null }, daten);
   const pf = pflanzeVon(z.pflanze);
   if (pf && !(pf.pflanzen || []).length && (pf.direktsaat || []).length) p.wie = "gesät";
+  if (G.planJahr) {   // geplant: Datum aus dem Lexikon vorschlagen (erster Pflanz- bzw. Säemonat)
+    p.geplant = G.planJahr;
+    const mon = ((p.wie === "gesät" ? pf?.direktsaat : pf?.pflanzen) || pf?.pflanzen || pf?.direktsaat || [])[0] || 5;
+    p.gepflanzt = `${G.planJahr}-${String(mon).padStart(2, "0")}-01`;
+  }
   D.pflanzungen.push(p);
   return p;
 }
@@ -1567,7 +1614,7 @@ function pflanzenWahlHTML(beet) {
   </div>`;
 }
 function pflanzenWahlListe(el, beet) {
-  const im = aktivePflanzungen(beet.id), mo = new Date().getMonth() + 1, jahr = new Date().getFullYear();
+  const im = aktivePflanzungen(beet.id), mo = new Date().getMonth() + 1, jahr = G.planJahr || new Date().getFullYear();
   const t = pflSuche.toLowerCase().trim();
   const liste = allePflanzen().filter(pf =>
     (!t || pf.name.toLowerCase().includes(t) || (pf.auch || []).some(a => a.toLowerCase().includes(t))) &&
@@ -1625,6 +1672,50 @@ function bepflanzungEreignisse(el, beet) {
 }
 
 /* ---------- Panel einer Pflanzung ---------- */
+function geplantPanelHTML(p) {
+  const pf = pflanzeVon(p.pflanze) || { name: "Unbekannte Pflanze", id: "" }, beet = objekt(p.beet);
+  const nb = nachbarnImBeet(p), eng = pflZuEng(p, zuEng()), ff = fruchtfolgeHinweis(p.beet, p.pflanze, p.geplant);
+  const einzelnGewaehlt = p.form === "punkt" && G.pflPunkt !== null && G.pflPunkt !== undefined && p.punkte[G.pflPunkt] && p.punkte.length > 1;
+  return `<div class="karte geplant-karte">
+    <div class="lex-kopf" style="margin-bottom:8px">${pflanzenBadge(pf)}<div><h2 style="margin:0">${esc(pf.name)} <span class="marker">geplant ${p.geplant}</span></h2>
+      <div class="klein leise">in „${esc(beet ? beet.name : pflBeetName(p))}“ · ${anzahlText(p)} ${anzahlVon(p) === 1 ? "Pflanze" : "Pflanzen"}</div></div></div>
+    <label>Geplant</label>
+    <div class="feld-einheit"><select data-pf="wie" aria-label="Wie" style="flex:0 0 auto;width:auto">${["gepflanzt", "gesät", "gesteckt"].map(w => `<option ${p.wie === w ? "selected" : ""}>${w === "gepflanzt" ? "pflanzen" : w === "gesät" ? "säen" : "stecken"}</option>`).join("")}</select><span>ab</span><input type="date" data-pf="gepflanzt" value="${esc(p.gepflanzt || "")}"></div>
+    <p class="klein leise" style="margin:4px 0 0">Laut Lexikon: ${[["vorziehen", "vorziehen"], ["direktsaat", "säen"], ["pflanzen", "pflanzen"]].filter(([k]) => (pf[k] || []).length).map(([k, n]) => `${n} ${monateText(pf[k])}`).join(" · ") || "keine Angabe"}</p>
+    <label>Sorte</label><input type="text" data-pf="sorte" value="${esc(p.sorte || "")}" placeholder="z. B. Ochsenherz">
+    ${p.form === "flaeche" ? `<div class="zwei">
+      <div><label>Breite</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-pf="w" value="${(p.w / 100).toFixed(2)}"><span>m</span></div></div>
+      <div><label>Tiefe</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-pf="h" value="${(p.h / 100).toFixed(2)}"><span>m</span></div></div></div>
+      <label>Anzahl</label><div class="feld-einheit"><input type="number" step="1" min="1" inputmode="numeric" data-pf="anzahl" value="${p.anzahl || ""}" placeholder="ca. ${autoAnzahl(pf, p.w, p.h)} (geschätzt)"><span>Stück</span></div>` : ""}
+    <label>Notiz</label><textarea data-pf="notiz" rows="2" placeholder="z. B. Saatgut noch kaufen">${esc(p.notiz || "")}</textarea>
+    <p class="klein leise" id="pfl-gespeichert" style="margin:6px 0 0">Änderungen werden automatisch gespeichert.</p>
+  </div>
+  ${ff ? `<div class="hinweis warn" style="margin:0 0 14px"><span class="sym">⟳</span><div><b>Fruchtfolge</b><span class="klein">${esc(ff.text)}</span></div></div>` : ""}
+  ${eng ? `<div class="hinweis warn" style="margin:0 0 14px"><span class="sym">⚠️</span><div><b>Zu eng</b><span class="klein">Platzbedarf überschneidet sich mit einer anderen Pflanzung.</span></div></div>` : ""}
+  ${nb.length ? `<div class="karte"><h2>🤝 Nachbarn hier</h2>${nb.map(n => `<span class="chip ${n.art}">${n.art === "gut" ? "✓" : n.art === "schlecht" ? "✗" : "?"} ${esc(pflanzeVon(n.p.pflanze).name)}</span>`).join("")}</div>` : ""}
+  <div class="karte"><div class="knopfreihe" style="margin:0">
+    <button class="knopf haupt" data-tun="uebernehmen">✅ Als ${p.wie === "gesät" ? "gesät" : p.wie === "gesteckt" ? "gesteckt" : "gepflanzt"} übernehmen</button>
+    ${p.form === "punkt" ? `<button class="knopf" data-tun="mehr-setzen">＋ Weitere setzen</button>` : ""}
+    ${einzelnGewaehlt ? `<button class="knopf" data-tun="punkt-weg">✕ Nur diese eine entfernen</button>` : ""}
+    <button class="knopf gefahr" data-tun="pfl-loeschen">🗑️ Aus der Planung löschen</button>
+  </div>
+  <p class="klein leise" style="margin:8px 0 0">„Übernehmen“ macht aus der Planung eine echte Pflanzung mit dem Datum, das du dann angibst. Sie erscheint dann in der normalen Ansicht und in der Chronik.</p></div>
+  <div class="knopfreihe" style="margin:0 0 14px"><a class="knopf text" href="#wissen/pflanze/${encodeURIComponent(pf.id)}">Im Lexikon ansehen →</a><button class="knopf text" data-tun="zum-beet">← Zum Beet</button></div>`;
+}
+async function planUebernehmen(id) {
+  const p = pflanzung(id); if (!p || !p.geplant) return;
+  const pf = pflanzeVon(p.pflanze) || { name: "?" };
+  const heute = heuteISO(), vorschlag = heute;
+  const w = await eingabe({ titel: `${pf.name} ${p.wie || "gepflanzt"}?`, text: "Aus der Planung wird eine echte Pflanzung.", ja: "Übernehmen",
+    felder: [{ id: "datum", label: "Datum", typ: "date", wert: vorschlag }] });
+  if (!w) return;
+  const vorher = stand();
+  delete p.geplant; p.gepflanzt = w.datum || heute;
+  const b = objekt(p.beet); if (b) p.beetName = b.name;
+  if (G.pfl === id) G.pfl = null;
+  merken(vorher); if (aktuelleSeite() === "garten") { planZeichnen(); panelZeichnen(); leisteAktualisieren(); } else zeigen();
+  melden(`${pf.name} als ${p.wie || "gepflanzt"} übernommen.`, { text: "Rückgängig", tun: rueckgaengig });
+}
 function pflanzungPanelHTML(p) {
   const pf = pflanzeVon(p.pflanze) || { name: "Unbekannte Pflanze", id: "" }, beet = objekt(p.beet);
   const nb = nachbarnImBeet(p), mo = new Date().getMonth() + 1, eng = pflZuEng(p, zuEng());
@@ -1700,9 +1791,11 @@ function pflanzungPanelEreignisse(el, p) {
       melden("Ernte eingetragen.", { text: "Jetzt abräumen", tun: () => abraeumen(p.id) });
     }
     if (t === "abraeumen") abraeumen(p.id);
+    if (t === "uebernehmen") planUebernehmen(p.id);
     if (t === "tagebuch") tagebuchBearbeiten(null, { beet: p.beet, pflanze: p.pflanze });
     if (t === "pfl-loeschen") {
-      if (!await fragen({ titel: "Pflanzung löschen?", text: `„${esc(pf.name)}“ wird ganz entfernt, auch aus Chronik und Fruchtfolge. Wenn das Beet nur frei wird, nimm lieber „Abräumen“.`, ja: "Löschen", gefahr: true })) return;
+      if (!await fragen(p.geplant ? { titel: "Aus der Planung löschen?", text: `„${esc(pf.name)}“ wird aus der Planung ${p.geplant} entfernt.`, ja: "Löschen", gefahr: true }
+        : { titel: "Pflanzung löschen?", text: `„${esc(pf.name)}“ wird ganz entfernt, auch aus Chronik und Fruchtfolge. Wenn das Beet nur frei wird, nimm lieber „Abräumen“.`, ja: "Löschen", gefahr: true })) return;
       const vorher = stand();
       D.pflanzungen = D.pflanzungen.filter(x => x.id !== p.id); G.pfl = null;
       merken(vorher); planZeichnen(); panelZeichnen(); leisteAktualisieren();
@@ -1786,16 +1879,16 @@ function startGartenHTML() {
   const beete = D.garten.objekte.filter(o => ARTEN[o.art]?.pflanzbar);
   if (!D.garten.objekte.length) return `<p class="leise">Noch nichts eingetragen. Als Erstes zeichnest du deinen Garten und legst die Beete an.</p>`;
   if (!beete.length) return `<p class="leise">Dein Garten ist gezeichnet. Als Nächstes legst du die Beete an.</p>`;
-  const qm = beete.reduce((a, o) => a + flaeche(o), 0) / 10000, liste = aktivePflanzungen(), mo = new Date().getMonth() + 1;
+  const qm = beete.reduce((a, o) => a + flaeche(o), 0) / 10000, liste = echtAktiv(), mo = new Date().getMonth() + 1;
   const ernte = [...new Set(liste.filter(p => (pflanzeVon(p.pflanze)?.ernte || []).includes(mo)).map(p => pflanzeVon(p.pflanze).name))];
   return `<p style="margin-top:0">${beete.length} ${beete.length === 1 ? "Beet" : "Beete"} mit zusammen ${zahl(qm, 1)} m² Pflanzfläche${liste.length ? `, darin ${liste.length} ${liste.length === 1 ? "Pflanzung" : "Pflanzungen"}` : ""}.</p>
     ${ernte.length ? `<p><b>Laut Kalender Erntezeit:</b> ${esc(ernte.join(", "))}</p>` : (liste.length ? "" : `<p class="leise klein">Noch nichts gepflanzt: Beet im Gartenplan antippen, dann „＋ Pflanze setzen“.</p>`)}`;
 }
 function lexikonGartenHTML(pf) {
-  const akt = aktivePflanzungen().filter(p => p.pflanze === pf.id);
-  const frueher = D.pflanzungen.filter(p => p.pflanze === pf.id && p.abgeraeumt);
+  const akt = echtAktiv().filter(p => p.pflanze === pf.id);
+  const frueher = echte().filter(p => p.pflanze === pf.id && p.abgeraeumt);
   if (!akt.length && !frueher.length) return "";
-  const ernten = D.pflanzungen.filter(p => p.pflanze === pf.id).flatMap(p => p.ernten || []);
+  const ernten = echte().filter(p => p.pflanze === pf.id).flatMap(p => p.ernten || []);
   return `<div class="karte"><h2>🌱 In deinem Garten</h2>
     ${akt.length ? `<ul class="klein" style="margin:0;padding-left:18px">${akt.map(p => `<li>${esc(pflBeetName(p))}: ${anzahlText(p)} Stück${p.sorte ? `, ‚${esc(p.sorte)}‘` : ""}, ${p.wie} am ${datumKurz(p.gepflanzt)}</li>`).join("")}</ul>` : `<p class="klein leise" style="margin:0">Steht gerade nicht im Garten.</p>`}
     ${frueher.length ? `<p class="klein leise" style="margin:6px 0 0">Früher: ${frueher.length}× angebaut (${[...new Set(frueher.map(jahrVon))].sort().join(", ")}).</p>` : ""}
@@ -2101,15 +2194,15 @@ function wetterEreignisse(jahr) {
   const ev = [];
   for (const t of tage) {
     const w = log[t];
-    if (w.min <= GRENZEN.frost) ev.push({ datum: t, typ: "wetter", sym: "❄️", text: `Frost: Tiefstwert ${zahl(w.min, 1)} °C` });
-    if (w.max >= GRENZEN.hitze) ev.push({ datum: t, typ: "wetter", sym: "🔥", text: `Hitze: bis ${zahl(w.max, 0)} °C` });
-    if (w.regen >= STARKREGEN) ev.push({ datum: t, typ: "wetter", sym: "🌧️", text: `Starkregen: ${zahl(w.regen, 0)} mm` });
+    if (w.min <= GRENZEN.frost) ev.push({ datum: t, typ: "wetter", sym: "i-frost", text: `Frost: Tiefstwert ${zahl(w.min, 1)} °C` });
+    if (w.max >= GRENZEN.hitze) ev.push({ datum: t, typ: "wetter", sym: "i-hitze", text: `Hitze: bis ${zahl(w.max, 0)} °C` });
+    if (w.regen >= STARKREGEN) ev.push({ datum: t, typ: "wetter", sym: "i-regen", text: `Starkregen: ${zahl(w.regen, 0)} mm` });
   }
   // Trockenphasen: mindestens 10 aufeinanderfolgende aufgezeichnete Tage mit zusammen unter 5 mm, im Schnitt warm
   let start = null, summe = 0, waerme = 0, n = 0, vorher = null;
   const abschliessen = () => {
     if (start && n >= 10 && waerme / n >= GRENZEN.trockenWaerme)
-      ev.push({ datum: start, bis: vorher, typ: "wetter", sym: "💧", text: `Trockenphase: ${n} Tage mit zusammen ${zahl(summe, 1)} mm Regen (bis ${datumKurz(vorher)})` });
+      ev.push({ datum: start, bis: vorher, typ: "wetter", sym: "i-trocken", text: `Trockenphase: ${n} Tage mit zusammen ${zahl(summe, 1)} mm Regen (bis ${datumKurz(vorher)})` });
     start = null; summe = 0; waerme = 0; n = 0;
   };
   for (const t of tage) {
@@ -2138,26 +2231,26 @@ function wetterJahr(jahr) {
 /* ---------- Ereignisse sammeln ---------- */
 function chronikEreignisse(jahr) {
   const ev = [];
-  for (const p of D.pflanzungen) {
+  for (const p of echte()) {
     const pf = pflanzeVon(p.pflanze) || { name: "Unbekannte Pflanze" };
     const name = pf.name + (p.sorte ? ` ‚${p.sorte}‘` : ""), beet = pflBeetName(p);
     const basis = { pid: p.id, pflanze: p.pflanze, beet: p.beet, beetName: beet };
-    if (p.gepflanzt) ev.push({ ...basis, datum: p.gepflanzt, typ: "garten", sym: p.wie === "gesät" ? "🌰" : "🌱",
+    if (p.gepflanzt) ev.push({ ...basis, datum: p.gepflanzt, typ: "garten", sym: p.wie === "gesät" ? "i-saat" : "i-pflanz",
       text: `${name} ${p.wie || "gepflanzt"} in ${beet}`, zusatz: `${anzahlText(p)} ${anzahlVon(p) === 1 ? "Pflanze" : "Pflanzen"}` });
-    for (const e of p.ernten || []) ev.push({ ...basis, datum: e.datum, typ: "ernte", sym: "🧺", text: `${name} geerntet (${beet})`,
+    for (const e of p.ernten || []) ev.push({ ...basis, datum: e.datum, typ: "ernte", sym: "i-ernte", text: `${name} geerntet (${beet})`,
       zusatz: e.menge ? `${zahl(e.menge, e.menge % 1 ? 1 : 0)} ${e.einheit}` : "" });
-    if (p.abgeraeumt) ev.push({ ...basis, datum: p.abgeraeumt, typ: "garten", sym: "🧹", text: `${name} abgeräumt (${beet})` });
+    if (p.abgeraeumt) ev.push({ ...basis, datum: p.abgeraeumt, typ: "garten", sym: "i-abraeumen", text: `${name} abgeräumt (${beet})` });
   }
   for (const t of D.tagebuch || []) {
     const pf = t.pflanze && pflanzeVon(t.pflanze), b = t.beet && (objekt(t.beet) || null);
-    ev.push({ datum: t.datum, typ: "tagebuch", sym: "📝", text: t.text, tid: t.id, pflanze: t.pflanze, beet: t.beet,
+    ev.push({ datum: t.datum, typ: "tagebuch", sym: "i-notiz", text: t.text, tid: t.id, pflanze: t.pflanze, beet: t.beet,
       beetName: b ? b.name : t.beetName, zusatz: [b ? b.name : t.beetName, pf ? pf.name : ""].filter(Boolean).join(" · ") });
   }
   return ev.filter(e => e.datum && e.datum.startsWith(jahr + "-")).concat(wetterEreignisse(jahr));
 }
 function chronikJahre() {
   const j = new Set([new Date().getFullYear()]);
-  for (const p of D.pflanzungen) { [p.gepflanzt, p.abgeraeumt, ...(p.ernten || []).map(e => e.datum)].forEach(d => d && j.add(+d.slice(0, 4))); }
+  for (const p of echte()) { [p.gepflanzt, p.abgeraeumt, ...(p.ernten || []).map(e => e.datum)].forEach(d => d && j.add(+d.slice(0, 4))); }
   for (const t of D.tagebuch || []) j.add(+t.datum.slice(0, 4));
   for (const t of Object.keys(D.wetterLog || {})) j.add(+t.slice(0, 4));
   return [...j].sort((a, b) => b - a);
@@ -2211,7 +2304,7 @@ function chronikZeichnen() {
       const m = +e.datum.slice(5, 7);
       if (m !== monat) { if (monat !== null) html += `</ul>`; monat = m; html += `<h2 class="ch-monat">${MONATE[m - 1]} ${CH.jahr}</h2><ul class="ch-liste">`; }
       html += `<li class="ch-eintrag typ-${e.typ}">
-        <span class="ch-datum">${+e.datum.slice(8)}.</span><span class="ch-sym" aria-hidden="true">${e.sym}</span>
+        <span class="ch-datum">${+e.datum.slice(8)}.</span><span class="ch-sym sym-${e.sym}" aria-hidden="true">${icon(e.sym)}</span>
         <div class="ch-text">${e.typ === "tagebuch" ? `<div class="ch-notiz">${esc(e.text).replace(/\n/g, "<br>")}</div>` : `<div>${esc(e.text)}</div>`}
           ${e.zusatz ? `<div class="klein leise">${esc(e.zusatz)}</div>` : ""}</div>
         ${e.tid ? `<button class="knopf text klein nicht-drucken" data-tb="${e.tid}">Bearbeiten</button>` : e.pid && pflanzung(e.pid) && !pflanzung(e.pid).abgeraeumt ? `<button class="knopf text klein nicht-drucken" data-zeig="${e.pid}">Im Plan</button>` : ""}
@@ -2234,7 +2327,7 @@ function chronikZeichnen() {
 /* ---------- Auswertung ---------- */
 function ernteSummen(jahr) {
   const s = new Map();   // pflanze → { einheit → menge }, anzahl
-  for (const p of D.pflanzungen) for (const e of p.ernten || []) {
+  for (const p of echte()) for (const e of p.ernten || []) {
     if (!e.datum || !e.datum.startsWith(jahr + "-")) continue;
     const x = s.get(p.pflanze) || { mengen: {}, anzahl: 0, ohne: 0 };
     x.anzahl++;
@@ -2246,7 +2339,7 @@ function ernteSummen(jahr) {
 const mengenText = m => Object.entries(m).map(([e, v]) => `${zahl(v, v % 1 ? 1 : 0)} ${e}`).join(", ");
 function auswertungHTML(jahr) {
   const ernte = ernteSummen(jahr), vor = ernteSummen(jahr - 1);
-  const gesetzt = D.pflanzungen.filter(p => (p.gepflanzt || "").startsWith(jahr + "-"));
+  const gesetzt = echte().filter(p => (p.gepflanzt || "").startsWith(jahr + "-"));
   const arten = new Set(gesetzt.map(p => p.pflanze));
   const w = wetterJahr(jahr), wv = wetterJahr(jahr - 1);
   const zeilen = [...ernte.entries()].sort((a, b) => (pflanzeVon(a[0])?.name || "").localeCompare(pflanzeVon(b[0])?.name || "", "de"));
@@ -2315,6 +2408,81 @@ async function tagebuchBearbeiten(alt, vorgabe = {}) {
 }
 
 
+/* ============================================================
+   PLANUNG: Übersicht über geplante Pflanzungen eines Jahres
+   Geplantes liegt in D.pflanzungen mit p.geplant = Jahr; gezeichnet wird im Gartenplan (Ansicht „Planung“).
+   ============================================================ */
+let PL_JAHR = null;
+function planWarnungen(p) {
+  const alt = G.planJahr; G.planJahr = p.geplant;   // Nachbarn/Enge im Planungsjahr prüfen
+  const w = [];
+  const ff = fruchtfolgeHinweis(p.beet, p.pflanze, p.geplant); if (ff) w.push({ art: "fruchtfolge", text: "⟳ " + ff.text });
+  const schlecht = nachbarnImBeet(p).filter(n => n.art === "schlecht").map(n => pflanzeVon(n.p.pflanze).name);
+  if (schlecht.length) w.push({ art: "schlecht", text: "✗ schlechte Nachbarn: " + schlecht.join(", ") });
+  if (pflZuEng(p, zuEng())) w.push({ art: "eng", text: "⚠ zu eng gesetzt" });
+  G.planJahr = alt;
+  return w;
+}
+function planungSeite(main) {
+  seitentitel(main, "Planung");
+  const j = new Date().getFullYear();
+  const jahre = [...new Set([j, j + 1, ...D.pflanzungen.filter(p => p.geplant).map(p => p.geplant)])].sort();
+  if (!PL_JAHR) PL_JAHR = D.pflanzungen.some(p => p.geplant === j + 1) || new Date().getMonth() >= 8 ? j + 1 : j;
+  const liste = D.pflanzungen.filter(p => p.geplant === PL_JAHR && !p.abgeraeumt && objekt(p.beet))
+    .sort((a, b) => (a.gepflanzt || "").localeCompare(b.gepflanzt || "") || pflBeetName(a).localeCompare(pflBeetName(b), "de"));
+  const warn = new Map(liste.map(p => [p.id, planWarnungen(p)]));
+  const anzWarn = [...warn.values()].filter(w => w.length).length;
+  const beete = D.garten.objekte.filter(o => ARTEN[o.art]?.pflanzbar);
+  let html = `<div class="ch-werkzeug">
+      <select id="pl-jahr" aria-label="Jahr">${jahre.map(x => `<option ${x === PL_JAHR ? "selected" : ""}>${x}</option>`).join("")}</select>
+      <button class="knopf haupt" id="pl-plan">📋 Im Gartenplan planen</button>
+      ${liste.length ? `<button class="knopf nicht-drucken" id="pl-drucken">🖨️<span class="lang"> Liste drucken</span></button>` : ""}
+    </div>`;
+  if (!beete.length) html += `<div class="karte"><p style="margin:0">Leg zuerst im <a href="#garten">Gartenplan</a> deine Beete an. Dann kannst du hier die Saison planen.</p></div>`;
+  else if (!liste.length) html += `<div class="karte"><h2>Noch nichts geplant für ${PL_JAHR}</h2>
+      <p>So geht's: „📋 Im Gartenplan planen“ öffnet den Gartenplan in der Planungsansicht ${PL_JAHR}. Dort setzt du Pflanzen wie gewohnt – sie werden aber nur geplant. Die Auswahlliste zeigt dabei gute und schlechte Nachbarn und warnt, wenn im Beet zuletzt dieselbe Pflanzenfamilie stand.</p>
+      <p class="klein leise" style="margin:0">Wenn es so weit ist, übernimmst du Geplantes mit einem Klick als „gepflanzt“ oder „gesät“.</p></div>`;
+  else {
+    html += `<div class="karte"><p style="margin:0"><b>${liste.length}</b> ${liste.length === 1 ? "Pflanzung" : "Pflanzungen"} geplant in ${new Set(liste.map(p => p.beet)).size} ${new Set(liste.map(p => p.beet)).size === 1 ? "Beet" : "Beeten"}${anzWarn ? ` · <span class="warn-text">${anzWarn} mit Hinweisen</span>` : " · keine Hinweise"}.</p></div>
+      <div class="karte ch-verlauf">`;
+    let monat = null;
+    const jetzt = heuteISO();
+    for (const p of liste) {
+      const pf = pflanzeVon(p.pflanze) || { name: "?" }, m = +(p.gepflanzt || "0000-05").slice(5, 7);
+      if (m !== monat) { if (monat !== null) html += `</ul>`; monat = m; html += `<h2 class="ch-monat">${MONATE[m - 1]} ${PL_JAHR}</h2><ul class="ch-liste">`; }
+      const w = warn.get(p.id);
+      html += `<li class="pl-eintrag">
+        ${pflanzenBadge(pf)}
+        <div class="ch-text"><div><b>${esc(pf.name)}</b>${p.sorte ? ` ‚${esc(p.sorte)}‘` : ""} · ${esc(pflBeetName(p))} · ${anzahlText(p)} St.</div>
+          <div class="klein leise">${p.wie === "gesät" ? "säen" : p.wie === "gesteckt" ? "stecken" : "pflanzen"} ab ${datumKurz(p.gepflanzt)}${p.notiz ? ` · ${esc(p.notiz)}` : ""}</div>
+          ${w.length ? `<div class="pw-tags">${w.map(x => `<span class="pw-tag ${x.art === "schlecht" ? "schlecht" : "fruchtfolge"}">${esc(x.text)}</span>`).join("")}</div>` : ""}</div>
+        <div class="knopfreihe nicht-drucken" style="margin:0">
+          <button class="knopf text klein" data-pl-zeig="${p.id}">Im Plan</button>
+          <button class="knopf klein" data-pl-ueber="${p.id}">✅ Übernehmen</button>
+        </div></li>`;
+    }
+    html += `</ul></div>`;
+  }
+  html += `<p class="klein leise">Tipp: Mehrjährige Pflanzen wie Rhabarber, Erdbeeren oder Kräuter bleiben stehen – sie werden in der Planungsansicht blass angezeigt und müssen nicht neu geplant werden.</p>`;
+  main.insertAdjacentHTML("beforeend", html);
+  $("#pl-jahr").onchange = e => { PL_JAHR = +e.target.value; zeigen(); };
+  $("#pl-plan").onclick = () => { G.planJahr = PL_JAHR; G.pfl = null; G.auswahl = null; location.hash = "garten"; };
+  const dr = $("#pl-drucken"); if (dr) dr.onclick = () => window.print();
+  $$("[data-pl-zeig]").forEach(k => k.onclick = () => {
+    const p = pflanzung(k.dataset.plZeig); if (!p) return;
+    G.planJahr = p.geplant; G.pfl = p.id; G.auswahl = p.beet; G.zeigeNach = p.id; location.hash = "garten";
+  });
+  $$("[data-pl-ueber]").forEach(k => k.onclick = () => planUebernehmen(k.dataset.plUeber));
+}
+function startPlanungHTML() {
+  const j = new Date().getFullYear(), bald = new Date(); bald.setDate(bald.getDate() + 14);
+  const grenze = bald.toISOString().slice(0, 10);
+  const faellig = D.pflanzungen.filter(p => p.geplant === j && !p.abgeraeumt && objekt(p.beet) && (p.gepflanzt || "") <= grenze);
+  if (!faellig.length) return "";
+  return `<p style="margin:8px 0 0"><b>Laut Planung jetzt dran:</b> ${esc(faellig.slice(0, 6).map(p => `${pflanzeVon(p.pflanze)?.name || "?"} (${pflBeetName(p)})`).join(", "))}${faellig.length > 6 ? " …" : ""}
+    <a href="#planung">Zur Planung →</a></p>`;
+}
+
 function seitentitel(main, titel, unter) {
   main.insertAdjacentHTML("beforeend", `<div class="seitentitel"><h1>${esc(titel)}</h1>${unter ? `<p class="leise">${unter}</p>` : ""}</div>`);
 }
@@ -2339,7 +2507,7 @@ const SEITEN = {
           </div>
           <div class="karte">
             <h2>🥕 Im Garten</h2>
-            ${startGartenHTML()}
+            ${startGartenHTML()}${startPlanungHTML()}
             <a class="knopf" href="#garten">${icon("i-garten")} Zum Gartenplan</a>
           </div>
         </div>
@@ -2350,17 +2518,7 @@ const SEITEN = {
 
   garten(main) { gartenSeite(main); },
 
-  planung(main) {
-    seitentitel(main, "Planung");
-    main.insertAdjacentHTML("beforeend", `
-      <div class="karte"><p>Hier planst du die nächste Saison auf demselben Gartenplan – im Planungsmodus, ohne deinen echten Garten zu verändern.</p></div>
-      ${baldKarte("Geplant", [
-        "Jahreszeiten, die aufeinander aufbauen: Frühling → Sommer → Herbst → Winter",
-        "Hinweise zur Fruchtfolge: Was stand hier im letzten Jahr?",
-        "Geplante Pflanzen mit einem Klick als „gepflanzt“ übernehmen",
-        "Druckansicht des Plans (als PDF speicherbar)",
-      ])}`);
-  },
+  planung(main) { planungSeite(main); },
 
   chronik(main) { chronikSeite(main); },
 
@@ -2504,6 +2662,18 @@ const SEITEN = {
           <p><b>Kalender:</b> Unter <b>Wissen → Kalender</b> blätterst du durch die Monate und siehst, was jeweils vorgezogen, gesät, gepflanzt und geerntet wird. Darunter steht die Jahresübersicht aller Pflanzen. Auf der Startseite zeigt die Karte „Im …“ dasselbe für den aktuellen Monat.</p>
           <p><b>Quellen:</b> Unter <b>Wissen → Quellen</b> steht, woher die Angaben stammen. Alle Texte sind in eigenen Worten geschrieben.</p>
         </div></details>
+        <details><summary>Planung</summary><div>
+          <p>Mit der Planung entwirfst du die nächste Saison auf deinem Gartenplan, ohne den echten Garten zu verändern.</p>
+          <ul>
+            <li><b>Planungsansicht öffnen:</b> im Gartenplan oben rechts in der Leiste von „🌱 Garten jetzt“ auf „📋 Planung …“ umschalten, oder unter <b>Planung</b> auf „Im Gartenplan planen“. Der Plan bekommt einen blau gestrichelten Rahmen, darüber steht ein Hinweis.</li>
+            <li><b>Planen:</b> Beet antippen → „＋ Pflanze setzen“, genau wie sonst. Geplante Pflanzen haben einen gestrichelten Rand. Die Auswahlliste zeigt gute und schlechte Nachbarn und warnt (⟳), wenn im Beet innerhalb der Anbaupause dieselbe Pflanzenfamilie stand – dabei zählt auch, was in diesem Jahr dort wächst oder gewachsen ist.</li>
+            <li><b>Datum:</b> Die App schlägt den ersten Pflanz- bzw. Säemonat aus dem Lexikon vor; du kannst ihn ändern. Unter dem Datum steht zum Vergleich, was das Lexikon empfiehlt.</li>
+            <li><b>Mehrjährige Pflanzen</b> (Rhabarber, Erdbeeren, Beeren, Kräuter) bleiben stehen und erscheinen in der Planung blass.</li>
+            <li><b>Übersicht:</b> Der Reiter <b>Planung</b> listet alles Geplante nach Monaten, mit Hinweisen zu Fruchtfolge, Nachbarn und Abstand. „Im Plan“ springt zur Stelle im Gartenplan.</li>
+            <li><b>Übernehmen:</b> Wenn es so weit ist, „✅ Übernehmen“ (in der Übersicht oder bei der geplanten Pflanzung). Du gibst das echte Datum an, und aus der Planung wird eine Pflanzung – sichtbar in „Garten jetzt“ und in der Chronik. Auf der Startseite erscheint ein Hinweis, wenn Geplantes in den nächsten zwei Wochen dran ist.</li>
+            <li><b>Drucken:</b> In der Planungsansicht „🖨️ Drucken“ druckt den Plan mit einer Liste aller geplanten Pflanzungen (oder speichert ihn als PDF). Im Reiter Planung druckt „Liste drucken“ die Übersicht.</li>
+          </ul>
+        </div></details>
         <details><summary>Chronik und Tagebuch</summary><div>
           <p>Die <b>Chronik</b> sammelt von selbst, was im Garten passiert: gepflanzt, gesät, gesteckt, geerntet (mit Menge) und abgeräumt – jeweils mit Datum und Beet. Dazu kommen deine <b>Tagebuch-Einträge</b> und <b>Wetterereignisse</b>.</p>
           <ul>
@@ -2579,6 +2749,7 @@ const ART_REIHENFOLGE = ["garten", "haus", "weg", "pfad", "terrasse", "rasen", "
 const formVon = art => (ARTEN[art].kreis ? "kreis" : ARTEN[art].linie ? "linie" : "poly");
 
 const G = {               // Zustand des Plans (nicht gespeichert)
+  planJahr: null,         // null = jetzt; sonst Jahr der Planungsansicht
   view: null,             // sichtbarer Ausschnitt {x, y, w} in cm
   auswahl: null,          // id des gewählten Objekts
   ecke: null,             // Index der gewählten Ecke
@@ -3559,6 +3730,27 @@ function gartenTasten(e) {
 document.addEventListener("keydown", gartenTasten);
 
 /* ---------- Werkzeugleiste ---------- */
+function ansichtWechseln(jahr) {
+  if (G.setzen) setzenBeenden();
+  G.planJahr = jahr; G.pfl = null; G.auswahlPflanze = null; G.zurueck = []; G.vor = [];
+  planZeichnen(); panelZeichnen(); leisteAktualisieren();
+}
+/* Druck: Plan plus Liste der (geplanten) Pflanzungen */
+function planDrucken() {
+  const liste = aktivePflanzungen().filter(p => G.planJahr ? p.geplant === G.planJahr : true)
+    .sort((a, b) => pflBeetName(a).localeCompare(pflBeetName(b), "de") || (a.gepflanzt || "").localeCompare(b.gepflanzt || ""));
+  const el = $("#druck-liste");
+  el.innerHTML = `<h2>${G.planJahr ? `Planung ${G.planJahr}` : `Garten am ${datumKurz(heuteISO())}`}</h2>
+    ${liste.length ? `<table class="tabelle"><thead><tr><th>Beet</th><th>Pflanze</th><th>Sorte</th><th>Anzahl</th><th>${G.planJahr ? "Geplant ab" : "Seit"}</th><th>Notiz</th></tr></thead><tbody>
+      ${liste.map(p => `<tr><td>${esc(pflBeetName(p))}</td><td>${esc(pflanzeVon(p.pflanze)?.name || "?")}</td><td>${esc(p.sorte || "")}</td><td>${anzahlText(p)}</td><td>${p.wie === "gesät" ? (G.planJahr ? "säen " : "gesät ") : ""}${datumKurz(p.gepflanzt)}</td><td>${esc(p.notiz || "")}</td></tr>`).join("")}
+    </tbody></table>` : `<p>Keine Pflanzungen.</p>`}`;
+  const gew = G.auswahl, pf = G.pfl; G.auswahl = null; G.pfl = null; planZeichnen();
+  document.body.classList.add("druck-plan");
+  setTimeout(() => {
+    window.print();
+    document.body.classList.remove("druck-plan"); G.auswahl = gew; G.pfl = pf; planZeichnen();
+  }, 50);
+}
 function leisteAktualisieren() {
   const l = $(".plan-leiste"); if (!l) return;
   $("#k-bearbeiten").classList.toggle("an", !!G.bearbeiten);
@@ -3567,6 +3759,20 @@ function leisteAktualisieren() {
   $("#k-zurueck").disabled = !G.zurueck.length;
   $("#k-vor").disabled = !G.vor.length;
   $("#k-hinzu").classList.toggle("verborgen", !G.bearbeiten);
+  const j = new Date().getFullYear(), an = $("#k-ansicht");
+  an.innerHTML = `<option value="">🌱 Garten jetzt</option>` + [j, j + 1].map(x => `<option value="${x}" ${G.planJahr === x ? "selected" : ""}>📋 Planung ${x}</option>`).join("");
+  $(".garten-layout")?.classList.toggle("planungsansicht", !!G.planJahr);
+  const bn = $("#plan-banner");
+  if (bn) {
+    bn.classList.toggle("verborgen", !G.planJahr);
+    if (G.planJahr) {
+      const n = D.pflanzungen.filter(p => p.geplant === G.planJahr && !p.abgeraeumt).length;
+      bn.innerHTML = `<div><b>📋 Planung ${G.planJahr}</b> · ${n} geplant<br><span class="klein">Was du jetzt setzt, wird nur geplant – dein echter Garten bleibt unverändert. Mehrjährige Pflanzen, die stehen bleiben, sind blass zu sehen. Fruchtfolge-Hinweise beziehen sich auf das Planungsjahr.</span></div>
+        <div class="knopfreihe" style="margin:0"><button class="knopf" id="plan-drucken">🖨️ Drucken</button><button class="knopf" id="plan-zurueck">Zurück zu „jetzt“</button></div>`;
+      $("#plan-drucken").onclick = planDrucken;
+      $("#plan-zurueck").onclick = () => ansichtWechseln(null);
+    }
+  }
   const sel = $("#k-bereich");
   sel.innerHTML = `<option value="">Springe zu …</option><option value="alles">Ganzer Garten</option>` +
     D.garten.bereiche.map(b => `<option value="${b.id}">${esc(b.name)}</option>`).join("");
@@ -3598,7 +3804,7 @@ function panelZeichnen() {
   if (!o) { el.innerHTML = gartenPflanzenUebersichtHTML() + uebersichtHTML(); uebersichtEreignisse(el); gartenPflanzenUebersichtEreignisse(el); return; }
   if (G.auswahlPflanze === o.id && ARTEN[o.art].pflanzbar) { el.innerHTML = pflanzenWahlHTML(o); pflanzenWahlEreignisse(el, o); return; }
   const gp = G.pfl && pflanzung(G.pfl);
-  if (gp && !gp.abgeraeumt) { el.innerHTML = pflanzungPanelHTML(gp); pflanzungPanelEreignisse(el, gp); return; }
+  if (gp && !gp.abgeraeumt) { el.innerHTML = gp.geplant ? geplantPanelHTML(gp) : pflanzungPanelHTML(gp); pflanzungPanelEreignisse(el, gp); return; }
   if (G.setzen) { el.innerHTML = `<div class="karte"><p class="klein" style="margin:0">Setzen läuft – siehe Hinweis über dem Plan.</p></div>`; return; }
   const a = ARTEN[o.art], r = rahmen(o), form = o.form, pflanzbar = !!a.pflanzbar;
   let h = `<div class="karte"><h2>${farbpunkt(o.art)} ${esc(o.name)}${o.fest ? " 🔒" : ""}</h2>`;
@@ -3837,7 +4043,10 @@ function gartenSeite(main) {
       <button class="knopf" id="k-alles" title="Ganzen Garten zeigen" aria-label="Ganzen Garten zeigen">⤢<span class="lang"> Alles</span></button>
       <select id="k-bereich" aria-label="Springe zu Bereich"></select>
       <button class="knopf" id="k-merken" title="Aktuelle Ansicht als Bereich merken" aria-label="Ansicht merken">📍<span class="lang"> Merken</span></button>
+      <span class="trenner"></span>
+      <select id="k-ansicht" aria-label="Ansicht: jetzt oder Planung"></select>
     </div>
+    <div class="plan-banner verborgen" id="plan-banner"></div>
     <div class="garten-layout">
       <div class="plan-spalte"><div class="zeichnen-leiste verborgen" id="zeichnen-leiste"></div>
       <div class="plan-rahmen">
@@ -3845,6 +4054,7 @@ function gartenSeite(main) {
         <div class="massstab" id="massstab"></div>
       </div><p class="klein leise nur-finger" style="margin:6px 2px 0">☝️ Ein Finger scrollt die Seite · ✌️ zwei Finger verschieben und zoomen den Plan</p></div>
       <div class="panel" id="garten-panel"></div>
+      <div id="druck-liste" class="nur-druck"></div>
     </div>
 `);
 
@@ -3856,6 +4066,7 @@ function gartenSeite(main) {
   $("#k-minus").onclick = () => zoomen(1.4);
   $("#k-alles").onclick = allesZeigen;
   $("#k-merken").onclick = bereichMerken;
+  $("#k-ansicht").onchange = e => ansichtWechseln(e.target.value ? +e.target.value : null);
   $("#k-bereich").onchange = e => {
     const v = e.target.value; e.target.value = "";
     if (v === "alles") allesZeigen();
