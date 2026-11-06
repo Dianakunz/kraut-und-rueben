@@ -64,6 +64,12 @@ a{color:var(--gruen)}
 button{font:inherit;color:inherit}
 .verborgen{display:none!important}
 svg.icon{width:24px;height:24px;flex:none}
+h1 svg.icon,h2 svg.icon,h3 svg.icon,p svg.icon,li svg.icon,b svg.icon,.knopf svg.icon,.chip svg.icon,label svg.icon,.unternav svg.icon,.umschalter svg.icon,summary svg.icon,.zurueck svg.icon{width:1.2em;height:1.2em;vertical-align:-.24em}
+h2 svg.icon{color:var(--gruen-dunkel)} [data-modus="dunkel"] h2 svg.icon{color:var(--marke)}
+.knopf.haupt svg.icon,.knopf.gefahr.voll svg.icon{--ak:currentColor}
+.hinweis .sym svg.icon{width:24px;height:24px}
+.tag .sym svg.icon{width:30px;height:30px}
+.abgleich-status svg.icon{width:15px;height:15px;vertical-align:-3px}
 
 /* ============================================================
    AUFBAU: Handy (Standard) und Laptop (ab 900 px Breite)
@@ -535,7 +541,7 @@ dialog .knopfreihe{justify-content:flex-end}
 .ch-sym.sym-i-ernte{color:var(--gelb)}
 .ch-sym.sym-i-abraeumen{color:var(--leise)}
 .ch-sym.sym-i-notiz{color:var(--text)}
-.ch-sym.sym-i-frost,.ch-sym.sym-i-regen{color:var(--blau)}
+.ch-sym.sym-i-frost,.ch-sym.sym-i-starkregen{color:var(--blau)}
 .ch-sym.sym-i-hitze{color:#d9822b}
 .ch-sym.sym-i-trocken{color:var(--gelb)}
 .familien-legende{margin:0 0 10px}
@@ -553,24 +559,52 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <!-- Symbole (werden über <use> eingebunden) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="wm" viewBox="0 0 810 399"><path fill="currentColor" fill-rule="evenodd" d="M709.3 340.0 708.7 337.7 707.0 335.3 704.3 334.0 702.3 334.0 699.7 335.7 694.3 344.3 689.7 349.0 686.7 351.0 683.7 352.0 680.0 352.0 677.0 351.0 674.0 348.3 671.7 344.0 670.7 340.7 669.0 327.7 669.0 302.7 670.0 285.7 669.3 268.0 666.7 260.0 664.0 255.7 658.0 250.3 654.0 248.3 648.7 247.0 641.7 247.0 635.0 248.3 629.3 250.7 622.7 255.0 612.3 266.0 607.3 273.3 602.7 282.3 601.7 282.0 602.7 273.3 602.7 260.7 600.3 254.0 597.0 250.3 593.3 248.3 585.0 247.3 578.0 248.7 573.3 250.7 568.7 254.7 567.7 257.3 567.7 260.0 569.3 263.7 571.0 270.0 571.7 278.7 571.3 303.0 570.3 321.0 563.0 333.0 554.0 342.7 544.3 349.3 537.0 352.3 533.3 353.3 524.3 354.0 519.0 353.3 512.3 351.0 507.7 348.0 501.7 341.7 498.7 336.3 496.7 329.3 497.3 328.7 503.3 328.0 514.7 325.0 528.0 318.7 533.3 315.0 539.7 309.0 546.3 299.3 549.3 292.0 550.7 286.0 550.7 274.7 548.7 267.7 546.7 263.3 542.7 258.0 539.0 254.7 534.3 251.7 528.7 249.3 522.0 248.0 515.0 247.7 507.7 248.3 502.3 249.7 495.7 252.3 490.3 255.3 485.0 259.3 479.7 264.7 472.3 275.0 467.0 286.3 463.0 301.0 462.0 309.3 462.0 324.0 463.0 332.0 466.0 343.7 472.0 356.0 476.0 361.3 482.0 367.3 488.3 371.7 494.3 374.7 501.0 377.0 510.0 378.7 520.7 378.7 527.0 378.0 535.0 376.0 545.0 371.7 556.7 363.3 565.0 354.7 569.3 348.7 570.3 349.3 570.3 366.3 571.7 370.3 574.3 373.3 579.7 375.7 586.7 376.0 591.7 375.0 597.0 372.0 600.0 368.7 601.7 364.0 601.7 345.3 602.7 334.0 604.7 322.0 608.7 307.3 613.7 295.0 621.0 283.0 626.3 277.3 632.0 274.3 634.0 274.3 636.7 276.3 638.0 279.3 638.7 284.7 637.7 334.3 639.0 348.3 641.3 356.7 643.7 361.7 646.0 365.3 650.3 370.0 657.3 374.0 665.3 376.0 673.7 376.0 677.3 375.3 686.7 371.7 693.0 367.3 700.7 359.3 706.7 349.3 709.0 343.3ZM518.0 268.7 521.0 272.0 523.0 280.0 522.7 286.7 519.3 296.3 515.0 302.3 509.3 307.3 501.7 311.3 494.7 313.0 494.0 311.7 494.0 303.7 495.0 295.7 497.7 285.3 501.7 276.7 506.7 270.7 511.0 268.0 515.3 267.7ZM238.0 202.7 233.3 205.0 229.3 209.3 227.0 215.0 227.0 222.7 230.0 229.3 234.3 233.0 239.3 235.0 247.0 235.0 253.0 232.3 257.3 227.7 259.3 222.3 259.3 216.3 258.7 213.3 255.3 207.3 251.7 204.3 247.0 202.3 241.7 202.0ZM288.0 201.3 282.3 203.3 278.3 206.7 275.3 212.3 274.7 215.0 274.7 220.7 277.3 227.7 280.7 231.3 285.3 234.0 288.3 234.7 293.7 234.7 299.3 232.7 304.3 228.3 307.0 222.3 307.0 215.3 306.0 212.0 303.7 207.7 300.3 204.3 297.0 202.3 293.7 201.3ZM59.7 208.0 56.7 211.3 54.3 217.3 54.3 223.0 56.0 227.0 59.3 230.0 63.7 230.3 72.7 226.3 74.7 226.7 73.0 246.7 65.0 317.3 65.0 322.3 62.0 351.3 61.3 377.3 62.0 380.0 64.0 383.7 69.0 387.0 73.0 388.0 82.0 388.0 87.7 386.7 93.3 384.0 96.3 381.3 98.3 378.3 99.7 371.7 98.7 360.3 98.7 336.0 99.7 325.7 99.7 318.0 101.0 304.3 102.3 303.0 104.0 303.0 105.0 303.7 113.0 319.3 122.3 335.3 136.7 357.3 147.7 371.0 157.0 380.3 165.3 387.0 173.7 392.0 182.0 395.7 190.3 398.0 198.3 399.0 206.7 398.7 213.3 397.3 219.3 395.0 224.3 391.7 227.0 389.0 228.7 386.0 229.3 383.0 228.3 380.0 226.7 378.7 219.3 378.3 209.3 375.3 204.0 372.7 198.0 368.7 189.3 361.7 180.0 352.3 166.7 336.3 151.7 315.7 139.7 296.7 141.3 295.3 148.0 293.0 156.0 289.0 168.7 280.3 177.3 271.7 184.7 260.3 187.0 254.7 188.7 247.3 188.7 230.7 185.7 221.0 182.7 215.3 179.7 211.3 171.3 203.7 166.7 200.7 160.0 197.7 149.3 194.3 131.0 192.3 122.0 192.3 109.3 193.3 94.3 195.7 74.0 201.3 66.3 204.3ZM142.0 220.3 148.7 226.7 151.0 231.0 152.7 236.7 153.0 244.0 152.0 249.7 148.0 259.7 145.0 264.0 140.0 269.3 131.7 275.3 125.0 278.3 118.0 280.3 104.7 281.7 103.7 280.0 109.7 227.7 110.3 217.7 111.3 216.7 115.7 216.0 126.7 215.7 134.3 217.0ZM449.7 278.7 444.7 269.0 437.0 260.3 429.0 255.3 423.3 253.3 418.0 252.3 409.3 252.7 404.3 254.0 398.0 257.0 393.0 260.7 389.0 264.7 381.7 274.3 381.0 273.7 381.7 255.3 384.0 223.3 384.0 205.3 382.7 197.3 379.3 190.7 375.3 186.7 371.3 184.3 366.0 183.0 361.0 182.7 355.7 183.3 349.0 185.3 343.3 188.3 339.3 191.7 336.0 197.0 335.7 200.3 336.3 202.7 338.3 204.3 342.0 203.7 346.3 204.3 349.3 208.0 351.0 215.0 351.3 240.0 349.0 297.3 348.7 340.7 340.0 350.7 336.3 353.3 331.3 355.3 328.3 355.3 324.3 353.7 322.0 351.7 320.3 349.0 317.7 340.0 316.3 326.7 316.7 299.7 320.0 260.0 317.7 254.3 313.7 251.3 309.0 250.0 302.3 250.0 297.0 251.3 293.0 253.3 289.3 256.7 287.3 261.0 287.0 286.3 285.0 308.3 283.0 320.0 278.0 336.3 272.7 345.3 267.0 351.3 261.0 353.7 257.3 353.3 254.0 351.3 252.0 348.3 250.7 344.7 249.0 333.7 249.0 319.3 252.0 274.7 251.3 262.7 249.0 257.3 245.0 253.7 239.0 251.7 232.3 251.7 224.7 253.3 220.3 255.3 216.3 259.0 215.0 261.3 215.0 265.0 218.0 271.0 219.0 275.7 219.0 293.0 217.0 317.7 216.7 338.0 218.0 351.7 220.0 359.0 225.3 369.0 230.0 373.7 237.7 378.0 245.3 380.0 256.7 379.7 262.3 378.0 269.0 374.7 273.7 371.3 279.7 365.0 283.7 359.3 287.3 352.3 288.7 353.0 291.0 361.3 296.0 369.7 302.0 374.7 310.0 378.0 318.0 378.7 324.7 377.7 329.7 376.0 334.3 373.7 340.3 369.3 346.0 363.7 350.3 358.0 351.7 358.3 353.0 364.0 357.0 371.0 362.3 375.3 368.3 378.0 378.7 380.0 391.0 380.0 398.7 379.0 409.3 376.0 422.3 369.3 434.0 359.3 441.7 349.3 448.7 335.0 451.3 326.3 453.7 312.3 453.7 296.0 451.7 285.0ZM408.0 277.3 411.7 279.0 414.7 282.0 417.7 287.7 420.0 295.7 420.7 313.0 420.0 319.3 417.7 329.3 415.0 337.3 412.3 343.0 408.7 348.7 404.0 354.0 398.7 358.0 392.0 360.3 386.3 360.3 383.7 359.3 381.3 356.7 380.0 351.3 379.3 344.7 379.7 325.7 380.7 316.7 382.7 307.3 386.7 296.7 391.0 288.7 394.0 284.7 400.0 279.3 404.7 277.3ZM221.0 54.0 217.3 52.3 210.3 51.7 206.0 52.3 198.3 55.7 194.7 58.3 188.7 65.0 184.0 71.7 180.7 79.0 179.7 80.0 179.0 79.7 179.3 69.0 178.3 63.0 176.0 58.7 173.7 56.3 170.0 54.3 165.7 53.3 161.7 53.3 156.0 54.3 148.0 58.3 143.3 63.0 142.0 66.7 142.0 68.7 143.0 71.0 144.7 72.0 149.7 72.0 152.0 75.3 152.7 79.7 152.7 98.0 150.3 135.7 150.0 155.0 151.0 158.7 153.3 161.7 157.7 163.7 166.3 163.7 173.7 160.7 176.7 157.3 178.0 154.3 178.0 139.3 180.0 120.0 182.7 108.0 187.7 93.7 191.0 87.0 197.0 79.0 202.0 75.7 205.3 75.3 207.0 76.0 209.0 78.0 210.7 81.3 213.0 83.0 217.3 83.0 219.0 82.3 223.7 78.7 225.7 75.7 227.3 71.0 227.7 64.0 225.7 58.7ZM788.7 28.0 787.3 26.3 784.7 24.7 782.0 24.0 777.0 24.0 772.3 25.3 769.7 27.0 767.7 29.3 766.7 32.0 766.0 76.7 765.0 78.0 758.7 76.7 754.7 76.7 749.0 77.7 744.3 79.3 736.3 84.3 730.0 91.3 727.0 96.0 723.3 103.7 720.0 115.7 719.0 129.3 720.7 140.7 716.3 145.7 713.7 147.3 710.0 147.7 708.3 147.0 705.7 144.0 704.0 137.7 703.3 122.7 704.7 104.7 704.7 94.3 703.7 89.3 701.7 85.0 698.7 81.7 694.3 79.3 691.0 78.7 683.0 79.3 676.7 82.3 669.3 89.0 662.7 98.7 662.0 98.3 662.7 93.7 662.7 85.7 661.3 81.7 659.3 79.3 654.3 77.3 649.7 77.3 644.0 79.3 641.3 81.7 640.3 83.7 641.7 95.7 640.3 135.7 639.7 137.0 633.0 143.3 629.3 145.0 627.0 145.0 624.7 144.0 622.0 141.0 620.7 138.0 619.7 132.7 619.0 116.0 619.7 103.7 621.7 87.0 621.7 81.3 621.0 79.3 618.7 76.7 614.0 75.0 606.7 75.3 603.7 76.7 601.0 79.3 600.0 81.3 598.0 110.7 596.0 121.0 594.0 127.7 590.3 135.0 586.3 139.3 583.0 140.7 580.7 140.0 578.3 137.7 577.3 135.7 576.3 129.7 576.3 118.0 579.3 90.3 579.3 81.7 578.3 78.3 575.3 74.7 571.0 73.0 567.0 72.7 562.3 73.3 558.0 75.3 555.7 77.3 554.0 80.0 554.0 83.0 557.0 89.0 557.0 99.3 555.0 119.3 555.0 133.3 557.0 143.7 559.0 148.3 562.7 153.0 568.7 157.0 574.0 158.3 581.3 158.0 586.7 156.0 592.7 151.7 596.3 147.3 599.3 141.7 600.7 141.0 603.0 148.3 605.7 153.0 608.0 155.7 613.3 159.0 618.0 160.0 626.3 159.0 633.0 155.3 639.7 149.3 640.3 150.0 641.0 156.3 642.7 159.0 646.3 161.0 649.3 161.3 655.7 160.3 658.0 159.0 661.0 155.0 661.7 137.3 662.7 130.3 665.7 118.3 668.7 110.3 671.0 105.7 674.3 101.3 678.3 97.7 681.3 97.0 683.0 98.7 684.0 102.0 684.0 111.3 683.0 124.7 683.0 137.3 684.0 145.7 686.0 152.0 688.3 156.0 694.0 161.0 699.7 162.7 705.7 162.7 709.7 161.7 716.3 158.0 724.0 150.3 729.7 157.3 735.3 161.0 741.0 162.7 747.3 162.7 750.7 162.0 756.7 159.0 762.7 153.3 768.3 143.7 769.3 144.0 770.0 146.7 773.3 153.3 777.3 157.3 780.0 159.0 784.7 160.3 790.3 160.3 798.0 157.7 801.3 155.3 805.7 150.7 809.7 143.3 809.7 140.7 808.3 138.3 805.3 137.7 799.3 143.7 796.0 145.0 794.3 145.0 791.3 143.7 789.7 141.7 787.3 135.0 785.7 117.7 785.7 87.7 787.7 53.0 789.7 33.0ZM760.0 90.3 763.7 91.7 765.3 93.7 765.3 112.0 764.0 123.7 762.0 131.0 758.0 139.3 753.7 144.0 750.7 145.3 749.0 145.3 746.7 144.3 744.7 142.3 742.7 138.3 741.7 134.7 741.0 129.0 741.7 114.7 745.7 101.7 749.3 95.7 753.7 92.0 755.7 91.0ZM502.7 44.7 502.0 43.0 499.0 41.0 481.7 41.7 480.7 40.7 483.3 14.3 482.3 11.7 480.3 9.7 478.0 8.3 475.0 7.7 470.0 7.7 464.0 9.3 461.7 10.7 459.0 13.7 458.0 15.7 457.0 20.7 454.7 43.0 453.7 44.0 445.7 44.7 440.3 46.0 438.0 47.7 436.0 51.3 435.7 57.0 436.3 59.0 438.3 61.0 440.3 61.7 452.3 61.0 452.7 66.7 450.7 95.0 451.0 124.3 443.7 133.3 439.7 136.3 435.7 138.0 432.0 138.0 430.3 137.3 427.0 134.3 424.7 129.0 422.7 118.7 422.3 99.7 423.7 70.0 424.7 63.0 424.7 54.3 421.3 49.7 418.0 48.0 415.3 47.3 410.3 47.3 406.0 48.3 401.0 51.3 398.0 55.7 398.0 72.0 397.0 94.7 394.0 113.3 391.7 120.7 388.0 128.7 382.0 135.7 378.3 137.3 374.7 137.3 370.7 134.7 368.7 131.0 367.0 123.0 366.7 99.7 368.7 71.7 368.7 61.3 367.7 57.0 365.7 53.3 362.0 50.3 357.3 49.0 349.3 49.3 346.0 50.3 340.3 53.7 338.3 56.0 337.3 58.3 337.3 60.3 340.0 65.7 341.0 70.7 341.0 82.0 339.7 105.0 340.0 128.7 333.3 136.3 329.3 139.3 324.0 141.3 321.0 141.0 316.3 137.7 314.7 134.7 312.7 127.0 311.7 118.3 311.7 95.0 313.0 69.7 310.3 66.0 310.7 60.3 308.0 56.3 303.7 53.3 297.7 51.3 291.0 50.3 278.7 50.7 266.0 54.0 256.7 58.7 250.7 63.0 246.0 67.3 241.3 72.7 237.0 79.0 231.0 90.3 227.0 101.7 224.3 117.3 224.3 130.0 225.0 134.7 227.3 142.7 231.7 151.0 236.3 156.0 240.3 159.0 244.3 161.0 251.3 162.7 258.7 162.7 263.3 161.7 267.7 160.0 272.7 157.0 281.7 148.3 288.0 138.0 289.0 138.7 289.0 140.3 291.3 147.0 295.0 153.0 300.3 157.7 304.7 159.7 309.0 160.7 316.0 160.7 319.7 160.0 326.7 157.0 333.7 152.0 342.0 142.0 343.0 142.3 345.0 147.3 347.3 150.7 351.3 154.7 356.3 158.0 365.3 160.3 371.3 160.3 375.0 159.7 382.0 157.0 389.7 151.3 392.7 148.3 396.0 143.7 399.7 137.0 401.0 138.3 402.0 143.0 405.7 149.7 411.3 154.7 419.0 157.7 425.3 158.0 429.3 157.3 436.3 154.7 441.3 151.3 446.7 146.3 453.0 137.7 454.3 138.3 456.0 143.0 460.3 149.3 464.7 153.0 470.3 156.0 475.7 157.3 482.7 157.7 487.3 157.0 493.7 155.0 500.3 151.3 507.7 144.7 514.3 135.0 516.3 131.0 517.7 126.3 517.3 124.3 515.7 121.3 513.0 120.0 511.3 120.0 508.3 122.3 503.0 130.3 500.0 133.3 495.3 136.0 493.0 136.7 488.7 136.7 485.0 135.0 481.7 131.0 480.0 127.0 478.7 120.3 477.7 106.7 477.7 90.0 479.3 59.3 480.0 58.7 493.3 57.7 496.3 57.0 499.7 55.0 501.7 52.3 502.7 49.7ZM285.3 68.3 287.0 70.3 286.0 95.7 284.0 108.7 280.7 120.3 276.0 130.0 274.0 133.0 269.0 138.0 264.3 140.0 260.7 139.7 259.3 139.0 255.7 135.0 253.7 129.7 252.7 121.0 253.7 107.0 257.0 94.0 261.7 84.0 265.0 79.0 270.3 73.3 273.0 71.3 278.0 69.0 280.7 68.3ZM123.7 2.3 119.0 0.3 110.0 0.0 102.7 1.3 97.3 3.3 94.7 5.0 92.7 8.0 93.0 15.3 92.0 18.7 83.0 34.0 76.0 43.3 67.7 52.7 58.7 61.3 50.0 68.3 49.0 68.0 55.3 15.7 55.3 10.7 54.7 7.7 53.3 5.3 49.7 2.3 45.3 1.0 36.3 0.7 26.3 2.7 17.0 6.3 13.0 8.7 9.3 12.3 7.3 17.3 7.3 20.7 8.7 24.0 10.0 25.3 12.3 26.3 21.7 24.0 22.7 25.3 22.7 31.3 15.7 90.3 9.0 138.3 6.0 150.0 4.3 153.0 0.7 156.3 0.0 158.0 0.3 160.7 3.7 165.3 6.3 167.0 12.3 168.7 19.7 168.7 24.0 168.0 31.7 165.0 37.7 159.3 39.7 154.7 40.7 149.3 45.7 93.0 49.0 89.7 50.0 89.7 51.0 90.7 56.0 101.0 72.0 129.7 81.0 143.7 87.7 152.3 97.0 161.0 102.0 164.0 109.7 166.7 114.3 167.3 122.3 167.0 129.7 165.0 134.7 162.7 139.0 159.7 144.0 154.3 145.7 150.7 145.7 147.3 145.0 145.3 143.7 144.0 141.3 144.0 136.7 145.3 132.3 145.3 128.3 144.0 120.3 138.3 111.7 129.0 104.0 118.7 94.0 103.3 75.3 72.3 76.0 71.0 85.7 63.0 101.7 47.3 110.7 37.3 120.3 25.0 124.3 18.7 127.3 11.7 127.3 7.7 126.7 5.7Z"/></symbol>
-    <symbol id="i-start" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
-    <symbol id="i-garten" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-8"/><path d="M12 12C12 8 9.5 5.5 5 5.5 5 10 7.5 12 12 12z"/><path d="M12 10c0-3.6 2.4-6 7-6 0 4.4-2.6 6-7 6z"/><path d="M4 20h16"/></g></symbol>
-    <symbol id="i-planung" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.5 14.5l2 2 4-4"/></g></symbol>
-    <symbol id="i-chronik" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4v4.5H8"/><path d="M12 7.5V12l3 2"/></g></symbol>
-    <symbol id="i-wissen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5.5A2.5 2.5 0 0 1 7 3h12.5v15H7a2.5 2.5 0 0 0-2.5 2.5z"/><path d="M4.5 20.5V5.5"/><path d="M19.5 18v3H7"/><path d="M9 7.5h6"/></g></symbol>
-    <symbol id="i-vorrat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8v3H8z"/><path d="M7 6h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M5 11.5h14"/><path d="M9 15.5h6"/></g></symbol>
+    <symbol id="i-start" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11.2 12 4l8.5 7.2"/><path d="M5.5 9.7V20h13V9.7"/><path d="M10 20v-5.2h4V20"/><circle cx="12" cy="10.6" r="1.5" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-garten" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20.5h18"/><path d="M4.8 20.5c1.4-3 12.9-3 14.4 0"/><path d="M12 18.2c-2.1-1.4-2.9-4.2-1.7-6.4h3.4c1.2 2.2.4 5-1.7 6.4z" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/><path d="M12 11.8c-.4-2.9-2.4-4.6-5-4.7.2 2.7 2.3 4.4 5 4.7z"/><path d="M12 11.8c.4-2.9 2.4-4.6 5-4.7-.2 2.7-2.3 4.4-5 4.7z"/></g></symbol>
+    <symbol id="i-planung" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="12.5" height="17" rx="2"/><path d="M7.3 8h6M7.3 11.5h4.2"/><path d="M12.8 20.5v-2.3l6.6-6.6 2.3 2.3-6.6 6.6z" style="stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-chronik" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h11.5A1.5 1.5 0 0 1 19 5v15.5H7.5A1.5 1.5 0 0 1 6 19z"/><path d="M6 17.5h13"/><path d="M10.5 3.5v6.3l1.8-1.4 1.8 1.4V3.5" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-wissen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.6C9.9 5.1 6.6 4.6 3.5 5.6v13.3c3.1-1 6.4-.5 8.5 1 2.1-1.5 5.4-2 8.5-1V5.6c-3.1-1-6.4-.5-8.5 1z"/><path d="M12 6.6v13.3"/><path d="M14.6 14.6c0-2.5 1.7-4.2 4-4.2 0 2.5-1.7 4.2-4 4.2z" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-vorrat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="3.5" width="11" height="3" rx="1"/><path d="M7.5 6.5C6 7.6 5.5 9 5.5 10.5V18a2.5 2.5 0 0 0 2.5 2.5h8a2.5 2.5 0 0 0 2.5-2.5v-7.5c0-1.5-.5-2.9-2-4"/><rect x="8.5" y="11" width="7" height="5.5" rx="1" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
     <symbol id="i-hilfe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.3-2.5 3.8"/><path d="M12 17.2v.1"/></g></symbol>
-    <symbol id="i-zahnrad" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4.3a2 2 0 0 1-2 0l-.2-.1a2 2 0 0 0-2.7.7l-.2.4a2 2 0 0 0 .7 2.7l.2.1a2 2 0 0 1 1 1.7v.5a2 2 0 0 1-1 1.8l-.2.1a2 2 0 0 0-.7 2.7l.2.4a2 2 0 0 0 2.7.7l.2-.1a2 2 0 0 1 2 0l.4.3a2 2 0 0 1 1 1.7v.2a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.2a2 2 0 0 1 1-1.7l.4-.3a2 2 0 0 1 2 0l.2.1a2 2 0 0 0 2.7-.7l.2-.4a2 2 0 0 0-.7-2.7l-.2-.1a2 2 0 0 1-1-1.8v-.5a2 2 0 0 1 1-1.7l.2-.1a2 2 0 0 0 .7-2.7l-.2-.4a2 2 0 0 0-2.7-.7l-.2.1a2 2 0 0 1-2 0l-.4-.3a2 2 0 0 1-1-1.7V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></g></symbol>
-    <symbol id="i-saat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18H6z"/><path d="M6 8h12"/><path d="M12 11v6"/><path d="M12 14c0-2 1.5-3 3-3 0 2-1.5 3-3 3z"/><path d="M12 15c0-1.6-1.2-2.5-2.5-2.5 0 1.6 1.2 2.5 2.5 2.5z"/></g></symbol>
-    <symbol id="i-pflanz" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-8"/><path d="M12 13c0-3 2.5-5 6-5 0 3.5-2.5 5-6 5z"/><path d="M12 11C12 8 9.8 6 6.5 6c0 3 2.2 5 5.5 5z"/><path d="M5 20h14"/></g></symbol>
-    <symbol id="i-ernte" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-1.6 9a1.5 1.5 0 0 1-1.5 1.2H7.1A1.5 1.5 0 0 1 5.6 19z"/><path d="M8 10a4 4 0 0 1 8 0"/><path d="M9 14v3M12 14v3M15 14v3"/></g></symbol>
-    <symbol id="i-abraeumen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l-6 10"/><path d="M5 12l6 3.5-2.5 5.5L2.5 17z"/><path d="M6.5 18.5l1.5-3M4.5 16.5l2-2.5"/><path d="M15 21h6"/></g></symbol>
-    <symbol id="i-notiz" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 15.5h8M8 19h5"/></g></symbol>
-    <symbol id="i-frost" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M9.5 4.5L12 6l2.5-1.5M9.5 19.5L12 18l2.5 1.5"/></g></symbol>
-    <symbol id="i-hitze" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></g></symbol>
-    <symbol id="i-regen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15a4 4 0 0 1-.3-8 5.5 5.5 0 0 1 10.6 1.3A3.5 3.5 0 0 1 17 15z"/><path d="M8 18l-1 2.5M12 18l-1 2.5M16 18l-1 2.5"/></g></symbol>
-    <symbol id="i-trocken" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s5.5 6.3 5.5 10.2a5.5 5.5 0 0 1-11 0C6.5 9.3 12 3 12 3z"/><path d="M4 4l16 16"/></g></symbol>
-    <symbol id="i-ort" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></g></symbol>
+    <symbol id="i-zahnrad" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2.8l1.6 2.3 2.7-.6.7 2.7 2.6 1-.8 2.6 1.9 2-1.9 2 .8 2.6-2.6 1-.7 2.7-2.7-.6L12 21.2l-1.6-2.3-2.7.6-.7-2.7-2.6-1 .8-2.6L3.3 12l1.9-2-.8-2.6 2.6-1 .7-2.7 2.7.6z"/></g></symbol>
+    <symbol id="i-ort" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-saat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="3.5" width="13" height="17" rx="1.5"/><path d="M5.5 8h13"/><ellipse cx="9.8" cy="13" rx="1.1" ry="1.5" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/><ellipse cx="14.2" cy="12.4" rx="1.1" ry="1.5" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/><ellipse cx="12" cy="16.6" rx="1.1" ry="1.5" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-pflanz" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 18.9l1.5 1.5 3.4-3.4-1.5-1.5z" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/><path d="M8.6 15.4c-.8-2.2 0-5.2 2.3-7.4 2-2 4.8-3.6 8.6-4.5-.9 3.8-2.5 6.6-4.5 8.6-2.2 2.3-5.2 3.1-7.4 2.3z"/><path d="M10.4 13.6l5.6-5.6"/></g></symbol>
+    <symbol id="i-ernte" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11.5h17l-1.7 7.8a1.8 1.8 0 0 1-1.8 1.4H7a1.8 1.8 0 0 1-1.8-1.4z"/><path d="M7.3 11.5a4.7 4.7 0 0 1 9.4 0"/><path d="M9.3 14.5v3.2M12 14.5v3.2M14.7 14.5v3.2"/><circle cx="10" cy="9.2" r="1.7" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/><circle cx="14" cy="8.6" r="1.7" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-abraeumen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l10.5-10.5"/><path d="M11.5 6.5l6 6" style="stroke:var(--ak,var(--rot))"/><path d="M12.3 7.3l1.5-1.5M14.5 9.5 16 8M16.7 11.7l1.5-1.5"/></g></symbol>
+    <symbol id="i-notiz" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 3.5H15l3.5 3.5v13.5h-13z"/><path d="M15 3.5V7h3.5" style="stroke:var(--ak,var(--rot))"/><path d="M8.5 11.5h7M8.5 14.5h7M8.5 17.5h4.5"/></g></symbol>
+    <symbol id="i-fruchtfolge" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18.8 13a7 7 0 0 1-12.3 3.8"/><path d="M5.2 11a7 7 0 0 1 12.3-3.8"/><path d="M17.8 3.6v3.8H14"/><path d="M6.2 20.4v-3.8H10"/><circle cx="12" cy="12" r="1.8" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-nachbarn" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20.5h18"/><path d="M8 20.5v-7"/><path d="M8 13.5c0-3-2-5-4.5-5 0 3 2 5 4.5 5z"/><path d="M8 16c0-2.6 1.9-4.3 4.2-4.3 0 2.6-1.9 4.3-4.2 4.3z"/><circle cx="16.5" cy="17.2" r="2.6" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/><path d="M16.5 14.6c-.4-2.2.6-4 2.7-4.7.3 2.2-.8 3.9-2.7 4.7z"/></g></symbol>
+    <symbol id="i-steckbrief" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.6V5A1.5 1.5 0 0 1 5 3.5h7.6l8 8-9 9z"/><circle cx="8" cy="8" r="1.6" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-kalender" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M7.5 13h2M11 13h2M14.5 13h2M7.5 16.5h2M11 16.5h2"/><rect x="14.3" y="15.6" width="2.4" height="2" rx=".4" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-quellen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="15.5" width="16" height="4.5" rx="1"/><rect x="5.5" y="11" width="13" height="4.5" rx="1" style="stroke:var(--ak,var(--rot))"/><rect x="4.5" y="6.5" width="14" height="4.5" rx="1"/><path d="M7.5 6.5v4.5M8.5 11v4.5M7 15.5V20"/></g></symbol>
+    <symbol id="i-warnung" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 21 19.5H3z"/><path d="M12 10v4.2"/><circle cx="12" cy="16.9" r=".9" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".9" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.7 2.7L16.2 9.5" style="stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-drucken" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3.5h10V9"/><rect x="3.5" y="9" width="17" height="7.5" rx="2"/><path d="M7 14h10v6.5H7z"/><circle cx="17" cy="12" r=".9" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-bearbeiten" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4.5L15.8 4.7l3.5 3.5L8.5 19z"/><path d="M13.8 6.7l3.5 3.5"/><path d="M15.8 4.7l3.5 3.5" style="stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-loeschen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7h15"/><path d="M9 7V4.5h6V7"/><path d="M6.5 7l1 13h9l1-13"/><path d="M10 11v5.5M14 11v5.5"/></g></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></g></symbol>
+    <symbol id="i-alles" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></g></symbol>
+    <symbol id="i-abgleich" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.4-8 5.8 5.8 0 0 1 11.1 1.4A3.4 3.4 0 0 1 17.4 18"/><path d="M12 12.5v6.5"/><path d="M9.5 16.5 12 19l2.5-2.5" style="stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-daten" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="5" rx="1.2"/><path d="M5 9v10.5h14V9"/><path d="M10 13h4" style="stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-darstellung" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-schloss" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><circle cx="12" cy="15.5" r="1.4" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-offen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 7.7-1.5"/><circle cx="12" cy="15.5" r="1.4" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-liste" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="5" cy="6.5" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="17.5" r="1"/></g></symbol>
+    <symbol id="i-w-klar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/></g></symbol>
+    <symbol id="i-w-teils" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/><path d="M8.5 2.8v1.4M2.8 8.5h1.4M4.5 4.5l1 1M12.5 4.5l-1 1"/><path d="M9 19.5h8.5a3.3 3.3 0 0 0 .3-6.6 4.8 4.8 0 0 0-9.2 1.1A2.8 2.8 0 0 0 9 19.5z"/></g></symbol>
+    <symbol id="i-w-wolke" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18.5h10a3.8 3.8 0 0 0 .4-7.6 5.5 5.5 0 0 0-10.6 1.4A3.1 3.1 0 0 0 7 18.5z"/></g></symbol>
+    <symbol id="i-w-nebel" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16M6 12.5h12M4 16h16M7 19.5h10"/></g></symbol>
+    <symbol id="i-w-regen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15a3.8 3.8 0 0 1-.4-7.6 5.5 5.5 0 0 1 10.6 1.4A3.1 3.1 0 0 1 17 15z"/><path d="M8.5 17.5 7.5 20M12.5 17.5l-1 2.5M16.5 17.5l-1 2.5" style="stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-w-schnee" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15a3.8 3.8 0 0 1-.4-7.6 5.5 5.5 0 0 1 10.6 1.4A3.1 3.1 0 0 1 17 15z"/><circle cx="8.5" cy="18.5" r=".9" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/><circle cx="12" cy="20" r=".9" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/><circle cx="15.5" cy="18.5" r=".9" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-w-gewitter" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15a3.8 3.8 0 0 1-.4-7.6 5.5 5.5 0 0 1 10.6 1.4A3.1 3.1 0 0 1 17 15z"/><path d="M12.8 13.5l-2.3 3.7h3l-2.3 3.8" style="stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-frost" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M9.6 4.6 12 6l2.4-1.4M9.6 19.4 12 18l2.4 1.4"/><circle cx="12" cy="12" r="1.6" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-hitze" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14.6V5a2 2 0 0 1 4 0v9.6a3.8 3.8 0 1 1-4 0z"/><circle cx="12" cy="17.6" r="1.8" style="fill:var(--ak,var(--rot));stroke:var(--ak,var(--rot))"/><path d="M12 15.8V9" style="stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-trocken" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5s5.5 6.2 5.5 10.2a5.5 5.5 0 0 1-11 0C6.5 9.7 12 3.5 12 3.5z"/><path d="M4.5 4.5l15 15" style="stroke:var(--ak,var(--rot))"/></g></symbol>
+    <symbol id="i-starkregen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13a3.8 3.8 0 0 1-.4-7.6 5.5 5.5 0 0 1 10.6 1.4A3.1 3.1 0 0 1 17 13z"/><path d="M8 15.5l-1.5 4M11.5 15.5 10 19.5M15 15.5l-1.5 4M18 15.5l-1 2.5" style="stroke:var(--ak,var(--rot))"/></g></symbol>
+  <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  </g>
 </svg>
 
 <!-- Laptop: Seitenleiste -->
@@ -629,13 +663,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.7.2"></script>
+<script src="pflanzen.js?v=0.8.0"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.7.2";
+const APP_VERSION = "0.8.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -918,14 +952,14 @@ function ortsauswahl(ziel, nachher) {
 const GRENZEN = { frost: 0, bodenfrost: 4, hitze: 30, trockenVorher: 5, trockenNachher: 3, trockenWaerme: 12 };
 
 const WETTERCODES = {
-  0: ["☀️", "Klar"], 1: ["🌤️", "Überwiegend klar"], 2: ["⛅", "Teils bewölkt"], 3: ["☁️", "Bedeckt"],
-  45: ["🌫️", "Nebel"], 48: ["🌫️", "Nebel mit Reif"],
-  51: ["🌦️", "Leichter Niesel"], 53: ["🌦️", "Niesel"], 55: ["🌧️", "Starker Niesel"], 56: ["🌧️", "Gefrierender Niesel"], 57: ["🌧️", "Gefrierender Niesel"],
-  61: ["🌧️", "Leichter Regen"], 63: ["🌧️", "Regen"], 65: ["🌧️", "Starker Regen"], 66: ["🌧️", "Gefrierender Regen"], 67: ["🌧️", "Gefrierender Regen"],
-  71: ["🌨️", "Leichter Schnee"], 73: ["🌨️", "Schnee"], 75: ["❄️", "Starker Schnee"], 77: ["🌨️", "Schneegriesel"],
-  80: ["🌦️", "Regenschauer"], 81: ["🌦️", "Regenschauer"], 82: ["⛈️", "Heftige Schauer"],
-  85: ["🌨️", "Schneeschauer"], 86: ["🌨️", "Schneeschauer"],
-  95: ["⛈️", "Gewitter"], 96: ["⛈️", "Gewitter mit Hagel"], 99: ["⛈️", "Gewitter mit Hagel"],
+  0: ["i-w-klar", "Klar"], 1: ["i-w-teils", "Überwiegend klar"], 2: ["i-w-teils", "Teils bewölkt"], 3: ["i-w-wolke", "Bedeckt"],
+  45: ["i-w-nebel", "Nebel"], 48: ["i-w-nebel", "Nebel mit Reif"],
+  51: ["i-w-regen", "Leichter Niesel"], 53: ["i-w-regen", "Niesel"], 55: ["i-w-regen", "Starker Niesel"], 56: ["i-w-regen", "Gefrierender Niesel"], 57: ["i-w-regen", "Gefrierender Niesel"],
+  61: ["i-w-regen", "Leichter Regen"], 63: ["i-w-regen", "Regen"], 65: ["i-w-regen", "Starker Regen"], 66: ["i-w-regen", "Gefrierender Regen"], 67: ["i-w-regen", "Gefrierender Regen"],
+  71: ["i-w-schnee", "Leichter Schnee"], 73: ["i-w-schnee", "Schnee"], 75: ["i-w-schnee", "Starker Schnee"], 77: ["i-w-schnee", "Schneegriesel"],
+  80: ["i-w-regen", "Regenschauer"], 81: ["i-w-regen", "Regenschauer"], 82: ["i-w-gewitter", "Heftige Schauer"],
+  85: ["i-w-schnee", "Schneeschauer"], 86: ["i-w-schnee", "Schneeschauer"],
+  95: ["i-w-gewitter", "Gewitter"], 96: ["i-w-gewitter", "Gewitter mit Hagel"], 99: ["i-w-gewitter", "Gewitter mit Hagel"],
 };
 
 async function wetterHolen() {
@@ -976,17 +1010,17 @@ function wetterHinweise({ vorher, kommend }) {
   const bodenTage = kommend.filter(t => t.min > GRENZEN.frost && t.min < GRENZEN.bodenfrost);
   if (frostTage.length) {
     const kalt = frostTage.reduce((a, b) => (b.min < a.min ? b : a));
-    h.push({ art: "frost", sym: "❄️", titel: "Frost erwartet",
+    h.push({ art: "frost", sym: "i-frost", titel: "Frost erwartet",
       text: `Tiefstwerte bis ${zahl(kalt.min, 1)} °C (${frostTage.map(t => tagName(t.datum)).join(", ")}). Empfindliche Pflanzen abdecken oder hereinholen, Gießwasser und Leitungen schützen.` });
   } else if (bodenTage.length) {
     const kalt = bodenTage.reduce((a, b) => (b.min < a.min ? b : a));
-    h.push({ art: "frost", sym: "🌡️", titel: "Bodenfrost möglich",
+    h.push({ art: "frost", sym: "i-frost", titel: "Bodenfrost möglich",
       text: `Tiefstwert ${zahl(kalt.min, 1)} °C (${bodenTage.map(t => tagName(t.datum)).join(", ")}). In klaren, windstillen Nächten kann es am Boden einige Grad kälter sein als angezeigt.` });
   }
   const heiss = kommend.filter(t => t.max >= GRENZEN.hitze);
   if (heiss.length) {
     const max = Math.max(...heiss.map(t => t.max));
-    h.push({ art: "hitze", sym: "🔥", titel: "Hitze",
+    h.push({ art: "hitze", sym: "i-hitze", titel: "Hitze",
       text: `Bis ${zahl(max, 0)} °C (${heiss.map(t => tagName(t.datum)).join(", ")}). Früh morgens oder abends gießen, empfindliche Pflanzen schattieren.` });
   }
   const regenVorher = vorher.reduce((s, t) => s + (t.regen || 0), 0);
@@ -994,26 +1028,26 @@ function wetterHinweise({ vorher, kommend }) {
   const regenNachher = naechste3.reduce((s, t) => s + (t.regen || 0), 0);
   const warm = naechste3.length && naechste3.reduce((s, t) => s + t.max, 0) / naechste3.length >= GRENZEN.trockenWaerme;
   if (vorher.length >= 5 && regenVorher < GRENZEN.trockenVorher && regenNachher < GRENZEN.trockenNachher && warm) {
-    h.push({ art: "warn", sym: "💧", titel: "Trockenphase",
+    h.push({ art: "warn", sym: "i-trocken", titel: "Trockenphase",
       text: `In den letzten 7 Tagen nur ${zahl(regenVorher, 1)} mm Regen, und auch in den nächsten Tagen kommt kaum etwas dazu. Beete, Jungpflanzen und Kübel gießen.` });
   }
-  if (!h.length) h.push({ art: "ok", sym: "✅", titel: "Keine Warnungen", text: "Kein Frost, keine Hitze und keine Trockenphase in Sicht." });
+  if (!h.length) h.push({ art: "ok", sym: "i-check", titel: "Keine Warnungen", text: "Kein Frost, keine Hitze und keine Trockenphase in Sicht." });
   return { hinweise: h, regenVorher };
 }
 
 async function wetterKarte(ziel) {
   const ort = D.einstellungen.standort;
   if (!ort) {
-    ziel.innerHTML = `<h2>🌦️ Wetter</h2>
+    ziel.innerHTML = `<h2>${icon("i-w-teils")} Wetter</h2>
       <p>Trag deinen Standort ein, dann siehst du hier die Vorhersage mit Frost- und Trockenwarnungen.</p>
       <a class="knopf haupt" href="#einstellungen">${icon("i-ort")} Standort eintragen</a>`;
     return;
   }
-  ziel.innerHTML = `<h2>🌦️ Wetter <span class="leise klein" style="font-weight:400">· ${esc(ort.name)}</span></h2><p class="leise">Wetter wird geladen …</p>`;
+  ziel.innerHTML = `<h2>${icon("i-w-teils")} Wetter <span class="leise klein" style="font-weight:400">· ${esc(ort.name)}</span></h2><p class="leise">Wetter wird geladen …</p>`;
   let w;
   try { w = await wetterHolen(); }
   catch (e) {
-    ziel.innerHTML = `<h2>🌦️ Wetter</h2><p>Das Wetter konnte gerade nicht geladen werden. Bist du online?</p>
+    ziel.innerHTML = `<h2>${icon("i-w-teils")} Wetter</h2><p>Das Wetter konnte gerade nicht geladen werden. Bist du online?</p>
       <p class="klein leise">Technischer Grund: ${esc(e.message)}</p>`;
     return;
   }
@@ -1021,19 +1055,19 @@ async function wetterKarte(ziel) {
   const auf = wetterAufbereiten(w);
   const { hinweise, regenVorher } = wetterHinweise(auf);
   const tage = auf.kommend.slice(0, 7).map(t => {
-    const [sym, text] = WETTERCODES[t.code] || ["❔", "Unbekannt"];
+    const [sym, text] = WETTERCODES[t.code] || ["i-w-wolke", "Unbekannt"];
     const frost = t.min <= GRENZEN.frost || t.min < GRENZEN.bodenfrost;
     return `<div class="tag ${t.datum === heuteISO() ? "heute" : ""}" title="${esc(text)}">
       <div class="wt">${t.datum === heuteISO() ? "Heute" : WOCHENTAGE[new Date(t.datum + "T12:00:00").getDay()]}</div>
-      <div class="sym" aria-label="${esc(text)}">${sym}</div>
+      <div class="sym" aria-label="${esc(text)}">${icon(sym)}</div>
       <div class="max">${zahl(t.max, 0)}°</div>
       <div class="min ${frost ? "frost" : ""}">${zahl(t.min, 0)}°</div>
       <div class="regen">${t.regen >= 0.5 ? zahl(t.regen, 0) + " mm" : ""}</div>
     </div>`;
   }).join("");
-  ziel.innerHTML = `<h2>🌦️ Wetter <span class="leise klein" style="font-weight:400">· ${esc(ort.name)}</span></h2>
+  ziel.innerHTML = `<h2>${icon("i-w-teils")} Wetter <span class="leise klein" style="font-weight:400">· ${esc(ort.name)}</span></h2>
     <div class="wettertage">${tage}</div>
-    ${hinweise.map(x => `<div class="hinweis ${x.art}"><span class="sym">${x.sym}</span><div><b>${esc(x.titel)}</b>${esc(x.text)}</div></div>`).join("")}
+    ${hinweise.map(x => `<div class="hinweis ${x.art}"><span class="sym">${icon(x.sym)}</span><div><b>${esc(x.titel)}</b>${esc(x.text)}</div></div>`).join("")}
     <p class="klein leise" style="margin:10px 0 0">Regen in den letzten 7 Tagen: ${zahl(regenVorher, 1)} mm ·
     ${w.veraltet ? "Offline – Stand vom " + zeitText(w.zeit) : "Stand: " + new Date(w.zeit).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) + " Uhr"}</p>`;
 }
@@ -1117,7 +1151,7 @@ function wissenSeite(main) {
   if (bereich === "pflanze") return pflanzenDetail(main, decodeURIComponent(teile[2] || ""));
   if (bereich === "eigene") return eigenePflanzeForm(main, teile[2] ? decodeURIComponent(teile[2]) : null);
   main.insertAdjacentHTML("beforeend", `<div class="unternav">
-    ${[["pflanzen", "🌱 Pflanzen"], ["kalender", "🗓️ Kalender"], ["quellen", "📚 Quellen"]].map(([k, n]) => `<a href="#wissen/${k}" class="${bereich === k ? "an" : ""}">${n}</a>`).join("")}
+    ${[["pflanzen", `${icon("i-garten")} Pflanzen`], ["kalender", `${icon("i-kalender")} Kalender`], ["quellen", `${icon("i-quellen")} Quellen`]].map(([k, n]) => `<a href="#wissen/${k}" class="${bereich === k ? "an" : ""}">${n}</a>`).join("")}
   </div>`);
   if (bereich === "kalender") return kalenderAnsicht(main);
   if (bereich === "quellen") return quellenAnsicht(main);
@@ -1175,18 +1209,18 @@ function pflanzenDetail(main, id) {
     <a class="zurueck" href="#wissen">← Alle Pflanzen</a>
     <div class="lex-kopf">${pflanzenBadge(p, true)}<div><h2>${esc(p.name)}${p.eigen ? ` <span class="marker">eigene</span>` : ""}</h2>
       ${(p.auch || []).length ? `<div class="leise klein">auch: ${esc(p.auch.join(", "))}</div>` : ""}</div>
-      ${p.eigen ? `<a class="knopf" style="margin-left:auto" href="#wissen/eigene/${encodeURIComponent(p.id)}">✏️ Bearbeiten</a>` : ""}</div>
+      ${p.eigen ? `<a class="knopf" style="margin-left:auto" href="#wissen/eigene/${encodeURIComponent(p.id)}">${icon("i-bearbeiten")} Bearbeiten</a>` : ""}</div>
     <div class="raster zwei">
       <div>
-        <div class="karte"><h2>🗓️ Anbaukalender</h2>
+        <div class="karte"><h2>${icon("i-kalender")} Anbaukalender</h2>
           <div class="kal-tabelle">
             <div></div>${MON_KURZ.map((m, i) => `<div class="kal-mon${i + 1 === jetzt ? " jetzt" : ""}">${m[0]}</div>`).join("")}
             ${TAETIGKEITEN.map(t => `<div class="kal-name">${t.name}</div>${MON_KURZ.map((_, i) => `<div class="kal-zelle${i + 1 === jetzt ? " jetzt" : ""}" ${(p[t.feld] || []).includes(i + 1) ? `style="background:${t.farbe}"` : ""}></div>`).join("")}`).join("")}
           </div>
           <div class="kal-text klein">${TAETIGKEITEN.filter(t => (p[t.feld] || []).length).map(t => `<div><b>${t.name}:</b> ${monateText(p[t.feld])}</div>`).join("")}</div>
         </div>
-        ${p.anleitung ? `<div class="karte"><h2>🌿 Anbau in Kürze</h2><p style="margin:0">${esc(p.anleitung)}</p></div>` : ""}
-        <div class="karte"><h2>🤝 Nachbarn im Beet</h2>
+        ${p.anleitung ? `<div class="karte"><h2>${icon("i-pflanz")} Anbau in Kürze</h2><p style="margin:0">${esc(p.anleitung)}</p></div>` : ""}
+        <div class="karte"><h2>${icon("i-nachbarn")} Nachbarn im Beet</h2>
           <div class="nb-gruppe"><div class="nb-titel">Gute Nachbarn</div>${chips(n.gut, "gut")}</div>
           <div class="nb-gruppe"><div class="nb-titel">Schlechte Nachbarn</div>${chips(n.schlecht, "schlecht")}</div>
           ${n.umstritten.length ? `<div class="nb-gruppe"><div class="nb-titel">Umstritten</div>${chips(n.umstritten, "umstritten")}</div>` : ""}
@@ -1195,7 +1229,7 @@ function pflanzenDetail(main, id) {
         </div>
       </div>
       <div>
-        <div class="karte"><h2>📋 Steckbrief</h2>
+        <div class="karte"><h2>${icon("i-steckbrief")} Steckbrief</h2>
           <div class="steckbrief">
             ${zeile("Gruppe", esc(p.gruppe || "–") + (p.mehrjaehrig ? " · mehrjährig" : ""))}
             ${zeile("Familie", esc(f.name))}
@@ -1212,13 +1246,13 @@ function pflanzenDetail(main, id) {
           </div>
           <p class="klein leise" style="margin:10px 0 0">Saattiefe, Wuchshöhe und Zeiten sind Richtwerte und hängen von der Sorte ab – die Angaben auf der Samentüte haben Vorrang.</p>
         </div>
-        ${(p.hinweise || []).length ? `<div class="karte hinweis-karte"><h2>⚠️ Unterschiedliche Angaben</h2><ul>${p.hinweise.map(h => `<li>${esc(h)}</li>`).join("")}</ul></div>` : ""}
+        ${(p.hinweise || []).length ? `<div class="karte hinweis-karte"><h2>${icon("i-warnung")} Unterschiedliche Angaben</h2><ul>${p.hinweise.map(h => `<li>${esc(h)}</li>`).join("")}</ul></div>` : ""}
         ${lexikonGartenHTML(p)}
-        <div class="karte"><h2>📝 Meine Notizen</h2>
+        <div class="karte"><h2>${icon("i-notiz")} Meine Notizen</h2>
           <textarea id="p-notiz" rows="4" placeholder="Eigene Erfahrungen, Lieblingssorten, Tipps …">${esc((D.pflanzenNotizen || {})[p.id] || "")}</textarea>
           <p class="klein leise" id="p-notiz-stand" style="margin:4px 0 0"></p>
         </div>
-        ${(p.quellen || []).length ? `<div class="karte"><h2>📚 Quellen</h2><ul class="quellen">${p.quellen.filter(q => QUELLEN[q]).map(q => `<li><a href="${QUELLEN[q].url}" target="_blank" rel="noopener">${esc(QUELLEN[q].titel)}</a></li>`).join("")}</ul></div>` : ""}
+        ${(p.quellen || []).length ? `<div class="karte"><h2>${icon("i-quellen")} Quellen</h2><ul class="quellen">${p.quellen.filter(q => QUELLEN[q]).map(q => `<li><a href="${QUELLEN[q].url}" target="_blank" rel="noopener">${esc(QUELLEN[q].titel)}</a></li>`).join("")}</ul></div>` : ""}
       </div>
     </div>`);
   let t;
@@ -1270,7 +1304,7 @@ function kalenderAnsicht(main) {
 
 function quellenAnsicht(main) {
   main.insertAdjacentHTML("beforeend", `
-    <div class="karte"><h2>📚 Woher die Angaben stammen</h2>
+    <div class="karte"><h2>${icon("i-quellen")} Woher die Angaben stammen</h2>
       <p>Alle Texte im Lexikon sind in eigenen Worten geschrieben. Die Werte stammen aus diesen Quellen und wurden untereinander abgeglichen. Wo sich Quellen widersprechen, steht das bei der jeweiligen Pflanze unter „Unterschiedliche Angaben“.</p>
       <ul class="quellen">${Object.values(QUELLEN).map(q => `<li><a href="${q.url}" target="_blank" rel="noopener">${esc(q.titel)}</a></li>`).join("")}</ul>
       <p class="klein leise" style="margin:0">Stand der Pflanzendaten: ${new Date(PFLANZEN_STAND).toLocaleDateString("de-DE")} · ${PFLANZEN.length} Pflanzen. Saattiefen und Keimhinweise sind allgemeine Richtwerte; im Zweifel gilt die Samentüte.</p>
@@ -1546,7 +1580,7 @@ function setzenHinweis() {
   if (!z) { if (G.zeichnen) zeichnenHinweis(); return; }
   const pf = pflanzeVon(z.pflanze), b = objekt(z.beet), gruppe = z.gruppe && pflanzung(z.gruppe);
   const [reihe, inReihe] = pflAbstand(pf);
-  el.innerHTML = `<div><b>🌱 ${esc(pf.name)} in „${esc(b ? b.name : "")}“</b><br><span class="klein">${z.form === "punkt"
+  el.innerHTML = `<div><b>${icon("i-pflanz")} ${esc(pf.name)} in „${esc(b ? b.name : "")}“</b><br><span class="klein">${z.form === "punkt"
       ? `Tippe für jede Pflanze einmal ins Beet. Der Kreis zeigt den Platzbedarf (${inReihe} cm Abstand).${gruppe ? ` Gesetzt: ${gruppe.punkte.length}.` : ""} Ziehen verschiebt den Ausschnitt.`
       : `Ziehe im Beet die Fläche auf, die ${esc(pf.name)} bekommen soll. Ein kurzes Tippen setzt eine Fläche in Standardgröße. Abstand ${reihe} × ${inReihe} cm.`}</span></div>
     <div class="knopfreihe" style="margin:0">
@@ -1623,7 +1657,7 @@ function flaecheAnlegen(q, vorher) {
 /* ---------- Auswahlliste „Was soll ins Beet?“ ---------- */
 let pflSuche = "", pflNurJetzt = false;
 function pflanzenWahlHTML(beet) {
-  return `<div class="karte"><h2>🌱 Was soll in „${esc(beet.name)}“?</h2>
+  return `<div class="karte"><h2>${icon("i-pflanz")} Was soll in „${esc(beet.name)}“?</h2>
     <input type="search" id="pw-suche" placeholder="Pflanze suchen …" aria-label="Pflanze suchen" value="${esc(pflSuche)}">
     <label class="schalter-klein" style="margin:8px 0"><input type="checkbox" id="pw-jetzt" ${pflNurJetzt ? "checked" : ""}> Nur was im ${MONATE[new Date().getMonth()]} gesät oder gepflanzt wird</label>
     <div class="legende" style="margin:0 0 6px"><span><i style="background:var(--gruen)"></i>gute Nachbarn</span><span><i style="background:var(--rot)"></i>schlechte Nachbarn</span><span><i style="background:var(--gelb)"></i>Fruchtfolge beachten</span></div>
@@ -1671,13 +1705,13 @@ function bepflanzungHTML(beet) {
   const frueher = D.pflanzungen.filter(p => p.beet === beet.id && p.abgeraeumt).sort((a, b) => (b.gepflanzt || "").localeCompare(a.gepflanzt || ""));
   const konflikte = [], engSet = zuEng();
   for (const p of liste) for (const n of nachbarnImBeet(p)) if (n.art === "schlecht" && p.id < n.p.id) konflikte.push(`${pflanzeVon(p.pflanze).name} und ${pflanzeVon(n.p.pflanze).name}`);
-  return `<div class="karte"><h2>🌱 Bepflanzung</h2>
+  return `<div class="karte"><h2>${icon("i-garten")} Bepflanzung</h2>
     ${liste.length ? `<ul class="objliste">${liste.map(p => { const pf = pflanzeVon(p.pflanze) || { name: "?" };
       return `<li data-pfl="${p.id}">${pflanzenBadge(pf)}<span>${esc(pf.name)}${p.sorte ? ` <span class="leise">‚${esc(p.sorte)}‘</span>` : ""}</span><span class="leise">${anzahlText(p)} St.</span></li>`; }).join("")}</ul>`
       : `<p class="klein leise" style="margin:0 0 6px">Hier wächst gerade nichts.</p>`}
-    ${liste.some(p => pflZuEng(p, engSet)) ? `<div class="hinweis warn" style="margin-top:8px"><span class="sym">⚠️</span><div><b>Zu eng</b><span class="klein">${esc([...new Set(liste.filter(p => pflZuEng(p, engSet)).map(p => pflanzeVon(p.pflanze).name))].join(", "))}: Platzbedarf überschneidet sich (gelb gestrichelt).</span></div></div>` : ""}
-    ${konflikte.length ? `<div class="hinweis warn" style="margin-top:8px"><span class="sym">⚠️</span><div><b>Schlechte Nachbarn</b><span class="klein">${esc(konflikte.join("; "))} stehen dicht beieinander.</span></div></div>` : ""}
-    <div class="knopfreihe"><button class="knopf haupt" data-tun="pflanze-setzen">＋ Pflanze setzen</button><button class="knopf" data-tun="beet-tagebuch">📝 Tagebuch</button></div>
+    ${liste.some(p => pflZuEng(p, engSet)) ? `<div class="hinweis warn" style="margin-top:8px"><span class="sym">${icon("i-warnung")}</span><div><b>Zu eng</b><span class="klein">${esc([...new Set(liste.filter(p => pflZuEng(p, engSet)).map(p => pflanzeVon(p.pflanze).name))].join(", "))}: Platzbedarf überschneidet sich (gelb gestrichelt).</span></div></div>` : ""}
+    ${konflikte.length ? `<div class="hinweis warn" style="margin-top:8px"><span class="sym">${icon("i-warnung")}</span><div><b>Schlechte Nachbarn</b><span class="klein">${esc(konflikte.join("; "))} stehen dicht beieinander.</span></div></div>` : ""}
+    <div class="knopfreihe"><button class="knopf haupt" data-tun="pflanze-setzen">＋ Pflanze setzen</button><button class="knopf" data-tun="beet-tagebuch">${icon("i-notiz")} Tagebuch</button></div>
     ${frueher.length ? `<details style="margin-top:10px"><summary class="klein"><b>Früher hier</b> (${frueher.length})</summary><ul class="klein" style="margin:6px 0 0;padding-left:18px">${frueher.slice(0, 12).map(p =>
       `<li>${jahrVon(p)}: ${esc((pflanzeVon(p.pflanze) || { name: "?" }).name)} <span class="leise">(${datumKurz(p.gepflanzt)} bis ${datumKurz(p.abgeraeumt)})</span></li>`).join("")}</ul></details>` : ""}
   </div>`;
@@ -1708,14 +1742,14 @@ function geplantPanelHTML(p) {
     <label>Notiz</label><textarea data-pf="notiz" rows="2" placeholder="z. B. Saatgut noch kaufen">${esc(p.notiz || "")}</textarea>
     <p class="klein leise" id="pfl-gespeichert" style="margin:6px 0 0">Änderungen werden automatisch gespeichert.</p>
   </div>
-  ${ff ? `<div class="hinweis warn" style="margin:0 0 14px"><span class="sym">⟳</span><div><b>Fruchtfolge</b><span class="klein">${esc(ff.text)}</span></div></div>` : ""}
-  ${eng ? `<div class="hinweis warn" style="margin:0 0 14px"><span class="sym">⚠️</span><div><b>Zu eng</b><span class="klein">Platzbedarf überschneidet sich mit einer anderen Pflanzung.</span></div></div>` : ""}
-  ${nb.length ? `<div class="karte"><h2>🤝 Nachbarn hier</h2>${nb.map(n => `<span class="chip ${n.art}">${n.art === "gut" ? "✓" : n.art === "schlecht" ? "✗" : "?"} ${esc(pflanzeVon(n.p.pflanze).name)}</span>`).join("")}</div>` : ""}
+  ${ff ? `<div class="hinweis warn" style="margin:0 0 14px"><span class="sym">${icon("i-fruchtfolge")}</span><div><b>Fruchtfolge</b><span class="klein">${esc(ff.text)}</span></div></div>` : ""}
+  ${eng ? `<div class="hinweis warn" style="margin:0 0 14px"><span class="sym">${icon("i-warnung")}</span><div><b>Zu eng</b><span class="klein">Platzbedarf überschneidet sich mit einer anderen Pflanzung.</span></div></div>` : ""}
+  ${nb.length ? `<div class="karte"><h2>${icon("i-nachbarn")} Nachbarn hier</h2>${nb.map(n => `<span class="chip ${n.art}">${n.art === "gut" ? "✓" : n.art === "schlecht" ? "✗" : "?"} ${esc(pflanzeVon(n.p.pflanze).name)}</span>`).join("")}</div>` : ""}
   <div class="karte"><div class="knopfreihe" style="margin:0">
-    <button class="knopf haupt" data-tun="uebernehmen">✅ Als ${p.wie === "gesät" ? "gesät" : p.wie === "gesteckt" ? "gesteckt" : "gepflanzt"} übernehmen</button>
+    <button class="knopf haupt" data-tun="uebernehmen">${icon("i-check")} Als ${p.wie === "gesät" ? "gesät" : p.wie === "gesteckt" ? "gesteckt" : "gepflanzt"} übernehmen</button>
     ${p.form === "punkt" ? `<button class="knopf" data-tun="mehr-setzen">＋ Weitere setzen</button>` : ""}
     ${einzelnGewaehlt ? `<button class="knopf" data-tun="punkt-weg">✕ Nur diese eine entfernen</button>` : ""}
-    <button class="knopf gefahr" data-tun="pfl-loeschen">🗑️ Aus der Planung löschen</button>
+    <button class="knopf gefahr" data-tun="pfl-loeschen">${icon("i-loeschen")} Aus der Planung löschen</button>
   </div>
   <p class="klein leise" style="margin:8px 0 0">„Übernehmen“ macht aus der Planung eine echte Pflanzung mit dem Datum, das du dann angibst. Sie erscheint dann in der normalen Ansicht und in der Chronik.</p></div>
   <div class="knopfreihe" style="margin:0 0 14px"><a class="knopf text" href="#wissen/pflanze/${encodeURIComponent(pf.id)}">Im Lexikon ansehen →</a><button class="knopf text" data-tun="zum-beet">← Zum Beet</button></div>`;
@@ -1756,21 +1790,21 @@ function pflanzungPanelHTML(p) {
     <label>Notiz</label><textarea data-pf="notiz" rows="2" placeholder="z. B. mit Vlies abgedeckt">${esc(p.notiz || "")}</textarea>
     <p class="klein leise" id="pfl-gespeichert" style="margin:6px 0 0">Änderungen werden automatisch gespeichert.</p>
   </div>
-  ${eng ? `<div class="hinweis warn" style="margin:0 0 14px"><span class="sym">⚠️</span><div><b>Zu eng</b><span class="klein">${p.form === "punkt" ? `Die gelb gestrichelten Pflanzen überschneiden sich mit ihren Nachbarn. ${esc(pf.name)} braucht etwa ${pflAbstand(pf)[1]} cm Abstand – der Kreis zeigt den Platzbedarf.` : "Diese Fläche überschneidet sich mit einer anderen Pflanzung."}</span></div></div>` : ""}
-  ${nb.length ? `<div class="karte"><h2>🤝 Nachbarn hier</h2>${nb.map(n => `<span class="chip ${n.art}">${n.art === "gut" ? "✓" : n.art === "schlecht" ? "✗" : "?"} ${esc(pflanzeVon(n.p.pflanze).name)}</span>`).join("")}
+  ${eng ? `<div class="hinweis warn" style="margin:0 0 14px"><span class="sym">${icon("i-warnung")}</span><div><b>Zu eng</b><span class="klein">${p.form === "punkt" ? `Die gelb gestrichelten Pflanzen überschneiden sich mit ihren Nachbarn. ${esc(pf.name)} braucht etwa ${pflAbstand(pf)[1]} cm Abstand – der Kreis zeigt den Platzbedarf.` : "Diese Fläche überschneidet sich mit einer anderen Pflanzung."}</span></div></div>` : ""}
+  ${nb.length ? `<div class="karte"><h2>${icon("i-nachbarn")} Nachbarn hier</h2>${nb.map(n => `<span class="chip ${n.art}">${n.art === "gut" ? "✓" : n.art === "schlecht" ? "✗" : "?"} ${esc(pflanzeVon(n.p.pflanze).name)}</span>`).join("")}
     ${nb.some(n => n.art === "schlecht") ? `<p class="klein leise" style="margin:6px 0 0">Rot heißt: Diese Kombination gilt als ungünstig. Mehr Abstand (über ${NACHBAR_NAEHE} cm) oder ein anderes Beet hilft.</p>` : ""}</div>` : ""}
-  <div class="karte"><h2>🧺 Ernte</h2>
+  <div class="karte"><h2>${icon("i-ernte")} Ernte</h2>
     ${(p.ernten || []).length ? `<ul class="objliste">${p.ernten.map((e, i) => `<li><span>${datumKurz(e.datum)}</span><span class="leise">${e.menge ? `${zahl(e.menge, e.menge % 1 ? 1 : 0)} ${esc(e.einheit)}` : "ohne Menge"}</span><button class="x" data-ernte-weg="${i}" aria-label="Ernte löschen" title="Löschen">✕</button></li>`).join("")}</ul>
       ${summeText ? `<p class="klein" style="margin:6px 0 0"><b>Zusammen:</b> ${summeText}</p>` : ""}`
       : `<p class="klein leise" style="margin:0">${ernteZeit ? "Laut Kalender ist gerade Erntezeit." : `Erntezeit laut Kalender: ${monateText(pf.ernte)}.`}</p>`}
-    <div class="knopfreihe"><button class="knopf haupt" data-tun="ernten">🧺 Ernte eintragen</button></div>
+    <div class="knopfreihe"><button class="knopf haupt" data-tun="ernten">${icon("i-ernte")} Ernte eintragen</button></div>
   </div>
   <div class="karte"><div class="knopfreihe" style="margin:0">
     ${p.form === "punkt" ? `<button class="knopf" data-tun="mehr-setzen">＋ Weitere setzen</button>` : ""}
     ${einzelnGewaehlt ? `<button class="knopf" data-tun="punkt-weg">✕ Nur diese eine Pflanze entfernen</button>` : ""}
-    <button class="knopf" data-tun="tagebuch">📝 Tagebuch</button>
-    <button class="knopf" data-tun="abraeumen">🧹 Abräumen</button>
-    <button class="knopf gefahr" data-tun="pfl-loeschen">🗑️ Löschen</button>
+    <button class="knopf" data-tun="tagebuch">${icon("i-notiz")} Tagebuch</button>
+    <button class="knopf" data-tun="abraeumen">${icon("i-abraeumen")} Abräumen</button>
+    <button class="knopf gefahr" data-tun="pfl-loeschen">${icon("i-loeschen")} Löschen</button>
   </div>
   <p class="klein leise" style="margin:8px 0 0">${p.form === "punkt" ? "Pflanzen lassen sich einzeln verschieben. Um eine einzelne zu entfernen, sie im Plan antippen (sie wird dicker umrandet) und dann „Nur diese eine Pflanze entfernen“." : "Ziehen verschiebt die Fläche, der Punkt unten rechts ändert die Größe."}
     <b>Abräumen</b>, wenn das Beet frei wird: Die Pflanzung bleibt für Chronik und Fruchtfolge gespeichert. <b>Löschen</b> nur bei einem falschen Eintrag.</p></div>
@@ -1874,10 +1908,10 @@ function pflZugEnde(z) {
 function gartenPflanzenUebersichtHTML() {
   const liste = aktivePflanzungen();
   if (!liste.length && !D.garten.objekte.some(o => ARTEN[o.art].pflanzbar)) return "";
-  if (!liste.length) return `<div class="karte"><h2>🌱 Pflanzen setzen</h2><p class="klein leise" style="margin:0">Tippe ein Beet, Hochbeet, Gewächshaus oder einen Kübel an und dann auf „＋ Pflanze setzen“.</p></div>`;
+  if (!liste.length) return `<div class="karte"><h2>${icon("i-pflanz")} Pflanzen setzen</h2><p class="klein leise" style="margin:0">Tippe ein Beet, Hochbeet, Gewächshaus oder einen Kübel an und dann auf „＋ Pflanze setzen“.</p></div>`;
   const mo = new Date().getMonth() + 1;
   const ernte = liste.filter(p => (pflanzeVon(p.pflanze)?.ernte || []).includes(mo));
-  return `<div class="karte"><h2>🌱 Im Garten</h2>
+  return `<div class="karte"><h2>${icon("i-garten")} Im Garten</h2>
     <p class="klein" style="margin:0 0 6px">${liste.length} ${liste.length === 1 ? "Pflanzung" : "Pflanzungen"} in ${new Set(liste.map(p => p.beet)).size} ${new Set(liste.map(p => p.beet)).size === 1 ? "Beet" : "Beeten"}.</p>
     <ul class="objliste">${liste.slice().sort((a, b) => pflBeetName(a).localeCompare(pflBeetName(b), "de")).map(p => { const pf = pflanzeVon(p.pflanze) || { name: "?" };
       return `<li data-pfl-waehle="${p.id}">${pflanzenBadge(pf)}<span>${esc(pf.name)}</span><span class="leise">${esc(pflBeetName(p))}</span></li>`; }).join("")}</ul>
@@ -1907,7 +1941,7 @@ function lexikonGartenHTML(pf) {
   const frueher = echte().filter(p => p.pflanze === pf.id && p.abgeraeumt);
   if (!akt.length && !frueher.length) return "";
   const ernten = echte().filter(p => p.pflanze === pf.id).flatMap(p => p.ernten || []);
-  return `<div class="karte"><h2>🌱 In deinem Garten</h2>
+  return `<div class="karte"><h2>${icon("i-garten")} In deinem Garten</h2>
     ${akt.length ? `<ul class="klein" style="margin:0;padding-left:18px">${akt.map(p => `<li>${esc(pflBeetName(p))}: ${anzahlText(p)} Stück${p.sorte ? `, ‚${esc(p.sorte)}‘` : ""}, ${p.wie} am ${datumKurz(p.gepflanzt)}</li>`).join("")}</ul>` : `<p class="klein leise" style="margin:0">Steht gerade nicht im Garten.</p>`}
     ${frueher.length ? `<p class="klein leise" style="margin:6px 0 0">Früher: ${frueher.length}× angebaut (${[...new Set(frueher.map(jahrVon))].sort().join(", ")}).</p>` : ""}
     ${ernten.length ? `<p class="klein leise" style="margin:4px 0 0">${ernten.length} ${ernten.length === 1 ? "Ernte" : "Ernten"} eingetragen.</p>` : ""}
@@ -2095,9 +2129,9 @@ function statusSetzen(status, meldung = "") {
     ok: cfg && cfg.zeit ? `Abgeglichen ${zeitText(cfg.zeit)}` : "Abgeglichen",
     offline: meldung || "Offline", fehler: meldung || "Fehler beim Abgleich", konflikt: meldung || "Bitte entscheiden",
   };
-  const symbol = { aus: "", wartet: "☁", laeuft: "⟳", ok: "☁✓", offline: "☁✕", fehler: "☁!", konflikt: "☁?" }[status];
+  const symbol = { aus: "", wartet: "", laeuft: "…", ok: "✓", offline: "✕", fehler: "!", konflikt: "?" }[status];
   $$(".abgleich-status").forEach(el => {
-    el.textContent = symbol; el.title = texte[status]; el.dataset.status = status;
+    el.innerHTML = status === "aus" ? "" : icon("i-abgleich") + esc(symbol); el.title = texte[status]; el.dataset.status = status;
     el.classList.toggle("verborgen", status === "aus");
   });
   const k = $("#abgleich-text"); if (k) k.textContent = texte[status];
@@ -2117,7 +2151,7 @@ function auswahlDialog({ titel, text, optionen }) {
 function abgleichKarteHTML() {
   const cfg = abgleichEinstellungen();
   if (!cfg || !cfg.token) return `<div class="karte" id="abgleich-karte">
-    <h2>🔄 Abgleich zwischen Laptop und Handy</h2>
+    <h2>${icon("i-abgleich")} Abgleich zwischen Laptop und Handy</h2>
     <p>Deine Gartendaten können über ein <b>privates GitHub-Repository</b> auf allen deinen Geräten gleich sein – kostenlos. Wie du Repository und Token anlegst, steht in der Anleitung (?) unter „Abgleich zwischen Laptop und Handy“ und ausführlich im Word-Dokument „Abgleich einrichten“.</p>
     <div class="formular">
       <label>Repository<input type="text" id="ab-repo" placeholder="benutzername/kraut-und-rueben-daten" value="${esc(cfg?.repo || "")}" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
@@ -2128,7 +2162,7 @@ function abgleichKarteHTML() {
     <div class="knopfreihe"><button class="knopf haupt" id="ab-verbinden">Verbinden</button></div>
   </div>`;
   return `<div class="karte" id="abgleich-karte">
-    <h2>🔄 Abgleich zwischen Laptop und Handy</h2>
+    <h2>${icon("i-abgleich")} Abgleich zwischen Laptop und Handy</h2>
     <p>Verbunden mit <b>${esc(cfg.repo)}</b> als „${esc(cfg.geraet || "ohne Namen")}“.<br><span class="klein" id="abgleich-text"></span></p>
     <label class="schalter"><input type="checkbox" id="ab-auto" ${cfg.auto !== false ? "checked" : ""}> Automatisch abgleichen (beim Öffnen und nach jeder Änderung)</label>
     <div class="knopfreihe">
@@ -2214,7 +2248,7 @@ function wetterEreignisse(jahr) {
     const w = log[t];
     if (w.min <= GRENZEN.frost) ev.push({ datum: t, typ: "wetter", sym: "i-frost", text: `Frost: Tiefstwert ${zahl(w.min, 1)} °C` });
     if (w.max >= GRENZEN.hitze) ev.push({ datum: t, typ: "wetter", sym: "i-hitze", text: `Hitze: bis ${zahl(w.max, 0)} °C` });
-    if (w.regen >= STARKREGEN) ev.push({ datum: t, typ: "wetter", sym: "i-regen", text: `Starkregen: ${zahl(w.regen, 0)} mm` });
+    if (w.regen >= STARKREGEN) ev.push({ datum: t, typ: "wetter", sym: "i-starkregen", text: `Starkregen: ${zahl(w.regen, 0)} mm` });
   }
   // Trockenphasen: mindestens 10 aufeinanderfolgende aufgezeichnete Tage mit zusammen unter 5 mm, im Schnitt warm
   let start = null, summe = 0, waerme = 0, n = 0, vorher = null;
@@ -2285,7 +2319,7 @@ function chronikSeite(main) {
       <select id="ch-jahr" aria-label="Jahr">${jahre.map(j => `<option ${j === CH.jahr ? "selected" : ""}>${j}</option>`).join("")}</select>
       <div class="umschalter" id="ch-ansicht"><button data-a="verlauf" class="${CH.ansicht === "verlauf" ? "an" : ""}">Verlauf</button><button data-a="auswertung" class="${CH.ansicht === "auswertung" ? "an" : ""}">Auswertung</button></div>
       <button class="knopf haupt" id="ch-neu">＋ Tagebuch-Eintrag</button>
-      <button class="knopf nicht-drucken" id="ch-drucken" title="Drucken oder als PDF speichern">🖨️<span class="lang"> Drucken</span></button>
+      <button class="knopf nicht-drucken" id="ch-drucken" title="Drucken oder als PDF speichern">${icon("i-drucken")}<span class="lang"> Drucken</span></button>
     </div>
     <div id="ch-inhalt"></div>`);
   $("#ch-jahr").onchange = e => { CH.jahr = +e.target.value; chronikZeichnen(); };
@@ -2307,7 +2341,7 @@ function chronikZeichnen() {
     .sort((a, b) => b.datum.localeCompare(a.datum) || (a.typ === "wetter") - (b.typ === "wetter"));
   const zaehle = t => alle.filter(e => t === "alle" || e.typ === t).length;
   let html = `<div class="ch-filter">
-      <div class="umschalter" id="ch-typ">${[["alle", "Alles"], ["garten", "🌱 Garten"], ["ernte", "🧺 Ernte"], ["tagebuch", "📝 Tagebuch"], ["wetter", "🌦️ Wetter"]]
+      <div class="umschalter" id="ch-typ">${[["alle", "Alles"], ["garten", `${icon("i-garten")} Garten`], ["ernte", `${icon("i-ernte")} Ernte`], ["tagebuch", `${icon("i-notiz")} Tagebuch`], ["wetter", `${icon("i-w-teils")} Wetter`]]
         .map(([k, n]) => `<button data-t="${k}" class="${CH.typ === k ? "an" : ""}">${n} <span class="leise">${zaehle(k)}</span></button>`).join("")}</div>
       <select id="ch-beet" aria-label="Beet"><option value="">Alle Beete</option>${beete.map(([k, n]) => `<option value="${esc(k)}" ${CH.beet === k ? "selected" : ""}>${esc(n)}</option>`).join("")}</select>
       <select id="ch-pflanze" aria-label="Pflanze"><option value="">Alle Pflanzen</option>${pflanzen.map(([k, n]) => `<option value="${esc(k)}" ${CH.pflanze === k ? "selected" : ""}>${esc(n)}</option>`).join("")}</select>
@@ -2363,21 +2397,21 @@ function auswertungHTML(jahr) {
   const zeilen = [...ernte.entries()].sort((a, b) => (pflanzeVon(a[0])?.name || "").localeCompare(pflanzeVon(b[0])?.name || "", "de"));
   return `<div class="raster zwei">
     <div>
-      <div class="karte"><h2>🌱 ${jahr} im Überblick</h2>
+      <div class="karte"><h2>${icon("i-garten")} ${jahr} im Überblick</h2>
         <div class="steckbrief">
           <div class="sb-l">Pflanzungen</div><div class="sb-w">${gesetzt.length} (${arten.size} verschiedene Pflanzen)</div>
           <div class="sb-l">Ernten eingetragen</div><div class="sb-w">${[...ernte.values()].reduce((s, x) => s + x.anzahl, 0)}</div>
           <div class="sb-l">Abgeräumt</div><div class="sb-w">${D.pflanzungen.filter(p => (p.abgeraeumt || "").startsWith(jahr + "-")).length}</div>
           <div class="sb-l">Tagebuch-Einträge</div><div class="sb-w">${(D.tagebuch || []).filter(t => t.datum.startsWith(jahr + "-")).length}</div>
         </div></div>
-      <div class="karte"><h2>🧺 Ernte ${jahr}</h2>
+      <div class="karte"><h2>${icon("i-ernte")} Ernte ${jahr}</h2>
         ${zeilen.length ? `<table class="tabelle"><thead><tr><th>Pflanze</th><th>Menge</th><th>Ernten</th><th>${jahr - 1}</th></tr></thead><tbody>
           ${zeilen.map(([id, x]) => { const v = vor.get(id); return `<tr><td>${esc(pflanzeVon(id)?.name || "?")}</td><td>${mengenText(x.mengen) || "–"}${x.ohne ? ` <span class="leise klein">(+${x.ohne}× ohne Menge)</span>` : ""}</td><td>${x.anzahl}</td><td class="leise">${v ? mengenText(v.mengen) || `${v.anzahl}×` : "–"}</td></tr>`; }).join("")}
-        </tbody></table>` : `<p class="leise klein" style="margin:0">Für ${jahr} sind noch keine Ernten eingetragen. Ernten trägst du im Gartenplan bei der Pflanzung ein (🧺 Ernte eintragen).</p>`}
+        </tbody></table>` : `<p class="leise klein" style="margin:0">Für ${jahr} sind noch keine Ernten eingetragen. Ernten trägst du im Gartenplan bei der Pflanzung ein (${icon("i-ernte")} Ernte eintragen).</p>`}
       </div>
     </div>
     <div>
-      <div class="karte"><h2>🌦️ Wetter ${jahr}</h2>
+      <div class="karte"><h2>${icon("i-w-teils")} Wetter ${jahr}</h2>
         ${w ? `<div class="steckbrief">
           <div class="sb-l">Letzter Frost im Frühjahr</div><div class="sb-w">${w.letzterFrost ? datumKurz(w.letzterFrost) : "–"}${wv && wv.letzterFrost ? ` <span class="leise klein">(${jahr - 1}: ${datumKurz(wv.letzterFrost)})</span>` : ""}</div>
           <div class="sb-l">Erster Frost im Herbst</div><div class="sb-w">${w.ersterFrost ? datumKurz(w.ersterFrost) : "–"}${wv && wv.ersterFrost ? ` <span class="leise klein">(${jahr - 1}: ${datumKurz(wv.ersterFrost)})</span>` : ""}</div>
@@ -2438,7 +2472,7 @@ function planWarnungen(p) {
   const ff = fruchtfolgeHinweis(p.beet, p.pflanze, p.geplant, pflRahmen(p), p.id); if (ff) w.push({ art: "fruchtfolge", text: "⟳ " + ff.text });
   const schlecht = nachbarnImBeet(p).filter(n => n.art === "schlecht").map(n => pflanzeVon(n.p.pflanze).name);
   if (schlecht.length) w.push({ art: "schlecht", text: "✗ schlechte Nachbarn: " + schlecht.join(", ") });
-  if (pflZuEng(p, zuEng())) w.push({ art: "eng", text: "⚠ zu eng gesetzt" });
+  if (pflZuEng(p, zuEng())) w.push({ art: "eng", text: "zu eng gesetzt" });
   G.planJahr = alt;
   return w;
 }
@@ -2451,7 +2485,7 @@ function planungSeite(main) {
   main.insertAdjacentHTML("beforeend", `<div class="ch-werkzeug nicht-drucken">
       <label class="pl-jahrwahl">Planung für <select id="pl-jahr" aria-label="Jahr">${jahre.map(x => `<option ${x === PL_JAHR ? "selected" : ""}>${x}</option>`).join("")}</select></label>
       ${beete.length ? `<label class="schalter-klein"><input type="checkbox" id="pl-vorjahr" ${vorjahrZeigen() ? "checked" : ""}> ${PL_JAHR - 1} einblenden</label>
-      <button class="knopf" id="pl-drucken">🖨️<span class="lang"> Plan drucken</span></button>` : ""}
+      <button class="knopf" id="pl-drucken">${icon("i-drucken")}<span class="lang"> Plan drucken</span></button>` : ""}
     </div>`);
   $("#pl-jahr").onchange = e => { PL_JAHR = +e.target.value; G.view = G.view; zeigen(); };
   if (!beete.length) {
@@ -2488,7 +2522,7 @@ function planListeFuellen() {
           ${w.length ? `<div class="pw-tags">${w.map(x => `<span class="pw-tag ${x.art === "schlecht" ? "schlecht" : "fruchtfolge"}">${esc(x.text)}</span>`).join("")}</div>` : ""}</div>
         <div class="knopfreihe" style="margin:0">
           <button class="knopf text klein" data-pl-zeig="${p.id}">Im Plan</button>
-          <button class="knopf klein" data-pl-ueber="${p.id}">✅ Übernehmen</button>
+          <button class="knopf klein" data-pl-ueber="${p.id}">${icon("i-check")} Übernehmen</button>
         </div></li>`;
     }
     html += `</ul></div>`;
@@ -2517,7 +2551,7 @@ function seitentitel(main, titel, unter) {
   main.insertAdjacentHTML("beforeend", `<div class="seitentitel"><h1>${esc(titel)}</h1>${unter ? `<p class="leise">${unter}</p>` : ""}</div>`);
 }
 function baldKarte(titel, punkte) {
-  return `<div class="karte bald"><h2>🌱 ${esc(titel)}</h2>
+  return `<div class="karte bald"><h2>${icon("i-garten")} ${esc(titel)}</h2>
     <p class="leise klein">Diese Funktionen kommen Schritt für Schritt in den nächsten Versionen:</p>
     <ul>${punkte.map(p => `<li>${p}</li>`).join("")}</ul></div>`;
 }
@@ -2532,11 +2566,11 @@ const SEITEN = {
         <div class="karte" id="wetter"></div>
         <div>
           <div class="karte">
-            <h2>🗓️ Im ${MONATE[heute.getMonth()]}</h2>
+            <h2>${icon("i-kalender")} Im ${MONATE[heute.getMonth()]}</h2>
             ${monatKarteHTML()}
           </div>
           <div class="karte">
-            <h2>🥕 Im Garten</h2>
+            <h2>${icon("i-garten")} Im Garten</h2>
             ${startGartenHTML()}${startPlanungHTML()}
             <a class="knopf" href="#garten">${icon("i-garten")} Zum Gartenplan</a>
           </div>
@@ -2576,13 +2610,13 @@ const SEITEN = {
         <div id="ort-wahl"></div>
       </div>
       <div class="karte">
-        <h2>🎨 Darstellung</h2>
+        <h2>${icon("i-darstellung")} Darstellung</h2>
         <div class="umschalter" id="design">
           <button data-w="hell">Hell</button><button data-w="dunkel">Dunkel</button><button data-w="auto">Wie das Gerät</button>
         </div>
       </div>
       <div class="karte">
-        <h2>💾 Daten</h2>
+        <h2>${icon("i-daten")} Daten</h2>
         <p>Deine Daten liegen in diesem Browser auf diesem Gerät. ${D.geaendert ? `Zuletzt gespeichert: ${zeitText(D.geaendert)}.` : ""}</p>
         <p class="leise klein">Wenn du die Browserdaten löschst, sind auch die Gartendaten weg. Lade dir deshalb ab und zu eine Sicherung herunter.</p>
         <div class="knopfreihe">
@@ -2590,11 +2624,11 @@ const SEITEN = {
           <button class="knopf" id="laden">⬆️ Sicherung laden</button>
           <input type="file" id="datei" accept=".json,application/json" class="verborgen">
         </div>
-        <div class="knopfreihe"><button class="knopf gefahr" id="loeschen">🗑️ Alle Daten löschen</button></div>
+        <div class="knopfreihe"><button class="knopf gefahr" id="loeschen">${icon("i-loeschen")} Alle Daten löschen</button></div>
       </div>
       ${abgleichKarteHTML()}
       <div class="karte">
-        <h2>ℹ️ Über die App</h2>
+        <h2>${icon("i-info")} Über die App</h2>
         <p>Kraut und Rüben · Version ${APP_VERSION}</p>
         <p class="klein leise" style="margin:0">Wetter- und Ortsdaten: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> (CC BY 4.0)</p>
       </div>`);
@@ -2649,7 +2683,7 @@ const SEITEN = {
           </ul>
           <p><b>Drehen:</b> Über der ausgewählten Fläche sitzt ein runder Griff ↻. Daran ziehen dreht die Fläche um ihre Mitte, der Winkel steht daneben. Liegt eine gerade Kante fast parallel zu einer anderen Kante – zum Beispiel einem schrägen Zaun – rastet sie dort ein (gelbe Markierung, Zeichen ∥). Sonst dreht sie in ganzen Grad. Umschalttaste = frei drehen. Für genaue Werte gibt es weiterhin „90° drehen“ und „Drehen um …“.</p>
           <p><b>Andocken:</b> Schiebst du eine Fläche mit einer geraden Kante dicht an eine parallele schräge Kante (etwa nach dem Drehen an den Zaun), rastet sie bündig dort an. Gedrehte Rechtecke haben statt Breite und Tiefe die Felder „Seite A“ und „Seite B“.</p>
-          <p><b>Fixieren:</b> Passt eine Fläche, zum Beispiel Gartenfläche oder Haus, tippe auf „🔒 Fixieren“. Sie lässt sich dann nicht mehr verschieben oder verformen, bis du sie wieder löst.</p>
+          <p><b>Fixieren:</b> Passt eine Fläche, zum Beispiel Gartenfläche oder Haus, tippe auf „${icon("i-schloss")} Fixieren“. Sie lässt sich dann nicht mehr verschieben oder verformen, bis du sie wieder löst.</p>
           <p><b>Hilfen beim Platzieren:</b></p>
           <ul>
             <li><b>Blau gestrichelt</b> siehst du den Abstand der ausgewählten Fläche nach links, rechts, oben und unten bis zur nächsten Kante – zum Beispiel bis zum Zaun oder zum nächsten Beet.</li>
@@ -2665,7 +2699,7 @@ const SEITEN = {
           <p><b>Ansehen und Bearbeiten:</b> Ist „Bearbeiten“ aus, lassen sich die Flächen selbst nicht verändern. Antippen zeigt dann Name, Größe und bei Beeten die Bepflanzung. Am Handy ist Bearbeiten deshalb anfangs aus. Pflanzen setzen, ernten und abräumen geht in beiden Fällen.</p>
           <p><b>Am Laptop bleibt der Plan stehen:</b> Die Einstellungen rechts haben eine eigene Bildlaufleiste. So siehst du die Fläche immer, während du rechts weiter unten etwas änderst.</p>
           <p><b>Bewegen im Plan:</b> Am Laptop verschiebt Ziehen mit der Maus den Ausschnitt, das Mausrad zoomt. <b>Am Handy</b> scrollt ein Finger wie überall die Seite, damit du nicht im Plan „hängen bleibst“. Den Plan verschiebst und zoomst du mit <b>zwei Fingern</b>. Antippen wählt wie gewohnt aus. Ein gewähltes Beet, seine Griffe und eine gewählte Pflanzung lassen sich dagegen mit einem Finger ziehen; beim Zeichnen und Pflanzen-Setzen gehört der Finger ganz dem Plan. Außerdem gibt es + und −, und „Alles“ zeigt den ganzen Garten.</p>
-          <p><b>Bereiche:</b> Einen Ausschnitt mit „📍 Merken“ benennen, zum Beispiel „Vorgarten“. Über „Springe zu …“ kommst du direkt dorthin.</p>
+          <p><b>Bereiche:</b> Einen Ausschnitt mit „${icon("i-ort")} Merken“ benennen, zum Beispiel „Vorgarten“. Über „Springe zu …“ kommst du direkt dorthin.</p>
           <p><b>Rückgängig:</b> ↶ und ↷ in der Leiste (am Laptop auch Strg+Z und Strg+Y). Am Laptop verschieben die Pfeiltasten die ausgewählte Fläche um eine Rasterweite, Entf löscht sie, Esc hebt die Auswahl auf.</p>
         </div></details>
         <details><summary>Pflanzen setzen, ernten, abräumen</summary><div>
@@ -2678,7 +2712,7 @@ const SEITEN = {
           <p><b>Ändern:</b> Eine Pflanzung antippen. Rechts (am Handy darunter) trägst du Datum, gepflanzt/gesät/gesteckt, Sorte und eine Notiz ein. Einzelne Pflanzen und Flächen lassen sich verschieben, Flächen über den Punkt unten rechts vergrößern. „＋ Weitere setzen“ fügt zur selben Pflanzung neue hinzu. Eine einzelne Pflanze entfernst du, indem du sie antippst (sie wird dicker umrandet) und dann „Nur diese eine Pflanze entfernen“ wählst.</p>
           <p><b>Eine Pflanzung = ein Satz:</b> Alles, was du in einem Durchgang setzt, gehört zusammen. Datum, Sorte, Notiz und Ernte gelten für die ganze Pflanzung. Für eine zweite Sorte oder einen späteren Satz die Pflanze einfach noch einmal setzen.</p>
           <p><b>Warnungen im Plan:</b> Stehen zwei schlechte Nachbarn näher als 50 cm beieinander, bekommen beide einen <b>rot gestrichelten Rand</b>. Überschneiden sich Platzkreise oder Flächen deutlich (mehr als etwa 15 %), ist der Rand <b>gelb gestrichelt</b>: Die Pflanzen stehen zu eng. Beim Beet und bei der Pflanzung steht dann jeweils ein Hinweis.</p>
-          <p><b>Ernten:</b> „🧺 Ernte eintragen“ – Datum, auf Wunsch Menge und Einheit. Du kannst so oft ernten, wie du willst; die Summe steht darunter.</p>
+          <p><b>Ernten:</b> „${icon("i-ernte")} Ernte eintragen“ – Datum, auf Wunsch Menge und Einheit. Du kannst so oft ernten, wie du willst; die Summe steht darunter.</p>
           <p><b>Abräumen:</b> Wenn das Beet frei wird. Die Pflanzung verschwindet vom Plan, bleibt aber gespeichert. Daraus entstehen die Fruchtfolge-Hinweise, und beim Beet steht sie unter „Früher hier“. <b>Löschen</b> ist nur für falsche Einträge gedacht.</p>
           <p><b>Beet verschieben oder drehen:</b> Die Pflanzen wandern mit. Wird ein Beet gelöscht, verschwindet, was gerade darin wächst; Abgeräumtes bleibt erhalten.</p>
           <p>Rückgängig (↶) gilt auch für alles rund ums Pflanzen. Die Startseite und die Pflanzenkarten im Lexikon zeigen, was gerade wo im Garten steht.</p>
@@ -2701,18 +2735,18 @@ const SEITEN = {
             <li><b>Fruchtfolge:</b> Die Auswahlliste nennt, was in den letzten Jahren in diesem Beet stand. Ob es wirklich passt, prüft die App nach dem Setzen <b>nach der Stelle</b>: Nur wenn sich die neue Pflanzung mit einer früheren derselben Familie überschneidet, bekommt sie einen gelben Rand und einen Hinweis. In einem großen Beet kann man also gut nebeneinander wechseln.</li>
             <li><b>Mehrjährige Pflanzen</b> (Rhabarber, Erdbeeren, Beeren, Kräuter) bleiben stehen und sind blass zu sehen.</li>
             <li><b>Datum:</b> Die App schlägt den ersten Pflanz- bzw. Säemonat aus dem Lexikon vor; darunter steht zum Vergleich, was das Lexikon empfiehlt.</li>
-            <li><b>Liste unter dem Plan:</b> alles Geplante nach Monaten, mit Hinweisen zu Fruchtfolge, Nachbarn und Abstand. „Im Plan“ zeigt die Stelle, „✅ Übernehmen“ macht daraus eine echte Pflanzung mit dem Datum, das du angibst. Auf der Startseite erscheint ein Hinweis, wenn Geplantes in den nächsten zwei Wochen dran ist.</li>
-            <li><b>Drucken:</b> „🖨️ Plan drucken“ druckt den Plan mit einer Liste (oder speichert ihn als PDF). Im Reiter Garten gibt es denselben Knopf für den aktuellen Garten.</li>
+            <li><b>Liste unter dem Plan:</b> alles Geplante nach Monaten, mit Hinweisen zu Fruchtfolge, Nachbarn und Abstand. „Im Plan“ zeigt die Stelle, „${icon("i-check")} Übernehmen“ macht daraus eine echte Pflanzung mit dem Datum, das du angibst. Auf der Startseite erscheint ein Hinweis, wenn Geplantes in den nächsten zwei Wochen dran ist.</li>
+            <li><b>Drucken:</b> „${icon("i-drucken")} Plan drucken“ druckt den Plan mit einer Liste (oder speichert ihn als PDF). Im Reiter Garten gibt es denselben Knopf für den aktuellen Garten.</li>
           </ul>
         </div></details>
         <details><summary>Chronik und Tagebuch</summary><div>
           <p>Die <b>Chronik</b> sammelt von selbst, was im Garten passiert: gepflanzt, gesät, gesteckt, geerntet (mit Menge) und abgeräumt – jeweils mit Datum und Beet. Dazu kommen deine <b>Tagebuch-Einträge</b> und <b>Wetterereignisse</b>.</p>
           <ul>
-            <li><b>Tagebuch-Eintrag:</b> „＋ Tagebuch-Eintrag“ oben in der Chronik, oder im Gartenplan beim Beet bzw. bei einer Pflanzung auf „📝 Tagebuch“ (dann sind Beet und Pflanze schon ausgewählt). Datum, Text und – freiwillig – Beet und Pflanze. Antippen von „Bearbeiten“ ändert oder löscht einen Eintrag.</li>
+            <li><b>Tagebuch-Eintrag:</b> „＋ Tagebuch-Eintrag“ oben in der Chronik, oder im Gartenplan beim Beet bzw. bei einer Pflanzung auf „${icon("i-notiz")} Tagebuch“ (dann sind Beet und Pflanze schon ausgewählt). Datum, Text und – freiwillig – Beet und Pflanze. Antippen von „Bearbeiten“ ändert oder löscht einen Eintrag.</li>
             <li><b>Filter:</b> Jahr, Art (Garten, Ernte, Tagebuch, Wetter), Beet und Pflanze. „Im Plan“ springt zur Pflanzung im Gartenplan.</li>
             <li><b>Wetter:</b> Die App merkt sich das Wetter der vergangenen Tage, sobald die Startseite mit Standort das Wetter lädt (es reicht, die App mindestens einmal pro Woche zu öffnen). Daraus entstehen Einträge für Frostnächte (ab 0 °C), Hitzetage (ab 30 °C), Starkregen (ab 20 mm) und Trockenphasen (mindestens 10 Tage mit zusammen unter 5 mm).</li>
             <li><b>Auswertung:</b> Pflanzungen und Ernten des Jahres, Erntemengen je Pflanze im Vergleich zum Vorjahr, letzter Frost im Frühjahr und erster Frost im Herbst, Frostnächte, Hitzetage und Regenmenge.</li>
-            <li><b>Drucken:</b> „🖨️ Drucken“ druckt die aktuelle Ansicht oder speichert sie als PDF.</li>
+            <li><b>Drucken:</b> „${icon("i-drucken")} Drucken“ druckt die aktuelle Ansicht oder speichert sie als PDF.</li>
           </ul>
         </div></details>
         <details><summary>Abgleich zwischen Laptop und Handy</summary><div>
@@ -2723,7 +2757,7 @@ const SEITEN = {
             <li>In der App: Zahnrad → „Abgleich zwischen Laptop und Handy“ → Repository (<code>benutzername/kraut-und-rueben-daten</code>), Token und einen Namen für das Gerät eintragen → „Verbinden“.</li>
             <li>Auf dem zweiten Gerät genauso. Hat das zweite Gerät noch keine Daten, holt es sich alles von GitHub.</li>
           </ol>
-          <p><b>Im Alltag</b> musst du nichts tun: Die App gleicht beim Öffnen, beim Zurückwechseln in die App und wenige Sekunden nach jeder Änderung ab. Neben der Versionsnummer zeigt ein Wölkchen den Stand: <b>☁✓</b> abgeglichen, <b>☁</b> Änderung wartet, <b>☁✕</b> gerade kein Internet (wird nachgeholt), <b>☁!</b> Fehler, <b>☁?</b> du musst entscheiden.</p>
+          <p><b>Im Alltag</b> musst du nichts tun: Die App gleicht beim Öffnen, beim Zurückwechseln in die App und wenige Sekunden nach jeder Änderung ab. Neben der Versionsnummer zeigt ein Wölkchen den Stand: mit <b>✓</b> abgeglichen, ohne Zeichen: Änderung wartet, <b>✕</b> gerade kein Internet (wird nachgeholt), <b>!</b> Fehler, <b>?</b> du musst entscheiden.</p>
           <p><b>Auf zwei Geräten gleichzeitig geändert?</b> Dann fragt die App, welcher Stand gelten soll. Der andere geht nicht verloren: Auf GitHub bleiben alle früheren Stände in der Versionsgeschichte, und auf dem Gerät gibt es nach dem Übernehmen „Rückgängig“.</p>
           <p><b>Sicherheit:</b> Der Token liegt nur in diesem Browser auf diesem Gerät – nicht in der App, nicht in Sicherungen, nicht im öffentlichen Repository. Wer nur den Link zur App bekommt, sieht eine leere App. „Verbindung trennen“ löscht den Token vom Gerät; einen verlorenen Token löschst du auf GitHub unter Developer settings.</p>
           <p>„Alle Daten löschen“ trennt den Abgleich auf diesem Gerät automatisch, damit die leeren Daten nicht auf GitHub landen.</p>
@@ -3190,7 +3224,7 @@ function planZeichnen() {
     if (!pos) continue;
     const [cx, cy] = pos;
     belegt.push([cx, cy, bw, bh]);
-    html += `<text class="beschriftung" x="${cx}" y="${zweite ? cy - fs * 0.45 : cy}" font-size="${fs}" text-anchor="middle" dominant-baseline="middle">${esc(o.name)}${o.fest ? " 🔒" : ""}</text>`;
+    html += `<text class="beschriftung" x="${cx}" y="${zweite ? cy - fs * 0.45 : cy}" font-size="${fs}" text-anchor="middle" dominant-baseline="middle">${esc(o.name)}</text>`;
     if (zweite) html += `<text class="beschriftung zweit" x="${cx}" y="${cy + fs * 0.8}" font-size="${fs * 0.85}" text-anchor="middle" dominant-baseline="middle">${zweite}</text>`;
   }
 
@@ -3789,7 +3823,7 @@ function planDrucken() {
 function leisteAktualisieren() {
   const l = $(".plan-leiste"); if (!l) return;
   $("#k-bearbeiten").classList.toggle("an", !!G.bearbeiten);
-  $("#k-bearbeiten").innerHTML = `✏️<span class="lang"> Bearbeiten${G.bearbeiten ? ": an" : ""}</span>`;
+  $("#k-bearbeiten").innerHTML = `${icon("i-bearbeiten")}<span class="lang"> Bearbeiten${G.bearbeiten ? ": an" : ""}</span>`;
   $("#k-bearbeiten").title = G.bearbeiten ? "Bearbeiten ist an – tippen zum Ausschalten" : "Bearbeiten einschalten";
   $("#k-zurueck").disabled = !G.zurueck.length;
   $("#k-vor").disabled = !G.vor.length;
@@ -3838,12 +3872,12 @@ function panelZeichnen() {
   if (gp && !gp.abgeraeumt) { el.innerHTML = gp.geplant ? geplantPanelHTML(gp) : pflanzungPanelHTML(gp); pflanzungPanelEreignisse(el, gp); return; }
   if (G.setzen) { el.innerHTML = `<div class="karte"><p class="klein" style="margin:0">Setzen läuft – siehe Hinweis über dem Plan.</p></div>`; return; }
   const a = ARTEN[o.art], r = rahmen(o), form = o.form, pflanzbar = !!a.pflanzbar;
-  let h = `<div class="karte"><h2>${farbpunkt(o.art)} ${esc(o.name)}${o.fest ? " 🔒" : ""}</h2>`;
+  let h = `<div class="karte"><h2>${farbpunkt(o.art)} ${esc(o.name)}${o.fest ? " "+icon("i-schloss") : ""}</h2>`;
   if (!G.bearbeiten || o.fest) {
     h += `<p class="leise">${esc(a.name)} · ${groesseText(o)}</p>`;
     if (o.fest) h += `<p class="klein leise">Fixiert: Diese Fläche lässt sich nicht verschieben oder verformen. Ziehen auf ihr verschiebt nur den Ausschnitt.</p>
-      <button class="knopf" data-tun="loesen">🔓 Lösen</button>`;
-    else h += `<button class="knopf" data-tun="bearbeiten">✏️ Bearbeiten</button>`;
+      <button class="knopf" data-tun="loesen">${icon("i-offen")} Lösen</button>`;
+    else h += `<button class="knopf" data-tun="bearbeiten">${icon("i-bearbeiten")} Bearbeiten</button>`;
     h += `</div>`;
     if (pflanzbar) h += bepflanzungHTML(o);
     el.innerHTML = h; panelEreignisse(el, o); if (pflanzbar) bepflanzungEreignisse(el, o); return;
@@ -3882,7 +3916,7 @@ function panelZeichnen() {
   if (form === "poly" && o.art !== "garten" && (o.frei || istRechteckGedreht(o))) h += `<label class="schalter"><input type="checkbox" data-feld="frei" ${o.frei ? "checked" : ""}> Ecken einzeln verschieben (Form frei ändern)</label>
     <p class="klein leise" style="margin:2px 0 0">${o.frei ? "An: Jede Ecke lässt sich einzeln ziehen, das Rechteck kann schief werden." : "Aus: Ziehen an einer Ecke macht das Rechteck nur größer oder kleiner."}</p>`;
   h += `<p class="klein leise" style="margin:10px 0 0">${groesseText(o)}</p>
-    <div class="knopfreihe"><button class="knopf" data-tun="fixieren">🔒 Fixieren</button></div>
+    <div class="knopfreihe"><button class="knopf" data-tun="fixieren">${icon("i-schloss")} Fixieren</button></div>
     ${o.art === "garten" || o.art === "haus" ? `<p class="klein leise" style="margin:6px 0 0">Tipp: Passt die Form, fixiere sie. Dann verrutscht nichts, während du Beete platzierst.</p>` : ""}
   </div>`;
   if (form === "poly") {
@@ -3903,7 +3937,7 @@ function panelZeichnen() {
   h += `<div class="karte"><div class="knopfreihe" style="margin:0">
       ${form === "kreis" ? "" : `<button class="knopf" data-tun="drehen90">↻ 90° drehen</button><button class="knopf" data-tun="drehen">Drehen um …</button>`}
       <button class="knopf" data-tun="duplizieren">⧉ Duplizieren</button>
-      <button class="knopf gefahr" data-tun="loeschen">🗑️ Löschen</button>
+      <button class="knopf gefahr" data-tun="loeschen">${icon("i-loeschen")} Löschen</button>
     </div></div>
     <p class="klein leise">${form === "kreis" ? "Ziehen verschiebt den Kreis, der Punkt rechts ändert die Größe." :
       form === "linie" ? "Punkte ziehen formt den Weg. Das Plus zwischen zwei Punkten fügt einen Punkt ein, das Plus an den Enden verlängert den Weg." :
@@ -4026,11 +4060,11 @@ function uebersichtHTML() {
     <p class="klein leise" style="margin:8px 0 0">Beim Zeichnen fährst du die Form mit gedrückter Maustaste grob nach oder klickst die Ecken an. Das Raster zeigt die Meter.</p></div>`;
   const nachArt = ART_REIHENFOLGE.map(k => ob.filter(o => o.art === k)).filter(l => l.length).flat();
   return `<div class="karte"><h2>Im Plan</h2><ul class="objliste">
-      ${nachArt.map(o => `<li data-waehle="${o.id}">${farbpunkt(o.art)}<span>${esc(o.name)}${o.fest ? " 🔒" : ""}</span><span class="leise">${o.form === "linie" ? m(laengeLinie(umriss(o))) : zahl(flaeche(o) / 10000, 1) + " m²"}</span></li>`).join("")}
+      ${nachArt.map(o => `<li data-waehle="${o.id}">${farbpunkt(o.art)}<span>${esc(o.name)}${o.fest ? " "+icon("i-schloss") : ""}</span><span class="leise">${o.form === "linie" ? m(laengeLinie(umriss(o))) : zahl(flaeche(o) / 10000, 1) + " m²"}</span></li>`).join("")}
     </ul></div>
     <div class="karte"><h2>Bereiche</h2>
-      ${D.garten.bereiche.length ? `<ul class="objliste">${D.garten.bereiche.map(b => `<li data-bereich="${b.id}"><span>📍 ${esc(b.name)}</span><button class="x" data-bereich-weg="${b.id}" aria-label="Bereich löschen" title="Löschen">✕</button></li>`).join("")}</ul>`
-        : `<p class="klein leise">Noch keine. Zoome auf einen Teil des Gartens und tippe auf „📍 Merken“, um direkt dorthin springen zu können.</p>`}
+      ${D.garten.bereiche.length ? `<ul class="objliste">${D.garten.bereiche.map(b => `<li data-bereich="${b.id}"><span>${icon("i-ort")} ${esc(b.name)}</span><button class="x" data-bereich-weg="${b.id}" aria-label="Bereich löschen" title="Löschen">✕</button></li>`).join("")}</ul>`
+        : `<p class="klein leise">Noch keine. Zoome auf einen Teil des Gartens und tippe auf „${icon("i-ort")} Merken“, um direkt dorthin springen zu können.</p>`}
     </div>
     <div class="karte"><h2>Raster</h2>
       <p class="klein leise">Ecken und Flächen rasten in diesem Abstand ein.</p>
@@ -4077,8 +4111,8 @@ function gartenSeite(main, planJahr = null) {
       <button class="knopf" id="k-plus" aria-label="Vergrößern" title="Vergrößern">+</button>
       <button class="knopf" id="k-alles" title="Ganzen Garten zeigen" aria-label="Ganzen Garten zeigen">⤢<span class="lang"> Alles</span></button>
       <select id="k-bereich" aria-label="Springe zu Bereich"></select>
-      <button class="knopf" id="k-merken" title="Aktuelle Ansicht als Bereich merken" aria-label="Ansicht merken">📍<span class="lang"> Merken</span></button>
-      ${planJahr ? "" : `<button class="knopf" id="k-drucken" title="Gartenplan mit Liste drucken oder als PDF speichern" aria-label="Drucken">🖨️<span class="lang"> Drucken</span></button>`}
+      <button class="knopf" id="k-merken" title="Aktuelle Ansicht als Bereich merken" aria-label="Ansicht merken">${icon("i-ort")}<span class="lang"> Merken</span></button>
+      ${planJahr ? "" : `<button class="knopf" id="k-drucken" title="Gartenplan mit Liste drucken oder als PDF speichern" aria-label="Drucken">${icon("i-drucken")}<span class="lang"> Drucken</span></button>`}
     </div>
     <div class="plan-banner verborgen" id="plan-banner"></div>
     <div class="garten-layout">
@@ -4086,7 +4120,7 @@ function gartenSeite(main, planJahr = null) {
       <div class="plan-rahmen">
         <svg id="plan" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" role="img" aria-label="Gartenplan"></svg>
         <div class="massstab" id="massstab"></div>
-      </div><p class="klein leise nur-finger" style="margin:6px 2px 0">☝️ Ein Finger scrollt die Seite · ✌️ zwei Finger verschieben und zoomen den Plan</p></div>
+      </div><p class="klein leise nur-finger" style="margin:6px 2px 0">Ein Finger scrollt die Seite · zwei Finger verschieben und zoomen den Plan</p></div>
       <div class="panel" id="garten-panel"></div>
       <div id="druck-liste" class="nur-druck"></div>
     </div>
