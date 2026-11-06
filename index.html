@@ -160,7 +160,12 @@ main{padding:16px 14px calc(90px + env(safe-area-inset-bottom));max-width:1100px
 .knopf.gefahr.voll{background:var(--rot);color:#fff}
 .knopf.text{border-color:transparent;background:transparent;color:var(--gruen)}
 .knopfreihe{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-input[type=text],input[type=search]{
+.knopfreihe.senkrecht{flex-direction:column;align-items:stretch}
+.abgleich-status{font-size:.72rem;margin-left:4px;cursor:default}
+.abgleich-status[data-status="ok"]{color:var(--gruen)}
+.abgleich-status[data-status="fehler"],.abgleich-status[data-status="konflikt"]{color:var(--rot);font-weight:700}
+.abgleich-status[data-status="offline"],.abgleich-status[data-status="wartet"],.abgleich-status[data-status="laeuft"]{color:var(--leise)}
+input[type=text],input[type=search],input[type=password]{
   width:100%;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--linie);
   background:var(--karte);color:var(--text);font:inherit;
 }
@@ -515,7 +520,7 @@ dialog .knopfreihe{justify-content:flex-end}
 <aside id="seitenleiste">
   <a class="marke" href="#start" aria-label="Kraut und Rüben – Startseite">
     <span class="zeile"><img src="bilder/ruebe.png" alt=""><svg class="wortmarke" viewBox="0 0 810 399"><use href="#wm"/></svg></span>
-    <span class="version">Version <span class="app-version"></span></span>
+    <span class="version">Version <span class="app-version"></span> <span class="abgleich-status verborgen"></span></span>
   </a>
   <nav id="nav-gross"></nav>
   <div class="fuss">Wetterdaten: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a></div>
@@ -526,7 +531,7 @@ dialog .knopfreihe{justify-content:flex-end}
   <header id="kopf">
     <a class="marke" href="#start" aria-label="Kraut und Rüben – Startseite">
       <img src="bilder/ruebe.png" alt=""><svg class="wortmarke" viewBox="0 0 810 399"><use href="#wm"/></svg>
-      <span class="version">v<span class="app-version"></span></span>
+      <span class="version">v<span class="app-version"></span> <span class="abgleich-status verborgen"></span></span>
     </a>
     <div class="kopf-knoepfe">
       <button class="rund" data-ziel="anleitung" aria-label="Anleitung"><svg class="icon"><use href="#i-hilfe"/></svg></button>
@@ -560,19 +565,20 @@ dialog .knopfreihe{justify-content:flex-end}
       <div id="willkommen-ort"></div>
     </div>
     <button class="knopf text" id="willkommen-spaeter">Später eintragen</button>
+    <p class="klein leise" style="text-align:center;margin:4px 0 0">Schon auf einem anderen Gerät eingerichtet? Dann „Später eintragen“ und in den Einstellungen (Zahnrad) den Abgleich verbinden – Standort und Garten kommen dann von selbst.</p>
   </div>
 </div>
 
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.4.5"></script>
+<script src="pflanzen.js?v=0.5.0"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.4.5";
+const APP_VERSION = "0.5.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -634,6 +640,7 @@ function speichern() {
   D.geaendert = new Date().toISOString();
   try {
     localStorage.setItem(SPEICHER_SCHLUESSEL, JSON.stringify(D));
+    if (typeof abgleichBald === "function") abgleichBald();
     return true;
   } catch (e) {
     console.error(e);
@@ -1770,6 +1777,277 @@ function lexikonGartenHTML(pf) {
 }
 
 
+/* ============================================================
+   ABGLEICH ZWISCHEN GERÄTEN (über ein privates GitHub-Repository)
+   - Zugangsdaten (Repository, Token) liegen nur in diesem Browser unter "kur-abgleich",
+     nie in den Gartendaten, nie in einer Sicherung und nie im Code.
+   - Auf GitHub liegt eine Datei (Standard: daten.json) mit allen Gartendaten.
+   - Jede Änderung wird nach ein paar Sekunden hochgeladen; beim Öffnen der App
+     und beim Zurückkehren holt sie sich den neuesten Stand.
+   - Haben zwei Geräte gleichzeitig geändert, fragt die App, welcher Stand gilt.
+     Ältere Stände bleiben in der Versionsgeschichte auf GitHub erhalten.
+   ============================================================ */
+const ABGLEICH_SCHLUESSEL = "kur-abgleich";
+const VORHER_SCHLUESSEL = "kur-vor-abgleich";
+const AB = { laeuft: null, nochmal: false, timer: null, status: "aus", meldung: "", konfliktOffen: false };
+
+function abgleichEinstellungen() {
+  try { return JSON.parse(localStorage.getItem(ABGLEICH_SCHLUESSEL)) || null; } catch (e) { return null; }
+}
+function abgleichSpeichern(cfg) {
+  if (cfg) localStorage.setItem(ABGLEICH_SCHLUESSEL, JSON.stringify(cfg)); else localStorage.removeItem(ABGLEICH_SCHLUESSEL);
+}
+const abgleichAn = () => { const c = abgleichEinstellungen(); return !!(c && c.repo && c.token); };
+
+/* ---------- GitHub-Schnittstelle ---------- */
+function b64aus(text) {
+  const b = new TextEncoder().encode(text); let s = "";
+  for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+function b64ein(b64) { return new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, "")), c => c.charCodeAt(0))); }
+async function gh(cfg, pfad, optionen = {}) {
+  const antwort = await fetch("https://api.github.com" + pfad, {
+    cache: "no-store", ...optionen,
+    headers: { Authorization: "Bearer " + cfg.token, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", ...(optionen.headers || {}) },
+  });
+  return antwort;
+}
+function ghFehler(status, wo) {
+  if (status === 401) return "Der Token ist ungültig oder abgelaufen. Bitte einen neuen Token eintragen.";
+  if (status === 403) return "Der Token darf das nicht. Er braucht bei „Contents“ die Berechtigung „Read and write“.";
+  if (status === 404) return wo === "repo" ? "Repository nicht gefunden. Stimmt der Name (Benutzername/Repository)? Hat der Token Zugriff darauf?" : "Datei nicht gefunden.";
+  if (status === 409 || status === 422) return "Auf GitHub hat sich in der Zwischenzeit etwas geändert.";
+  return `GitHub antwortet mit Fehler ${status}.`;
+}
+const dateiPfad = cfg => "/repos/" + cfg.repo + "/contents/" + encodeURIComponent(cfg.pfad || "daten.json");
+async function entfernteDatei(cfg) {
+  const r = await gh(cfg, dateiPfad(cfg));
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error(ghFehler(r.status));
+  const j = await r.json();
+  let text = j.content ? b64ein(j.content) : "";
+  if (!text && j.size > 0) {   // große Dateien liefert GitHub nur „roh“
+    const r2 = await gh(cfg, dateiPfad(cfg), { headers: { Accept: "application/vnd.github.raw" } });
+    if (!r2.ok) throw new Error(ghFehler(r2.status));
+    text = await r2.text();
+  }
+  const inhalt = JSON.parse(text);
+  if (inhalt.app !== "kraut-und-rueben" || !inhalt.daten) throw new Error("Die Datei auf GitHub ist keine Datei von Kraut und Rüben.");
+  return { sha: j.sha, inhalt };
+}
+
+/* Was abgeglichen wird: alles außer gerätebezogenen Einstellungen */
+function abgleichDaten() {
+  const d = JSON.parse(JSON.stringify(D));
+  delete d.einstellungen.design; delete d.einstellungen.willkommenGesehen;
+  return d;
+}
+function hochladen(cfg, sha) {
+  const inhalt = { app: "kraut-und-rueben", version: APP_VERSION, geraet: cfg.geraet || "", gespeichert: new Date().toISOString(), daten: abgleichDaten() };
+  return gh(cfg, dateiPfad(cfg), { method: "PUT", body: JSON.stringify({
+    message: `Abgleich von ${cfg.geraet || "einem Gerät"} (${zeitText(inhalt.gespeichert)})`,
+    content: b64aus(JSON.stringify(inhalt, null, 1)), ...(sha ? { sha } : {}),
+  }) });
+}
+function abgleichUebernehmen(cfg, entfernt) {
+  // Bisherigen Stand dieses Geräts aufheben (für „Rückgängig“)
+  try { localStorage.setItem(VORHER_SCHLUESSEL, JSON.stringify({ zeit: new Date().toISOString(), daten: D })); } catch (e) {}
+  const geraetEig = { design: D.einstellungen.design, willkommenGesehen: true };
+  D = ergaenzen(entfernt.inhalt.daten);
+  Object.assign(D.einstellungen, geraetEig);
+  localStorage.setItem(SPEICHER_SCHLUESSEL, JSON.stringify(D));   // ohne neuen Zeitstempel
+  cfg.sha = entfernt.sha; cfg.stand = D.geaendert; cfg.zeit = new Date().toISOString();
+  abgleichSpeichern(cfg);
+  if (typeof G !== "undefined") {   // Gartenplan: Auswahl und Rückgängig-Verlauf passen nicht mehr
+    G.zurueck = []; G.vor = []; G.auswahl = null; G.pfl = null; G.ecke = null; G.setzen = null; G.auswahlPflanze = null;
+  }
+  designAnwenden(); zeigen();
+}
+const datenLeer = d => !d.garten.objekte.length && !d.pflanzungen.length && !d.planungen.length && !d.sorten.length &&
+  !d.saatgut.length && !d.rezepte.length && !(d.eigenePflanzen || []).length && !Object.keys(d.pflanzenNotizen || {}).length;
+
+/* ---------- Der eigentliche Abgleich ---------- */
+async function abgleichen({ still = true } = {}) {
+  if (!abgleichAn()) { statusSetzen("aus"); return; }
+  if (AB.laeuft) { AB.nochmal = true; return AB.laeuft; }
+  AB.laeuft = (async () => {
+    const cfg = abgleichEinstellungen();
+    if (!navigator.onLine) { statusSetzen("offline", "Kein Internet – wird nachgeholt."); return; }
+    statusSetzen("laeuft");
+    try {
+      for (let versuch = 0; versuch < 3; versuch++) {
+        const entfernt = await entfernteDatei(cfg);
+        const lokalGeaendert = D.geaendert !== cfg.stand;
+        if (!entfernt) {                                   // noch nichts auf GitHub
+          const r = await hochladen(cfg, null);
+          if (r.status === 409 || r.status === 422) continue;
+          if (!r.ok) throw new Error(ghFehler(r.status));
+          cfg.sha = (await r.json()).content.sha; cfg.stand = D.geaendert; cfg.zeit = new Date().toISOString();
+          abgleichSpeichern(cfg); statusSetzen("ok"); return;
+        }
+        if (entfernt.sha === cfg.sha) {                    // GitHub unverändert seit dem letzten Abgleich
+          if (!lokalGeaendert) { cfg.zeit = new Date().toISOString(); abgleichSpeichern(cfg); statusSetzen("ok"); return; }
+          const r = await hochladen(cfg, entfernt.sha);
+          if (r.status === 409 || r.status === 422) continue;
+          if (!r.ok) throw new Error(ghFehler(r.status));
+          cfg.sha = (await r.json()).content.sha; cfg.stand = D.geaendert; cfg.zeit = new Date().toISOString();
+          abgleichSpeichern(cfg); statusSetzen("ok"); return;
+        }
+        // GitHub hat einen neueren Stand von einem anderen Gerät
+        const ersterAbgleich = !cfg.sha;
+        if ((!lokalGeaendert && !ersterAbgleich) || datenLeer(D)) {
+          abgleichUebernehmen(cfg, entfernt); statusSetzen("ok");
+          if (!still || !ersterAbgleich) melden(`Neuer Stand von ${entfernt.inhalt.geraet || "einem anderen Gerät"} übernommen.`, { text: "Rückgängig", tun: vorAbgleichZurueck });
+          return;
+        }
+        // Beide Seiten geändert: fragen
+        if (AB.konfliktOffen) return;
+        AB.konfliktOffen = true; statusSetzen("konflikt", "Beide Geräte haben geändert – bitte entscheiden.");
+        const wahl = await auswahlDialog({
+          titel: ersterAbgleich ? "Welche Daten sollen gelten?" : "Auf zwei Geräten geändert",
+          text: (ersterAbgleich
+            ? `Auf GitHub liegen schon Gartendaten (zuletzt von <b>${esc(entfernt.inhalt.geraet || "einem anderen Gerät")}</b>, ${esc(zeitText(entfernt.inhalt.gespeichert))}). Auf diesem Gerät gibt es ebenfalls Daten.`
+            : `Seit dem letzten Abgleich wurde sowohl hier als auch auf <b>${esc(entfernt.inhalt.geraet || "einem anderen Gerät")}</b> (${esc(zeitText(entfernt.inhalt.gespeichert))}) etwas geändert.`) +
+            `<br><br>Welcher Stand soll ab jetzt überall gelten? Der andere bleibt als ältere Version auf GitHub bzw. als Rückgängig-Stand auf diesem Gerät erhalten.`,
+          optionen: [
+            { wert: "github", text: `Stand von ${entfernt.inhalt.geraet || "GitHub"} übernehmen`, haupt: true },
+            { wert: "hier", text: `Stand von diesem Gerät${cfg.geraet ? ` (${cfg.geraet})` : ""} hochladen` },
+            { wert: null, text: "Später entscheiden" },
+          ],
+        });
+        AB.konfliktOffen = false;
+        if (wahl === "github") { abgleichUebernehmen(cfg, entfernt); statusSetzen("ok"); melden("Stand von GitHub übernommen.", { text: "Rückgängig", tun: vorAbgleichZurueck }); return; }
+        if (wahl === "hier") { cfg.sha = entfernt.sha; abgleichSpeichern(cfg); continue; }   // nächster Durchlauf lädt hoch
+        statusSetzen("konflikt", "Noch nicht entschieden – „Jetzt abgleichen“ fragt erneut."); return;
+      }
+      throw new Error("Abgleich nicht möglich – GitHub hat sich mehrmals gleichzeitig geändert. Bitte gleich noch einmal versuchen.");
+    } catch (e) {
+      const offline = e instanceof TypeError;   // Netzwerkfehler
+      statusSetzen(offline ? "offline" : "fehler", offline ? "Keine Verbindung zu GitHub – wird nachgeholt." : e.message);
+      if (!still && !offline) fragen({ titel: "Abgleich nicht möglich", text: esc(e.message), ja: "OK", nein: null });
+    }
+  })();
+  try { await AB.laeuft; } finally {
+    AB.laeuft = null;
+    if (AB.nochmal) { AB.nochmal = false; abgleichen(); }
+  }
+}
+function abgleichBald() {   // nach jeder Änderung, gesammelt
+  if (!abgleichAn() || abgleichEinstellungen().auto === false) return;
+  clearTimeout(AB.timer);
+  statusSetzen("wartet");
+  AB.timer = setTimeout(() => abgleichen(), 4000);
+}
+function vorAbgleichZurueck() {
+  try {
+    const v = JSON.parse(localStorage.getItem(VORHER_SCHLUESSEL));
+    if (!v) return;
+    D = ergaenzen(v.daten); speichern(); designAnwenden(); zeigen();
+    melden("Vorheriger Stand wiederhergestellt.");
+  } catch (e) {}
+}
+
+/* ---------- Anzeige ---------- */
+function statusSetzen(status, meldung = "") {
+  AB.status = status; AB.meldung = meldung;
+  const cfg = abgleichEinstellungen();
+  const texte = {
+    aus: "", wartet: "Änderung wird gleich abgeglichen", laeuft: "Abgleich läuft …",
+    ok: cfg && cfg.zeit ? `Abgeglichen ${zeitText(cfg.zeit)}` : "Abgeglichen",
+    offline: meldung || "Offline", fehler: meldung || "Fehler beim Abgleich", konflikt: meldung || "Bitte entscheiden",
+  };
+  const symbol = { aus: "", wartet: "☁", laeuft: "⟳", ok: "☁✓", offline: "☁✕", fehler: "☁!", konflikt: "☁?" }[status];
+  $$(".abgleich-status").forEach(el => {
+    el.textContent = symbol; el.title = texte[status]; el.dataset.status = status;
+    el.classList.toggle("verborgen", status === "aus");
+  });
+  const k = $("#abgleich-text"); if (k) k.textContent = texte[status];
+}
+function auswahlDialog({ titel, text, optionen }) {
+  return new Promise(fertig => {
+    const dlg = $("#dialog");
+    dlg.innerHTML = `<h2 tabindex="-1" autofocus>${esc(titel)}</h2><p>${text}</p>
+      <div class="knopfreihe senkrecht">${optionen.map((o, i) => `<button class="knopf${o.haupt ? " haupt" : ""}" data-i="${i}">${esc(o.text)}</button>`).join("")}</div>`;
+    $$("[data-i]", dlg).forEach(k => k.onclick = () => { dlg.close(); fertig(optionen[+k.dataset.i].wert); });
+    dlg.oncancel = e => { e.preventDefault(); dlg.close(); fertig(null); };
+    dlg.showModal();
+  });
+}
+
+/* ---------- Karte in den Einstellungen ---------- */
+function abgleichKarteHTML() {
+  const cfg = abgleichEinstellungen();
+  if (!cfg || !cfg.token) return `<div class="karte" id="abgleich-karte">
+    <h2>🔄 Abgleich zwischen Laptop und Handy</h2>
+    <p>Deine Gartendaten können über ein <b>privates GitHub-Repository</b> auf allen deinen Geräten gleich sein – kostenlos. Wie du Repository und Token anlegst, steht in der Anleitung (?) unter „Abgleich zwischen Laptop und Handy“ und ausführlich im Word-Dokument „Abgleich einrichten“.</p>
+    <div class="formular">
+      <label>Repository<input type="text" id="ab-repo" placeholder="benutzername/kraut-und-rueben-daten" value="${esc(cfg?.repo || "")}" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <label>Token<input type="password" id="ab-token" placeholder="github_pat_…" autocomplete="off"></label>
+      <label>Name dieses Geräts<input type="text" id="ab-geraet" placeholder="z. B. Laptop oder Handy" value="${esc(cfg?.geraet || (matchMedia("(pointer: coarse)").matches ? "Handy" : "Laptop"))}"></label>
+    </div>
+    <p class="klein leise">Der Token bleibt nur in diesem Browser auf diesem Gerät gespeichert. Er steht nicht in der App, nicht in Sicherungen und wird nur an GitHub geschickt.</p>
+    <div class="knopfreihe"><button class="knopf haupt" id="ab-verbinden">Verbinden</button></div>
+  </div>`;
+  return `<div class="karte" id="abgleich-karte">
+    <h2>🔄 Abgleich zwischen Laptop und Handy</h2>
+    <p>Verbunden mit <b>${esc(cfg.repo)}</b> als „${esc(cfg.geraet || "ohne Namen")}“.<br><span class="klein" id="abgleich-text"></span></p>
+    <label class="schalter"><input type="checkbox" id="ab-auto" ${cfg.auto !== false ? "checked" : ""}> Automatisch abgleichen (beim Öffnen und nach jeder Änderung)</label>
+    <div class="knopfreihe">
+      <button class="knopf haupt" id="ab-jetzt">⟳ Jetzt abgleichen</button>
+      <button class="knopf" id="ab-trennen">Verbindung auf diesem Gerät trennen</button>
+    </div>
+    <p class="klein leise" style="margin:6px 0 0">Ältere Stände findest du auf GitHub im Repository unter „Commits“ bzw. in der Versionsgeschichte der Datei ${esc(cfg.pfad || "daten.json")}.</p>
+  </div>`;
+}
+function abgleichKarteEreignisse() {
+  const v = $("#ab-verbinden");
+  if (v) v.onclick = async () => {
+    const repo = $("#ab-repo").value.trim().replace(/^https?:\/\/github\.com\//, "").replace(/\.git$/, "").replace(/\/+$/, "");
+    const token = $("#ab-token").value.trim(), geraet = $("#ab-geraet").value.trim();
+    if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) { melden("Repository bitte als benutzername/name eintragen."); return; }
+    if (!token) { melden("Bitte den Token einfügen."); return; }
+    v.disabled = true; v.textContent = "Prüfe …";
+    try {
+      const cfg = { repo, token, geraet, pfad: "daten.json", auto: true, sha: null, stand: null, zeit: null };
+      const r = await gh(cfg, "/repos/" + repo);
+      if (!r.ok) throw new Error(ghFehler(r.status, "repo"));
+      const info = await r.json();
+      if (!info.private) throw new Error("Dieses Repository ist öffentlich – dann könnte jeder deine Gartendaten lesen. Bitte ein privates Repository nehmen (oder das Repository auf GitHub unter Settings auf „Private“ stellen).");
+      abgleichSpeichern(cfg);
+      zeigen();
+      await abgleichen({ still: false });
+      if (AB.status === "ok") melden("Verbunden und abgeglichen.");
+    } catch (e) {
+      const offline = e instanceof TypeError;
+      fragen({ titel: "Verbinden nicht möglich", text: esc(offline ? "Keine Verbindung zu GitHub. Bist du online?" : e.message), ja: "OK", nein: null });
+      v.disabled = false; v.textContent = "Verbinden";
+    }
+  };
+  const j = $("#ab-jetzt"); if (j) j.onclick = () => abgleichen({ still: false });
+  const a = $("#ab-auto"); if (a) a.onchange = () => { const c = abgleichEinstellungen(); c.auto = a.checked; abgleichSpeichern(c); };
+  const t = $("#ab-trennen"); if (t) t.onclick = async () => {
+    if (!await fragen({ titel: "Verbindung trennen?", text: "Der Token wird von diesem Gerät gelöscht. Deine Daten bleiben hier und auf GitHub erhalten. Du kannst dich jederzeit wieder verbinden.", ja: "Trennen" })) return;
+    const c = abgleichEinstellungen();
+    abgleichSpeichern({ repo: c.repo, geraet: c.geraet });   // ohne Token und ohne Abgleich-Stand
+    statusSetzen("aus"); zeigen();
+  };
+  statusSetzen(AB.status === "aus" && abgleichAn() ? "ok" : AB.status, AB.meldung);
+}
+
+/* ---------- Auslöser ---------- */
+function abgleichStarten() {
+  const auto = () => abgleichEinstellungen()?.auto !== false;
+  if (abgleichAn()) { if (auto()) abgleichen(); else statusSetzen("ok"); }
+  document.addEventListener("visibilitychange", () => {
+    if (!auto() || !abgleichAn()) return;
+    if (document.visibilityState === "visible") abgleichen();
+    else if (AB.timer) { clearTimeout(AB.timer); abgleichen(); }   // beim Wegwechseln Ausstehendes sofort hochladen
+  });
+  window.addEventListener("online", () => { if (auto()) abgleichen(); });
+}
+
+
 function seitentitel(main, titel, unter) {
   main.insertAdjacentHTML("beforeend", `<div class="seitentitel"><h1>${esc(titel)}</h1>${unter ? `<p class="leise">${unter}</p>` : ""}</div>`);
 }
@@ -1870,10 +2148,7 @@ const SEITEN = {
         </div>
         <div class="knopfreihe"><button class="knopf gefahr" id="loeschen">🗑️ Alle Daten löschen</button></div>
       </div>
-      <div class="karte bald">
-        <h2>🔄 Abgleich zwischen Laptop und Handy</h2>
-        <p class="leise klein" style="margin:0">Kommt in einer späteren Version: deine Daten automatisch auf allen deinen Geräten, kostenlos über ein privates GitHub-Repository.</p>
-      </div>
+      ${abgleichKarteHTML()}
       <div class="karte">
         <h2>ℹ️ Über die App</h2>
         <p>Kraut und Rüben · Version ${APP_VERSION}</p>
@@ -1887,12 +2162,16 @@ const SEITEN = {
       b.onclick = () => { D.einstellungen.design = b.dataset.w; speichern(); designAnwenden(); zeigen(); };
     });
 
+    abgleichKarteEreignisse();
     $("#sichern").onclick = sicherungHerunterladen;
     $("#laden").onclick = () => $("#datei").click();
     $("#datei").onchange = e => sicherungLaden(e.target.files[0]);
     $("#loeschen").onclick = async () => {
-      const ok = await fragen({ titel: "Alle Daten löschen?", text: "Garten, Pflanzungen, Planungen, Sorten, Vorrat und Einstellungen werden auf diesem Gerät gelöscht. Das lässt sich nicht rückgängig machen.<br><br>Tipp: Lade vorher eine Sicherung herunter.", ja: "Alles löschen", gefahr: true });
+      const ok = await fragen({ titel: "Alle Daten löschen?", text: "Garten, Pflanzungen, Planungen, Sorten, Vorrat und Einstellungen werden auf diesem Gerät gelöscht. Das lässt sich nicht rückgängig machen.<br><br>Tipp: Lade vorher eine Sicherung herunter." + (abgleichAn() ? "<br><br>Der Abgleich wird auf diesem Gerät getrennt, damit die leeren Daten nicht auf GitHub landen. Die Daten auf GitHub und auf deinen anderen Geräten bleiben erhalten." : ""), ja: "Alles löschen", gefahr: true });
       if (!ok) return;
+      clearTimeout(AB.timer);
+      const ab = abgleichEinstellungen(); if (ab) abgleichSpeichern({ repo: ab.repo, geraet: ab.geraet });
+      statusSetzen("aus");
       localStorage.removeItem(SPEICHER_SCHLUESSEL);
       localStorage.removeItem(WETTER_SCHLUESSEL);
       D = leereDaten();
@@ -1968,6 +2247,19 @@ const SEITEN = {
           <p><b>Eigene Pflanzen:</b> Fehlt etwas, legst du es mit „＋ Eigene Pflanze“ an: Name, Gruppe, Familie, Nährstoffbedarf, Abstand, Wuchshöhe, ob sie einzeln gesetzt wird, und die Monate zum Antippen. Eigene Pflanzen erscheinen überall wie die anderen und lassen sich bearbeiten oder löschen.</p>
           <p><b>Kalender:</b> Unter <b>Wissen → Kalender</b> blätterst du durch die Monate und siehst, was jeweils vorgezogen, gesät, gepflanzt und geerntet wird. Darunter steht die Jahresübersicht aller Pflanzen. Auf der Startseite zeigt die Karte „Im …“ dasselbe für den aktuellen Monat.</p>
           <p><b>Quellen:</b> Unter <b>Wissen → Quellen</b> steht, woher die Angaben stammen. Alle Texte sind in eigenen Worten geschrieben.</p>
+        </div></details>
+        <details><summary>Abgleich zwischen Laptop und Handy</summary><div>
+          <p>Damit deine Gartendaten auf allen Geräten gleich sind, speichert die App sie zusätzlich in einem <b>privaten GitHub-Repository</b>. Das ist kostenlos. Eine ausführliche Schritt-für-Schritt-Anleitung gibt es als Word-Dokument; kurz:</p>
+          <ol>
+            <li>Auf GitHub ein neues, <b>privates</b> Repository anlegen, z. B. <code>kraut-und-rueben-daten</code>. Nicht das Repository der App nehmen – das ist öffentlich.</li>
+            <li>Einen <b>Fine-grained Token</b> erstellen (Profilbild → Settings → Developer settings → Personal access tokens → Fine-grained tokens): nur Zugriff auf dieses eine Repository, Berechtigung „Contents: Read and write“. Am besten für jedes Gerät einen eigenen Token.</li>
+            <li>In der App: Zahnrad → „Abgleich zwischen Laptop und Handy“ → Repository (<code>benutzername/kraut-und-rueben-daten</code>), Token und einen Namen für das Gerät eintragen → „Verbinden“.</li>
+            <li>Auf dem zweiten Gerät genauso. Hat das zweite Gerät noch keine Daten, holt es sich alles von GitHub.</li>
+          </ol>
+          <p><b>Im Alltag</b> musst du nichts tun: Die App gleicht beim Öffnen, beim Zurückwechseln in die App und wenige Sekunden nach jeder Änderung ab. Neben der Versionsnummer zeigt ein Wölkchen den Stand: <b>☁✓</b> abgeglichen, <b>☁</b> Änderung wartet, <b>☁✕</b> gerade kein Internet (wird nachgeholt), <b>☁!</b> Fehler, <b>☁?</b> du musst entscheiden.</p>
+          <p><b>Auf zwei Geräten gleichzeitig geändert?</b> Dann fragt die App, welcher Stand gelten soll. Der andere geht nicht verloren: Auf GitHub bleiben alle früheren Stände in der Versionsgeschichte, und auf dem Gerät gibt es nach dem Übernehmen „Rückgängig“.</p>
+          <p><b>Sicherheit:</b> Der Token liegt nur in diesem Browser auf diesem Gerät – nicht in der App, nicht in Sicherungen, nicht im öffentlichen Repository. Wer nur den Link zur App bekommt, sieht eine leere App. „Verbindung trennen“ löscht den Token vom Gerät; einen verlorenen Token löschst du auf GitHub unter Developer settings.</p>
+          <p>„Alle Daten löschen“ trennt den Abgleich auf diesem Gerät automatisch, damit die leeren Daten nicht auf GitHub landen.</p>
         </div></details>
         <details><summary>Startseite und Wetter</summary><div>
           <p>Die Startseite zeigt das Wetter der nächsten 7 Tage für deinen Standort: Höchst- und Tiefstwert, Regenmenge und darunter Hinweise.</p>
@@ -3416,6 +3708,7 @@ navAufbauen();
 zeigen();
 willkommenPruefen();
 serviceWorkerStarten();
+abgleichStarten();
 window.addEventListener("resize", (() => { let breit = matchMedia("(min-width:900px)").matches;
   return () => { const b = matchMedia("(min-width:900px)").matches; if (b !== breit) { breit = b; if (aktuelleSeite() === "start") zeigen(); } }; })());
 
