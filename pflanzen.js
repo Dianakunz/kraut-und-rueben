@@ -142,7 +142,13 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   100,
+   200
+  ],
+  "hoeheHinweis": "Stabtomaten; Busch- und Balkontomaten bleiben mit 40–80 cm deutlich kleiner.",
+  "einzeln": true
  },
  {
   "id": "paprika",
@@ -190,7 +196,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   40,
+   80
+  ],
+  "einzeln": true
  },
  {
   "id": "aubergine",
@@ -233,7 +244,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   60,
+   100
+  ],
+  "einzeln": true
  },
  {
   "id": "gurke",
@@ -286,7 +302,13 @@ const PFLANZEN = [
   ],
   "hinweise": [
    "Vorziehen: Die BZfE-Tabelle nennt für Salatgurken nur die Direktsaat ab Mitte Mai; das Vorziehen im April ist gängige Praxis, steht dort aber nicht."
-  ]
+  ],
+  "hoehe": [
+   150,
+   200
+  ],
+  "hoeheHinweis": "An der Rankhilfe gezogen; ohne Rankhilfe liegen die Triebe am Boden.",
+  "einzeln": true
  },
  {
   "id": "zucchini",
@@ -334,7 +356,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   50,
+   80
+  ],
+  "einzeln": true
  },
  {
   "id": "kuerbis",
@@ -384,7 +411,13 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   30,
+   60
+  ],
+  "hoeheHinweis": "Bleibt niedrig, die Ranken werden aber mehrere Meter lang.",
+  "einzeln": true
  },
  {
   "id": "buschbohne",
@@ -429,7 +462,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   30,
+   50
+  ],
+  "einzeln": false
  },
  {
   "id": "stangenbohne",
@@ -477,7 +515,13 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   200,
+   300
+  ],
+  "hoeheHinweis": "Je nach Stangenhöhe.",
+  "einzeln": false
  },
  {
   "id": "erbse",
@@ -527,7 +571,13 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   40,
+   150
+  ],
+  "hoeheHinweis": "Niedrige Sorten um 40–60 cm, hohe Sorten brauchen ein Rankgitter.",
+  "einzeln": false
  },
  {
   "id": "moehre",
@@ -581,7 +631,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   30,
+   50
+  ],
+  "einzeln": false
  },
  {
   "id": "pastinake",
@@ -629,7 +684,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   40,
+   80
+  ],
+  "einzeln": false
  },
  {
   "id": "rote_bete",
@@ -681,7 +741,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   30,
+   40
+  ],
+  "einzeln": false
  },
  {
   "id": "radieschen",
@@ -732,7 +797,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   10,
+   20
+  ],
+  "einzeln": false
  },
  {
   "id": "kartoffel",
@@ -773,7 +843,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   50,
+   80
+  ],
+  "einzeln": false
  },
  {
   "id": "kohlrabi",
@@ -824,7 +899,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   30,
+   40
+  ],
+  "einzeln": false
  },
  {
   "id": "brokkoli",
@@ -874,7 +954,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   60,
+   90
+  ],
+  "einzeln": true
  },
  {
   "id": "blumenkohl",
@@ -922,7 +1007,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   50,
+   70
+  ],
+  "einzeln": true
  },
  {
   "id": "kopfkohl",
@@ -978,7 +1068,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   40,
+   60
+  ],
+  "einzeln": true
  },
  {
   "id": "gruenkohl",
@@ -1025,7 +1120,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   60,
+   120
+  ],
+  "einzeln": true
  },
  {
   "id": "kopfsalat",
@@ -1087,7 +1187,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   20,
+   30
+  ],
+  "einzeln": false
  },
  {
   "id": "pfluecksalat",
@@ -1152,7 +1257,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   20,
+   40
+  ],
+  "einzeln": false
  },
  {
   "id": "feldsalat",
@@ -1199,7 +1309,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   10,
+   15
+  ],
+  "einzeln": false
  },
  {
   "id": "spinat",
@@ -1245,7 +1360,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   20,
+   30
+  ],
+  "einzeln": false
  },
  {
   "id": "mangold",
@@ -1292,7 +1412,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   40,
+   60
+  ],
+  "einzeln": false
  },
  {
   "id": "zwiebel",
@@ -1342,7 +1467,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   30,
+   60
+  ],
+  "einzeln": false
  },
  {
   "id": "knoblauch",
@@ -1383,7 +1513,12 @@ const PFLANZEN = [
   ],
   "auch": [],
   "vorziehen": [],
-  "direktsaat": []
+  "direktsaat": [],
+  "hoehe": [
+   50,
+   90
+  ],
+  "einzeln": false
  },
  {
   "id": "lauch",
@@ -1446,7 +1581,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   50,
+   80
+  ],
+  "einzeln": false
  },
  {
   "id": "schnittlauch",
@@ -1501,7 +1641,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   20,
+   40
+  ],
+  "einzeln": false
  },
  {
   "id": "sellerie",
@@ -1547,7 +1692,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   40,
+   70
+  ],
+  "einzeln": false
  },
  {
   "id": "fenchel",
@@ -1602,7 +1752,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   50,
+   80
+  ],
+  "einzeln": false
  },
  {
   "id": "mais",
@@ -1651,7 +1806,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   150,
+   250
+  ],
+  "einzeln": false
  },
  {
   "id": "basilikum",
@@ -1696,7 +1856,12 @@ const PFLANZEN = [
    "Nährstoffbedarf: Für Kräuter gibt es in den genutzten Fachquellen keine einheitliche Einordnung; Mittelzehrer ist ein Richtwert."
   ],
   "auch": [],
-  "direktsaat": []
+  "direktsaat": [],
+  "hoehe": [
+   30,
+   60
+  ],
+  "einzeln": false
  },
  {
   "id": "petersilie",
@@ -1748,7 +1913,12 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr"
-  ]
+  ],
+  "hoehe": [
+   20,
+   40
+  ],
+  "einzeln": false
  },
  {
   "id": "dill",
@@ -1796,7 +1966,12 @@ const PFLANZEN = [
   ],
   "auch": [],
   "vorziehen": [],
-  "pflanzen": []
+  "pflanzen": [],
+  "hoehe": [
+   60,
+   120
+  ],
+  "einzeln": false
  }
 ];
 const MISCHKULTUR = [{"a": "basilikum", "b": "tomate", "art": "gut", "quelle": "hornbach"}, {"a": "blumenkohl", "b": "brokkoli", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "buschbohne", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "erbse", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "gruenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "blumenkohl", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "blumenkohl", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "blumenkohl", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "blumenkohl", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "brokkoli", "b": "buschbohne", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "erbse", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "gruenkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "brokkoli", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "brokkoli", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "brokkoli", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "brokkoli", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "brokkoli", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "erbse", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "fenchel", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "gruenkohl", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kartoffel", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "kohlrabi", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kopfkohl", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "kuerbis", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "lauch", "art": "schlecht", "quelle": "bund"}, {"a": "buschbohne", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "buschbohne", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "dill", "b": "erbse", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "fenchel", "art": "schlecht", "quelle": "bund"}, {"a": "dill", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "kartoffel", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "dill", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "fenchel", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "gruenkohl", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "erbse", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "erbse", "b": "kohlrabi", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kopfkohl", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "kuerbis", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "lauch", "art": "schlecht", "quelle": "bund"}, {"a": "erbse", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "erbse", "b": "stangenbohne", "art": "schlecht", "quelle": "bund", "notiz": "In der BUND-Tabelle bei der Stangenbohne als gut und schlecht genannt, bei der Erbse als schlecht."}, {"a": "erbse", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "fenchel", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "fenchel", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "fenchel", "b": "paprika", "art": "schlecht", "quelle": "bund"}, {"a": "fenchel", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "fenchel", "b": "stangenbohne", "art": "schlecht", "quelle": "bund"}, {"a": "fenchel", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "gruenkohl", "b": "gurke", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "kartoffel", "art": "schlecht", "quelle": "bund"}, {"a": "gruenkohl", "b": "knoblauch", "art": "schlecht", "quelle": "bund"}, {"a": "gruenkohl", "b": "kopfkohl", "art": "schlecht", "quelle": "bund", "notiz": "Kohlarten untereinander (BUND: „andere Kohlarten“)"}, {"a": "gruenkohl", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "gruenkohl", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "gurke", "b": "knoblauch", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "kopfkohl", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "kuerbis", "art": "schlecht", "quelle": "bund"}, {"a": "gurke", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "paprika", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "radieschen", "art": "schlecht", "quelle": "bund"}, {"a": "gurke", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "gurke", "b": "tomate", "art": "schlecht", "quelle": "hornbach"}, {"a": "gurke", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "kohlrabi", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "kopfkohl", "art": "schlecht", "quelle": "bund"}, {"a": "kartoffel", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "rote_bete", "art": "schlecht", "quelle": "bund", "notiz": "In der BUND-Tabelle bei der Roten Bete als gut und schlecht genannt, bei der Kartoffel als schlecht."}, {"a": "kartoffel", "b": "sellerie", "art": "schlecht", "quelle": "bund"}, {"a": "kartoffel", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "kartoffel", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "knoblauch", "b": "kopfkohl", "art": "schlecht", "quelle": "bund"}, {"a": "knoblauch", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "knoblauch", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "knoblauch", "b": "stangenbohne", "art": "schlecht", "quelle": "bund"}, {"a": "knoblauch", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "kuerbis", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kohlrabi", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "kopfsalat", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "mangold", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "pfluecksalat", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "kopfkohl", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "kopfsalat", "b": "lauch", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "petersilie", "art": "schlecht", "quelle": "bund"}, {"a": "kopfsalat", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "kopfsalat", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "kuerbis", "b": "mais", "art": "gut", "quelle": "bund"}, {"a": "kuerbis", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "kuerbis", "b": "tomate", "art": "schlecht", "quelle": "bund"}, {"a": "kuerbis", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "paprika", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "rote_bete", "art": "schlecht", "quelle": "bund"}, {"a": "lauch", "b": "sellerie", "art": "gut", "quelle": "bund"}, {"a": "lauch", "b": "stangenbohne", "art": "schlecht", "quelle": "bund"}, {"a": "lauch", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "mais", "b": "rote_bete", "art": "schlecht", "quelle": "bund"}, {"a": "mais", "b": "sellerie", "art": "schlecht", "quelle": "bund"}, {"a": "mais", "b": "tomate", "art": "umstritten", "quelle": "bund", "notiz": "BUND-Tabelle widersprüchlich: bei der Tomate guter, beim Mais schlechter Nachbar."}, {"a": "mangold", "b": "moehre", "art": "gut", "quelle": "bund"}, {"a": "mangold", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "mangold", "b": "spinat", "art": "schlecht", "quelle": "bund"}, {"a": "moehre", "b": "paprika", "art": "gut", "quelle": "bund"}, {"a": "moehre", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "moehre", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "moehre", "b": "zwiebel", "art": "umstritten", "quelle": "bund,lwg", "notiz": "BUND: gute Nachbarn. Bayerische Gartenakademie: nicht empfehlenswert (unterschiedlicher Nährstoff- und Wasserbedarf, Schutz vor Möhren-/Zwiebelfliege klappt nur selten)."}, {"a": "paprika", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "petersilie", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "petersilie", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "radieschen", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "rote_bete", "art": "gut", "quelle": "bund"}, {"a": "pfluecksalat", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "radieschen", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "radieschen", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "radieschen", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "rote_bete", "b": "spinat", "art": "schlecht", "quelle": "bund"}, {"a": "rote_bete", "b": "zwiebel", "art": "gut", "quelle": "bund"}, {"a": "sellerie", "b": "spinat", "art": "gut", "quelle": "bund"}, {"a": "sellerie", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "sellerie", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "spinat", "b": "stangenbohne", "art": "gut", "quelle": "bund"}, {"a": "spinat", "b": "tomate", "art": "gut", "quelle": "bund"}, {"a": "stangenbohne", "b": "zucchini", "art": "gut", "quelle": "bund"}, {"a": "stangenbohne", "b": "zwiebel", "art": "schlecht", "quelle": "bund"}, {"a": "zucchini", "b": "zwiebel", "art": "gut", "quelle": "bund"}];
