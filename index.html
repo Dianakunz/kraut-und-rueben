@@ -610,6 +610,8 @@ table.mk-tabelle{border-collapse:separate;border-spacing:3px;font-size:.88rem}
 .sg-knoepfe{display:flex;gap:6px;flex-wrap:wrap}
 .knopf.klein{min-height:34px;padding:4px 10px;font-size:.86rem}
 .hm-warn{border-left:5px solid var(--rot)}
+.hm-schalter{display:inline-flex;margin:0 0 12px}
+.hm-eigen{background:var(--gruen-hell);padding:8px 12px;border-radius:10px;list-style:none;margin-left:-18px!important}
 .hm-abschnitt>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
 .hm-abschnitt>summary::-webkit-details-marker{display:none}
 .hm-abschnitt>summary h2{margin:0;flex:1}
@@ -773,13 +775,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.11.0"></script>
+<script src="pflanzen.js?v=0.11.1"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.11.0";
+const APP_VERSION = "0.11.1";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -2931,6 +2933,7 @@ const HM_QUELLEN = {
   bodensee: ["Landratsamt Bodenseekreis: Fermentieren – Handreichung (BW zu Tisch)", "https://www.bodenseekreis.de/fileadmin/03_umwelt_landnutzung/landwirtschaft/downloads/fachinfo_ernaehrung/Fermentieren_Handreichung_und_Rezepte__BaWue_zu_Tisch.pdf"],
   oeko_tk:  ["Öko-Test: Tiefgekühlte Lebensmittel – was hält sich wie lange (nach BZfE)", "https://oekotest.de/essen-trinken/Tiefgekuehlte-Lebensmittel-Was-haelt-sich-wie-lange_12955_1.html"],
   topagrar: ["top agrar: Seminar zum Fermentieren – Gemüse aus dem Bauerngarten haltbar machen", "https://www.topagrar.com/landleben/kochen-und-backen/seminar-zum-fermentieren-das-gemuese-aus-dem-bauerngarten-haltbar-machen-13369206.html"],
+  usda: ["Colorado State University Extension: Bohnen einkochen (nach USDA-Einkochtabellen)", "https://apps.chhs.colostate.edu/preservesmart/produce/canning/beans-greenwax"],
   test_doe: ["Stiftung Warentest: Obst und Gemüse dörren", "https://www.test.de/Doerrgeraete-im-Test-Korinthenmacher-auf-dem-Pruefstand-5074567-0/"],
   oeko_kart:["Öko-Test: Kartoffeln richtig lagern", "https://www.oekotest.de/essen-trinken/Kartoffeln-richtig-lagern-Keller-Kuehlschrank-oder-Kartoffeltopf_11474_1.html"],
   dpa_lag:  ["dpa/Volksstimme (Okt. 2026): Keller, Erdmiete und mehr – Gemüse richtig lagern", "https://www.volksstimme.de/leben/haus-und-garten/reiche-ernte-wie-lagere-ich-mein-gemuse-richtig-4333703"],
@@ -2970,6 +2973,7 @@ const HM_ABSCHNITTE = [
       <li><b>Obst:</b> Meist reichen 20–30 Minuten bei 80–90 °C. ${hmQ("vzn_ein")} Die Zeit zählt erst, wenn die Temperatur erreicht ist – ein Thermometer hilft.</li>
       <li><b>Gemüse</b> (vor allem Bohnen, Erbsen) ist säurearm. Darin können Sporen des Botulismus-Erregers überleben, die erst über 100 °C abgetötet werden. ${hmQ("bfr_hm")}
         Das BfR empfiehlt deshalb, Gemüse <b>am besten unter Druck bei 121 °C</b> einzukochen. Geht das nicht: <b>zweimal auf 100 °C erhitzen, im Abstand von 1–2 Tagen</b>, dazwischen bei Raumtemperatur stehen lassen. ${hmQ("bfr_bot", "laves")}</li>
+      ${D.einstellungen.druckeinkocher ? `<li class="hm-eigen"><b>Mit deinem Druckeinkochtopf:</b> Gemüse darin einkochen statt zweimal im Wasserbad. Das Gewicht richtet sich nach der Höhenlage (laut Anleitung unter 300 m: 10 PSI, etwa 116 °C). Druck und Zeit immer aus derselben geprüften Tabelle nehmen, z. B. grüne Bohnen bei 10 PSI 20 Min. im ½-Liter-Glas, 25 Min. im 1-Liter-Glas. ${hmQ("usda")}</li>` : ""}
       <li><b>Tomaten</b> sind meist sauer genug (pH unter 4,6); die BfR-Regel für Gemüse nimmt die meisten Tomaten ausdrücklich aus. ${hmQ("bfr_bot")}</li>
       <li><b>Kontrolle:</b> Lässt sich der Deckel abheben, fehlt das Vakuum oder zischt es beim Öffnen nicht, den Inhalt nicht essen. Aufgewölbte Deckel: Glas ungeöffnet entsorgen. ${hmQ("bfr_bot")}</li>
       <li>Fehlt direkt nach dem Einkochen das Vakuum, kann man mit neuem Ring bzw. Deckel noch einmal einkochen – oder den Inhalt am nächsten Tag (auf 100 °C erhitzt) essen. ${hmQ("bfr_bot")}</li>
@@ -3016,7 +3020,7 @@ const HM_WIDERSPRUECHE = [
   "Kräuter einfrieren: Die Verbraucherzentrale Niedersachsen nennt 3–4 Monate, die Verbraucherzentrale Südtirol (nach BLE) 8–10 Monate für portionierte Küchenkräuter. Im Zweifel die kürzere Zeit nehmen – danach leidet vor allem das Aroma.",
   "Blanchieren: Die Verbraucherzentrale Niedersachsen rät, alle rohen Gemüse außer Spargel vor dem Einfrieren zu blanchieren. Nach den BZfE-Angaben (Öko-Test) können Zucchini und Paprika auch roh eingefroren werden.",
   "Druckeinkocher: Die Anleitung zu deinem Druckeinkochtopf sagt, säurearme Lebensmittel wie Gemüse ließen sich bei 100 °C nie sicher haltbar machen, nur unter Druck. Das BfR hält zweimaliges Erhitzen auf 100 °C als Ausweichlösung für vertretbar. Wer einen Druckeinkocher hat, nimmt für Gemüse am besten ihn.",
-  "Druck: Laut Topf-Anleitung reichen unter 300 m Höhe 10 PSI (etwa 115 °C); das BfR nennt 121 °C (entspricht 15 PSI). Im Zweifel die Zeiten und den Druck aus geprüften Rezepten für den eigenen Topf nehmen.",
+  "Druck: Laut Topf-Anleitung reichen unter 300 m Höhe 10 PSI (etwa 116 °C). Das entspricht den US-Einkochtabellen (USDA), deren Einkochzeiten genau auf diese Temperatur abgestimmt sind – z. B. grüne Bohnen 20 Min. (½ Liter) bzw. 25 Min. (1 Liter). Das BfR nennt allgemein 121 °C. Kein echter Widerspruch, solange Druck und Zeit aus derselben geprüften Tabelle stammen – nur nicht mischen.",
   "Fermentieren – waschen: Die Wurzelwerk-Checkliste rät, das Gemüse nicht zu waschen, sondern nur trocken abzureiben (wegen der Milchsäurebakterien auf der Oberfläche). Das BfR rät allgemein, alles gründlich zu waschen; ein Fermentier-Kurs (top agrar) hält einmal kurz Abspülen für ausreichend.",
   "Fermentieren – Salzlake: Wurzelwerk nimmt 30 g Salz pro Liter (3 %), die Verbraucherzentrale Südtirol und das Landratsamt Bodenseekreis 20 g (2 %). Beides ist üblich; mehr Salz bremst Fäulniskeime stärker, das Gemüse wird aber salziger.",
   "Dörrtemperatur: Stiftung Warentest nennt für Obst 60–70 °C, Backofenhersteller teils 80 °C. Höher geht schneller, kostet aber Aroma und Farbe.",
@@ -3051,7 +3055,7 @@ const HM_PFLANZE = {
 const HM_KRAEUTER = [["Einfrieren portioniert (3–4 bzw. 8–10 Monate, Angaben unterschiedlich).", "vzn_tk"], ["Trocknen bei 30–40 °C.", "test_doe"], ["Nicht in Öl auf Vorrat einlegen.", "bfr_oel"]];
 const HM_BEEREN = [["Einfrieren: einzeln vorfrieren, ca. 10–12 Monate.", "vzs_tk"], ["Einkochen: meist 20–30 Min. bei 80–90 °C.", "vzn_ein"]];
 function hmHinweise(p) {
-  if (HM_PFLANZE[p.id]) return HM_PFLANZE[p.id];
+  if (HM_PFLANZE[p.id]) return D.einstellungen.druckeinkocher ? HM_PFLANZE[p.id].map(([t, q]) => /^Einkochen nur unter Druck/.test(t) ? ["Einkochen im Druckeinkochtopf (nicht im Wasserbad).", "usda"] : [t, q]) : HM_PFLANZE[p.id];
   if (p.gruppe === "Kräuter") return HM_KRAEUTER;
   if (["erdbeere", "himbeere", "brombeere", "johannisbeere", "stachelbeere", "heidelbeere"].includes(p.id)) return HM_BEEREN;
   return [];
@@ -3183,11 +3187,13 @@ async function keimprobe(s) {
 function haltbarSeite(main) {
   main.insertAdjacentHTML("beforeend", `
     <div class="karte"><p style="margin:0">Grundlagen und Sicherheitsregeln zum Haltbarmachen der Ernte. Rezepte sammelst du unter <a href="#vorrat/rezepte">Rezepte</a>. Die Werte stammen von Behörden und Verbraucherzentralen; die Quelle steht jeweils dahinter.</p></div>
+    <label class="schalter-klein hm-schalter"><input type="checkbox" id="hm-druck" ${D.einstellungen.druckeinkocher ? "checked" : ""}> Ich habe einen Druckeinkochtopf</label>
     ${HM_WARNUNG()}
     <div class="hm-abschnitte">${HM_ABSCHNITTE.map(a => `<details class="karte hm-abschnitt" data-hm="${a.id}" ${VR.offen === a.id ? "open" : ""}><summary><h2>${icon(a.icon)} ${a.titel}</h2></summary><div class="hm-inhalt">${a.html()}</div></details>`).join("")}</div>
     <div class="karte hinweis-karte"><h2>${icon("i-warnung")} Unterschiedliche Angaben</h2><ul>${HM_WIDERSPRUECHE.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
     <div class="karte"><h2>${icon("i-quellen")} Quellen</h2><ul class="quellen">${Object.values(HM_QUELLEN).map(([t, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a></li>`).join("")}</ul></div>`);
   $$(".hm-abschnitt").forEach(d => d.addEventListener("toggle", () => { if (d.open) VR.offen = d.dataset.hm; }));
+  $("#hm-druck").onchange = e => { D.einstellungen.druckeinkocher = e.target.checked; speichern(); if (e.target.checked) VR.offen = "einkochen"; zeigen(); };
 }
 
 /* ---------- Rezepte ---------- */
@@ -3203,7 +3209,7 @@ function rezeptPflanzen(r) {
 function rezeptHinweise(r, pfl) {
   const t = (r.titel + " " + r.zutaten + " " + r.zubereitung).toLowerCase(), h = [];
   if (/(^|[^a-zäöüß])öl([^a-zäöüß]|$)|olivenöl|rapsöl|sonnenblumenöl/.test(t) && /einleg|eingelegt|aufgegossen|bedeck/.test(t)) h.push(`Enthält Gemüse oder Kräuter unter Öl: laut BfR nicht auf Vorrat, im Kühlschrank aufbewahren und am Tag nach der Herstellung verbrauchen.`);
-  if (r.art === "Einkochen" && pfl.some(p => p.gruppe === "Gemüse" && p.id !== "tomate") && !/essig/.test(t)) h.push(`Gemüse einkochen: laut BfR am besten unter Druck (121 °C), sonst zweimal auf 100 °C im Abstand von 1–2 Tagen.`);
+  if (r.art === "Einkochen" && pfl.some(p => p.gruppe === "Gemüse" && p.id !== "tomate") && !/essig/.test(t)) h.push(D.einstellungen.druckeinkocher ? `Gemüse einkochen: im Druckeinkochtopf, nicht im Wasserbad – Druck und Zeit aus einer geprüften Tabelle.` : `Gemüse einkochen: laut BfR am besten unter Druck (121 °C), sonst zweimal auf 100 °C im Abstand von 1–2 Tagen.`);
   if (pfl.some(p => ["buschbohne", "stangenbohne"].includes(p.id)) && /\broh\b/.test(t)) h.push(`Gartenbohnen nie roh essen (Phasin).`);
   return h;
 }
@@ -3614,7 +3620,7 @@ const SEITEN = {
             <li><b>Filter:</b> „Im … säen“ zeigt, was du diesen Monat vorziehen oder säen kannst; „Keimprobe empfohlen“ die gelben und roten Einträge. Leere Tüten mit „Aufgebraucht“ ausblenden.</li>
             <li>Die <b>Startseite</b> zeigt, was du aus deinem Vorrat diesen Monat säen kannst. Auf jeder <b>Pflanzenkarte</b> steht unter „Vorrat und Haltbarmachen“ dein Saatgut dieser Pflanze.</li>
           </ul>
-          <p><b>Haltbarmachen:</b> Grundlagen und Sicherheitsregeln zu Einfrieren, Einkochen, Fermentieren, Trocknen, Essig und Lagern, mit Quellen (BfR, Verbraucherzentralen). Wo sich Quellen widersprechen, steht es unten. Wichtig: Gemüse am besten unter Druck oder zweimal einkochen, und Gemüse oder Kräuter in Öl nicht auf Vorrat herstellen. Kurze Hinweise je Pflanze stehen auch auf der Pflanzenkarte.</p>
+          <p><b>Haltbarmachen:</b> Grundlagen und Sicherheitsregeln zu Einfrieren, Einkochen, Fermentieren, Trocknen, Essig und Lagern, mit Quellen (BfR, Verbraucherzentralen). Wo sich Quellen widersprechen, steht es unten. Wichtig: Gemüse am besten unter Druck oder zweimal einkochen (wer einen Druckeinkochtopf hat, setzt oben das Häkchen – dann richten sich die Hinweise danach), und Gemüse oder Kräuter in Öl nicht auf Vorrat herstellen. Kurze Hinweise je Pflanze stehen auch auf der Pflanzenkarte.</p>
           <p><b>Rezepte:</b> „＋ Rezept eintragen“ mit Titel, Art, Zutaten, Zubereitung, Haltbarkeit, Quelle und Notizen. Ein Tipp auf ein Rezept klappt es auf; dort kannst du es bearbeiten oder einzeln drucken. Pflanzen aus dem Lexikon, die in Titel oder Zutaten vorkommen, erkennt die App selbst – das Rezept steht dann auch auf der Pflanzenkarte. Bei Gemüse in Öl oder Gemüse zum Einkochen erscheint ein Sicherheitshinweis. Rezepte liegen nur in deinen Daten, nicht im öffentlichen Code.</p>
         </div></details>
         <details><summary>Planung</summary><div>
