@@ -390,7 +390,7 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
   background:var(--plan-bg);height:62vh;min-height:340px;
 }
 @media (min-width:900px){ .plan-rahmen{height:calc(100vh - 210px);min-height:460px} }
-#plan{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+#plan{width:100%;height:100%;display:block;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
 #plan.ziehen{cursor:grabbing}
 .massstab{position:absolute;left:12px;bottom:10px;font-size:.75rem;color:var(--leise);pointer-events:none}
 .massstab div{height:6px;border:2px solid var(--leise);border-top:0;margin-bottom:2px}
@@ -434,6 +434,8 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 .panel .kanten .kantenart{min-height:32px;min-width:36px;padding:2px 8px;font-size:1rem}
 .panel .kanten .kantenart.an{background:var(--gruen-hell);border-color:var(--gruen);color:var(--gruen-dunkel)}
 .panel .kanten .winkel{min-width:34px;text-align:right}
+.nur-finger{display:none}
+@media (pointer:coarse){.nur-finger{display:block}}
 #plan .treffer{fill:transparent;stroke:none;pointer-events:all;cursor:move}
 #plan .griff{fill:#fff;stroke:var(--auswahl);stroke-width:2px;vector-effect:non-scaling-stroke;cursor:move}
 #plan .griff.aktiv{fill:var(--auswahl)}
@@ -564,13 +566,13 @@ dialog .knopfreihe{justify-content:flex-end}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.4.2"></script>
+<script src="pflanzen.js?v=0.4.4"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.4.2";
+const APP_VERSION = "0.4.4";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1917,7 +1919,7 @@ const SEITEN = {
           <p><b>Auswählen, dann ändern:</b> Erst ein Klick wählt eine Fläche aus (rot umrandet). Nur die ausgewählte Fläche lässt sich ziehen. Ziehen auf einer nicht ausgewählten Fläche verschiebt nur den Ausschnitt – so verrutscht nichts aus Versehen.</p>
           <p><b>Die echte Form:</b> Bei der ausgewählten Fläche erscheinen rote Punkte an den Ecken.</p>
           <ul>
-            <li><b>Ecke ziehen</b> verändert die Form.</li>
+            <li><b>Ecke ziehen</b> verändert die Form. Bei einem Rechteck ändert es nur die Größe – das Rechteck bleibt rechtwinklig. Soll es schief werden, unter dem Plan „Ecken einzeln verschieben“ einschalten. Mit dem Plus auf einer Kante bekommt es eine fünfte Ecke und ist ab dann frei formbar (z. B. für ein L). Die Gartenfläche ist immer frei formbar.</li>
             <li><b>Das Plus</b> in der Mitte einer Kante fügt dort eine neue Ecke ein – so wird aus dem Rechteck zum Beispiel ein L.</li>
             <li><b>Doppelklick auf eine Ecke</b> entfernt sie (oder Ecke antippen und „Ecke entfernen“).</li>
             <li><b>Kantenlänge eintippen</b> unter „Kanten und Ecken“: Die zweite Ecke der Kante rückt auf das genaue Maß. Dort steht auch der Winkel jeder Ecke.</li>
@@ -1939,7 +1941,7 @@ const SEITEN = {
           <p><b>Hinzufügen:</b> Über „＋ Hinzufügen“ kommen Haus, Wege, Terrasse, Rasen, Beete, Hochbeete, Gewächshaus, Kübel und Sonstiges dazu. Neue Flächen erscheinen in der Mitte des sichtbaren Ausschnitts. Flächen lassen sich drehen, duplizieren und löschen.</p>
           <p><b>Ansehen und Bearbeiten:</b> Ist „Bearbeiten“ aus, lassen sich die Flächen selbst nicht verändern. Antippen zeigt dann Name, Größe und bei Beeten die Bepflanzung. Am Handy ist Bearbeiten deshalb anfangs aus. Pflanzen setzen, ernten und abräumen geht in beiden Fällen.</p>
           <p><b>Am Laptop bleibt der Plan stehen:</b> Die Einstellungen rechts haben eine eigene Bildlaufleiste. So siehst du die Fläche immer, während du rechts weiter unten etwas änderst.</p>
-          <p><b>Bewegen im Plan:</b> Mit der Maus ziehen bzw. mit einem Finger wischen verschiebt den Ausschnitt. Zoomen geht mit dem Mausrad, mit zwei Fingern oder mit + und −. „Alles“ zeigt den ganzen Garten.</p>
+          <p><b>Bewegen im Plan:</b> Am Laptop verschiebt Ziehen mit der Maus den Ausschnitt, das Mausrad zoomt. <b>Am Handy</b> scrollt ein Finger wie überall die Seite, damit du nicht im Plan „hängen bleibst“. Den Plan verschiebst und zoomst du mit <b>zwei Fingern</b>. Antippen wählt wie gewohnt aus. Ein gewähltes Beet, seine Griffe und eine gewählte Pflanzung lassen sich dagegen mit einem Finger ziehen; beim Zeichnen und Pflanzen-Setzen gehört der Finger ganz dem Plan. Außerdem gibt es + und −, und „Alles“ zeigt den ganzen Garten.</p>
           <p><b>Bereiche:</b> Einen Ausschnitt mit „📍 Merken“ benennen, zum Beispiel „Vorgarten“. Über „Springe zu …“ kommst du direkt dorthin.</p>
           <p><b>Rückgängig:</b> ↶ und ↷ in der Leiste (am Laptop auch Strg+Z und Strg+Y). Am Laptop verschieben die Pfeiltasten die ausgewählte Fläche um eine Rasterweite, Entf löscht sie, Esc hebt die Auswahl auf.</p>
         </div></details>
@@ -2155,6 +2157,20 @@ function istRechteck(o) {
 /* Rechteck in beliebiger Drehung (vier rechte Winkel, keine Kurven) */
 function istRechteckGedreht(o) {
   return o.form === "poly" && !o.rund && o.punkte.length === 4 && o.punkte.every((_, i) => { const w = winkelAn(o.punkte, i); return w !== null && Math.abs(w - 90) < 0.5; });
+}
+/* Rechtecke bleiben beim Ziehen an einer Ecke Rechtecke (nur größer/kleiner), außer „Ecken einzeln verschieben“ ist an.
+   Die Gartenfläche ist immer frei formbar. */
+const rechteckBleibt = o => o.art !== "garten" && !o.frei && istRechteckGedreht(o);
+function rechteckZiehen(o, i, w, e) {
+  const p = o.punkte, gg = p[(i + 2) % 4], n1 = (i + 1) % 4, n3 = (i + 3) % 4;
+  const einheit = q => { const l = Math.hypot(q[0], q[1]) || 1; return [q[0] / l, q[1] / l]; };
+  const d1 = einheit([p[n1][0] - gg[0], p[n1][1] - gg[1]]), d3 = einheit([p[n3][0] - gg[0], p[n3][1] - gg[1]]);
+  const r = rasterwert(e), rel = [w[0] - gg[0], w[1] - gg[1]];
+  const t1 = Math.max(10, einrasten(rel[0] * d1[0] + rel[1] * d1[1], r)), t3 = Math.max(10, einrasten(rel[0] * d3[0] + rel[1] * d3[1], r));
+  const rd = q => [Math.round(q[0] * 10) / 10, Math.round(q[1] * 10) / 10];
+  p[n1] = rd([gg[0] + d1[0] * t1, gg[1] + d1[1] * t1]);
+  p[n3] = rd([gg[0] + d3[0] * t3, gg[1] + d3[1] * t3]);
+  p[i] = rd([gg[0] + d1[0] * t1 + d3[0] * t3, gg[1] + d1[1] * t1 + d3[1] * t3]);
 }
 function seitenSetzen(o, a, b) {   // Seitenlängen eines (gedrehten) Rechtecks setzen, Ecke 1 bleibt stehen
   const p = o.punkte, l1 = abstand(p[0], p[1]) || 1, l2 = abstand(p[1], p[2]) || 1;
@@ -2774,8 +2790,22 @@ function zeichnenHTML(s) {
 }
 
 /* ---------- Maus, Finger, Tastatur ---------- */
+/* Am Handy: Ein Finger scrollt die Seite, zwei Finger verschieben und zoomen den Plan.
+   Nur wenn man etwas bearbeitet (Griff, gewähltes Beet, gewählte Pflanzung, Zeichnen, Pflanzen setzen),
+   gehört auch ein einzelner Finger dem Plan. */
+function fingerGehoertPlan(ziel) {
+  if (G.zeichnen || G.setzen) return true;
+  const t = ziel && ziel.closest && ziel.closest("[data-rolle]"), rolle = t && t.dataset.rolle;
+  if (!rolle) return false;
+  if (["griff", "neu", "verlaengern", "drehen", "radius", "pfl-groesse"].includes(rolle)) return true;
+  if (rolle === "pfl") return t.dataset.pid === G.pfl;
+  if (rolle === "obj") return !G.pfl && t.dataset.id === G.auswahl && editierbar(objekt(G.auswahl));
+  return false;
+}
 function planEreignisse() {
   const svg = $("#plan");
+  svg.addEventListener("touchstart", e => { if (e.touches.length > 1 || fingerGehoertPlan(e.target)) e.preventDefault(); }, { passive: false });
+  svg.addEventListener("touchmove", e => { if (e.touches.length > 1 || G.zug && G.zug.art !== "tipp") e.preventDefault(); }, { passive: false });
   svg.addEventListener("pointerdown", e => {
     G.zeiger.set(e.pointerId, { x: e.clientX, y: e.clientY });
     try { svg.setPointerCapture(e.pointerId); } catch (x) {}
@@ -2790,6 +2820,11 @@ function planEreignisse() {
     if (G.zeichnen) { zeichnenRunter(e); return; }
     const t = e.target.closest("[data-rolle]"), rolle = t && t.dataset.rolle;
     const w = welt(e.clientX, e.clientY), start = { x: e.clientX, y: e.clientY };
+    if (e.pointerType === "touch" && !fingerGehoertPlan(e.target)) {
+      // nur antippen erkennen; Ziehen mit einem Finger scrollt die Seite
+      G.zug = { art: "tipp", start, klickId: rolle === "obj" ? t.dataset.id : null, ziel: e.target, bewegt: false };
+      return;
+    }
     if (G.setzen) {
       const ziel = pflanzbarAn(w);
       G.zug = G.setzen.form === "flaeche" && ziel
@@ -2845,8 +2880,9 @@ function planEreignisse() {
       G.view = { x: z.mitte[0] - fx * neuW, y: z.mitte[1] - fy * neuW * g.h / g.b, w: neuW };
       planZeichnen(); return;
     }
-    if (!z.bewegt && Math.hypot(e.clientX - z.start.x, e.clientY - z.start.y) < 4) return;
+    if (!z.bewegt && Math.hypot(e.clientX - z.start.x, e.clientY - z.start.y) < (z.art === "tipp" ? 10 : 4)) return;
     z.bewegt = true;
+    if (z.art === "tipp") return;
     const w = welt(e.clientX, e.clientY);
     if (z.art === "pfl" || z.art === "pfl-groesse") { pflZugBewegen(z, w, e); return; }
     if (z.art === "setzen-flaeche") {
@@ -2866,7 +2902,9 @@ function planEreignisse() {
       pflVersetzen(z.pfl, dx, dy);
       planZeichnen();
     } else if (z.art === "ecke") {
-      const o = objekt(G.auswahl); o.punkte[z.i] = eckeFangen(o, z.i, z.versatz ? [w[0] + z.versatz[0], w[1] + z.versatz[1]] : w, e);
+      const o = objekt(G.auswahl), wz = z.versatz ? [w[0] + z.versatz[0], w[1] + z.versatz[1]] : w;
+      if (z.rechteck === undefined) z.rechteck = rechteckBleibt(o);
+      if (z.rechteck) rechteckZiehen(o, z.i, wz, e); else o.punkte[z.i] = eckeFangen(o, z.i, wz, e);
       planZeichnen();
     } else if (z.art === "drehen") {
       const o = objekt(G.auswahl), grad = drehFangen(z, w, e), rad = grad * Math.PI / 180, c = Math.cos(rad), sn = Math.sin(rad), [mx, my] = z.mitte;
@@ -2883,6 +2921,13 @@ function planEreignisse() {
 
   const ende = e => {
     G.zeiger.delete(e.pointerId);
+    if (G.zug && G.zug.art === "tipp") {   // Antippen mit dem Finger: auswählen wie ein Mausklick
+      const z = G.zug; G.zug = null;
+      if (e.type === "pointercancel" || z.bewegt) return;
+      if (pflZugStart(e, z.ziel, welt(e.clientX, e.clientY), z.start)) { const zz = G.zug; G.zug = null; pflZugEnde(zz); leisteAktualisieren(); return; }
+      waehlen(z.klickId); return;
+    }
+    if (e.type === "pointercancel" && G.zug && G.zug.art === "pan") { G.zug = null; svg.classList.remove("ziehen"); return; }
     if (G.zeichnen && (!G.zug || G.zug.art !== "pinch")) { zeichnenHoch(e); return; }
     const z = G.zug; if (!z) return;
     if (z.art === "pinch") { if (G.zeiger.size === 0) G.zug = null; return; }
@@ -3039,6 +3084,8 @@ function panelZeichnen() {
       <p class="klein leise" style="margin:4px 0 0">Vorlagen ersetzen die Form und behalten Breite und Tiefe.</p>`;
   }
   if (form !== "kreis") h += `<label class="schalter"><input type="checkbox" data-feld="rund" ${o.rund === true ? "checked" : ""}> ${form === "linie" ? "Geschwungen" : "Alle Kanten geschwungen"}</label>`;
+  if (form === "poly" && o.art !== "garten" && (o.frei || istRechteckGedreht(o))) h += `<label class="schalter"><input type="checkbox" data-feld="frei" ${o.frei ? "checked" : ""}> Ecken einzeln verschieben (Form frei ändern)</label>
+    <p class="klein leise" style="margin:2px 0 0">${o.frei ? "An: Jede Ecke lässt sich einzeln ziehen, das Rechteck kann schief werden." : "Aus: Ziehen an einer Ecke macht das Rechteck nur größer oder kleiner."}</p>`;
   h += `<p class="klein leise" style="margin:10px 0 0">${groesseText(o)}</p>
     <div class="knopfreihe"><button class="knopf" data-tun="fixieren">🔒 Fixieren</button></div>
     ${o.art === "garten" || o.art === "haus" ? `<p class="klein leise" style="margin:6px 0 0">Tipp: Passt die Form, fixiere sie. Dann verrutscht nichts, während du Beete platzierst.</p>` : ""}
@@ -3065,7 +3112,7 @@ function panelZeichnen() {
     </div></div>
     <p class="klein leise">${form === "kreis" ? "Ziehen verschiebt den Kreis, der Punkt rechts ändert die Größe." :
       form === "linie" ? "Punkte ziehen formt den Weg. Das Plus zwischen zwei Punkten fügt einen Punkt ein, das Plus an den Enden verlängert den Weg." :
-      "Ziehen verschiebt die Fläche, der runde Griff ↻ darüber dreht sie (rastet parallel zu nahen Kanten ein). Ecken ziehen ändert die Form, das Plus auf einer Kante fügt eine Ecke ein, Doppelklick auf eine Ecke entfernt sie."}
+      "Ziehen verschiebt die Fläche, der runde Griff ↻ darüber dreht sie (rastet parallel zu nahen Kanten ein). Ecken ziehen ändert die Form – bei Rechtecken nur die Größe, außer „Ecken einzeln verschieben“ ist an. Das Plus auf einer Kante fügt eine Ecke ein, Doppelklick auf eine Ecke entfernt sie."}
       Blau gestrichelt: Abstand zur nächsten Kante. Ecken rasten an anderen Ecken ein (rote Hilfslinie). Umschalttaste = frei, ohne Einrasten.</p>`;
   el.innerHTML = h;
   const cb = $('[data-feld="rund"]', el); if (cb && Array.isArray(o.rund)) cb.indeterminate = true;
@@ -3121,6 +3168,7 @@ function panelEreignisse(el, o) {
       if (feld === "name") o.name = wert.trim() || o.name;
       else if (feld === "art") o.art = wert;
       else if (feld === "rund") { if (f.checked) o.rund = true; else delete o.rund; }
+      else if (feld === "frei") { if (f.checked) o.frei = true; else delete o.frei; }
       else if (feld === "durchmesser" && zahlwert > 0) o.r = Math.round(zahlwert * 50);
       else if (feld === "wegbreite" && zahlwert > 0) o.breite = Math.round(zahlwert * 100);
       else if (feld === "seiteA" && zahlwert > 0) seitenSetzen(o, zahlwert * 100, abstand(o.punkte[1], o.punkte[2]));
@@ -3237,7 +3285,7 @@ function gartenSeite(main) {
       <div class="plan-rahmen">
         <svg id="plan" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" role="img" aria-label="Gartenplan"></svg>
         <div class="massstab" id="massstab"></div>
-      </div></div>
+      </div><p class="klein leise nur-finger" style="margin:6px 2px 0">☝️ Ein Finger scrollt die Seite · ✌️ zwei Finger verschieben und zoomen den Plan</p></div>
       <div class="panel" id="garten-panel"></div>
     </div>
 `);
