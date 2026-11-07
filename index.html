@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Kraut und Rüben · Version 0.13.0 -->
+<!-- Kraut und Rüben · Version 0.13.1 -->
 <html lang="de" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -813,13 +813,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.13.0"></script>
+<script src="pflanzen.js?v=0.13.1"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.13.0";
+const APP_VERSION = "0.13.1";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1339,6 +1339,10 @@ function wissenSeite(main) {
 }
 
 let lexFilter = { text: "", gruppe: "alle", jetzt: false };
+const LEX_GRUPPEN_HINWEIS = {
+  Blumen: "Hier stehen bewusst nur Blumen, die man essen kann oder die dem Gemüsebeet nützen: essbare Blüten (Ringelblume, Kapuzinerkresse, Kornblume, Lavendel, Malve), Sonnenblume wegen der Kerne und Tagetes, die Nematoden im Boden zurückdrängen soll. Reine Zierpflanzen fehlen – die kannst du über „＋ Eigene Pflanze“ ergänzen.",
+  Gründüngung: "Pflanzen, die nicht geerntet, sondern zur Bodenverbesserung gesät und später eingearbeitet werden. Jede steht einzeln, weil Saatzeit, Winterhärte und Pflanzenfamilie (wichtig für die Fruchtfolge) verschieden sind.",
+};
 function pflanzenListe(main) {
   main.insertAdjacentHTML("beforeend", `
     <div class="lex-werkzeug">
@@ -1352,6 +1356,7 @@ function pflanzenListe(main) {
       <p class="klein leise" style="margin:6px 0">Die Farbe zeigt die <b>Pflanzenfamilie</b>, nicht die Farbe der Pflanze. Pflanzen derselben Familie sollten wegen der Fruchtfolge nicht direkt nacheinander ins selbe Beet. Die Buchstaben sind die ersten beiden des Namens.</p>
       <div class="legende">${Object.values(FAMILIEN).filter(f => allePflanzen().some(p => familieVon(p) === f)).map(f => `<span><i style="background:${f.farbe};border-radius:50%"></i>${esc(f.name.replace(/\s*\(.*\)/, ""))}${f.pause ? ` (${esc(f.pause)})` : ""}</span>`).join("")}</div>
     </details>
+    <p class="klein leise" id="lex-gruppen-hinweis" style="margin:0 0 10px"></p>
     <div class="lex-raster" id="lex-raster"></div>
 `);
   const zeichnen = () => {
@@ -1360,6 +1365,8 @@ function pflanzenListe(main) {
       (lexFilter.gruppe === "alle" || p.gruppe === lexFilter.gruppe) &&
       (!t || p.name.toLowerCase().includes(t) || (p.auch || []).some(a => a.toLowerCase().includes(t))) &&
       (!lexFilter.jetzt || TAETIGKEITEN.some(x => (p[x.feld] || []).includes(mo))));
+    const gh = LEX_GRUPPEN_HINWEIS[lexFilter.gruppe] || "";
+    $("#lex-gruppen-hinweis").textContent = gh; $("#lex-gruppen-hinweis").hidden = !gh;
     $("#lex-raster").innerHTML = liste.length ? liste.map(p => `
       <a class="lex-karte" href="#wissen/pflanze/${encodeURIComponent(p.id)}">
         <div class="kopf">${pflanzenBadge(p)}<div><b>${esc(p.name)}</b>${p.eigen ? ` <span class="marker">eigene</span>` : ""}<div class="klein leise">${esc(familieVon(p).name.replace(/\s*\(.*\)/, ""))}</div></div></div>
@@ -3934,7 +3941,7 @@ const SEITEN = {
           <p>Rückgängig (↶) gilt auch für alles rund ums Pflanzen. Die Startseite und die Pflanzenkarten im Lexikon zeigen, was gerade wo im Garten steht.</p>
         </div></details>
         <details><summary>Pflanzenlexikon (Wissen)</summary><div>
-          <p>Unter <b>Wissen → Pflanzen</b> stehen gängige Gemüse, Kräuter, Obst, essbare Blüten und Gründüngungspflanzen. Oben suchst du nach Namen (auch nach anderen Namen wie „Paradeiser“ oder „Porree“), filterst nach Gemüse, Kräutern, Obst, Gründüngung oder Blumen oder zeigst nur, was im aktuellen Monat ansteht. Die kleine Leiste auf jeder Karte zeigt das Jahr von Januar bis Dezember: <b>gelb</b> vorziehen, <b>hellgrün</b> direkt säen, <b>dunkelgrün</b> pflanzen oder stecken, <b>rot</b> ernten. Der aktuelle Monat ist umrandet. Die Farbe des Kürzels vor dem Namen steht für die Pflanzenfamilie.</p>
+          <p>Unter <b>Wissen → Pflanzen</b> stehen gängige Gemüse, Kräuter, Obst, essbare Blüten und Gründüngungspflanzen. Oben suchst du nach Namen (auch nach anderen Namen wie „Paradeiser“ oder „Porree“), filterst nach Gemüse, Kräutern, Obst, Gründüngung oder Blumen oder zeigst nur, was im aktuellen Monat ansteht. Bei <b>Blumen</b> stehen nur essbare oder fürs Gemüsebeet nützliche Arten; reine Zierpflanzen kannst du als eigene Pflanze ergänzen. Die kleine Leiste auf jeder Karte zeigt das Jahr von Januar bis Dezember: <b>gelb</b> vorziehen, <b>hellgrün</b> direkt säen, <b>dunkelgrün</b> pflanzen oder stecken, <b>rot</b> ernten. Der aktuelle Monat ist umrandet. Die Farbe des Kürzels vor dem Namen steht für die Pflanzenfamilie.</p>
           <p>Ein Klick auf eine Pflanze öffnet ihre Karte mit Anbaukalender, kurzer Anleitung, Steckbrief (Familie, Nährstoffbedarf, Standort, Frost, Wuchshöhe, Abstand, Saattiefe, Anbaupause, Keimfähigkeit der Samen, Saatgut selbst gewinnen) und guten und schlechten Nachbarn. Die Nachbarn kannst du antippen und landest bei deren Karte. Ein Sternchen heißt: Dazu gibt es unten eine Anmerkung.</p>
           <p><b>Unterschiedliche Angaben:</b> Wenn sich die Quellen widersprechen, steht das offen bei der Pflanze. Saattiefen und Zeiten sind Richtwerte für durchschnittliche Lagen – die Samentüte hat Vorrang.</p>
           <p><b>Meine Notizen:</b> Auf jeder Pflanzenkarte kannst du eigene Erfahrungen eintragen. Sie werden beim Tippen automatisch gespeichert.</p>
