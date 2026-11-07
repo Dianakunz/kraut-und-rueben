@@ -4,8 +4,8 @@
 const PFLANZEN_STAND = "2026-11-07";
 const QUELLEN = {
  "bzfe": {
-  "titel": "BZfE/aid: Tabelle Aussaat- und Pflanzzeiten (Abstände, Anzucht, Pflanzung, Direktsaat, Ernte)",
-  "url": "https://www.bzfe.de/fileadmin/resources/Bildung/Tabelle_Aussaat_und_Pflanzzeiten.pdf"
+  "titel": "aid/BZfE: Tabelle Aussaat- und Pflanzzeiten (Jörg Planer, 2017; Abstände, Anzucht, Pflanzung, Direktsaat, Ernte) – nicht mehr online. Der Link führt zum Nachfolger, dem Saat- und Pflanzkalender der BLE (gleicher Autor, Werte nicht einzeln abgeglichen)",
+  "url": "https://www.landwirtschaft.de/garten/selbst-anbauen/obst-und-gemuese/saat-und-pflanzkalender"
  },
  "sbb": {
   "titel": "Südtiroler Bauernbund: Fruchtfolge (Anbaupausen nach Familien, Stark-/Mittel-/Schwachzehrer)",
