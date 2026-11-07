@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Kraut und Rüben · Version 0.12.2 -->
+<!-- Kraut und Rüben · Version 0.12.3 -->
 <html lang="de" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -350,7 +350,7 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 /* ============ GARTENPLAN ============ */
 :root{
   --f-garten:#e6f1d3; --s-garten:#8cc63f;
-  --f-rasen:#c9e4a0;  --s-rasen:#7fb13d;
+  --f-rasen:#c9e4a0;  --s-rasen:#7fb13d; --f-wiese:#dce6a6; --f-erde:#d9c7ad;
   --f-weg:#e7dfd0;    --s-weg:#b3a58c;
   --f-terrasse:#ddd3c3; --s-terrasse:#9c8c72;
   --f-haus:#d8d0c4;   --s-haus:#7d6f5d;
@@ -364,7 +364,7 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 }
 [data-theme="dark"]{
   --f-garten:#26331d; --s-garten:#6fa33a;
-  --f-rasen:#2f4721;  --s-rasen:#6fa33a;
+  --f-rasen:#2f4721;  --s-rasen:#6fa33a; --f-wiese:#3a4321; --f-erde:#3d3226;
   --f-weg:#3a352c;    --s-weg:#7d715d;
   --f-terrasse:#3b352d; --s-terrasse:#86775f;
   --f-haus:#3a3631;   --s-haus:#a4967f;
@@ -433,6 +433,11 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 :is(#plan,.plan-bild) .art-haus{stroke-width:2px}
 :is(#plan,.plan-bild) .art-garten{fill:var(--f-garten);stroke:var(--s-garten)}
 :is(#plan,.plan-bild) .art-rasen{fill:var(--f-rasen);stroke:var(--s-rasen)}
+:is(#plan,.plan-bild) .art-garten.boden-rasen{fill:var(--f-rasen)}
+:is(#plan,.plan-bild) .art-garten.boden-wiese{fill:var(--f-wiese)}
+:is(#plan,.plan-bild) .art-garten.boden-pflaster{fill:var(--f-terrasse)}
+:is(#plan,.plan-bild) .art-garten.boden-kies{fill:var(--f-weg)}
+:is(#plan,.plan-bild) .art-garten.boden-erde{fill:var(--f-erde)}
 :is(#plan,.plan-bild) .art-weg{fill:var(--f-weg);stroke:var(--s-weg)}
 :is(#plan,.plan-bild) .art-terrasse{fill:var(--f-terrasse);stroke:var(--s-terrasse)}
 :is(#plan,.plan-bild) .art-haus{fill:var(--f-haus);stroke:var(--s-haus)}
@@ -663,6 +668,9 @@ table.mk-tabelle{border-collapse:separate;border-spacing:3px;font-size:.88rem}
 @media (min-width:760px){.rz-spalten{grid-template-columns:1fr 1.6fr}}
 .rz-spalten h3{margin:0 0 6px;font-size:1rem}
 .rz-text{white-space:pre-wrap}
+.rz-zutaten{border-collapse:collapse;width:100%}
+.rz-zutaten td{padding:3px 0;border-bottom:1px solid var(--linie);vertical-align:top}
+.rz-menge{white-space:nowrap;padding-right:14px!important;color:var(--leise);width:1%;text-align:right}
 .rz-warn{background:var(--gelb-hell);color:var(--text);padding:8px 12px;border-radius:10px;margin:0 0 10px}
 @media print{ body.druck-rezept .seitentitel,body.druck-rezept .unternav,body.druck-rezept .rz-karte:not(.wird-gedruckt),body.druck-rezept .ch-werkzeug{display:none!important} }
 .zurueck-reihe{display:flex;gap:6px 22px;flex-wrap:wrap;align-items:baseline}
@@ -804,13 +812,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.12.2"></script>
+<script src="pflanzen.js?v=0.12.3"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.12.2";
+const APP_VERSION = "0.12.3";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1975,10 +1983,11 @@ function pflanzungPanelHTML(p) {
       <div><label>Breite</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-pf="w" value="${(p.w / 100).toFixed(2)}"><span>m</span></div></div>
       <div><label>Tiefe</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-pf="h" value="${(p.h / 100).toFixed(2)}"><span>m</span></div></div></div>
       <label>Anzahl</label><div class="feld-einheit"><input type="number" step="1" min="1" inputmode="numeric" data-pf="anzahl" value="${p.anzahl || ""}" placeholder="ca. ${autoAnzahl(pf, p.w, p.h)} (geschätzt)"><span>Stück</span></div>` : ""}
-    ${istBaum(pf) ? `<label>Krone</label>
-      <select data-pf="krone-wahl" aria-label="Kronengröße">${(pf.krone || []).map(k => `<option value="${k.d}" ${(p.krone || kroneStandard(pf)) === k.d ? "selected" : ""}>${zahl(k.d / 100, k.d % 100 ? 1 : 0)} m – ${esc(k.text)}</option>`).join("")}${(pf.krone || []).some(k => k.d === (p.krone || kroneStandard(pf))) ? "" : `<option value="" selected>eigener Wert</option>`}</select>
-      <div class="feld-einheit" style="margin-top:6px"><input type="number" step="0.5" min="0.5" inputmode="decimal" data-pf="krone" value="${zahl((p.krone || kroneStandard(pf)) / 100, 1).replace(",", ".")}" aria-label="Kronendurchmesser"><span>m Durchmesser</span></div>
-      <p class="klein leise" style="margin:4px 0 0">Am besten den heutigen Durchmesser eintragen – oder die erwartete Größe, wenn du Platz einplanen willst.</p>` : ""}
+    ${istBaum(pf) ? (() => { const d = p.krone || kroneStandard(pf), vor = (pf.krone || []).some(k => k.d === d) && G.kroneEigen !== p.id;
+      return `<label>Kronendurchmesser</label>
+      <select data-pf="krone-wahl" aria-label="Kronendurchmesser">${(pf.krone || []).map(k => `<option value="${k.d}" ${vor && d === k.d ? "selected" : ""}>${zahl(k.d / 100, k.d % 100 ? 1 : 0)} m – ${esc(k.text)}</option>`).join("")}<option value="eigen" ${vor ? "" : "selected"}>eigener Wert …</option></select>
+      ${vor ? "" : `<div class="feld-einheit" style="margin-top:6px"><input type="number" step="0.5" min="0.5" inputmode="decimal" data-pf="krone" value="${String(d / 100)}" aria-label="Eigener Kronendurchmesser"><span>m</span></div>`}
+      <p class="klein leise" style="margin:4px 0 0">Die Größen sind Richtwerte für ausgewachsene Bäume je nach Unterlage. Für einen jungen Baum „eigener Wert“ wählen und den heutigen Durchmesser eintragen – wenn er wächst, einfach später anpassen.</p>`; })() : ""}
     <label>Notiz</label><textarea data-pf="notiz" rows="2" placeholder="z. B. mit Vlies abgedeckt">${esc(p.notiz || "")}</textarea>
     <p class="klein leise" id="pfl-gespeichert" style="margin:6px 0 0">Änderungen werden automatisch gespeichert.</p>
   </div>
@@ -2011,7 +2020,7 @@ function pflanzungPanelEreignisse(el, p) {
       if (feld === "gepflanzt") p.gepflanzt = v || heuteISO();
       else if (feld === "wie" || feld === "sorte" || feld === "notiz") p[feld] = v.trim ? (feld === "notiz" ? v : v.trim()) : v;
       else if (feld === "anzahl") p.anzahl = zw > 0 ? Math.round(zw) : null;
-      else if (feld === "krone-wahl" && +v > 0) p.krone = +v;
+      else if (feld === "krone-wahl") { if (v === "eigen") G.kroneEigen = p.id; else { G.kroneEigen = null; p.krone = +v; } }
       else if (feld === "krone" && zw > 0) p.krone = Math.round(Math.min(zw, 30) * 100);
       else if ((feld === "w" || feld === "h") && zw > 0) p[feld] = Math.round(zw * 100);
     });
@@ -3134,9 +3143,10 @@ function keimStatus(s) {
     return pz >= 50 ? { stufe: "gut", text: `Keimprobe ${pz} %` } : { stufe: "alt", text: `Keimprobe nur ${pz} % – dichter säen oder ersetzen` };
   }
   if (s.bis) {
-    if (jetzt < s.bis) return { stufe: "gut", text: `keimfähig bis ${s.bis}` };
-    if (jetzt === s.bis) return { stufe: "bald", text: `läuft ${s.bis} ab – bald aufbrauchen` };
-    return { stufe: "alt", text: `seit ${s.bis} abgelaufen – Keimprobe machen` };
+    const [by, bm] = bisTeile(s.bis), h = new Date(), rest = (by * 12 + bm) - (h.getFullYear() * 12 + h.getMonth() + 1), t = bisText(s.bis);
+    if (rest >= 12) return { stufe: "gut", text: `keimfähig bis ${t}` };
+    if (rest >= 0) return { stufe: "bald", text: `keimfähig bis ${t} – möglichst bald aufbrauchen` };
+    return { stufe: "alt", text: `seit ${t} abgelaufen – Keimprobe machen` };
   }
   if (!s.jahr || !p || !p.keimJahre) return { stufe: "unbekannt", text: s.jahr ? "keine Angabe zur Keimfähigkeit" : "Jahr fehlt" };
   const alter = jetzt - s.jahr, b = p.keimJahre[1], a = p.keimBis ? b : p.keimJahre[0];
@@ -3146,6 +3156,17 @@ function keimStatus(s) {
   return { stufe: "alt", text: `${jt} – vermutlich zu alt, Keimprobe machen` };
 }
 const STUFE_RANG = { alt: 0, bald: 1, unbekannt: 2, gut: 3 };
+// "keimfähig bis": früher nur Jahr (Zahl), jetzt "JJJJ-MM"
+const bisTeile = b => typeof b === "number" ? [b, 12] : [+String(b).slice(0, 4), +String(b).slice(5, 7) || 12];
+const bisText = b => { const [y, m] = bisTeile(b); return typeof b === "number" ? String(y) : `${String(m).padStart(2, "0")}/${y}`; };
+function bisLesen(t) {   // akzeptiert 2029-01, 01/2029, 1.2029, 2029
+  t = String(t || "").trim(); let m;
+  if ((m = t.match(/^(\d{4})-(\d{1,2})$/))) return `${m[1]}-${m[2].padStart(2, "0")}`;
+  if ((m = t.match(/^(\d{1,2})\s*[./-]\s*(\d{4})$/))) return `${m[2]}-${m[1].padStart(2, "0")}`;
+  if ((m = t.match(/^(\d{4})$/))) return +m[1];
+  return null;
+}
+const jahrLesen = t => { const m = String(t || "").match(/(19|20)\d{2}/); return m ? +m[0] : null; };
 
 function saatgutSeite(main) {
   const monat = new Date().getMonth() + 1, alle = (D.saatgut || []);
@@ -3181,7 +3202,7 @@ function saatgutSeite(main) {
 }
 function saatZeile(s) {
   const p = pflanzeVon(s.pflanze) || { name: s.pflanze || "?", id: s.pflanze }, st = keimStatus(s);
-  const meta = [s.menge, s.jahr ? `Jahr ${s.jahr}` : "", { gekauft: "gekauft", selbst: "selbst gewonnen", getauscht: "getauscht/geschenkt" }[s.herkunft] || ""].filter(Boolean).join(" · ");
+  const meta = [s.marke, s.menge, s.jahrText ? `abgefüllt ${s.jahrText}` : s.jahr ? `Jahr ${s.jahr}` : "", { gekauft: "gekauft", selbst: "selbst gewonnen", getauscht: "getauscht/geschenkt" }[s.herkunft] || ""].filter(Boolean).join(" · ");
   return `<div class="sg-eintrag ${s.leer ? "leer" : ""}">
     ${pflanzenBadge(p)}
     <div class="sg-text"><a href="#wissen/pflanze/${encodeURIComponent(p.id)}"><b>${esc(p.name)}</b></a>${s.sorte ? ` <span>${esc(s.sorte)}</span>` : ""}
@@ -3194,18 +3215,20 @@ function saatZeile(s) {
     </div></div>`;
 }
 async function saatBearbeiten(alt, vorgabe = {}) {
-  const jahr = new Date().getFullYear();
+  const jahr = new Date().getFullYear(), v = k => alt?.[k] ?? vorgabe[k];
   const w = await eingabe({
     titel: alt ? "Saatgut bearbeiten" : "Saatgut eintragen", ja: "Speichern",
     felder: [
-      { id: "pflanze", label: "Pflanze", typ: "select", optionen: allePflanzen().slice().sort((a, b) => a.name.localeCompare(b.name, "de")).map(p => ({ wert: p.id, text: p.name })), wert: alt?.pflanze || vorgabe.pflanze || "tomate" },
-      { id: "sorte", label: "Sorte (optional)", wert: alt?.sorte || "", vorschlaege: [...new Set(alleSorten().map(s => s.name))] },
-      { id: "menge", label: "Menge (optional)", wert: alt?.menge || "", platzhalter: "z. B. 1 Tüte, halbvoll, ca. 30 Samen" },
-      { id: "jahr", label: "Erntejahr bzw. „abgepackt für“", typ: "number", schritt: 1, wert: alt?.jahr ?? jahr },
-      { id: "bis", label: "„Keimfähig bis“ laut Tüte (optional)", typ: "number", schritt: 1, wert: alt?.bis ?? "" },
-      { id: "herkunft", label: "Herkunft", typ: "select", optionen: [{ wert: "gekauft", text: "gekauft" }, { wert: "selbst", text: "selbst gewonnen" }, { wert: "getauscht", text: "getauscht/geschenkt" }], wert: alt?.herkunft || "gekauft" },
-      { id: "notiz", label: "Notiz (optional)", typ: "textarea", wert: alt?.notiz || "" },
+      { id: "pflanze", label: "Pflanze", typ: "select", optionen: [{ wert: "", text: "– bitte wählen –" }, ...allePflanzen().slice().sort((a, b) => a.name.localeCompare(b.name, "de")).map(p => ({ wert: p.id, text: p.name }))], wert: v("pflanze") || "" },
+      { id: "sorte", label: "Sorte (optional)", wert: v("sorte") || "", vorschlaege: [...new Set(alleSorten().map(s => s.name))] },
+      { id: "marke", label: "Marke bzw. Hersteller (optional)", wert: v("marke") || "", vorschlaege: [...new Set((D.saatgut || []).map(s => s.marke).filter(Boolean))], platzhalter: "z. B. Bingenheimer, Kiepenkerl" },
+      { id: "menge", label: "Menge (optional)", wert: v("menge") || "", platzhalter: "z. B. 1 Tüte, halbvoll, ca. 30 Samen" },
+      { id: "jahr", label: "Abgefüllt bzw. geerntet", wert: v("jahrText") || v("jahr") || jahr, platzhalter: "z. B. 2025 oder 2024/2025" },
+      { id: "bis", label: "„Keimfähig“ bzw. „haltbar bis“ laut Tüte (optional)", typ: "month", wert: typeof v("bis") === "number" ? `${v("bis")}-12` : (v("bis") || ""), platzhalter: "MM/JJJJ" },
+      { id: "herkunft", label: "Herkunft", typ: "select", optionen: [{ wert: "gekauft", text: "gekauft" }, { wert: "selbst", text: "selbst gewonnen" }, { wert: "getauscht", text: "getauscht/geschenkt" }], wert: v("herkunft") || "gekauft" },
+      { id: "notiz", label: "Notiz (optional)", typ: "textarea", wert: v("notiz") || "" },
     ],
+    text: "Bei einem Wirtschaftsjahr wie „2024/2025“ zählt das erste Jahr – dann wurden die Samen geerntet. Steht ein Haltbarkeitsdatum auf der Tüte, hat es Vorrang.",
     extra: alt ? { text: "Löschen", gefahr: true } : null,
   });
   if (w === "extra") {
@@ -3213,7 +3236,10 @@ async function saatBearbeiten(alt, vorgabe = {}) {
     melden("Saatgut gelöscht.", { text: "Rückgängig", tun: () => { D.saatgut.splice(i, 0, alt); speichern(); zeigen(); } }); return;
   }
   if (!w) return;
-  const daten = { pflanze: w.pflanze, sorte: w.sorte, menge: w.menge, jahr: isNaN(w.jahr) ? null : Math.round(w.jahr), bis: isNaN(w.bis) ? null : Math.round(w.bis), herkunft: w.herkunft, notiz: w.notiz };
+  const jt = String(w.jahr || "").trim(), bis = bisLesen(w.bis);
+  const daten = { pflanze: w.pflanze, sorte: w.sorte, marke: w.marke, menge: w.menge, jahr: jahrLesen(jt), jahrText: /\//.test(jt) ? jt : "", bis, herkunft: w.herkunft, notiz: w.notiz };
+  if (!w.pflanze) { melden("Bitte eine Pflanze wählen."); return saatBearbeiten(alt, daten); }
+  if (w.bis && !bis) { melden("Das Haltbarkeitsdatum bitte als Monat und Jahr eintragen, z. B. 01/2029."); return saatBearbeiten(alt, { ...daten, bis: "" }); }
   if (alt) Object.assign(alt, daten); else { D.saatgut = D.saatgut || []; D.saatgut.push({ id: gid(), leer: false, probe: null, ...daten }); }
   speichern(); zeigen(); melden("Saatgut gespeichert.");
 }
@@ -3287,6 +3313,12 @@ function rezeptSeite(main) {
   const ziel = location.hash.split("?r=")[1];
   if (ziel) { const el = $(`.rz-karte[data-rz="${CSS.escape(ziel)}"]`); if (el) { el.open = true; setTimeout(() => el.scrollIntoView({ block: "start", behavior: "smooth" }), 50); } }
 }
+const MENGE_RE = /^((?:ca\.?\s*)?[\d½¼¾⅓⅔]+(?:[.,/–-]\s*[\d½¼¾]+)?\s*(?:kg|g|mg|ml|cl|l|Liter|Gramm|EL|TL|Prise[n]?|Msp\.?|Stück|Stk\.?|Bund|Zehe[n]?|Tasse[n]?|Becher|Glas|Gläser|Dose[n]?|Pck\.?|Päckchen|Blatt|Blätter|Zweig[e]?|Handvoll|cm)?\.?)\s+(.+)$/i;
+function zutatenHTML(text) {
+  const zeilen = text.split(/\n+/).map(z => z.replace(/^[-–•*]\s*/, "").trim()).filter(Boolean);
+  return `<table class="rz-zutaten"><tbody>${zeilen.map(z => { const m = z.match(MENGE_RE);
+    return m ? `<tr><td class="rz-menge">${esc(m[1])}</td><td>${esc(m[2])}</td></tr>` : `<tr><td class="rz-menge"></td><td>${esc(z)}</td></tr>`; }).join("")}</tbody></table>`;
+}
 function rezeptKarte(r) {
   const pfl = rezeptPflanzen(r), hinw = rezeptHinweise(r, pfl);
   return `<details class="karte rz-karte" data-rz="${r.id}">
@@ -3295,7 +3327,7 @@ function rezeptKarte(r) {
     <div class="rz-inhalt">
       ${hinw.map(h => `<p class="rz-warn">${icon("i-warnung")} ${esc(h)}</p>`).join("")}
       <div class="rz-spalten">
-        ${r.zutaten ? `<div><h3>Zutaten</h3><div class="rz-text">${esc(r.zutaten)}</div></div>` : ""}
+        ${r.zutaten ? `<div><h3>Zutaten</h3>${zutatenHTML(r.zutaten)}</div>` : ""}
         ${r.zubereitung ? `<div><h3>Zubereitung</h3><div class="rz-text">${esc(r.zubereitung)}</div></div>` : ""}
       </div>
       ${r.haltbar ? `<p><b>Haltbarkeit:</b> ${esc(r.haltbar)}</p>` : ""}
@@ -3313,7 +3345,7 @@ async function rezeptBearbeiten(alt) {
     felder: [
       { id: "titel", label: "Titel", wert: alt?.titel || "" },
       { id: "art", label: "Art", typ: "select", optionen: REZEPT_ARTEN, wert: alt?.art || "Einkochen" },
-      { id: "zutaten", label: "Zutaten (eine pro Zeile)", typ: "textarea", wert: alt?.zutaten || "" },
+      { id: "zutaten", label: "Zutaten – eine pro Zeile, Menge vorne (z. B. „500 g Äpfel“)", typ: "textarea", wert: alt?.zutaten || "" },
       { id: "zubereitung", label: "Zubereitung", typ: "textarea", wert: alt?.zubereitung || "" },
       { id: "haltbar", label: "Haltbarkeit (optional)", wert: alt?.haltbar || "", platzhalter: "z. B. kühl und dunkel ca. 1 Jahr" },
       { id: "quelle", label: "Quelle (optional)", wert: alt?.quelle || "", platzhalter: "Buch, Webseite oder „von Oma“" },
@@ -3447,16 +3479,16 @@ function berichtZeitraum(jahr) {
   const heute = heuteISO();
   if (BERICHT.art === "monat") {
     const m = String(BERICHT.monat).padStart(2, "0"), letzter = new Date(jahr, BERICHT.monat, 0).getDate();
-    return { von: `${jahr}-${m}-01`, bis: minIso(`${jahr}-${m}-${letzter}`, heute), titel: `${MONATE[BERICHT.monat - 1]} ${jahr}` };
+    return { von: `${jahr}-${m}-01`, bis: minIso(`${jahr}-${m}-${letzter}`, heute), titel: `${MONATE[BERICHT.monat - 1]} ${jahr}`, datei: `${jahr}-${m} ${MONATE[BERICHT.monat - 1]}` };
   }
   if (BERICHT.art === "zeitraum") {
     if (!BERICHT.von) BERICHT.von = heute.slice(0, 8) + "01";
     if (!BERICHT.bis) BERICHT.bis = heute;
     let von = minIso(BERICHT.von, heute), bis = minIso(BERICHT.bis, heute);
     if (von > bis) [von, bis] = [bis, von];
-    return { von, bis, titel: `${datumKurz(von)} – ${datumKurz(bis)}` };
+    return { von, bis, titel: `${datumKurz(von)} – ${datumKurz(bis)}`, datei: `${von} bis ${bis}` };
   }
-  return { von: `${jahr}-01-01`, bis: minIso(`${jahr}-12-31`, heute), titel: `${jahr}` };
+  return { von: `${jahr}-01-01`, bis: minIso(`${jahr}-12-31`, heute), titel: `${jahr}`, datei: `${jahr}` };
 }
 const imZeitraum = (d, z) => d && d >= z.von && d <= z.bis;
 
@@ -3559,6 +3591,22 @@ function berichtAktiv(jahr) {
   const ei = $("#be-eigen"); if (ei) ei.onchange = () => { BERICHT.eigen = ei.value || ""; chronikZeichnen(); };
   if (BERICHT.teile.wetter) wetterBerichtLaden(berichtZeitraum(jahr));
 }
+
+/* ---------- Dateiname beim Drucken / Speichern als PDF (Browser nimmt den Seitentitel) ---------- */
+let TITEL_VOR_DRUCK = null;
+function druckTitel() {
+  const b = document.body.classList, seite = aktuelleSeite();
+  if (b.contains("druck-rezept")) { const h = $(".rz-karte.wird-gedruckt h2"); return h ? `Rezept ${h.textContent.trim()}` : null; }
+  if (b.contains("druck-plan")) return G.planJahr ? `Planung ${G.planJahr}` : `Gartenplan ${heuteISO()}`;
+  if (seite === "chronik") {
+    if (CH.ansicht === "bericht") return `Gartenbericht ${berichtZeitraum(CH.jahr).datei}`;
+    if (CH.ansicht === "rueckblick") return `Garten am ${CH.tag || heuteISO()}`;
+    return `Chronik ${CH.jahr}${CH.ansicht === "auswertung" ? " Auswertung" : ""}`;
+  }
+  return null;
+}
+window.addEventListener("beforeprint", () => { const t = druckTitel(); if (t) { TITEL_VOR_DRUCK = document.title; document.title = `${t} – Kraut und Rüben`.replace(/[\\/:*?"<>|]/g, "-"); } });
+window.addEventListener("afterprint", () => { if (TITEL_VOR_DRUCK !== null) { document.title = TITEL_VOR_DRUCK; TITEL_VOR_DRUCK = null; } });
 
 /* ---------- Wetter im Bericht: Archiv von Open-Meteo + Diagramme ---------- */
 const ARCHIV = {};
@@ -3825,7 +3873,8 @@ const SEITEN = {
             <li><b>Fläche</b> (Reihen-Gemüse wie Möhren, Salat, Zwiebeln): Im Beet die Fläche aufziehen. Ein kurzes Tippen setzt eine Fläche in Standardgröße. Die App schätzt aus den Abständen, wie viele Pflanzen hineinpassen. Du kannst die Zahl auch selbst eintragen.</li>
             <li>Oben über dem Plan lässt sich vor dem Setzen zwischen „Einzeln“ und „Fläche“ umschalten.</li>
           </ul>
-          <p><b>Obstbäume</b> (Apfel, Birne, Kirschen, Pflaume, Pfirsich, Feige) lassen sich zusätzlich auf <b>Rasen</b> oder die <b>Gartenfläche</b> setzen: Rasen antippen, „＋ Baum setzen“, Baum wählen und an die Stelle tippen. Im Plan erscheinen sie als <b>Krone</b> mit Stamm. Die Kronengröße stellst du bei der Pflanzung ein – entweder eine der Größen aus dem Lexikon (je nach Unterlage, z. B. 2 m für eine Spindel, 10 m für einen Hochstamm) oder einen eigenen Durchmesser. Unter einer Krone darf etwas wachsen; die „Zu eng“-Warnung prüft Bäume nur untereinander.</p>
+          <p><b>Obstbäume</b> (Apfel, Birne, Kirschen, Pflaume, Pfirsich, Feige) lassen sich zusätzlich auf <b>Rasen</b> oder die <b>Gartenfläche</b> setzen: Rasen oder Gartenfläche antippen, „＋ Baum setzen“, Baum wählen und an die Stelle tippen. Im Plan erscheinen sie als <b>Krone</b> mit Stamm. Den Kronendurchmesser stellst du bei der Pflanzung ein – entweder eine der Größen aus dem Lexikon (ausgewachsen, je nach Unterlage, z. B. 2 m für eine Spindel, 10 m für einen Hochstamm) oder „eigener Wert …“ für den heutigen Durchmesser; wächst der Baum, passt du ihn später an. Unter einer Krone darf etwas wachsen; die „Zu eng“-Warnung prüft Bäume nur untereinander.</p>
+          <p><b>Untergrund:</b> Die Gartenfläche kann einen Untergrund bekommen (Rasen, Wiese, Pflaster, Kies, Erde): Gartenfläche antippen, Bearbeiten, „Untergrund“ wählen. Er gilt überall, wo nichts anderes eingezeichnet ist – neue Beete, Wege oder das Haus liegen automatisch darüber, du musst also keine Lücken mit Rasen füllen. Abweichende Stellen zeichnest du als eigene Fläche ein (z. B. Terrasse). Hast du mehrere Gartenflächen (z. B. vorne und seitlich), bekommt jede ihren eigenen Untergrund.</p>
           <p><b>Ändern:</b> Eine Pflanzung antippen. Rechts (am Handy darunter) trägst du Datum, gepflanzt/gesät/gesteckt, Sorte und eine Notiz ein. Einzelne Pflanzen und Flächen lassen sich verschieben, Flächen über den Punkt unten rechts vergrößern. „＋ Weitere setzen“ fügt zur selben Pflanzung neue hinzu. Eine einzelne Pflanze entfernst du, indem du sie antippst (sie wird dicker umrandet) und dann „Nur diese eine Pflanze entfernen“ wählst.</p>
           <p><b>Eine Pflanzung = ein Satz:</b> Alles, was du in einem Durchgang setzt, gehört zusammen. Datum, Sorte, Notiz und Ernte gelten für die ganze Pflanzung. Für eine zweite Sorte oder einen späteren Satz die Pflanze einfach noch einmal setzen.</p>
           <p><b>Warnungen im Plan:</b> Stehen zwei schlechte Nachbarn näher als 50 cm beieinander, bekommen beide einen <b>rot gestrichelten Rand</b>. Überschneiden sich Platzkreise oder Flächen deutlich (mehr als etwa 15 %), ist der Rand <b>gelb gestrichelt</b>: Die Pflanzen stehen zu eng. Beim Beet und bei der Pflanzung steht dann jeweils ein Hinweis.</p>
@@ -3846,7 +3895,7 @@ const SEITEN = {
           <p><b>Quellen:</b> Unter <b>Wissen → Quellen</b> steht, woher die Angaben stammen. Alle Texte sind in eigenen Worten geschrieben.</p>
         </div></details>
         <details><summary>Vorrat: Saatgut, Haltbarmachen, Rezepte</summary><div>
-          <p><b>Saatgut:</b> Unter <b>Vorrat → Saatgut</b> trägst du deine Samentüten ein: Pflanze, Sorte, Menge, Jahr und Herkunft. Als Jahr gilt das Erntejahr oder das Jahr auf der Tüte („abgepackt für …“). Steht auf der Tüte „keimfähig bis“, trag das zusätzlich ein – es hat dann Vorrang. Aus dem Alter und der Keimfähigkeit im Lexikon zeigt die App: <b>grün</b> keimt gut, <b>gelb</b> vor der Aussaat besser eine Keimprobe machen, <b>rot</b> vermutlich zu alt.</p>
+          <p><b>Saatgut:</b> Unter <b>Vorrat → Saatgut</b> trägst du deine Samentüten ein: Pflanze, Sorte, Marke, Menge, Jahr und Herkunft. Beim Jahr geht auch ein Wirtschaftsjahr wie „2024/2025“ – dann zählt das erste Jahr, in dem die Samen geerntet wurden. Steht auf der Tüte „keimfähig“ oder „haltbar bis“ (Monat und Jahr), trag das zusätzlich ein – es hat dann Vorrang; ab zwölf Monaten vor Ablauf wird der Eintrag gelb. Aus dem Alter und der Keimfähigkeit im Lexikon zeigt die App: <b>grün</b> keimt gut, <b>gelb</b> vor der Aussaat besser eine Keimprobe machen, <b>rot</b> vermutlich zu alt.</p>
           <ul>
             <li><b>Keimprobe:</b> 10 Samen auf feuchtes Küchenpapier, nach der Keimdauer zählen und unter „Keimprobe“ eintragen. Eine Probe aus diesem oder dem letzten Jahr ersetzt die Schätzung.</li>
             <li><b>Filter:</b> „Im … säen“ zeigt, was du diesen Monat vorziehen oder säen kannst; „Keimprobe empfohlen“ die gelben und roten Einträge. Leere Tüten mit „Aufgebraucht“ ausblenden.</li>
@@ -3876,7 +3925,7 @@ const SEITEN = {
             <li><b>Wetter:</b> Die App merkt sich das Wetter der vergangenen Tage, sobald die Startseite mit Standort das Wetter lädt (es reicht, die App mindestens einmal pro Woche zu öffnen). Daraus entstehen Einträge für Frostnächte (ab 0 °C), Hitzetage (ab 30 °C), Starkregen (ab 20 mm) und Trockenphasen (mindestens 10 Tage mit zusammen unter 5 mm).</li>
             <li><b>Auswertung:</b> Pflanzungen und Ernten des Jahres, Erntemengen je Pflanze im Vergleich zum Vorjahr, letzter Frost im Frühjahr und erster Frost im Herbst, Frostnächte, Hitzetage und Regenmenge.</li>
             <li><b>Rückblick:</b> zeigt den Gartenplan an einem früheren Tag – mit Datumsfeld, Schieberegler oder den Monatsknöpfen (jeweils der 15.). Darunter steht, was an dem Tag in welchem Beet wuchs. Beete und Wege sind immer im heutigen Zustand, weil sich die App Umbauten nicht merkt.</li>
-            <li><b>Bericht:</b> stellt einen Bericht zum Drucken oder als PDF zusammen – für ein <b>ganzes Jahr</b>, einen <b>Monat</b> oder einen <b>eigenen Zeitraum</b> (von–bis). Gedruckt wird mit „Drucken“ oben; die Auswahl selbst wird nicht mitgedruckt. Enthalten sind: Gartenpläne zu wählbaren Zeitpunkten (beim Jahr z. B. Mitte Mai, Juli, September, bei Monat und Zeitraum Beginn und Ende, dazu ein eigenes Datum; ist die Bepflanzung gleich geblieben, erscheint der Plan nur einmal), Überblick und Ernte (mit Vergleich zum gleichen Zeitraum im Vorjahr), Wetter mit Diagrammen (Temperatur, Regen und Sonnenstunden – bei kurzen Zeiträumen pro Tag, sonst pro Woche) und Monatstabelle – die Wetterdaten holt der Bericht für das ganze Jahr aus dem Open-Meteo-Archiv, Lücken gibt es dort also nicht –, was im Garten geschah, und das Tagebuch. Abschnitte lassen sich abwählen.</li>
+            <li><b>Bericht:</b> stellt einen Bericht zum Drucken oder als PDF zusammen – für ein <b>ganzes Jahr</b>, einen <b>Monat</b> oder einen <b>eigenen Zeitraum</b> (von–bis). Gedruckt wird mit „Drucken“ oben; die Auswahl selbst wird nicht mitgedruckt. Beim Speichern als PDF schlägt die App einen Dateinamen mit dem Zeitraum vor (z. B. „Gartenbericht 2026-11 November“), damit sich Berichte nicht überschreiben. Enthalten sind: Gartenpläne zu wählbaren Zeitpunkten (beim Jahr z. B. Mitte Mai, Juli, September, bei Monat und Zeitraum Beginn und Ende, dazu ein eigenes Datum; ist die Bepflanzung gleich geblieben, erscheint der Plan nur einmal), Überblick und Ernte (mit Vergleich zum gleichen Zeitraum im Vorjahr), Wetter mit Diagrammen (Temperatur, Regen und Sonnenstunden – bei kurzen Zeiträumen pro Tag, sonst pro Woche) und Monatstabelle – die Wetterdaten holt der Bericht für das ganze Jahr aus dem Open-Meteo-Archiv, Lücken gibt es dort also nicht –, was im Garten geschah, und das Tagebuch. Abschnitte lassen sich abwählen.</li>
             <li><b>Drucken:</b> „${icon("i-drucken")} Drucken“ druckt die aktuelle Ansicht oder speichert sie als PDF.</li>
           </ul>
         </div></details>
@@ -3941,6 +3990,7 @@ const ARTEN = {
   gewaechshaus: { name: "Gewächshaus", ebene: 3, b: 200, t: 300, pflanzbar: true },
   kuebel:       { name: "Kübel", ebene: 3, kreis: true, r: 25, pflanzbar: true },
 };
+const BODEN = [["", "ohne (hellgrün)"], ["rasen", "Rasen"], ["wiese", "Wiese"], ["pflaster", "Pflaster"], ["kies", "Kies/Schotter"], ["erde", "Erde"]];
 const ART_REIHENFOLGE = ["garten", "haus", "weg", "pfad", "terrasse", "rasen", "beet", "hochbeet", "gewaechshaus", "kuebel", "sonstiges"];
 const formVon = art => (ARTEN[art].kreis ? "kreis" : ARTEN[art].linie ? "linie" : "poly");
 
@@ -4330,7 +4380,7 @@ function planZeichnen() {
   <rect x="${v.x}" y="${v.y}" width="${v.w}" height="${vh}" fill="url(#r-grob)"/>`;
 
   const sortiert = [...D.garten.objekte].sort((a, b) => ARTEN[a.art].ebene - ARTEN[b.art].ebene);
-  for (const o of sortiert) html += formElement(o, `obj art-${o.art}${o.id === G.auswahl ? " gewaehlt" : ""}`, s);
+  for (const o of sortiert) html += formElement(o, `obj art-${o.art}${o.boden ? " boden-" + o.boden : ""}${o.id === G.auswahl ? " gewaehlt" : ""}`, s);
   if (!G.zeichnen) html += pflanzungenSVG(s);
 
   // Beschriftungen: nur wenn genug Platz, nicht unter höheren Flächen, nicht übereinander
@@ -5017,6 +5067,8 @@ function panelZeichnen() {
   if (pflanzbar) h = bepflanzungHTML(o) + h;
   h += `<label>Name</label><input type="text" data-feld="name" value="${esc(o.name)}">
     <label>Art</label><select data-feld="art">${ART_REIHENFOLGE.filter(k => formVon(k) === form).map(k => `<option value="${k}" ${k === o.art ? "selected" : ""}>${ARTEN[k].name}</option>`).join("")}</select>`;
+  if (o.art === "garten") h += `<label>Untergrund</label><select data-feld="boden">${BODEN.map(([k, n]) => `<option value="${k}" ${(o.boden || "") === k ? "selected" : ""}>${n}</option>`).join("")}</select>
+    <p class="klein leise" style="margin:4px 0 0">Gilt überall, wo nichts anderes eingezeichnet ist. Beete, Wege und Haus liegen automatisch darüber. Abweichende Stellen (z. B. eine gepflasterte Ecke) einfach als eigene Fläche einzeichnen.</p>`;
   if (form === "kreis") {
     h += `<label>Durchmesser</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-feld="durchmesser" value="${(o.r * 2 / 100).toFixed(2)}"><span>m</span></div>`;
   } else if (form === "linie") {
@@ -5128,6 +5180,7 @@ function panelEreignisse(el, o) {
       const feld = f.dataset.feld;
       if (feld === "name") o.name = wert.trim() || o.name;
       else if (feld === "art") o.art = wert;
+      else if (feld === "boden") { if (wert) o.boden = wert; else delete o.boden; }
       else if (feld === "rund") { if (f.checked) o.rund = true; else delete o.rund; }
       else if (feld === "frei") { if (f.checked) o.frei = true; else delete o.frei; }
       else if (feld === "durchmesser" && zahlwert > 0) o.r = Math.round(zahlwert * 50);
