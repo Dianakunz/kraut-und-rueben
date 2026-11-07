@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Kraut und Rüben · Version 1.1.1 -->
+<!-- Kraut und Rüben · Version 1.2.0 -->
 <html lang="de" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -824,13 +824,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=1.1.1"></script>
+<script src="pflanzen.js?v=1.2.0"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "1.1.1";
+const APP_VERSION = "1.2.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1602,8 +1602,21 @@ const EINHEITEN = ["kg", "g", "Stück", "Bund", "Kopf", "Korb"];
 const pflanzung = id => D.pflanzungen.find(p => p.id === id);
 /* Im Gartenplan hängt „aktiv“ von der Ansicht ab: jetzt = echte Pflanzungen; Planung = geplante des Jahres plus mehrjährige, die stehen bleiben */
 const istMehrjaehrig = p => !!(pflanzeVon(p.pflanze) || {}).mehrjaehrig;
+/* Planung nach Jahreszeiten (1.2): geplante Pflanzungen stehen von ihrem Startmonat bis „steht bis“ (bisMonat) */
+const SAISONEN = { jahr: null, fruehjahr: [3, 5], sommer: [6, 8], herbst: [9, 11] };
+const SAISON_NAMEN = [["jahr", "Ganzes Jahr"], ["fruehjahr", "Frühjahr"], ["sommer", "Sommer"], ["herbst", "Herbst"]];
+function zeitfenster(p) {
+  if (!p.geplant) return [1, 12];   // bleibende mehrjährige Pflanzen
+  const v = +(p.gepflanzt || "").slice(5, 7) || 1;
+  return [v, p.bisMonat ? Math.max(v, p.bisMonat) : 12];
+}
+function zeitUeberlappt(a, b) {   // Monat, in dem die eine endet und die andere beginnt, gilt als Wechsel
+  const x = zeitfenster(a), y = zeitfenster(b), s = Math.max(x[0], y[0]), e = Math.min(x[1], y[1]);
+  return s < e || x[0] === y[0];
+}
+const inSaison = p => { const z = SAISONEN[G.saison || "jahr"]; if (!z) return true; const f = zeitfenster(p); return f[0] <= z[1] && z[0] <= f[1]; };
 const aktivePflanzungen = beetId => G.stichtag ? standAm(G.stichtag).filter(p => !beetId || p.beet === beetId) : D.pflanzungen.filter(p => !p.abgeraeumt && (!beetId || p.beet === beetId) && objekt(p.beet) &&
-  (G.planJahr ? (p.geplant === G.planJahr || (!p.geplant && istMehrjaehrig(p))) : !p.geplant));
+  (G.planJahr ? ((p.geplant === G.planJahr && inSaison(p)) || (!p.geplant && istMehrjaehrig(p))) : !p.geplant));
 const echtAktiv = beetId => D.pflanzungen.filter(p => !p.abgeraeumt && !p.geplant && (!beetId || p.beet === beetId) && objekt(p.beet));
 const echte = () => D.pflanzungen.filter(p => !p.geplant);
 function jahrVon(p) { return +(p.gepflanzt || "").slice(0, 4) || new Date().getFullYear(); }
@@ -1644,6 +1657,7 @@ function nachbarnImBeet(p) {
   const r = pflRahmen(p), erg = [];
   for (const q of aktivePflanzungen(p.beet)) {
     if (q.id === p.id || q.pflanze === p.pflanze) continue;
+    if (G.planJahr && !zeitUeberlappt(p, q)) continue;
     const m = nachbarArt(p.pflanze, q.pflanze);
     if (m && luecke(r, pflRahmen(q)) <= NACHBAR_NAEHE) erg.push({ p: q, art: m.art, notiz: m.notiz });
   }
@@ -1653,8 +1667,9 @@ const hatKonflikt = p => nachbarnImBeet(p).some(n => n.art === "schlecht");
 /* Zu eng: Platzkreise bzw. Flächen überschneiden sich deutlich. Ergebnis: Set mit "pid" (Fläche) bzw. "pid:i" (Einzelpflanze) */
 const ENG_TOLERANZ = 0.85;   // 15 % Überschneidung sind noch in Ordnung
 function zuEng() {
-  const teile = [];
+  const teile = [], pm = new Map();
   for (const p of aktivePflanzungen()) {
+    pm.set(p.id, p);
     if (p.form === "flaeche") teile.push({ key: p.id, pid: p.id, rect: { x1: p.x, y1: p.y, x2: p.x + p.w, y2: p.y + p.h } });
     else { const r = pflRadius(p), baum = istBaum(pflanzeVon(p.pflanze)); p.punkte.forEach(([x, y], i) => teile.push({ key: p.id + ":" + i, pid: p.id, x, y, r, baum })); }
   }
@@ -1663,6 +1678,7 @@ function zuEng() {
   for (let i = 0; i < teile.length; i++) for (let j = i + 1; j < teile.length; j++) {
     const a = teile[i], b = teile[j];
     if (!!a.baum !== !!b.baum) continue;   // unter einer Baumkrone darf etwas wachsen
+    if (a.pid === b.pid) { /* gleiche Pflanzung */ } else if (G.planJahr && !zeitUeberlappt(pm.get(a.pid), pm.get(b.pid))) continue;
     let zu = false;
     if (a.rect && b.rect) zu = Math.min(a.rect.x2, b.rect.x2) - Math.max(a.rect.x1, b.rect.x1) > 2 && Math.min(a.rect.y2, b.rect.y2) - Math.max(a.rect.y1, b.rect.y1) > 2;
     else if (a.rect) zu = kreisRect(b, a.rect);
@@ -1954,6 +1970,8 @@ function geplantPanelHTML(p) {
       <div class="klein leise">in „${esc(beet ? beet.name : pflBeetName(p))}“ · ${anzahlText(p)} ${anzahlVon(p) === 1 ? "Pflanze" : "Pflanzen"}</div></div></div>
     <label>Geplant</label>
     <div class="feld-einheit"><select data-pf="wie" aria-label="Wie" style="flex:0 0 auto;width:auto">${["gepflanzt", "gesät", "gesteckt"].map(w => `<option ${p.wie === w ? "selected" : ""}>${w === "gepflanzt" ? "pflanzen" : w === "gesät" ? "säen" : "stecken"}</option>`).join("")}</select><span>ab</span><input type="date" data-pf="gepflanzt" value="${esc(p.gepflanzt || "")}"></div>
+    ${istMehrjaehrig(p) ? "" : `<label>Steht bis</label><select data-pf="bisMonat"><option value="">ganze Saison</option>${MONATE.map((m, i) => i + 1 >= zeitfenster(p)[0] ? `<option value="${i + 1}" ${p.bisMonat === i + 1 ? "selected" : ""}>${m}</option>` : "").join("")}</select>
+    <p class="klein leise" style="margin:4px 0 0">Für Vor- und Nachkulturen: Was bis Mai steht, verträgt sich mit dem, was ab Mai an dieselbe Stelle kommt.</p>`}
     <p class="klein leise" style="margin:4px 0 0">Laut Lexikon: ${[["vorziehen", "vorziehen"], ["direktsaat", "säen"], ["pflanzen", "pflanzen"]].filter(([k]) => (pf[k] || []).length).map(([k, n]) => `${n} ${monateText(pf[k])}`).join(" · ") || "keine Angabe"}</p>
     <label>Sorte</label><input type="text" data-pf="sorte" list="sorten-vorschlag" value="${esc(p.sorte || "")}" placeholder="z. B. Ochsenherz">${sortenDatalist(p.pflanze)}
     ${p.form === "flaeche" ? `<div class="zwei">
@@ -1978,11 +1996,15 @@ function geplantPanelHTML(p) {
 async function planUebernehmen(id) {
   const p = pflanzung(id); if (!p || !p.geplant) return;
   const pf = pflanzeVon(p.pflanze) || { name: "?" };
-  const heute = heuteISO(), vorschlag = heute;
-  const w = await eingabe({ titel: `${pf.name} ${p.wie || "gepflanzt"}?`, text: "Aus der Planung wird eine echte Pflanzung.", ja: "Übernehmen",
-    felder: [{ id: "datum", label: "Datum", typ: "date", wert: vorschlag }] });
+  const heute = heuteISO(), vorschlag = heute, r = pflRahmen(p);
+  const vork = D.pflanzungen.filter(q => !q.geplant && !q.abgeraeumt && q.beet === p.beet && !istMehrjaehrig(q) && luecke(pflRahmen(q), r) < 1);
+  const felder = [{ id: "datum", label: "Datum", typ: "date", wert: vorschlag }];
+  if (vork.length) felder.push({ id: "vork", label: `An dieser Stelle steht noch ${vork.map(q => pflanzeVon(q.pflanze)?.name || "?").join(", ")}`, typ: "select", wert: "ja",
+    optionen: [{ wert: "ja", text: "abräumen (am selben Datum)" }, { wert: "nein", text: "stehen lassen" }] });
+  const w = await eingabe({ titel: `${pf.name} ${p.wie || "gepflanzt"}?`, text: "Aus der Planung wird eine echte Pflanzung.", ja: "Übernehmen", felder });
   if (!w) return;
   const vorher = stand();
+  if (vork.length && w.vork === "ja") vork.forEach(q => { q.abgeraeumt = w.datum || heute; });
   delete p.geplant; p.gepflanzt = w.datum || heute;
   const b = objekt(p.beet); if (b) p.beetName = b.name;
   if (G.pfl === id) G.pfl = null;
@@ -2045,6 +2067,7 @@ function pflanzungPanelEreignisse(el, p) {
       if (feld === "gepflanzt") p.gepflanzt = v || heuteISO();
       else if (feld === "wie" || feld === "sorte" || feld === "notiz") p[feld] = v.trim ? (feld === "notiz" ? v : v.trim()) : v;
       else if (feld === "anzahl") p.anzahl = zw > 0 ? Math.round(zw) : null;
+      else if (feld === "bisMonat") { if (v) p.bisMonat = +v; else delete p.bisMonat; }
       else if (feld === "krone-wahl") { if (v === "eigen") G.kroneEigen = p.id; else { G.kroneEigen = null; p.krone = +v; } }
       else if (feld === "krone" && zw > 0) p.krone = Math.round(Math.min(zw, 30) * 100);
       else if ((feld === "w" || feld === "h") && zw > 0) p[feld] = Math.round(zw * 100);
@@ -2725,14 +2748,22 @@ async function tagebuchBearbeiten(alt, vorgabe = {}) {
    ============================================================ */
 let PL_JAHR = null;
 function vorjahrZeigen() { try { return localStorage.getItem("kur-vorjahr") !== "aus"; } catch (e) { return true; } }
+function vorkulturGleicheFamilie(p) {   // geplante Vorkultur derselben Familie an derselben Stelle im selben Jahr
+  const pf = pflanzeVon(p.pflanze); if (!pf || !pf.familie || !pauseJahre(pf)) return null;
+  const start = zeitfenster(p)[0], r = pflRahmen(p);
+  const q = D.pflanzungen.find(q => q.id !== p.id && q.geplant === p.geplant && q.beet === p.beet && zeitfenster(q)[1] <= start && zeitfenster(q)[0] < start
+    && pflanzeVon(q.pflanze)?.familie === pf.familie && luecke(pflRahmen(q), r) < 1);
+  return q ? pflanzeVon(q.pflanze).name : null;
+}
 function planWarnungen(p) {
-  const alt = G.planJahr; G.planJahr = p.geplant;   // Nachbarn/Enge im Planungsjahr prüfen
+  const alt = G.planJahr, altS = G.saison; G.planJahr = p.geplant; G.saison = "jahr";   // Nachbarn/Enge im ganzen Planungsjahr prüfen
   const w = [];
   const ff = fruchtfolgeHinweis(p.beet, p.pflanze, p.geplant, pflRahmen(p), p.id); if (ff) w.push({ art: "fruchtfolge", text: "⟳ " + ff.text });
+  else { const v = vorkulturGleicheFamilie(p); if (v) w.push({ art: "fruchtfolge", text: `⟳ vorher steht hier ${v} – gleiche Familie` }); }
   const schlecht = nachbarnImBeet(p).filter(n => n.art === "schlecht").map(n => pflanzeVon(n.p.pflanze).name);
   if (schlecht.length) w.push({ art: "schlecht", text: "✗ schlechte Nachbarn: " + schlecht.join(", ") });
   if (pflZuEng(p, zuEng())) w.push({ art: "eng", text: "zu eng gesetzt" });
-  G.planJahr = alt;
+  G.planJahr = alt; G.saison = altS;
   return w;
 }
 function planungSeite(main) {
@@ -2743,6 +2774,7 @@ function planungSeite(main) {
   const beete = D.garten.objekte.filter(o => ARTEN[o.art]?.pflanzbar);
   main.insertAdjacentHTML("beforeend", `<div class="ch-werkzeug nicht-drucken">
       <label class="pl-jahrwahl">Planung für <select id="pl-jahr" aria-label="Jahr">${jahre.map(x => `<option ${x === PL_JAHR ? "selected" : ""}>${x}</option>`).join("")}</select></label>
+      ${beete.length ? `<div class="umschalter" id="pl-saison">${SAISON_NAMEN.map(([k, n]) => `<button data-s="${k}" class="${(G.saison || "jahr") === k ? "an" : ""}">${n}</button>`).join("")}</div>` : ""}
       ${beete.length ? `<label class="schalter-klein"><input type="checkbox" id="pl-vorjahr" ${vorjahrZeigen() ? "checked" : ""}> ${PL_JAHR - 1} einblenden</label>
       <button class="knopf" id="pl-drucken">${icon("i-drucken")}<span class="lang"> Plan drucken</span></button>` : ""}
     </div>`);
@@ -2753,6 +2785,7 @@ function planungSeite(main) {
   }
   gartenSeite(main, PL_JAHR);
   $("#pl-drucken").onclick = planDrucken;
+  $$("#pl-saison button").forEach(b => b.onclick = () => { G.saison = b.dataset.s; $$("#pl-saison button").forEach(x => x.classList.toggle("an", x === b)); G.pfl = null; planZeichnen(); panelZeichnen(); leisteAktualisieren(); planListeFuellen(); });
   $("#pl-vorjahr").onchange = e => { try { localStorage.setItem("kur-vorjahr", e.target.checked ? "an" : "aus"); } catch (x) {} planZeichnen(); leisteAktualisieren(); };
   const box = document.createElement("div"); box.id = "pl-liste"; box.className = "nicht-drucken";
   main.appendChild(box);
@@ -2777,7 +2810,7 @@ function planListeFuellen() {
       html += `<li class="pl-eintrag">
         ${pflanzenBadge(pf)}
         <div class="ch-text"><div><b>${esc(pf.name)}</b>${p.sorte ? ` ‚${esc(p.sorte)}‘` : ""} · ${esc(pflBeetName(p))} · ${anzahlText(p)} St.</div>
-          <div class="klein leise">${p.wie === "gesät" ? "säen" : p.wie === "gesteckt" ? "stecken" : "pflanzen"} ab ${datumKurz(p.gepflanzt)}${p.notiz ? ` · ${esc(p.notiz)}` : ""}</div>
+          <div class="klein leise">${p.wie === "gesät" ? "säen" : p.wie === "gesteckt" ? "stecken" : "pflanzen"} ab ${datumKurz(p.gepflanzt)}${p.bisMonat ? `, steht bis ${MONATE[p.bisMonat - 1]}` : ""}${p.notiz ? ` · ${esc(p.notiz)}` : ""}</div>
           ${w.length ? `<div class="pw-tags">${w.map(x => `<span class="pw-tag ${x.art === "schlecht" ? "schlecht" : "fruchtfolge"}">${esc(x.text)}</span>`).join("")}</div>` : ""}</div>
         <div class="knopfreihe" style="margin:0">
           <button class="knopf text klein" data-pl-zeig="${p.id}">Im Plan</button>
@@ -4170,6 +4203,8 @@ const SEITEN = {
             <li><b>Was stand letztes Jahr wo?</b> Gepunktete Umrisse mit Namen zeigen die Pflanzungen des Vorjahres. So siehst du direkt, wohin etwas für die Fruchtfolge besser nicht kommt. Wird es zu unübersichtlich, schaltest du sie oben mit „… einblenden“ aus; die Fruchtfolge-Warnungen gibt es trotzdem.</li>
             <li><b>Fruchtfolge:</b> Die Auswahlliste nennt, was in den letzten Jahren in diesem Beet stand. Ob es wirklich passt, prüft die App nach dem Setzen <b>nach der Stelle</b>: Nur wenn sich die neue Pflanzung mit einer früheren derselben Familie überschneidet, bekommt sie einen gelben Rand und einen Hinweis. In einem großen Beet kann man also gut nebeneinander wechseln.</li>
             <li><b>Mehrjährige Pflanzen</b> (Rhabarber, Erdbeeren, Beeren, Kräuter) bleiben stehen und sind blass zu sehen.</li>
+            <li><b>Jahreszeiten:</b> Über dem Plan wählst du <b>Ganzes Jahr</b>, <b>Frühjahr</b> (März–Mai), <b>Sommer</b> (Juni–August) oder <b>Herbst</b> (September–November). Der Plan zeigt dann nur, was in dieser Zeit im Beet steht. Damit das klappt, trägst du bei einer geplanten Pflanzung unter <b>„Steht bis“</b> den Monat ein, bis zu dem sie bleibt – zum Beispiel Radieschen bis Mai und danach Buschbohnen ab Juni an derselben Stelle. Ohne Angabe steht eine Pflanzung bis zum Jahresende.</li>
+            <li><b>Vor- und Nachkultur:</b> Abstand und Nachbarn prüft die App nur, wenn sich zwei Pflanzungen auch zeitlich überschneiden. Endet die eine in dem Monat, in dem die andere beginnt, gilt das als Wechsel. Kommt eine Nachkultur aus derselben Familie an dieselbe Stelle (z. B. Rucola nach Radieschen), weist die Liste darauf hin. Beim Übernehmen fragt die App, ob die Pflanzung, die an der Stelle noch steht, abgeräumt werden soll.</li>
             <li><b>Datum:</b> Die App schlägt den ersten Pflanz- bzw. Säemonat aus dem Lexikon vor; darunter steht zum Vergleich, was das Lexikon empfiehlt.</li>
             <li><b>Liste unter dem Plan:</b> alles Geplante nach Monaten, mit Hinweisen zu Fruchtfolge, Nachbarn und Abstand. „Im Plan“ zeigt die Stelle, „${icon("i-check")} Übernehmen“ macht daraus eine echte Pflanzung mit dem Datum, das du angibst. Auf der Startseite erscheint ein Hinweis, wenn Geplantes in den nächsten zwei Wochen dran ist.</li>
             <li><b>Saatgut für die Saison:</b> Unter der Liste klappst du „Saatgut für …“ auf. Die App gleicht ab, was du geplant hast, mit deinem Saatgutvorrat: <b>fehlt im Vorrat</b> (auch wenn nur eine andere Sorte da ist), <b>vorhanden – Keimprobe lohnt sich</b>, <b>vorhanden</b> und <b>als Jungpflanze geplant</b> (nur nötig, wenn du selbst vorziehst). Die Keimfähigkeit wird auf das Frühjahr des Planungsjahres bezogen. Es zählt nur, was geplant ist – aufgebrauchtes Saatgut von Pflanzen, die du nicht planst, erscheint nicht. Die Zahl im roten Kreis sagt, wie viele Punkte zu erledigen sind; Meldungen von selbst gibt es keine.</li>
