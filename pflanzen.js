@@ -25,7 +25,7 @@ const QUELLEN = {
  },
  "psr": {
   "titel": "ProSpecieRara: Grundlagen Gemüse-Samenbau (Schwierigkeit der Samengewinnung)",
-  "url": "https://www.prospecierara.ch/fileadmin/user_upload/prospecierara.ch/Pflanzen/Wissen/Grundlagen_Samenbau_ProSpecieRara.pdf"
+  "url": "https://cms.prospecierara.ch/assets/website/prospecierara.ch/Pflanzen/Wissen/Grundlagen_Samenbau_ProSpecieRara.pdf"
  },
  "hornbach": {
   "titel": "Hornbach: Günstige und ungünstige Beetnachbarn (nur für Tomate–Basilikum und Tomate–Gurke)",
@@ -166,10 +166,6 @@ const QUELLEN = {
  "oekotest_gd": {
   "titel": "Öko-Test: Gründüngung im Herbst – Wellnesskur für den Boden",
   "url": "https://www.oekotest.de/freizeit-technik/gruenduengung-im-herbst-wellnesskur-fuer-den-boden-so-gehts_14899_1.html"
- },
- "bioaustria_gd": {
-  "titel": "Bio Austria: Gründüngungspflanzen (Saatzeiten, Saattiefe)",
-  "url": "https://cdn.bio-austria.at/app/uploads/Gr%C3%BCnd%C3%BCngunspflanzen.pdf"
  },
  "dreschflegel_gd": {
   "titel": "Dreschflegel: Infoblatt Gründünger im Hausgarten",
@@ -4932,8 +4928,7 @@ const PFLANZEN = [
    "bund_gd",
    "vdl_gd",
    "nig_gd",
-   "oekotest_gd",
-   "bioaustria_gd"
+   "oekotest_gd"
   ],
   "anleitung": "Der Allrounder unter den Gründüngern: mit keinem Gemüse verwandt (nur mit Borretsch und Beinwell), deshalb passt Phacelia in jede Fruchtfolge. Nach der Ernte breitwürfig säen, einharken, feucht halten. Blüht nach etwa sechs bis acht Wochen und ist dann voller Bienen.",
   "hinweise": [
@@ -5033,12 +5028,11 @@ const PFLANZEN = [
    "bund_gd",
    "vdl_gd",
    "nig_gd",
-   "oekotest_gd",
-   "bioaustria_gd"
+   "oekotest_gd"
   ],
   "anleitung": "Klassische Herbstsaat nach der Ernte. Als Hülsenfrüchtler bindet er Stickstoff, der der nächsten Kultur zugutekommt – ideal vor Starkzehrern wie Kohl, Tomate oder Kürbis. Er zählt aber zur Familie von Erbse und Bohne: Die Anbaupause gilt auch für ihn.",
   "hinweise": [
-   "Aussaatzeit: BUND nennt Ende Juli bis Anfang September, Bio Austria Juli bis Mitte September, der VdL Juli bis September, Öko-Test sogar noch Oktober.",
+   "Aussaatzeit: BUND nennt Ende Juli bis Anfang September, der VdL Juli bis September, Öko-Test sogar noch Oktober.",
    "Einarbeiten: Der Abstand bis zur Folgekultur ist ein Richtwert."
   ],
   "vorziehen": [],
