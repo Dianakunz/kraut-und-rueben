@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Kraut und Rüben · Version 0.12.3 -->
+<!-- Kraut und Rüben · Version 0.12.4 -->
 <html lang="de" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -172,7 +172,7 @@ main{padding:16px 14px calc(90px + env(safe-area-inset-bottom));max-width:1100px
 .abgleich-status[data-status="ok"]{color:var(--gruen)}
 .abgleich-status[data-status="fehler"],.abgleich-status[data-status="konflikt"]{color:var(--rot);font-weight:700}
 .abgleich-status[data-status="offline"],.abgleich-status[data-status="wartet"],.abgleich-status[data-status="laeuft"]{color:var(--leise)}
-input[type=text],input[type=search],input[type=password]{
+input[type=text],input[type=search],input[type=password],input[type=month],input[type=date]{
   width:100%;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--linie);
   background:var(--karte);color:var(--text);font:inherit;
 }
@@ -345,7 +345,8 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 .pw-tag.fruchtfolge{color:var(--gelb)}
 .objliste .p-badge{width:26px;height:26px;font-size:.72rem}
 .panel input[type=date]{width:100%;min-height:40px;padding:6px 10px;border-radius:10px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit}
-.felder select,.felder input[type=date]{flex:1;width:100%;min-height:40px;padding:6px 10px;border-radius:10px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit}
+.felder select{flex:1;width:100%;min-height:40px;padding:6px 10px;border-radius:10px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit}
+.felder input[type=date],.felder input[type=month]{flex:1;width:100%;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit}
 
 /* ============ GARTENPLAN ============ */
 :root{
@@ -812,13 +813,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.12.3"></script>
+<script src="pflanzen.js?v=0.12.4"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.12.3";
+const APP_VERSION = "0.12.4";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
