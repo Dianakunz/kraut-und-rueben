@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Kraut und Rüben · Version 0.11.3 -->
+<!-- Kraut und Rüben · Version 0.12.0 -->
 <html lang="de" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -573,6 +573,11 @@ table.mk-tabelle{border-collapse:separate;border-spacing:3px;font-size:.88rem}
 .mk-fazit{margin:12px 0 0;padding:8px 12px;border-radius:10px}
 .mk-fazit.schlecht{background:var(--rot-hell)} .mk-fazit.gut{background:var(--gruen-hell)}
 .ue-tab-rahmen{overflow-x:auto}
+:is(#plan,.plan-bild) .pfl-baum{fill-opacity:.22;stroke-opacity:.55}
+:is(#plan,.plan-bild) .pfl-baum.gewaehlt{fill-opacity:.32;stroke-opacity:1}
+:is(#plan,.plan-bild) .baum-rand{fill:none;stroke:var(--pf);stroke-width:3px;stroke-linecap:round;vector-effect:non-scaling-stroke;opacity:.75;pointer-events:none}
+:is(#plan,.plan-bild) .baum-stamm{fill:#6b4a2f;stroke:#fff;stroke-width:1.5px;vector-effect:non-scaling-stroke;pointer-events:none}
+:is(#plan,.plan-bild) .baum-name{pointer-events:none}
 /* Rückblick und Bericht */
 .plan-bild{display:block;width:100%;height:auto;max-height:75vh;background:var(--karte2);border:1px solid var(--linie);border-radius:10px;margin:4px 0 12px}
 .plan-bild .pfl,.plan-bild .obj{cursor:default}
@@ -799,13 +804,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.11.3"></script>
+<script src="pflanzen.js?v=0.12.0"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.11.3";
+const APP_VERSION = "0.12.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1338,10 +1343,7 @@ function pflanzenListe(main) {
       <div class="legende">${Object.values(FAMILIEN).filter(f => allePflanzen().some(p => familieVon(p) === f)).map(f => `<span><i style="background:${f.farbe};border-radius:50%"></i>${esc(f.name.replace(/\s*\(.*\)/, ""))}${f.pause ? ` (${esc(f.pause)})` : ""}</span>`).join("")}</div>
     </details>
     <div class="lex-raster" id="lex-raster"></div>
-    <div style="margin-top:14px">${baldKarte("Kommt noch in „Wissen“", [
-      "Obstbäume wie Apfel, Birne, Kirsche und Pflaume (mit Krone im Gartenplan)",
-      "Physalis, Feige und Melone",
-    ])}</div>`);
+`);
   const zeichnen = () => {
     const t = lexFilter.text.toLowerCase().trim(), mo = new Date().getMonth() + 1;
     const liste = allePflanzen().filter(p =>
@@ -1384,13 +1386,13 @@ function pflanzenDetail(main, id) {
           <div class="kal-text klein">${TAETIGKEITEN.filter(t => (p[t.feld] || []).length).map(t => `<div><b>${t.name}:</b> ${monateText(p[t.feld])}</div>`).join("")}</div>
         </div>
         ${p.anleitung ? `<div class="karte"><h2>${icon("i-pflanz")} Anbau in Kürze</h2><p style="margin:0">${esc(p.anleitung)}</p></div>` : ""}
-        <div class="karte"><h2>${icon("i-nachbarn")} Nachbarn im Beet</h2>
+        ${p.baum ? "" : `<div class="karte"><h2>${icon("i-nachbarn")} Nachbarn im Beet</h2>
           <div class="nb-gruppe"><div class="nb-titel">Gute Nachbarn</div>${chips(n.gut, "gut")}</div>
           <div class="nb-gruppe"><div class="nb-titel">Schlechte Nachbarn</div>${chips(n.schlecht, "schlecht")}</div>
           ${n.umstritten.length ? `<div class="nb-gruppe"><div class="nb-titel">Umstritten</div>${chips(n.umstritten, "umstritten")}</div>` : ""}
           ${notizen.length ? `<div class="klein leise" style="margin-top:8px">${[...new Set(notizen.map(x => x.notiz))].map(t => `* ${esc(notizen.filter(x => x.notiz === t).map(x => pflanzeVon(x.id).name).join(", "))}: ${esc(t)}`).join("<br>")}</div>` : ""}
           <p class="klein leise" style="margin:8px 0 0">Mischkultur beruht vor allem auf Erfahrungswerten; die Wirkung ist wissenschaftlich kaum belegt. Wichtiger ist genug Abstand.</p>
-        </div>
+        </div>`}
       </div>
       <div>
         <div class="karte"><h2>${icon("i-steckbrief")} Steckbrief</h2>
@@ -1401,14 +1403,17 @@ function pflanzenDetail(main, id) {
             ${zeile("Standort", esc(p.standort || "–"))}
             ${zeile("Frost", esc(FROST[p.frost] || "–"))}
             ${zeile("Wuchshöhe", p.hoehe ? `${p.hoehe[0] === p.hoehe[1] ? p.hoehe[0] : p.hoehe[0] + "–" + p.hoehe[1]} cm${p.hoeheHinweis ? `<br><span class="leise">${esc(p.hoeheHinweis)}</span>` : ""}` : "")}
-            ${zeile("Im Plan", p.einzeln ? "als Einzelpflanzen setzen" : "als Fläche bzw. Reihen setzen")}
-            ${zeile("Abstand", p.abstand ? `${p.abstand[0]} cm zwischen den Reihen, ${p.abstand[1]} cm in der Reihe${p.abstandHinweis ? `<br><span class="leise">${esc(p.abstandHinweis)}</span>` : ""}` : "–")}
-            ${zeile("Saattiefe", esc(p.saattiefe || "–") + (p.keimung ? `<br><span class="leise">${esc(p.keimung)}</span>` : ""))}
+            ${zeile("Im Plan", p.baum ? "als Baum mit Krone setzen – auch auf Rasen oder Gartenfläche" : p.einzeln ? "als Einzelpflanzen setzen" : "als Fläche bzw. Reihen setzen")}
+            ${p.baum ? zeile("Kronendurchmesser", (p.krone || []).map(k => `${zahl(k.d / 100, k.d % 100 ? 1 : 0)} m – ${esc(k.text)}`).join("<br>") + `<br><span class="leise">Richtwerte aus den empfohlenen Pflanzabständen; im Plan einstellbar.</span>`) : ""}
+            ${p.befruchtung ? zeile("Befruchtung", esc(p.befruchtung)) : ""}
+            ${p.schnitt ? zeile("Schnitt", esc(p.schnitt)) : ""}
+            ${p.baum ? "" : zeile("Abstand", p.abstand ? `${p.abstand[0]} cm zwischen den Reihen, ${p.abstand[1]} cm in der Reihe${p.abstandHinweis ? `<br><span class="leise">${esc(p.abstandHinweis)}</span>` : ""}` : "–")}
+            ${p.baum ? "" : zeile("Saattiefe", esc(p.saattiefe || "–") + (p.keimung ? `<br><span class="leise">${esc(p.keimung)}</span>` : ""))}
             ${zeile("Anbaupause", p.pause && !f.pause ? `${esc(p.pause)} ohne ${esc(p.name)} an derselben Stelle` : pause ? `${esc(pause)} für die ganze Familie (${esc(f.name.replace(/\s*\(.*\)/, ""))})` : (p.mehrjaehrig ? "entfällt (bleibt mehrere Jahre stehen)" : "keine Angabe"))}
-            ${zeile("Samen keimfähig", esc(keim))}
-            ${zeile("Samen selbst gewinnen", esc(SAATGUT[p.saatgut] || "keine Angabe"))}
+            ${p.baum ? "" : zeile("Samen keimfähig", esc(keim))}
+            ${p.baum ? "" : zeile("Samen selbst gewinnen", esc(SAATGUT[p.saatgut] || "keine Angabe"))}
           </div>
-          <p class="klein leise" style="margin:10px 0 0">Saattiefe, Wuchshöhe und Zeiten sind Richtwerte und hängen von der Sorte ab – die Angaben auf der Samentüte haben Vorrang.</p>
+          <p class="klein leise" style="margin:10px 0 0">${p.baum ? "Wuchshöhe, Krone und Zeiten sind Richtwerte und hängen von Sorte und Unterlage ab." : `Saattiefe, Wuchshöhe und Zeiten sind Richtwerte und hängen von der Sorte ab – die Angaben auf der Samentüte haben Vorrang.`}</p>
         </div>
         ${(p.hinweise || []).length ? `<div class="karte hinweis-karte"><h2>${icon("i-warnung")} Unterschiedliche Angaben</h2><ul>${p.hinweise.map(h => `<li>${esc(h)}</li>`).join("")}</ul></div>` : ""}
         ${lexikonGartenHTML(p)}
@@ -1571,6 +1576,10 @@ const echte = () => D.pflanzungen.filter(p => !p.geplant);
 function jahrVon(p) { return +(p.gepflanzt || "").slice(0, 4) || new Date().getFullYear(); }
 function datumKurz(iso) { if (!iso) return "–"; const [j, mo, t] = iso.split("-"); return `${+t}.${+mo}.${j}`; }
 function platzRadius(pf) { return Math.max(5, ((pf && pf.abstand && pf.abstand[1]) || 30) / 2); }
+const istBaum = pf => !!(pf && pf.baum);
+const kroneStandard = pf => (pf && pf.krone && pf.krone[0] && pf.krone[0].d) || 300;
+function pflRadius(p, pf = pflanzeVon(p.pflanze)) { return istBaum(pf) ? Math.max(25, (p.krone || kroneStandard(pf)) / 2) : platzRadius(pf); }
+const kannBaum = o => !!(ARTEN[o.art] && (ARTEN[o.art].pflanzbar || ARTEN[o.art].baumOk));
 function pflAbstand(pf) { return (pf && pf.abstand) || [30, 30]; }
 function autoAnzahl(pf, w, h) {
   const [reihe, inReihe] = pflAbstand(pf), lang = Math.max(w, h), kurz = Math.min(w, h);
@@ -1583,7 +1592,7 @@ function anzahlVon(p) {
 function anzahlText(p) { return p.form === "flaeche" && !p.anzahl ? `ca. ${anzahlVon(p)}` : String(anzahlVon(p)); }
 function pflRahmen(p) {
   if (p.form === "flaeche") return { x1: p.x, y1: p.y, x2: p.x + p.w, y2: p.y + p.h };
-  const r = platzRadius(pflanzeVon(p.pflanze)), xs = p.punkte.map(q => q[0]), ys = p.punkte.map(q => q[1]);
+  const r = pflRadius(p), xs = p.punkte.map(q => q[0]), ys = p.punkte.map(q => q[1]);
   return { x1: Math.min(...xs) - r, y1: Math.min(...ys) - r, x2: Math.max(...xs) + r, y2: Math.max(...ys) + r };
 }
 function pflMitte(p) { const r = pflRahmen(p); return [(r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2]; }
@@ -1614,12 +1623,13 @@ function zuEng() {
   const teile = [];
   for (const p of aktivePflanzungen()) {
     if (p.form === "flaeche") teile.push({ key: p.id, pid: p.id, rect: { x1: p.x, y1: p.y, x2: p.x + p.w, y2: p.y + p.h } });
-    else { const r = platzRadius(pflanzeVon(p.pflanze)); p.punkte.forEach(([x, y], i) => teile.push({ key: p.id + ":" + i, pid: p.id, x, y, r })); }
+    else { const r = pflRadius(p), baum = istBaum(pflanzeVon(p.pflanze)); p.punkte.forEach(([x, y], i) => teile.push({ key: p.id + ":" + i, pid: p.id, x, y, r, baum })); }
   }
   const eng = new Set();
   const kreisRect = (k, q) => Math.hypot(Math.max(q.x1 - k.x, 0, k.x - q.x2), Math.max(q.y1 - k.y, 0, k.y - q.y2)) < k.r * ENG_TOLERANZ;
   for (let i = 0; i < teile.length; i++) for (let j = i + 1; j < teile.length; j++) {
     const a = teile[i], b = teile[j];
+    if (!!a.baum !== !!b.baum) continue;   // unter einer Baumkrone darf etwas wachsen
     let zu = false;
     if (a.rect && b.rect) zu = Math.min(a.rect.x2, b.rect.x2) - Math.max(a.rect.x1, b.rect.x1) > 2 && Math.min(a.rect.y2, b.rect.y2) - Math.max(a.rect.y1, b.rect.y1) > 2;
     else if (a.rect) zu = kreisRect(b, a.rect);
@@ -1684,7 +1694,7 @@ function pflanzungenSVG(s) {
     for (const q of echte().filter(q => jahrVon(q) === G.planJahr - 1 && objekt(q.beet) && !(istMehrjaehrig(q) && !q.abgeraeumt))) {
       const pf = pflanzeVon(q.pflanze), farbe = pf ? familieVon(pf).farbe : "#8a8f80", r = pflRahmen(q);
       h += q.form === "flaeche" ? `<rect class="vorjahr" x="${q.x}" y="${q.y}" width="${q.w}" height="${q.h}" style="--pf:${farbe}"/>`
-        : q.punkte.map(([x, y]) => `<circle class="vorjahr" cx="${x}" cy="${y}" r="${platzRadius(pf)}" style="--pf:${farbe}"/>`).join("");
+        : q.punkte.map(([x, y]) => `<circle class="vorjahr" cx="${x}" cy="${y}" r="${pflRadius(q, pf)}" style="--pf:${farbe}"/>`).join("");
       h += `<text class="vorjahr-text" x="${(r.x1 + r.x2) / 2}" y="${r.y2 - 4 / s}" font-size="${10 / s}" text-anchor="middle">${G.planJahr - 1}: ${esc(pf ? pf.name : "?")}</text>`;
     }
   }
@@ -1702,8 +1712,15 @@ function pflanzungenSVG(s) {
       }
       if (p.id === G.pfl) h += `<circle class="griff" data-rolle="pfl-groesse" cx="${p.x + p.w}" cy="${p.y + p.h}" r="${(fingerBedienung() ? 10 : 7) / s}"/>`;
     } else {
-      const r = platzRadius(pf), kurz = name.slice(0, 2);
+      const r = pflRadius(p, pf), kurz = name.slice(0, 2), baum = istBaum(pf);
       p.punkte.forEach(([x, y], i) => {
+        if (baum) {   // Krone: gewellter Rand, Stamm in der Mitte, Name darunter
+          h += `<circle class="${kl}${eng.has(p.id + ":" + i) ? " eng" : ""}${p.id === G.pfl && G.pflPunkt === i ? " punkt-gewaehlt" : ""} pfl-punkt pfl-baum" data-rolle="pfl" data-pid="${p.id}" data-pi="${i}" cx="${x}" cy="${y}" r="${r}" style="--pf:${farbe}"/>`;
+          h += `<circle class="baum-rand" cx="${x}" cy="${y}" r="${r * 0.93}" style="--pf:${farbe};stroke-dasharray:${(r * 0.32).toFixed(1)} ${(r * 0.1).toFixed(1)}"/>`;
+          h += `<circle class="baum-stamm" cx="${x}" cy="${y}" r="${Math.min(r * 0.12, 7 / s)}"/>`;
+          if (r * s >= 22) h += `<text class="pfl-text baum-name" x="${x}" y="${y + Math.min(r * 0.12, 7 / s) + 13 / s}" font-size="${11 / s}" text-anchor="middle">${esc(name)}</text>`;
+          return;
+        }
         h += `<circle class="${kl}${eng.has(p.id + ":" + i) ? " eng" : ""}${p.id === G.pfl && G.pflPunkt === i ? " punkt-gewaehlt" : ""} pfl-punkt" data-rolle="pfl" data-pid="${p.id}" data-pi="${i}" cx="${x}" cy="${y}" r="${r}" style="--pf:${farbe}"/>`;
         h += `<circle class="pfl-kern" cx="${x}" cy="${y}" r="${Math.min(r * 0.45, 9 / s)}" style="--pf:${farbe}"/>`;
         if (r * s >= 14) h += `<text class="pfl-kuerzel" x="${x}" y="${y}" font-size="${Math.min(r * 0.5, 10 / s)}" text-anchor="middle" dominant-baseline="central">${esc(kurz)}</text>`;
@@ -1770,14 +1787,15 @@ function setzenHinweis() {
     if (a === "fertig") setzenBeenden();
   });
 }
-function pflanzbarAn(w) {
-  const kand = D.garten.objekte.filter(o => ARTEN[o.art].pflanzbar && punktIn(o, w));
+function pflanzbarAn(w, baum = G.setzen && istBaum(pflanzeVon(G.setzen.pflanze))) {
+  const kand = D.garten.objekte.filter(o => (ARTEN[o.art].pflanzbar || (baum && ARTEN[o.art].baumOk)) && punktIn(o, w));
   return kand.sort((a, b) => ARTEN[b.art].ebene - ARTEN[a.art].ebene || flaeche(a) - flaeche(b))[0] || null;
 }
 function neuePflanzung(z, daten) {
   const b = objekt(z.beet);
   const p = Object.assign({ id: gid(), pflanze: z.pflanze, beet: z.beet, beetName: b ? b.name : "", gepflanzt: heuteISO(), wie: "gepflanzt", sorte: "", notiz: "", ernten: [], abgeraeumt: null }, daten);
   const pf = pflanzeVon(z.pflanze);
+  if (istBaum(pf) && !p.krone) p.krone = kroneStandard(pf);
   if (pf && !(pf.pflanzen || []).length && (pf.direktsaat || []).length) p.wie = "gesät";
   if (G.planJahr) {   // geplant: Datum aus dem Lexikon vorschlagen (erster Pflanz- bzw. Säemonat)
     p.geplant = G.planJahr;
@@ -1789,7 +1807,7 @@ function neuePflanzung(z, daten) {
 }
 function setzenKlick(w, e) {      // Tippen ohne Ziehen
   const z = G.setzen, ziel = pflanzbarAn(w);
-  if (!ziel) { melden("Bitte in ein Beet, Hochbeet, Gewächshaus oder einen Kübel tippen."); return; }
+  if (!ziel) { melden(istBaum(pflanzeVon(z.pflanze)) ? "Bitte auf Rasen, Gartenfläche, in ein Beet oder einen Kübel tippen." : "Bitte in ein Beet, Hochbeet, Gewächshaus oder einen Kübel tippen."); return; }
   if (ziel.id !== z.beet) { z.beet = ziel.id; z.gruppe = null; G.pfl = null; G.auswahl = ziel.id; }
   const r = Math.min(rasterwert(e), 5), pt = [einrasten(w[0], r), einrasten(w[1], r)];
   const vorher = stand();
@@ -1825,7 +1843,7 @@ function flaecheAnlegen(q, vorher) {
 /* ---------- Auswahlliste „Was soll ins Beet?“ ---------- */
 let pflSuche = "", pflNurJetzt = false;
 function pflanzenWahlHTML(beet) {
-  return `<div class="karte"><h2>${icon("i-pflanz")} Was soll in „${esc(beet.name)}“?</h2>
+  return `<div class="karte"><h2>${icon("i-pflanz")} ${ARTEN[beet.art].pflanzbar ? `Was soll in „${esc(beet.name)}“?` : `Welcher Baum soll auf „${esc(beet.name)}“?`}</h2>
     <input type="search" id="pw-suche" placeholder="Pflanze suchen …" aria-label="Pflanze suchen" value="${esc(pflSuche)}">
     <label class="schalter-klein" style="margin:8px 0"><input type="checkbox" id="pw-jetzt" ${pflNurJetzt ? "checked" : ""}> Nur was im ${MONATE[new Date().getMonth()]} gesät oder gepflanzt wird</label>
     <div class="legende" style="margin:0 0 6px"><span><i style="background:var(--gruen)"></i>gute Nachbarn</span><span><i style="background:var(--rot)"></i>schlechte Nachbarn</span><span><i style="background:var(--gelb)"></i>Fruchtfolge beachten</span></div>
@@ -1836,7 +1854,8 @@ function pflanzenWahlHTML(beet) {
 function pflanzenWahlListe(el, beet) {
   const im = aktivePflanzungen(beet.id), mo = new Date().getMonth() + 1, jahr = G.planJahr || new Date().getFullYear();
   const t = pflSuche.toLowerCase().trim();
-  const liste = allePflanzen().filter(pf =>
+  const nurBaum = !ARTEN[beet.art].pflanzbar;
+  const liste = allePflanzen().filter(pf => (!nurBaum || istBaum(pf)) &&
     (!t || pf.name.toLowerCase().includes(t) || (pf.auch || []).some(a => a.toLowerCase().includes(t))) &&
     (!pflNurJetzt || [...(pf.pflanzen || []), ...(pf.direktsaat || [])].includes(mo)));
   $("#pw-liste", el).innerHTML = liste.length ? liste.map(pf => {
@@ -1876,10 +1895,11 @@ function bepflanzungHTML(beet) {
   return `<div class="karte"><h2>${icon("i-garten")} Bepflanzung</h2>
     ${liste.length ? `<ul class="objliste">${liste.map(p => { const pf = pflanzeVon(p.pflanze) || { name: "?" };
       return `<li data-pfl="${p.id}">${pflanzenBadge(pf)}<span>${esc(pf.name)}${p.sorte ? ` <span class="leise">‚${esc(p.sorte)}‘</span>` : ""}</span><span class="leise">${anzahlText(p)} St.</span></li>`; }).join("")}</ul>`
-      : `<p class="klein leise" style="margin:0 0 6px">Hier wächst gerade nichts.</p>`}
+      : `<p class="klein leise" style="margin:0 0 6px">${ARTEN[beet.art].pflanzbar ? "Hier wächst gerade nichts." : "Hier steht noch kein Obstbaum."}</p>`}
     ${liste.some(p => pflZuEng(p, engSet)) ? `<div class="hinweis warn" style="margin-top:8px"><span class="sym">${icon("i-warnung")}</span><div><b>Zu eng</b><span class="klein">${esc([...new Set(liste.filter(p => pflZuEng(p, engSet)).map(p => pflanzeVon(p.pflanze).name))].join(", "))}: Platzbedarf überschneidet sich (gelb gestrichelt).</span></div></div>` : ""}
     ${konflikte.length ? `<div class="hinweis warn" style="margin-top:8px"><span class="sym">${icon("i-warnung")}</span><div><b>Schlechte Nachbarn</b><span class="klein">${esc(konflikte.join("; "))} stehen dicht beieinander.</span></div></div>` : ""}
-    <div class="knopfreihe"><button class="knopf haupt" data-tun="pflanze-setzen">＋ Pflanze setzen</button><button class="knopf" data-tun="beet-tagebuch">${icon("i-notiz")} Tagebuch</button></div>
+    ${!ARTEN[beet.art].pflanzbar ? `<p class="klein leise" style="margin:6px 0 0">Auf ${esc(ARTEN[beet.art].name)} lassen sich Obstbäume setzen.</p>` : ""}
+    <div class="knopfreihe"><button class="knopf haupt" data-tun="pflanze-setzen">＋ ${ARTEN[beet.art].pflanzbar ? "Pflanze" : "Baum"} setzen</button><button class="knopf" data-tun="beet-tagebuch">${icon("i-notiz")} Tagebuch</button></div>
     ${frueher.length ? `<details style="margin-top:10px"><summary class="klein"><b>Früher hier</b> (${frueher.length})</summary><ul class="klein" style="margin:6px 0 0;padding-left:18px">${frueher.slice(0, 12).map(p =>
       `<li>${jahrVon(p)}: ${esc((pflanzeVon(p.pflanze) || { name: "?" }).name)} <span class="leise">(${datumKurz(p.gepflanzt)} bis ${datumKurz(p.abgeraeumt)})</span></li>`).join("")}</ul></details>` : ""}
   </div>`;
@@ -1955,6 +1975,10 @@ function pflanzungPanelHTML(p) {
       <div><label>Breite</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-pf="w" value="${(p.w / 100).toFixed(2)}"><span>m</span></div></div>
       <div><label>Tiefe</label><div class="feld-einheit"><input type="number" step="0.05" min="0.1" inputmode="decimal" data-pf="h" value="${(p.h / 100).toFixed(2)}"><span>m</span></div></div></div>
       <label>Anzahl</label><div class="feld-einheit"><input type="number" step="1" min="1" inputmode="numeric" data-pf="anzahl" value="${p.anzahl || ""}" placeholder="ca. ${autoAnzahl(pf, p.w, p.h)} (geschätzt)"><span>Stück</span></div>` : ""}
+    ${istBaum(pf) ? `<label>Krone</label>
+      <select data-pf="krone-wahl" aria-label="Kronengröße">${(pf.krone || []).map(k => `<option value="${k.d}" ${(p.krone || kroneStandard(pf)) === k.d ? "selected" : ""}>${zahl(k.d / 100, k.d % 100 ? 1 : 0)} m – ${esc(k.text)}</option>`).join("")}${(pf.krone || []).some(k => k.d === (p.krone || kroneStandard(pf))) ? "" : `<option value="" selected>eigener Wert</option>`}</select>
+      <div class="feld-einheit" style="margin-top:6px"><input type="number" step="0.5" min="0.5" inputmode="decimal" data-pf="krone" value="${zahl((p.krone || kroneStandard(pf)) / 100, 1).replace(",", ".")}" aria-label="Kronendurchmesser"><span>m Durchmesser</span></div>
+      <p class="klein leise" style="margin:4px 0 0">Am besten den heutigen Durchmesser eintragen – oder die erwartete Größe, wenn du Platz einplanen willst.</p>` : ""}
     <label>Notiz</label><textarea data-pf="notiz" rows="2" placeholder="z. B. mit Vlies abgedeckt">${esc(p.notiz || "")}</textarea>
     <p class="klein leise" id="pfl-gespeichert" style="margin:6px 0 0">Änderungen werden automatisch gespeichert.</p>
   </div>
@@ -1987,6 +2011,8 @@ function pflanzungPanelEreignisse(el, p) {
       if (feld === "gepflanzt") p.gepflanzt = v || heuteISO();
       else if (feld === "wie" || feld === "sorte" || feld === "notiz") p[feld] = v.trim ? (feld === "notiz" ? v : v.trim()) : v;
       else if (feld === "anzahl") p.anzahl = zw > 0 ? Math.round(zw) : null;
+      else if (feld === "krone-wahl" && +v > 0) p.krone = +v;
+      else if (feld === "krone" && zw > 0) p.krone = Math.round(Math.min(zw, 30) * 100);
       else if ((feld === "w" || feld === "h") && zw > 0) p[feld] = Math.round(zw * 100);
     });
   }));
@@ -2601,7 +2627,7 @@ function auswertungHTML(jahr) {
 
 /* ---------- Tagebuch-Eintrag ---------- */
 async function tagebuchBearbeiten(alt, vorgabe = {}) {
-  const beete = D.garten.objekte.filter(o => ARTEN[o.art]?.pflanzbar).sort((a, b) => a.name.localeCompare(b.name, "de"));
+  const beete = D.garten.objekte.filter(o => ARTEN[o.art]?.pflanzbar || D.pflanzungen.some(p => p.beet === o.id)).sort((a, b) => a.name.localeCompare(b.name, "de"));
   const pflanzen = allePflanzen();
   const w = await eingabe({
     titel: alt ? "Tagebuch-Eintrag bearbeiten" : "Neuer Tagebuch-Eintrag",
@@ -3368,7 +3394,7 @@ function standListeHTML(tag) {
   const l = standAm(tag), beete = new Map();
   for (const p of l) { const n = pflBeetName(p); if (!beete.has(n)) beete.set(n, []); beete.get(n).push(p); }
   if (!l.length) return `<p class="leise klein" style="margin:0">An diesem Tag war nichts eingetragen.</p>`;
-  return `<table class="tabelle rb-tab"><thead><tr><th>Beet</th><th>Was wuchs dort</th></tr></thead><tbody>
+  return `<table class="tabelle rb-tab"><thead><tr><th>Wo</th><th>Was wuchs dort</th></tr></thead><tbody>
     ${[...beete.entries()].sort((a, b) => a[0].localeCompare(b[0], "de")).map(([n, ps]) => `<tr><td>${esc(n)}</td><td>${ps.sort((a, b) => (a.gepflanzt || "").localeCompare(b.gepflanzt || "")).map(p => {
       const pf = pflanzeVon(p.pflanze);
       return `<span class="rb-pfl">${pf ? pflanzenBadge(pf) : ""} ${esc(pf ? pf.name : "?")}${p.sorte ? ` <span class="leise">${esc(p.sorte)}</span>` : ""} <span class="leise klein">${p.wie === "gesät" ? "gesät" : p.wie === "gesteckt" ? "gesteckt" : "seit"} ${datumKurz(p.gepflanzt)}</span></span>`; }).join("")}</td></tr>`).join("")}
@@ -3799,6 +3825,7 @@ const SEITEN = {
             <li><b>Fläche</b> (Reihen-Gemüse wie Möhren, Salat, Zwiebeln): Im Beet die Fläche aufziehen. Ein kurzes Tippen setzt eine Fläche in Standardgröße. Die App schätzt aus den Abständen, wie viele Pflanzen hineinpassen. Du kannst die Zahl auch selbst eintragen.</li>
             <li>Oben über dem Plan lässt sich vor dem Setzen zwischen „Einzeln“ und „Fläche“ umschalten.</li>
           </ul>
+          <p><b>Obstbäume</b> (Apfel, Birne, Kirschen, Pflaume, Pfirsich, Feige) lassen sich zusätzlich auf <b>Rasen</b> oder die <b>Gartenfläche</b> setzen: Rasen antippen, „＋ Baum setzen“, Baum wählen und an die Stelle tippen. Im Plan erscheinen sie als <b>Krone</b> mit Stamm. Die Kronengröße stellst du bei der Pflanzung ein – entweder eine der Größen aus dem Lexikon (je nach Unterlage, z. B. 2 m für eine Spindel, 10 m für einen Hochstamm) oder einen eigenen Durchmesser. Unter einer Krone darf etwas wachsen; die „Zu eng“-Warnung prüft Bäume nur untereinander.</p>
           <p><b>Ändern:</b> Eine Pflanzung antippen. Rechts (am Handy darunter) trägst du Datum, gepflanzt/gesät/gesteckt, Sorte und eine Notiz ein. Einzelne Pflanzen und Flächen lassen sich verschieben, Flächen über den Punkt unten rechts vergrößern. „＋ Weitere setzen“ fügt zur selben Pflanzung neue hinzu. Eine einzelne Pflanze entfernst du, indem du sie antippst (sie wird dicker umrandet) und dann „Nur diese eine Pflanze entfernen“ wählst.</p>
           <p><b>Eine Pflanzung = ein Satz:</b> Alles, was du in einem Durchgang setzt, gehört zusammen. Datum, Sorte, Notiz und Ernte gelten für die ganze Pflanzung. Für eine zweite Sorte oder einen späteren Satz die Pflanze einfach noch einmal setzen.</p>
           <p><b>Warnungen im Plan:</b> Stehen zwei schlechte Nachbarn näher als 50 cm beieinander, bekommen beide einen <b>rot gestrichelten Rand</b>. Überschneiden sich Platzkreise oder Flächen deutlich (mehr als etwa 15 %), ist der Rand <b>gelb gestrichelt</b>: Die Pflanzen stehen zu eng. Beim Beet und bei der Pflanzung steht dann jeweils ein Hinweis.</p>
@@ -3902,8 +3929,8 @@ const SEITEN = {
        oder { id, art, name, form: "linie", punkte: [[x,y], …], breite, rund?, fest? }
    ============================================================ */
 const ARTEN = {
-  garten:       { name: "Gartenfläche", ebene: 0, b: 1200, t: 800, ohneNummer: true },
-  rasen:        { name: "Rasen", ebene: 1, b: 500, t: 400 },
+  garten:       { name: "Gartenfläche", ebene: 0, b: 1200, t: 800, ohneNummer: true, baumOk: true },
+  rasen:        { name: "Rasen", ebene: 1, b: 500, t: 400, baumOk: true },
   terrasse:     { name: "Terrasse", ebene: 1, b: 400, t: 300 },
   weg:          { name: "Weg (Fläche)", kurz: "Weg", ebene: 1, b: 100, t: 500 },
   pfad:         { name: "Weg (Linie)", kurz: "Weg", ebene: 1, linie: true, breite: 80, hinweis: "Punkte setzen, auch geschwungen" },
@@ -4972,11 +4999,11 @@ function panelZeichnen() {
   const el = $("#garten-panel"); if (!el) return;
   const o = G.auswahl && objekt(G.auswahl);
   if (!o) { el.innerHTML = gartenPflanzenUebersichtHTML() + uebersichtHTML(); uebersichtEreignisse(el); gartenPflanzenUebersichtEreignisse(el); return; }
-  if (G.auswahlPflanze === o.id && ARTEN[o.art].pflanzbar) { el.innerHTML = pflanzenWahlHTML(o); pflanzenWahlEreignisse(el, o); return; }
+  if (G.auswahlPflanze === o.id && kannBaum(o)) { el.innerHTML = pflanzenWahlHTML(o); pflanzenWahlEreignisse(el, o); return; }
   const gp = G.pfl && pflanzung(G.pfl);
   if (gp && !gp.abgeraeumt) { el.innerHTML = gp.geplant ? geplantPanelHTML(gp) : pflanzungPanelHTML(gp); pflanzungPanelEreignisse(el, gp); return; }
   if (G.setzen) { el.innerHTML = `<div class="karte"><p class="klein" style="margin:0">Setzen läuft – siehe Hinweis über dem Plan.</p></div>`; return; }
-  const a = ARTEN[o.art], r = rahmen(o), form = o.form, pflanzbar = !!a.pflanzbar;
+  const a = ARTEN[o.art], r = rahmen(o), form = o.form, pflanzbar = kannBaum(o);
   let h = `<div class="karte"><h2>${farbpunkt(o.art)} ${esc(o.name)}${o.fest ? " "+icon("i-schloss") : ""}</h2>`;
   if (!G.bearbeiten || o.fest) {
     h += `<p class="leise">${esc(a.name)} · ${groesseText(o)}</p>`;

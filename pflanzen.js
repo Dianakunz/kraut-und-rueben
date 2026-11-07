@@ -1,7 +1,7 @@
-/* Kraut und Rüben – Pflanzendaten (Etappen 1 und 2)
+/* Kraut und Rüben – Pflanzendaten (Etappen 1 bis 3)
    Alle Texte in eigenen Worten; Werte aus den unter QUELLEN genannten Fachquellen.
    Diese Datei wird automatisch erzeugt. */
-const PFLANZEN_STAND = "2026-11-06";
+const PFLANZEN_STAND = "2026-11-07";
 const QUELLEN = {
  "bzfe": {
   "titel": "BZfE/aid: Tabelle Aussaat- und Pflanzzeiten (Abstände, Anzucht, Pflanzung, Direktsaat, Ernte)",
@@ -94,6 +94,62 @@ const QUELLEN = {
  "kiepenkerl_ringelblume": {
   "titel": "Kiepenkerl (bei OBI): Bio-Ringelblume, Aussaat April–Juni",
   "url": "https://www.obi.at/p/4652723/kiepenkerl-saatgut-bio-ringelblume-oranja"
+ },
+ "lv_obst": {
+  "titel": "Bayerischer Landesverband für Gartenbau: Obstanbau im Hausgarten (Unterlagen, Pflanzabstände, Befruchtung)",
+  "url": "https://mv.gartenbauvereine.org/wp-content/uploads/2020/05/Obstanbau-im-Hausgarten.pdf"
+ },
+ "lwg_unterlage": {
+  "titel": "Bayerische Gartenakademie (LWG), Merkblatt 3101: Veredlungsunterlagen von Obstgehölzen",
+  "url": "https://www.lwg.bayern.de/mam/cms06/gartenakademie/dateien/3101_-_veredlungsunterlagen_von_obstgehoelzen.pdf"
+ },
+ "arche_befr": {
+  "titel": "Arche Noah: Kurzinfo Veredelung (Befruchtungsverhältnisse der Obstarten)",
+  "url": "https://www.arche-noah.at/media/kurzinfo_veredelung.pdf"
+ },
+ "lv_sommerschnitt": {
+  "titel": "Bayerischer Landesverband für Gartenbau: Sommerschnitt von Obstgehölzen",
+  "url": "https://mv.gartenbauvereine.org/wp-content/uploads/2020/05/Sommerschnitt.pdf"
+ },
+ "lwg_steinobst": {
+  "titel": "Bayerische Gartenakademie: Steinobst – die besten Sorten (Sauerkirsche, Zwetschge)",
+  "url": "https://lwg.bayern.de/mam/cms06/gartenakademie/dateien/3160_a_steinobst_bf.pdf"
+ },
+ "lwg_pfirsich": {
+  "titel": "Bayerische Gartenakademie, Merkblatt 3173: Schnitt von Pfirsich",
+  "url": "https://www.lwg.bayern.de/mam/cms06/gartenakademie/dateien/3173-schnitt_pfirsich.pdf"
+ },
+ "arche_pfirsich": {
+  "titel": "Arche Noah: Pfirsich (Fruchten am einjährigen Holz, Kräuselkrankheit)",
+  "url": "https://www.arche-noah.at/media/pfirsich.pdf"
+ },
+ "naturadb_pfirsich": {
+  "titel": "NaturaDB: Pfirsich (Wuchsgrößen, Zwergsorten)",
+  "url": "https://www.naturadb.de/pflanzen/prunus-persica/"
+ },
+ "toom_pflanzzeit": {
+  "titel": "toom Ratgeber: Obstbaum pflanzen (Herbst Okt.–Nov., Frühjahr März–Apr.)",
+  "url": "https://toom.de/selbermachen/garten-freizeit/pflanzen/obstgarten-anlegen/obstbaum-pflanzen/"
+ },
+ "samenhaus_feige": {
+  "titel": "Samenhaus: Feigen im Garten (selbstfruchtende, winterharte Sorten)",
+  "url": "https://www.samenhaus.de/gartenblog/?p=9359"
+ },
+ "zdf_feige": {
+  "titel": "ZDFheute: Feigenbaum pflanzen (Reife Ende Juli/August bis Oktober)",
+  "url": "https://www.zdfheute.de/ratgeber/feigenbaum-schneiden-pflege-standort-100.html"
+ },
+ "plantura_physalis": {
+  "titel": "Plantura: Physalis anbauen",
+  "url": "https://www.plantura.garden/obst/physalis/physalis-anbauen"
+ },
+ "lv_kuerbis": {
+  "titel": "Bayerischer Landesverband für Gartenbau: Vielfalt der Kürbisgewächse (Melone)",
+  "url": "https://mv.gartenbauvereine.org/wp-content/uploads/2020/05/VielfaltKuerbisgewaechse.pdf"
+ },
+ "samenhaus_melone": {
+  "titel": "Samenhaus: Melonen anbauen (Abstand 80–100 cm)",
+  "url": "https://www.samenhaus.de/gartenblog/?p=301"
  }
 };
 const FAMILIEN = {
@@ -181,6 +237,11 @@ const FAMILIEN = {
   "name": "Kapuzinerkressengewächse",
   "pause": null,
   "farbe": "#e0702a"
+ },
+ "maulbeer": {
+  "name": "Maulbeergewächse",
+  "pause": null,
+  "farbe": "#7a4b8c"
  }
 };
 const PFLANZEN = [
@@ -3681,6 +3742,575 @@ const PFLANZEN = [
    "Nährstoffbedarf: Richtwert."
   ],
   "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "apfel",
+  "name": "Apfel",
+  "auch": [
+   "Apfelbaum"
+  ],
+  "gruppe": "Obst",
+  "familie": "rosen",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "baum": true,
+  "standort": "sonnig, tiefgründiger, nicht zu trockener Boden",
+  "frost": "hart",
+  "abstand": [
+   300,
+   200
+  ],
+  "saattiefe": "–",
+  "keimung": "Wird als veredelter Baum gekauft (wurzelnackt oder im Topf).",
+  "pflanzen": [
+   3,
+   4,
+   10,
+   11
+  ],
+  "ernte": [
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   250,
+   800
+  ],
+  "hoeheHinweis": "Hängt vor allem von der Unterlage ab: Spindel auf schwacher Unterlage bleibt klein, Halb- und Hochstämme werden groß.",
+  "einzeln": true,
+  "krone": [
+   {
+    "text": "schwach wachsend (z. B. Spindel auf M 9)",
+    "d": 200
+   },
+   {
+    "text": "mittelstark (z. B. Busch auf MM 106)",
+    "d": 500
+   },
+   {
+    "text": "stark (Halb-/Hochstamm auf Sämling)",
+    "d": 1000
+   }
+  ],
+  "befruchtung": "Braucht eine zweite, gleichzeitig blühende Apfelsorte in der Nähe (Fremdbefruchter). Stehen in der Nachbarschaft kaum Apfelbäume, zwei Sorten pflanzen.",
+  "schnitt": "Hauptschnitt im Spätwinter (etwa Dezember bis Mitte März, nicht bei starkem Frost). Ein leichter Sommerschnitt bremst das Wachstum.",
+  "quellen": [
+   "lv_obst",
+   "lwg_unterlage",
+   "arche_befr",
+   "toom_pflanzzeit"
+  ],
+  "anleitung": "Am besten im Herbst (Oktober/November) pflanzen, Topfware fast das ganze Jahr. Die Veredlungsstelle muss deutlich über der Erde bleiben. Bäume auf schwacher Unterlage brauchen dauerhaft einen Pfahl. Beim Kauf nach der Unterlage fragen – sie bestimmt, wie groß der Baum wird.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert.",
+   "Pflanzzeit: Die meisten Quellen nennen den Herbst als beste Zeit; ein Merkblatt der Gartenakademie nennt keine Pflanzzeit. Topfware kann laut Händlerangaben fast ganzjährig gepflanzt werden."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "birne",
+  "name": "Birne",
+  "auch": [
+   "Birnbaum"
+  ],
+  "gruppe": "Obst",
+  "familie": "rosen",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "baum": true,
+  "standort": "sonnig und warm, geschützt (blüht früh)",
+  "frost": "hart",
+  "abstand": [
+   400,
+   400
+  ],
+  "saattiefe": "–",
+  "keimung": "Wird als veredelter Baum gekauft (wurzelnackt oder im Topf).",
+  "pflanzen": [
+   3,
+   4,
+   10,
+   11
+  ],
+  "ernte": [
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   300,
+   1000
+  ],
+  "hoeheHinweis": "Auf Quitte veredelt deutlich kleiner als auf Birnensämling.",
+  "einzeln": true,
+  "krone": [
+   {
+    "text": "schwach wachsend (Spindel/Busch auf Quitte A)",
+    "d": 400
+   },
+   {
+    "text": "stark (Halb-/Hochstamm auf Sämling)",
+    "d": 800
+   }
+  ],
+  "befruchtung": "Braucht eine zweite Birnensorte als Befruchter (Fremdbefruchter).",
+  "schnitt": "Wie beim Apfel im Spätwinter; Birnen möglichst wenig schneiden.",
+  "quellen": [
+   "lv_obst",
+   "lwg_unterlage",
+   "arche_befr",
+   "toom_pflanzzeit"
+  ],
+  "anleitung": "Im Herbst pflanzen. Birnen brauchen mehr Wärme als Äpfel; an einer warmen Hauswand gedeihen sie besonders gut, auch als Spalier. Die Unterlage Quitte A verträgt keinen kalkreichen Boden.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "suesskirsche",
+  "name": "Süßkirsche",
+  "auch": [
+   "Kirsche",
+   "Kirschbaum"
+  ],
+  "gruppe": "Obst",
+  "familie": "rosen",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "baum": true,
+  "standort": "sonnig, durchlässiger Boden (keine Staunässe)",
+  "frost": "hart",
+  "abstand": [
+   500,
+   400
+  ],
+  "saattiefe": "–",
+  "keimung": "Wird als veredelter Baum gekauft (wurzelnackt oder im Topf).",
+  "pflanzen": [
+   3,
+   4,
+   10,
+   11
+  ],
+  "ernte": [
+   6,
+   7
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   300,
+   1500
+  ],
+  "hoeheHinweis": "Ohne schwach wachsende Unterlage (z. B. GiSelA 5) werden Süßkirschen sehr groß.",
+  "einzeln": true,
+  "krone": [
+   {
+    "text": "schwach wachsend (z. B. GiSelA 5)",
+    "d": 400
+   },
+   {
+    "text": "stark (Halb-/Hochstamm)",
+    "d": 1000
+   }
+  ],
+  "befruchtung": "Meist Fremdbefruchter, außerdem passen nicht alle Sorten zueinander – beim Kauf nach einer passenden Befruchtersorte fragen. Einige neuere Sorten sind selbstfruchtbar, z. B. 'Sunburst', 'Sweetheart', 'Lapins'.",
+  "schnitt": "Im Sommer direkt nach der Ernte; Süßkirschen brauchen nur selten einen Schnitt.",
+  "quellen": [
+   "lv_obst",
+   "lwg_unterlage",
+   "arche_befr",
+   "toom_pflanzzeit",
+   "lv_sommerschnitt"
+  ],
+  "anleitung": "Im Herbst pflanzen. Für den Hausgarten unbedingt eine schwach wachsende Unterlage wählen. Gegen Vögel hilft ein Netz zur Reife.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "sauerkirsche",
+  "name": "Sauerkirsche",
+  "auch": [
+   "Weichsel",
+   "Schattenmorelle"
+  ],
+  "gruppe": "Obst",
+  "familie": "rosen",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "baum": true,
+  "standort": "sonnig bis halbschattig, anspruchsloser als die Süßkirsche",
+  "frost": "hart",
+  "abstand": [
+   400,
+   300
+  ],
+  "saattiefe": "–",
+  "keimung": "Wird als veredelter Baum gekauft (wurzelnackt oder im Topf).",
+  "pflanzen": [
+   3,
+   4,
+   10,
+   11
+  ],
+  "ernte": [
+   7,
+   8
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   250,
+   500
+  ],
+  "einzeln": true,
+  "krone": [
+   {
+    "text": "schwach wachsend (Spindel/Busch)",
+    "d": 300
+   },
+   {
+    "text": "stark (Halb-/Hochstamm)",
+    "d": 500
+   }
+  ],
+  "befruchtung": "Je nach Sorte selbstfruchtbar, teilweise oder gar nicht – z. B. ist 'Karneol' nur teilweise und 'Koröser Weichsel' nicht selbstfruchtbar. Beim Kauf nachfragen.",
+  "schnitt": "Jedes Jahr nach der Ernte: abgetragene, überhängende Zweige auf einen jungen Trieb zurückschneiden, sonst verkahlen sie.",
+  "quellen": [
+   "lv_obst",
+   "lwg_unterlage",
+   "arche_befr",
+   "toom_pflanzzeit",
+   "lv_sommerschnitt",
+   "lwg_steinobst"
+  ],
+  "anleitung": "Im Herbst pflanzen. Sauerkirschen tragen am einjährigen Holz – der regelmäßige Schnitt nach der Ernte hält sie fruchtbar.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert.",
+   "Befruchtung: Manche Ratgeber nennen Sauerkirschen pauschal selbstfruchtbar; laut Arche Noah und Gartenakademie hängt das von der Sorte ab."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "pflaume",
+  "name": "Pflaume / Zwetschge",
+  "auch": [
+   "Zwetschge",
+   "Zwetschke",
+   "Pflaumenbaum",
+   "Mirabelle",
+   "Reneklode"
+  ],
+  "gruppe": "Obst",
+  "familie": "rosen",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "baum": true,
+  "standort": "sonnig, warm, ausreichend feuchter Boden",
+  "frost": "hart",
+  "abstand": [
+   400,
+   300
+  ],
+  "saattiefe": "–",
+  "keimung": "Wird als veredelter Baum gekauft (wurzelnackt oder im Topf).",
+  "pflanzen": [
+   3,
+   4,
+   10,
+   11
+  ],
+  "ernte": [
+   7,
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   300,
+   600
+  ],
+  "hoeheHinweis": "Die Krone wird meist 3–5 m breit.",
+  "einzeln": true,
+  "krone": [
+   {
+    "text": "schwach wachsend (z. B. Spindel auf Wangenheimer)",
+    "d": 300
+   },
+   {
+    "text": "mittel (Busch/Halbstamm auf St. Julien)",
+    "d": 500
+   },
+   {
+    "text": "stark (Halb-/Hochstamm)",
+    "d": 600
+   }
+  ],
+  "befruchtung": "Je nach Sorte selbstfruchtbar, teilweise oder nicht – viele Hauszwetschgen tragen allein. Beim Kauf nachfragen.",
+  "schnitt": "Im Sommer nach der Ernte, spätestens bis Ende August.",
+  "quellen": [
+   "lv_obst",
+   "lwg_unterlage",
+   "arche_befr",
+   "toom_pflanzzeit",
+   "lwg_steinobst"
+  ],
+  "anleitung": "Im Herbst pflanzen. Frühe Zwetschgensorten reifen schon Anfang Juli, späte erst im September/Oktober – mit zwei Sorten verlängert sich die Erntezeit.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "pfirsich",
+  "name": "Pfirsich",
+  "auch": [
+   "Nektarine",
+   "Zwergpfirsich",
+   "Pfirsichbaum"
+  ],
+  "gruppe": "Obst",
+  "familie": "rosen",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "baum": true,
+  "standort": "vollsonnig, warm und geschützt (z. B. vor einer Hauswand); blüht früh",
+  "frost": "hart",
+  "abstand": [
+   300,
+   300
+  ],
+  "saattiefe": "–",
+  "keimung": "Wird als veredelter Baum gekauft (wurzelnackt oder im Topf).",
+  "pflanzen": [
+   3,
+   4,
+   10,
+   11
+  ],
+  "ernte": [
+   7,
+   8,
+   9
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   100,
+   500
+  ],
+  "hoeheHinweis": "Zwergsorten wie 'Bonanza' oder 'Calypso' bleiben etwa 1–1,5 m hoch und passen in einen Kübel; als Busch wird der Pfirsich 2–5 m hoch.",
+  "einzeln": true,
+  "krone": [
+   {
+    "text": "Zwergpfirsich (Strauch, auch im Kübel)",
+    "d": 100
+   },
+   {
+    "text": "Busch/kleiner Baum",
+    "d": 300
+   }
+  ],
+  "befruchtung": "Selbstfruchtbar – ein einzelner Baum trägt.",
+  "schnitt": "Jedes Jahr kurz vor oder während der Blüte. Der Pfirsich trägt am einjährigen Holz; ohne jährlichen Schnitt verkahlt er von unten.",
+  "quellen": [
+   "arche_befr",
+   "lwg_pfirsich",
+   "arche_pfirsich",
+   "naturadb_pfirsich",
+   "toom_pflanzzeit"
+  ],
+  "anleitung": "Im Frühjahr oder Herbst an einen warmen, geschützten Platz pflanzen. Häufigstes Problem ist die Kräuselkrankheit (blasig gekräuselte Blätter im Frühjahr) – robuste Sorten wählen, z. B. 'Revita'. Zwergpfirsiche im Kübel frostfrei, aber kühl überwintern. Die frühe Blüte ist durch Spätfröste gefährdet – auch deshalb der geschützte Platz.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "feige",
+  "name": "Feige",
+  "auch": [
+   "Feigenbaum"
+  ],
+  "gruppe": "Obst",
+  "familie": "maulbeer",
+  "zehrer": "mittel",
+  "mehrjaehrig": true,
+  "baum": true,
+  "standort": "vollsonnig, warm, geschützt (am besten vor einer Südwand)",
+  "frost": "leicht",
+  "abstand": [
+   300,
+   300
+  ],
+  "saattiefe": "–",
+  "keimung": "Wird als Pflanze gekauft oder über Steckhölzer vermehrt.",
+  "pflanzen": [
+   4,
+   5
+  ],
+  "ernte": [
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": "vegetativ",
+  "hoehe": [
+   200,
+   500
+  ],
+  "einzeln": true,
+  "krone": [
+   {
+    "text": "kleiner Baum/Strauch (Richtwert)",
+    "d": 300
+   },
+   {
+    "text": "im Kübel",
+    "d": 100
+   }
+  ],
+  "befruchtung": "Nur selbstfruchtende Sorten pflanzen, z. B. 'Brown Turkey', 'Bornholmfeige', 'Dalmatie' – andere brauchen eine bestimmte Wespe, die es hier nicht gibt.",
+  "schnitt": "Wenig nötig; erfrorene Triebe im Frühjahr entfernen.",
+  "quellen": [
+   "samenhaus_feige",
+   "zdf_feige"
+  ],
+  "anleitung": "Im Frühjahr pflanzen, damit sie bis zum Winter einwurzelt. Junge Feigen brauchen in den ersten Jahren Winterschutz (Vlies, Mulch am Fuß). Feigen reifen nicht nach – erst ernten, wenn sie weich sind und sich leicht lösen. In milden Gegenden reift manchmal schon im Sommer eine erste Ernte.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert.",
+   "Pflanzzeit: Für frostempfindlichere Gehölze wird meist das Frühjahr empfohlen; Händler bieten Feigen von März bis Oktober an.",
+   "Winterhärte: Für 'Brown Turkey' nennen manche Quellen bis −15 bzw. −20 °C, Händler nur −5 bis −8 °C (ausgepflanzt im Weinbauklima). Sicherer ist die vorsichtige Angabe – also Winterschutz einplanen.",
+   "Kronendurchmesser: Keine Quelle nennt einen festen Wert; 3 m ist ein Richtwert für einen ausgewachsenen Strauch bzw. kleinen Baum."
+  ],
+  "vorziehen": [],
+  "direktsaat": []
+ },
+ {
+  "id": "physalis",
+  "name": "Physalis",
+  "auch": [
+   "Andenbeere",
+   "Kapstachelbeere"
+  ],
+  "gruppe": "Obst",
+  "familie": "nachtschatten",
+  "zehrer": "mittel",
+  "standort": "sonnig, warm, geschützt",
+  "frost": "empfindlich",
+  "abstand": [
+   80,
+   70
+  ],
+  "abstandHinweis": "Quellen nennen 50 bis 80 cm.",
+  "saattiefe": "ca. 0,5 cm (nur dünn bedecken)",
+  "keimung": "Keimt bei etwa 20 °C",
+  "vorziehen": [
+   2,
+   3
+  ],
+  "pflanzen": [
+   5,
+   6
+  ],
+  "ernte": [
+   8,
+   9,
+   10
+  ],
+  "keimJahre": null,
+  "saatgut": "mittel",
+  "hoehe": [
+   100,
+   150
+  ],
+  "hoeheHinweis": "Eine Stütze oder ein Gitter hilft.",
+  "einzeln": true,
+  "quellen": [
+   "plantura_physalis",
+   "sbb"
+  ],
+  "anleitung": "Ab Februar warm vorziehen und nach den Eisheiligen auspflanzen – Physalis braucht von der Aussaat bis zur Reife fünf bis sechs Monate. Reif ist die Frucht, wenn die Hülle trocken und papierartig ist. Sie ist mehrjährig und lässt sich hell und frostfrei überwintern; im Freiland wird sie meist einjährig gezogen. Als Nachtschattengewächs gilt dieselbe Anbaupause wie bei Tomate und Kartoffel.",
+  "hinweise": [
+   "Nährstoffbedarf: Richtwert.",
+   "Saattiefe: Manche Quellen nennen Physalis einen Lichtkeimer, andere empfehlen etwa 0,5 cm Erde. Gemeinsam ist: nur dünn bedecken.",
+   "Keimfähigkeit: keine verlässliche Angabe gefunden."
+  ],
+  "direktsaat": []
+ },
+ {
+  "id": "melone",
+  "name": "Melone",
+  "auch": [
+   "Zuckermelone",
+   "Honigmelone",
+   "Netzmelone",
+   "Cantaloupe"
+  ],
+  "gruppe": "Obst",
+  "familie": "kuerbis",
+  "zehrer": "stark",
+  "standort": "vollsonnig, sehr warm; am sichersten im Gewächshaus oder Folientunnel",
+  "frost": "empfindlich",
+  "abstand": [
+   100,
+   90
+  ],
+  "abstandHinweis": "Quellen nennen 80–100 cm.",
+  "saattiefe": "ca. 1–2 cm",
+  "keimung": "Keimt bei etwa 20–25 °C; nicht pikieren, gleich in Töpfe säen",
+  "vorziehen": [
+   3,
+   4
+  ],
+  "pflanzen": [
+   5,
+   6
+  ],
+  "ernte": [
+   8,
+   9
+  ],
+  "keimJahre": [
+   3,
+   4
+  ],
+  "saatgut": "mittel",
+  "hoehe": [
+   30,
+   50
+  ],
+  "hoeheHinweis": "Bleibt niedrig, die Ranken werden lang; im Gewächshaus auch nach oben leitbar.",
+  "einzeln": true,
+  "quellen": [
+   "lv_kuerbis",
+   "samenhaus_melone",
+   "bingenheim",
+   "sbb"
+  ],
+  "anleitung": "Ende März bis Mitte April einzeln in Töpfe säen und warm stellen. Ab Mitte Mai ins Gewächshaus, ins Freiland eher Anfang Juni und am besten auf schwarze Mulchfolie, die den Boden wärmt. Unter 10 °C leiden die Pflanzen. Pro Pflanze reifen etwa vier bis sechs Früchte; reif sind sie, wenn sie duften und sich der Stiel leicht löst.",
+  "hinweise": [
+   "Nährstoffbedarf: Kürbisgewächse gelten als Starkzehrer; für die Melone selbst nennt das SBB-Merkblatt keinen eigenen Wert.",
+   "Auspflanzen: Das Merkblatt des Landesverbands nennt für Kürbisgewächse allgemein ab Mitte Mai; mehrere Ratgeber empfehlen für Melonen im Freiland erst Anfang Juni."
+  ],
   "direktsaat": []
  }
 ];
