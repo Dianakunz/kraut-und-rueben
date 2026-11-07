@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Kraut und Rüben · Version 0.12.4 -->
+<!-- Kraut und Rüben · Version 0.13.0 -->
 <html lang="de" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -813,13 +813,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.12.4"></script>
+<script src="pflanzen.js?v=0.13.0"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.12.4";
+const APP_VERSION = "0.13.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1328,12 +1328,13 @@ function wissenSeite(main) {
   if (bereich === "pflanze") return pflanzenDetail(main, decodeURIComponent(teile[2] || ""));
   if (bereich === "eigene") return eigenePflanzeForm(main, teile[2] ? decodeURIComponent(teile[2]) : null);
   main.insertAdjacentHTML("beforeend", `<div class="unternav">
-    ${[["pflanzen", `${icon("i-garten")} Pflanzen`], ["kalender", `${icon("i-kalender")} Kalender`], ["uebersichten", `${icon("i-liste")} Übersichten`], ["sorten", `${icon("i-steckbrief")} Sorten`], ["quellen", `${icon("i-quellen")} Quellen`]].map(([k, n]) => `<a href="#wissen/${k}" class="${bereich === k ? "an" : ""}">${n}</a>`).join("")}
+    ${[["pflanzen", `${icon("i-garten")} Pflanzen`], ["kalender", `${icon("i-kalender")} Kalender`], ["uebersichten", `${icon("i-liste")} Übersichten`], ["sorten", `${icon("i-steckbrief")} Sorten`], ["jauchen", `${icon("i-w-regen")} Jauchen`], ["quellen", `${icon("i-quellen")} Quellen`]].map(([k, n]) => `<a href="#wissen/${k}" class="${bereich === k ? "an" : ""}">${n}</a>`).join("")}
   </div>`);
   if (bereich === "kalender") return kalenderAnsicht(main);
   if (bereich === "uebersichten") return uebersichtSeite(main);
   if (bereich === "sorten") return sortenSeite(main);
   if (bereich === "quellen") return quellenAnsicht(main);
+  if (bereich === "jauchen") return jaucheSeite(main);
   pflanzenListe(main);
 }
 
@@ -1342,7 +1343,7 @@ function pflanzenListe(main) {
   main.insertAdjacentHTML("beforeend", `
     <div class="lex-werkzeug">
       <input type="search" id="lex-suche" placeholder="Pflanze suchen …" aria-label="Pflanze suchen" value="${esc(lexFilter.text)}">
-      <div class="umschalter" id="lex-gruppe">${["alle", "Gemüse", "Kräuter", "Obst", "Blumen"].map(g => `<button data-g="${g}" class="${lexFilter.gruppe === g ? "an" : ""}">${g === "alle" ? "Alle" : g}</button>`).join("")}</div>
+      <div class="umschalter" id="lex-gruppe">${["alle", "Gemüse", "Kräuter", "Obst", "Blumen", "Gründüngung"].map(g => `<button data-g="${g}" class="${lexFilter.gruppe === g ? "an" : ""}">${g === "alle" ? "Alle" : g}</button>`).join("")}</div>
       <label class="schalter-klein"><input type="checkbox" id="lex-jetzt" ${lexFilter.jetzt ? "checked" : ""}> Nur was im ${MONATE[new Date().getMonth()]} ansteht</label>
       <a class="knopf" href="#wissen/eigene">＋ Eigene Pflanze</a>
     </div>
@@ -1395,7 +1396,7 @@ function pflanzenDetail(main, id) {
           <div class="kal-text klein">${TAETIGKEITEN.filter(t => (p[t.feld] || []).length).map(t => `<div><b>${t.name}:</b> ${monateText(p[t.feld])}</div>`).join("")}</div>
         </div>
         ${p.anleitung ? `<div class="karte"><h2>${icon("i-pflanz")} Anbau in Kürze</h2><p style="margin:0">${esc(p.anleitung)}</p></div>` : ""}
-        ${p.baum ? "" : `<div class="karte"><h2>${icon("i-nachbarn")} Nachbarn im Beet</h2>
+        ${p.baum || p.gd ? "" : `<div class="karte"><h2>${icon("i-nachbarn")} Nachbarn im Beet</h2>
           <div class="nb-gruppe"><div class="nb-titel">Gute Nachbarn</div>${chips(n.gut, "gut")}</div>
           <div class="nb-gruppe"><div class="nb-titel">Schlechte Nachbarn</div>${chips(n.schlecht, "schlecht")}</div>
           ${n.umstritten.length ? `<div class="nb-gruppe"><div class="nb-titel">Umstritten</div>${chips(n.umstritten, "umstritten")}</div>` : ""}
@@ -1410,19 +1411,20 @@ function pflanzenDetail(main, id) {
             ${zeile("Familie", esc(f.name))}
             ${zeile("Nährstoffbedarf", esc(ZEHRER[p.zehrer] || "–"))}
             ${zeile("Standort", esc(p.standort || "–"))}
-            ${zeile("Frost", esc(FROST[p.frost] || "–"))}
+            ${p.gd ? "" : zeile("Frost", esc(FROST[p.frost] || "–"))}
             ${zeile("Wuchshöhe", p.hoehe ? `${p.hoehe[0] === p.hoehe[1] ? p.hoehe[0] : p.hoehe[0] + "–" + p.hoehe[1]} cm${p.hoeheHinweis ? `<br><span class="leise">${esc(p.hoeheHinweis)}</span>` : ""}` : "")}
-            ${zeile("Im Plan", p.baum ? "als Baum mit Krone setzen – auch auf Rasen oder Gartenfläche" : p.einzeln ? "als Einzelpflanzen setzen" : "als Fläche bzw. Reihen setzen")}
+            ${zeile("Im Plan", p.baum ? "als Baum mit Krone setzen – auch auf Rasen oder Gartenfläche" : p.gd ? "als Fläche auf ein freies Beet einsäen" : p.einzeln ? "als Einzelpflanzen setzen" : "als Fläche bzw. Reihen setzen")}
             ${p.baum ? zeile("Kronendurchmesser", (p.krone || []).map(k => `${zahl(k.d / 100, k.d % 100 ? 1 : 0)} m – ${esc(k.text)}`).join("<br>") + `<br><span class="leise">Richtwerte aus den empfohlenen Pflanzabständen; im Plan einstellbar.</span>`) : ""}
             ${p.befruchtung ? zeile("Befruchtung", esc(p.befruchtung)) : ""}
             ${p.schnitt ? zeile("Schnitt", esc(p.schnitt)) : ""}
-            ${p.baum ? "" : zeile("Abstand", p.abstand ? `${p.abstand[0]} cm zwischen den Reihen, ${p.abstand[1]} cm in der Reihe${p.abstandHinweis ? `<br><span class="leise">${esc(p.abstandHinweis)}</span>` : ""}` : "–")}
+            ${p.gd ? zeile("Aussaat", `breitwürfig auf die freie Fläche säen, einharken, feucht halten<br><span class="leise">Saatmenge: ${esc(p.gd.menge)}</span>`) + zeile("Über Winter", esc(p.gd.winter)) + zeile("Einarbeiten", esc(p.gd.einarbeiten)) + zeile("Wirkung", esc(p.gd.wirkung)) : ""}
+            ${p.baum || p.gd ? "" : zeile("Abstand", p.abstand ? `${p.abstand[0]} cm zwischen den Reihen, ${p.abstand[1]} cm in der Reihe${p.abstandHinweis ? `<br><span class="leise">${esc(p.abstandHinweis)}</span>` : ""}` : "–")}
             ${p.baum ? "" : zeile("Saattiefe", esc(p.saattiefe || "–") + (p.keimung ? `<br><span class="leise">${esc(p.keimung)}</span>` : ""))}
             ${zeile("Anbaupause", p.pause && !f.pause ? `${esc(p.pause)} ohne ${esc(p.name)} an derselben Stelle` : pause ? `${esc(pause)} für die ganze Familie (${esc(f.name.replace(/\s*\(.*\)/, ""))})` : (p.mehrjaehrig ? "entfällt (bleibt mehrere Jahre stehen)" : "keine Angabe"))}
-            ${p.baum ? "" : zeile("Samen keimfähig", esc(keim))}
-            ${p.baum ? "" : zeile("Samen selbst gewinnen", esc(SAATGUT[p.saatgut] || "keine Angabe"))}
+            ${p.baum || p.gd ? "" : zeile("Samen keimfähig", esc(keim))}
+            ${p.baum || p.gd ? "" : zeile("Samen selbst gewinnen", esc(SAATGUT[p.saatgut] || "keine Angabe"))}
           </div>
-          <p class="klein leise" style="margin:10px 0 0">${p.baum ? "Wuchshöhe, Krone und Zeiten sind Richtwerte und hängen von Sorte und Unterlage ab." : `Saattiefe, Wuchshöhe und Zeiten sind Richtwerte und hängen von der Sorte ab – die Angaben auf der Samentüte haben Vorrang.`}</p>
+          <p class="klein leise" style="margin:10px 0 0">${p.baum ? "Wuchshöhe, Krone und Zeiten sind Richtwerte und hängen von Sorte und Unterlage ab." : p.gd ? "Zeiten und Mengen sind Richtwerte – je später im Jahr gesät wird, desto weniger wächst bis zum Winter." : `Saattiefe, Wuchshöhe und Zeiten sind Richtwerte und hängen von der Sorte ab – die Angaben auf der Samentüte haben Vorrang.`}</p>
         </div>
         ${(p.hinweise || []).length ? `<div class="karte hinweis-karte"><h2>${icon("i-warnung")} Unterschiedliche Angaben</h2><ul>${p.hinweise.map(h => `<li>${esc(h)}</li>`).join("")}</ul></div>` : ""}
         ${lexikonGartenHTML(p)}
@@ -1513,7 +1515,7 @@ function eigenePflanzeForm(main, id) {
       <p class="klein leise">Für Pflanzen, die (noch) nicht im Lexikon stehen. Nur der Name ist Pflicht.</p>
       <label>Name<input type="text" id="e-name" value="${esc(p.name)}"></label>
       <div class="zwei-spalten">
-        <label>Gruppe<select id="e-gruppe">${["Gemüse", "Kräuter", "Obst", "Blumen", "Sonstiges"].map(g => `<option ${p.gruppe === g ? "selected" : ""}>${g}</option>`).join("")}</select></label>
+        <label>Gruppe<select id="e-gruppe">${["Gemüse", "Kräuter", "Obst", "Blumen", "Gründüngung", "Sonstiges"].map(g => `<option ${p.gruppe === g ? "selected" : ""}>${g}</option>`).join("")}</select></label>
         <label>Familie<select id="e-familie"><option value="">unbekannt</option>${Object.entries(FAMILIEN).map(([k, f]) => `<option value="${k}" ${p.familie === k ? "selected" : ""}>${esc(f.name)}</option>`).join("")}</select></label>
         <label>Nährstoffbedarf<select id="e-zehrer">${Object.keys(ZEHRER).map(z => `<option value="${z}" ${p.zehrer === z ? "selected" : ""}>${z[0].toUpperCase() + z.slice(1)}zehrer</option>`).join("")}</select></label>
         <label>Abstand Reihe / Pflanze (cm)<span class="feld-einheit"><input type="number" id="e-ar" min="1" value="${p.abstand[0]}"><input type="number" id="e-ap" min="1" value="${p.abstand[1]}"></span></label>
@@ -3720,6 +3722,53 @@ async function wetterBerichtLaden(z) {
   if ($("#be-wetter") === el) el.innerHTML = wetterBerichtHTML(z, tage, fehler);
 }
 
+/* ---------- Wissen: Jauchen und Brühen (0.13) ---------- */
+const JA_QUELLEN = ["nabu_staerkung", "plantura_jauche", "utopia_jauche", "gj_jauche", "samenhaus_jauche", "testde_jauche", "utopia_beinwell", "apotheken_beinwell", "lfl_beinwell", "oekotest_nessel"];
+const jq = (...k) => `<span class="leise">(${k.map(x => esc(((QUELLEN[x] || {}).titel || x).split(":")[0])).join(", ")})</span>`;
+const JA_TEILE = [
+  { id: "arten", titel: "Was ist was?", icon: "i-info", html: () => `
+    <dl class="ja-liste">
+      <dt>Jauche</dt><dd>Pflanzen in Wasser <b>vergären</b> lassen, etwa zwei bis drei Wochen. Riecht stark, wirkt vor allem als <b>Dünger</b> und wird immer verdünnt gegossen. ${jq("nabu_staerkung", "plantura_jauche")}</dd>
+      <dt>Brühe</dt><dd>Pflanzen etwa 24 Stunden in Wasser einweichen, dann rund eine halbe Stunde köcheln, abkühlen und absieben. Zum <b>Spritzen</b> gegen Pilze und Läuse. ${jq("nabu_staerkung")}</dd>
+      <dt>Kaltwasserauszug</dt><dd>Frische Pflanzen in kaltem Wasser ziehen lassen, ohne dass es gärt – je nach Quelle einen bis drei Tage. Zum Spritzen gegen Blattläuse. ${jq("nabu_staerkung", "samenhaus_jauche")}</dd>
+      <dt>Tee</dt><dd>Mit kochendem Wasser aufgießen, ziehen lassen, abkühlen. Schnell gemacht, zum Spritzen. ${jq("nabu_staerkung", "testde_jauche")}</dd>
+    </dl>
+    <p class="klein leise">Jauchen, Brühen und Tees sind <b>Pflanzenstärkungsmittel</b>: Sie helfen vorbeugend und bei leichtem Befall. Die Wirkung beruht vor allem auf Erfahrung und ist wissenschaftlich wenig untersucht.</p>` },
+  { id: "nessel-jauche", titel: "Brennnesseljauche (Dünger)", icon: "i-w-regen", html: () => `
+    <p><b>Zutaten:</b> 1 kg frische Brennnesseln ohne Blüten und Samen (oder etwa 150–200 g getrocknete) auf 10 Liter Wasser, am besten Regenwasser. ${jq("gj_jauche", "utopia_jauche")}</p>
+    <ol>
+      <li>Die Brennnesseln mit Handschuhen grob zerkleinern und in einen Eimer oder ein Fass aus <b>Kunststoff oder Holz</b> geben – kein Metall. ${jq("utopia_jauche")}</li>
+      <li>Mit Wasser auffüllen, sodass alles bedeckt ist, und luftdurchlässig abdecken (Gitter, Tuch).</li>
+      <li>Täglich umrühren. Eine Handvoll Gesteinsmehl mildert den Geruch. Am besten im Freien und abseits der Terrasse ansetzen.</li>
+      <li>Fertig ist die Jauche nach etwa zwei bis drei Wochen, wenn sie dunkel ist und <b>nicht mehr schäumt</b>. Absieben, die Reste auf den Kompost.</li>
+    </ol>
+    <p><b>Anwenden:</b> nie pur. Zum Gießen <b>1 : 10</b> verdünnen (1 Liter Jauche auf 10 Liter Wasser), für junge Pflanzen schwächer, etwa ½ Liter auf 10 Liter. Auf feuchte Erde an den Fuß der Pflanze gießen, in der Wachstumszeit etwa alle ein bis zwei Wochen (Richtwert). ${jq("utopia_jauche", "nabu_staerkung")}</p>
+    <p><b>Gut für</b> Starkzehrer wie Tomate, Gurke, Kürbis, Paprika und Kartoffel. ${jq("utopia_jauche")}</p>` },
+  { id: "nessel-spritz", titel: "Brennnessel gegen Blattläuse", icon: "i-w-regen", html: () => `
+    <p><b>Kaltwasserauszug:</b> frische Brennnesseln zerkleinern, mit kaltem Wasser bedecken und etwa einen Tag ziehen lassen – es darf <b>nicht gären</b>. Absieben und unverdünnt auf die befallenen Triebe sprühen; bei Bedarf nach ein paar Tagen wiederholen. Samenhaus nennt 100 g frische Brennnesseln je Ansatz. ${jq("samenhaus_jauche", "nabu_staerkung")}</p>
+    <p><b>Brühe:</b> Brennnesseln 24 Stunden einweichen, eine halbe Stunde köcheln, abkühlen lassen, absieben und verdünnt spritzen. Wirkt eher stärkend als düngend. ${jq("nabu_staerkung", "plantura_jauche")}</p>
+    <p class="klein leise">Spritzen am besten abends oder bei bedecktem Himmel, nicht in praller Sonne und nicht in offene Blüten.</p>` },
+  { id: "beinwell", titel: "Beinwelljauche (Kalium)", icon: "i-w-regen", html: () => `
+    <p>Wird genauso angesetzt wie Brennnesseljauche: etwa 1 kg zerkleinerte Beinwellblätter auf 10 Liter Regenwasser, 10–20 Tage gären lassen, bis kein Schaum mehr entsteht. ${jq("utopia_beinwell")}</p>
+    <p><b>Anwenden:</b> 1 : 10 verdünnt gießen. Beinwell ist reich an <b>Kalium</b> – gut für Fruchtgemüse wie Tomaten und für Kartoffeln, gern auch gemischt mit Brennnesseljauche.</p>
+    <p class="klein"><b>Wichtig:</b> Beinwell enthält Pyrrolizidinalkaloide. Er ist ein Dünger, kein Tee – nicht essen, nicht trinken. ${jq("apotheken_beinwell", "lfl_beinwell")}</p>` },
+];
+const JA_WIDERSPRUECHE = [
+  "Verdünnung zum Spritzen: Manche Ratgeber verdünnen Brennnesseljauche für die Blätter 1 : 20, Gartenjournal gegen Schädlinge sogar 1 : 50. Gärende Jauche kann Blätter verätzen – deshalb für die Blätter lieber Kaltwasserauszug oder Brühe nehmen.",
+  "Kaltwasserauszug: Der NABU nennt 24 Stunden bis 3 Tage, viele Anleitungen nur 12–24 Stunden. Je länger er steht, desto eher beginnt er zu gären – dann wird er zur Jauche.",
+  "Gärdauer: Für Brennnesseljauche werden meist zwei bis drei Wochen genannt, für Beinwelljauche bei Utopia 10–20 Tage. Entscheidend ist, dass sich kein Schaum mehr bildet.",
+  "Brühe: Die Anleitungen verdünnen unterschiedlich stark, häufig 1 : 5 bis 1 : 10. Bei empfindlichen Jungpflanzen zuerst an wenigen Blättern ausprobieren.",
+];
+const JA = { offen: "nessel-jauche" };
+function jaucheSeite(main) {
+  main.insertAdjacentHTML("beforeend", `
+    <div class="karte"><p style="margin:0">Selbst gemachte Dünger und Pflanzenstärkung aus <a href="#wissen/pflanze/brennnessel">Brennnessel</a> und <a href="#wissen/pflanze/beinwell">Beinwell</a>. Die Mengen sind Richtwerte aus den Quellen unten.</p></div>
+    <div class="hm-abschnitte">${JA_TEILE.map(a => `<details class="karte hm-abschnitt" data-ja="${a.id}" ${JA.offen === a.id ? "open" : ""}><summary><h2>${icon(a.icon)} ${a.titel}</h2></summary><div class="hm-inhalt">${a.html()}</div></details>`).join("")}</div>
+    <div class="karte hinweis-karte"><h2>${icon("i-warnung")} Unterschiedliche Angaben</h2><ul>${JA_WIDERSPRUECHE.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
+    <div class="karte"><h2>${icon("i-quellen")} Quellen</h2><ul class="quellen">${JA_QUELLEN.filter(q => QUELLEN[q]).map(q => `<li><a href="${QUELLEN[q].url}" target="_blank" rel="noopener">${esc(QUELLEN[q].titel)}</a></li>`).join("")}</ul></div>`);
+  $$("[data-ja]").forEach(d => d.addEventListener("toggle", () => { if (d.open) JA.offen = d.dataset.ja; }));
+}
+
 function seitentitel(main, titel, unter) {
   main.insertAdjacentHTML("beforeend", `<div class="seitentitel"><h1>${esc(titel)}</h1>${unter ? `<p class="leise">${unter}</p>` : ""}</div>`);
 }
@@ -3885,7 +3934,7 @@ const SEITEN = {
           <p>Rückgängig (↶) gilt auch für alles rund ums Pflanzen. Die Startseite und die Pflanzenkarten im Lexikon zeigen, was gerade wo im Garten steht.</p>
         </div></details>
         <details><summary>Pflanzenlexikon (Wissen)</summary><div>
-          <p>Unter <b>Wissen → Pflanzen</b> stehen gängige Gemüse, Kräuter, Beerenobst und Blumen fürs Gemüsebeet. Oben suchst du nach Namen (auch nach anderen Namen wie „Paradeiser“ oder „Porree“), filterst nach Gemüse, Kräutern, Obst oder Blumen oder zeigst nur, was im aktuellen Monat ansteht. Die kleine Leiste auf jeder Karte zeigt das Jahr von Januar bis Dezember: <b>gelb</b> vorziehen, <b>hellgrün</b> direkt säen, <b>dunkelgrün</b> pflanzen oder stecken, <b>rot</b> ernten. Der aktuelle Monat ist umrandet. Die Farbe des Kürzels vor dem Namen steht für die Pflanzenfamilie.</p>
+          <p>Unter <b>Wissen → Pflanzen</b> stehen gängige Gemüse, Kräuter, Obst, essbare Blüten und Gründüngungspflanzen. Oben suchst du nach Namen (auch nach anderen Namen wie „Paradeiser“ oder „Porree“), filterst nach Gemüse, Kräutern, Obst, Gründüngung oder Blumen oder zeigst nur, was im aktuellen Monat ansteht. Die kleine Leiste auf jeder Karte zeigt das Jahr von Januar bis Dezember: <b>gelb</b> vorziehen, <b>hellgrün</b> direkt säen, <b>dunkelgrün</b> pflanzen oder stecken, <b>rot</b> ernten. Der aktuelle Monat ist umrandet. Die Farbe des Kürzels vor dem Namen steht für die Pflanzenfamilie.</p>
           <p>Ein Klick auf eine Pflanze öffnet ihre Karte mit Anbaukalender, kurzer Anleitung, Steckbrief (Familie, Nährstoffbedarf, Standort, Frost, Wuchshöhe, Abstand, Saattiefe, Anbaupause, Keimfähigkeit der Samen, Saatgut selbst gewinnen) und guten und schlechten Nachbarn. Die Nachbarn kannst du antippen und landest bei deren Karte. Ein Sternchen heißt: Dazu gibt es unten eine Anmerkung.</p>
           <p><b>Unterschiedliche Angaben:</b> Wenn sich die Quellen widersprechen, steht das offen bei der Pflanze. Saattiefen und Zeiten sind Richtwerte für durchschnittliche Lagen – die Samentüte hat Vorrang.</p>
           <p><b>Meine Notizen:</b> Auf jeder Pflanzenkarte kannst du eigene Erfahrungen eintragen. Sie werden beim Tippen automatisch gespeichert.</p>
@@ -3893,6 +3942,8 @@ const SEITEN = {
           <p><b>Kalender:</b> Unter <b>Wissen → Kalender</b> blätterst du durch die Monate und siehst, was jeweils vorgezogen, gesät, gepflanzt und geerntet wird. Darunter steht die Jahresübersicht aller Pflanzen. Auf der Startseite zeigt die Karte „Im …“ dasselbe für den aktuellen Monat.</p>
           <p><b>Übersichten:</b> Unter <b>Wissen → Übersichten</b> stehen dieselben Daten nach Themen statt nach Pflanzen: <b>Fruchtfolge</b> (alle Pflanzenfamilien mit Anbaupause und Mitgliedern), <b>Nährstoffbedarf</b> (Stark-, Mittel-, Schwachzehrer), <b>Mischkultur</b> (Pflanzen auswählen oder „aus Beet übernehmen“ – eine Tabelle zeigt für jedes Paar ✓ gut, ✗ schlecht, ? umstritten), <b>Saatgut</b> (wie lange Samen keimfähig sind und wie leicht man selbst Samen gewinnt) und <b>alle Pflanzen als Tabelle</b> (filtern, z. B. nach „halbschattig“ oder „winterhart“, und durch Tippen auf eine Spalte sortieren). Ein Tipp auf eine Pflanze öffnet ihre Karte; oben führt <b>„← Zurück zu …“</b> wieder genau dorthin, wo du warst.</p>
           <p><b>Sorten:</b> Unter <b>Wissen → Sorten</b> sammelst du deine Sorten mit Sternen (0–5) und Erfahrungen. Sorten, die du im Gartenplan bei einer Pflanzung einträgst, erscheinen dort automatisch – mit den Jahren, in denen sie angebaut wurden, und der Erntemenge. Beim Eintragen einer Sorte im Gartenplan schlägt die App deine bekannten Sorten vor. Auf jeder Pflanzenkarte steht „Meine Sorten“.</p>
+          <p><b>Gründüngung:</b> Der Filter „Gründüngung“ zeigt Phacelia, Gelbsenf, Inkarnatklee, Serradella, Winterwicke und Welsches Weidelgras – jeweils einzeln, weil Saatzeit, Winterhärte und Familie verschieden sind. Im Steckbrief stehen Saatmenge (g/m²), ob die Pflanze über Winter abfriert, wann du sie einarbeitest und was sie bewirkt. Im Plan säst du sie wie andere Pflanzen als Fläche auf ein freies Beet; die Fruchtfolge zählt sie mit (Senf ist ein Kreuzblütler wie Kohl, Klee und Wicke sind Hülsenfrüchtler wie Erbse und Bohne).</p>
+          <p><b>Jauchen:</b> Unter <b>Wissen → Jauchen</b> stehen Anleitungen für Brennnesseljauche, Brennnessel-Kaltwasserauszug und -Brühe gegen Blattläuse sowie Beinwelljauche – mit Mengen, Verdünnung und den Stellen, an denen die Quellen voneinander abweichen.</p>
           <p><b>Quellen:</b> Unter <b>Wissen → Quellen</b> steht, woher die Angaben stammen. Alle Texte sind in eigenen Worten geschrieben.</p>
         </div></details>
         <details><summary>Vorrat: Saatgut, Haltbarmachen, Rezepte</summary><div>
