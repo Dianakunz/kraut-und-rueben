@@ -4,7 +4,7 @@
 const PFLANZEN_STAND = "2026-11-07";
 const QUELLEN = {
  "bzfe": {
-  "titel": "aid/BZfE: Tabelle Aussaat- und Pflanzzeiten (Jörg Planer, 2017; Abstände, Anzucht, Pflanzung, Direktsaat, Ernte) – nicht mehr online. Der Link führt zum Nachfolger, dem Saat- und Pflanzkalender der BLE (gleicher Autor, Werte nicht einzeln abgeglichen)",
+  "titel": "aid/BZfE: Tabelle Aussaat- und Pflanzzeiten (Jörg Planer, 2017) – nicht mehr online; Nachfolger ist der BLE-Saat- und Pflanzkalender",
   "url": "https://www.landwirtschaft.de/garten/selbst-anbauen/obst-und-gemuese/saat-und-pflanzkalender"
  },
  "sbb": {
@@ -150,6 +150,10 @@ const QUELLEN = {
  "samenhaus_melone": {
   "titel": "Samenhaus: Melonen anbauen (Abstand 80–100 cm)",
   "url": "https://www.samenhaus.de/gartenblog/?p=301"
+ },
+ "ble": {
+  "titel": "BLE/BZL: Saat- und Pflanzkalender, 2. Auflage 2024 (Abstände, Anzucht, Direktsaat, Pflanzung, Ernte)",
+  "url": "https://www.landwirtschaft.de/garten/selbst-anbauen/obst-und-gemuese/saat-und-pflanzkalender"
  }
 };
 const FAMILIEN = {
@@ -284,11 +288,12 @@ const PFLANZEN = [
   "auch": [],
   "direktsaat": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    100,
@@ -338,11 +343,12 @@ const PFLANZEN = [
   ],
   "direktsaat": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    40,
@@ -374,7 +380,8 @@ const PFLANZEN = [
   ],
   "ernte": [
    8,
-   9
+   9,
+   10
   ],
   "keimJahre": [
    5,
@@ -386,11 +393,12 @@ const PFLANZEN = [
   "direktsaat": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    60,
@@ -417,7 +425,9 @@ const PFLANZEN = [
   "saattiefe": "ca. 1–2 cm",
   "keimung": "Dunkelkeimer",
   "vorziehen": [
-   4
+   4,
+   5,
+   6
   ],
   "direktsaat": [
    5,
@@ -440,15 +450,16 @@ const PFLANZEN = [
   "saatgut": "mittel",
   "anleitung": "Ab Mitte Mai direkt säen oder ab April in Töpfen vorziehen und nach den Eisheiligen pflanzen. Gurken mögen gleichmäßig feuchten, humusreichen Boden und lauwarmes Gießwasser. Kletternde Sorten an einem Netz oder Gitter hochleiten.",
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
    "psr",
-   "hornbach"
+   "hornbach",
+   "bzfe"
   ],
   "hinweise": [
-   "Vorziehen: Die BZfE-Tabelle nennt für Salatgurken nur die Direktsaat ab Mitte Mai; das Vorziehen im April ist gängige Praxis, steht dort aber nicht."
+   "Vorziehen: Die alte BZfE-Tabelle nannte für Salatgurken nur die Direktsaat ab Mitte Mai; der BLE-Kalender führt auch die Anzucht im Topf (April bis Juni)."
   ],
   "hoehe": [
    150,
@@ -466,14 +477,16 @@ const PFLANZEN = [
   "standort": "sonnig, nährstoffreich",
   "frost": "empfindlich",
   "abstand": [
-   140,
-   140
+   150,
+   150
   ],
   "abstandHinweis": "etwa 2 m² pro Pflanze",
   "saattiefe": "ca. 2–3 cm",
   "keimung": "Dunkelkeimer",
   "vorziehen": [
-   4
+   4,
+   5,
+   6
   ],
   "direktsaat": [
    5,
@@ -498,11 +511,12 @@ const PFLANZEN = [
   "auch": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    50,
@@ -530,7 +544,8 @@ const PFLANZEN = [
   "keimung": "Dunkelkeimer",
   "vorziehen": [
    4,
-   5
+   5,
+   6
   ],
   "direktsaat": [
    5,
@@ -553,11 +568,12 @@ const PFLANZEN = [
   "anleitung": "Ab Mitte April vorziehen oder ab Mitte Mai direkt säen. Kürbisse ranken weit und brauchen sehr viel Platz und Nährstoffe. Erntereif, wenn der Stiel verholzt und die Schale hart ist; vor dem ersten Frost ernten.",
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    30,
@@ -604,11 +620,12 @@ const PFLANZEN = [
   "pflanzen": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    30,
@@ -657,11 +674,12 @@ const PFLANZEN = [
   "vorziehen": [],
   "pflanzen": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    200,
@@ -697,9 +715,11 @@ const PFLANZEN = [
    6
   ],
   "ernte": [
+   5,
    6,
    7,
-   8
+   8,
+   9
   ],
   "keimJahre": [
    4,
@@ -713,11 +733,12 @@ const PFLANZEN = [
   "vorziehen": [],
   "pflanzen": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    40,
@@ -740,7 +761,7 @@ const PFLANZEN = [
   "frost": "leicht",
   "abstand": [
    25,
-   4
+   5
   ],
   "abstandHinweis": "späte Sorten 25 × 7 cm",
   "saattiefe": "ca. 1–2 cm",
@@ -773,11 +794,12 @@ const PFLANZEN = [
   "vorziehen": [],
   "pflanzen": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    30,
@@ -826,11 +848,12 @@ const PFLANZEN = [
   "vorziehen": [],
   "pflanzen": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    40,
@@ -883,11 +906,12 @@ const PFLANZEN = [
   "vorziehen": [],
   "pflanzen": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    30,
@@ -939,11 +963,12 @@ const PFLANZEN = [
   "pflanzen": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    10,
@@ -985,11 +1010,12 @@ const PFLANZEN = [
   "vorziehen": [],
   "direktsaat": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    50,
@@ -1014,7 +1040,8 @@ const PFLANZEN = [
   "vorziehen": [
    3,
    4,
-   5
+   5,
+   6
   ],
   "direktsaat": [
    6,
@@ -1023,7 +1050,8 @@ const PFLANZEN = [
   "pflanzen": [
    4,
    5,
-   6
+   6,
+   7
   ],
   "ernte": [
    5,
@@ -1041,11 +1069,12 @@ const PFLANZEN = [
   "auch": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    30,
@@ -1072,15 +1101,20 @@ const PFLANZEN = [
    4,
    5,
    6,
-   7
+   7,
+   8
   ],
   "pflanzen": [
    5,
    6,
    7,
-   8
+   8,
+   9
   ],
   "ernte": [
+   4,
+   5,
+   6,
    7,
    8,
    9,
@@ -1096,11 +1130,12 @@ const PFLANZEN = [
   "direktsaat": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    60,
@@ -1125,19 +1160,27 @@ const PFLANZEN = [
   "vorziehen": [
    3,
    4,
-   5
-  ],
-  "pflanzen": [
    5,
    6,
    7
   ],
+  "pflanzen": [
+   4,
+   5,
+   6,
+   7,
+   8
+  ],
   "ernte": [
+   3,
+   4,
+   5,
    7,
    8,
    9,
    10,
-   11
+   11,
+   12
   ],
   "keimJahre": [
    5,
@@ -1149,11 +1192,12 @@ const PFLANZEN = [
   "direktsaat": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    50,
@@ -1177,7 +1221,7 @@ const PFLANZEN = [
   "standort": "sonnig, sehr nährstoffreich",
   "frost": "leicht",
   "abstand": [
-   60,
+   50,
    50
   ],
   "abstandHinweis": "frühe Sorten 50 × 50 cm, Lagerkohl 60 × 60 cm",
@@ -1210,11 +1254,12 @@ const PFLANZEN = [
   "direktsaat": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    40,
@@ -1262,11 +1307,12 @@ const PFLANZEN = [
   "direktsaat": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    60,
@@ -1329,11 +1375,12 @@ const PFLANZEN = [
   "anleitung": "Von März bis Juli alle paar Wochen säen oder pflanzen, dann gibt es laufend Salat. Hoch pflanzen, sodass der Wurzelhals frei bleibt. Nach etwa sechs bis acht Wochen ernten, bevor er schießt.",
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    20,
@@ -1384,6 +1431,7 @@ const PFLANZEN = [
    8
   ],
   "ernte": [
+   4,
    5,
    6,
    7,
@@ -1399,11 +1447,12 @@ const PFLANZEN = [
   "anleitung": "Anbau wie Kopfsalat. Von Pflücksalaten erntet man laufend die äußeren Blätter, das Herz wächst weiter – so reicht eine Pflanzung viele Wochen.",
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    20,
@@ -1451,11 +1500,12 @@ const PFLANZEN = [
   "pflanzen": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    10,
@@ -1502,11 +1552,12 @@ const PFLANZEN = [
   "vorziehen": [],
   "pflanzen": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    20,
@@ -1554,11 +1605,12 @@ const PFLANZEN = [
   "vorziehen": [],
   "pflanzen": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    40,
@@ -1609,11 +1661,12 @@ const PFLANZEN = [
   ],
   "vorziehen": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    30,
@@ -1630,7 +1683,7 @@ const PFLANZEN = [
   "standort": "sonnig, durchlässiger Boden",
   "frost": "hart",
   "abstand": [
-   30,
+   20,
    15
   ],
   "saattiefe": "Zehen ca. 3–5 cm tief",
@@ -1650,13 +1703,15 @@ const PFLANZEN = [
   "saatgut": "vegetativ",
   "anleitung": "Zehen im Herbst (September/Oktober) oder im zeitigen Frühjahr (Februar bis April) mit der Spitze nach oben stecken. Herbstknoblauch bringt meist größere Knollen. Ernten, wenn ein Großteil der Blätter gelb wird – meist ab Juli.",
   "quellen": [
+   "ble",
    "knoblauch",
    "sbb",
    "bund"
   ],
   "hinweise": [
    "Die Pflanzzeiten in der BZfE-Tabelle sind für Knoblauch nicht eindeutig lesbar; die App nutzt deshalb die Angaben von Plantura und Samenhaus.",
-   "Nährstoffbedarf: Angaben schwanken zwischen Schwach- und Mittelzehrer."
+   "Nährstoffbedarf: Angaben schwanken zwischen Schwach- und Mittelzehrer.",
+   "Der BLE-Kalender zeigt für Knoblauch eine Ernte von Oktober bis Januar. Knoblauch wird aber im Sommer geerntet, wenn das Laub welkt; die App bleibt deshalb bei Juli/August (Plantura, Samenhaus). Vermutlich ein Fehler im Kalender."
   ],
   "auch": [],
   "vorziehen": [],
@@ -1703,6 +1758,7 @@ const PFLANZEN = [
    2,
    3,
    4,
+   5,
    6,
    7,
    8,
@@ -1723,11 +1779,12 @@ const PFLANZEN = [
   ],
   "direktsaat": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    50,
@@ -1783,11 +1840,12 @@ const PFLANZEN = [
   "auch": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    20,
@@ -1821,6 +1879,8 @@ const PFLANZEN = [
    5
   ],
   "ernte": [
+   7,
+   8,
    9,
    10,
    11
@@ -1834,11 +1894,12 @@ const PFLANZEN = [
   "direktsaat": [],
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    40,
@@ -1894,11 +1955,12 @@ const PFLANZEN = [
   "anleitung": "Frühe Sorten ab April, späte ab Mai säen oder vorziehen. Fenchel neigt bei Trockenheit, Kälte und langen Tagen zum Schießen – Sommeraussaaten gelingen oft besser. Etwa drei Monate nach der Pflanzung ernten.",
   "hinweise": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    50,
@@ -1927,6 +1989,7 @@ const PFLANZEN = [
    4
   ],
   "direktsaat": [
+   4,
    5,
    6
   ],
@@ -1934,6 +1997,8 @@ const PFLANZEN = [
    5
   ],
   "ernte": [
+   7,
+   8,
    9,
    10
   ],
@@ -1948,11 +2013,12 @@ const PFLANZEN = [
    "Mischkultur Mais–Tomate: Die BUND-Tabelle nennt Mais bei der Tomate als guten, die Tomate beim Mais aber als schlechten Nachbarn."
   ],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    150,
@@ -1994,9 +2060,10 @@ const PFLANZEN = [
   ],
   "saatgut": null,
   "quellen": [
-   "bzfe",
+   "ble",
    "bingenheim",
-   "hornbach"
+   "hornbach",
+   "bzfe"
   ],
   "anleitung": "Von Mitte März bis Mitte April warm vorziehen und erst ab Mitte Mai ins Freie setzen – Basilikum verträgt keine Kälte. Morgens gießen, nicht über die Blätter. Triebspitzen ernten, dann verzweigt er sich.",
   "hinweise": [
@@ -2020,7 +2087,7 @@ const PFLANZEN = [
   "frost": "hart",
   "abstand": [
    20,
-   5
+   15
   ],
   "abstandHinweis": "BLE-Kalender: 20 × 15 cm",
   "saattiefe": "ca. 1 cm",
@@ -2055,11 +2122,12 @@ const PFLANZEN = [
   "vorziehen": [],
   "pflanzen": [],
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "hoehe": [
    20,
@@ -2093,7 +2161,8 @@ const PFLANZEN = [
    6,
    7,
    8,
-   9
+   9,
+   10
   ],
   "keimJahre": [
    3,
@@ -2101,10 +2170,11 @@ const PFLANZEN = [
   ],
   "saatgut": null,
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "samenhaus",
-   "bund"
+   "bund",
+   "bzfe"
   ],
   "anleitung": "Von April bis August direkt säen, am besten in mehreren Sätzen. Dill lässt sich schlecht verpflanzen. Laufend die Spitzen ernten; die Dolden mit Samen eignen sich zum Einlegen von Gurken.",
   "hinweise": [
@@ -2163,8 +2233,9 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
-   "sbb"
+   "ble",
+   "sbb",
+   "bzfe"
   ],
   "anleitung": "Von April bis September in Reihen säen, am besten alle drei bis vier Wochen ein neuer Satz. Nach vier bis sechs Wochen die Blätter schneiden, sie wachsen nach. Im Hochsommer blüht Rucola schnell und wird scharf; Vlies und feuchter Boden halten Erdflöhe fern.",
   "hinweise": [
@@ -2187,7 +2258,7 @@ const PFLANZEN = [
   "standort": "sonnig",
   "frost": "leicht",
   "abstand": [
-   40,
+   35,
    30
   ],
   "saattiefe": "ca. 0,5 cm (Richtwert)",
@@ -2222,10 +2293,11 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
-   "bund"
+   "bund",
+   "bzfe"
   ],
   "anleitung": "Für die Herbsternte ab Mitte Juni vorziehen und im Juli oder August pflanzen, nicht zu tief setzen. Gleichmäßig feucht halten. Wer mildere Blätter möchte, bindet die Köpfe ein bis zwei Wochen vor der Ernte zusammen (Bleichen). Verträgt leichten Frost.",
   "hinweise": [
@@ -2282,11 +2354,12 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "samenhaus",
    "samenhaus2",
-   "bund"
+   "bund",
+   "bzfe"
   ],
   "anleitung": "Am sichersten ab Mitte Juli direkt säen oder vorgezogen pflanzen. Im Frühjahr gesät, bildet Chinakohl bei langen Tagen leicht Blüten statt Köpfen (er „schießt“). Gleichmäßig gießen und gegen Erdflöhe mit Vlies abdecken.",
   "hinweise": [
@@ -2336,11 +2409,12 @@ const PFLANZEN = [
   ],
   "einzeln": true,
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "anleitung": "Mitte März bis Mitte April vorziehen und ab Ende April bis Juni pflanzen. Rosenkohl steht lange im Beet und braucht viel Nährstoffe. Die Röschen werden von unten nach oben geerntet, von Oktober bis in den Winter; Frost macht sie milder.",
   "hinweise": [
@@ -2373,6 +2447,7 @@ const PFLANZEN = [
    5
   ],
   "pflanzen": [
+   3,
    4,
    5,
    6,
@@ -2405,11 +2480,12 @@ const PFLANZEN = [
   ],
   "einzeln": true,
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "anleitung": "Je nach Sorte gibt es frühen Wirsing (Ernte Juni/Juli), Herbstwirsing (August bis Dezember) und späten Wirsing, der bis ins Frühjahr im Beet stehen bleibt. Vorziehen, mit 50–60 cm Abstand pflanzen und gleichmäßig feucht halten.",
   "hinweise": [
@@ -2457,12 +2533,13 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "samenhaus",
    "samenhaus2",
    "bund",
-   "psr"
+   "psr",
+   "bzfe"
   ],
   "anleitung": "Sommerrettich von April bis Mitte Juni, Winterrettich von Mitte Juni bis Mitte August direkt säen. Gleichmäßig feucht halten, sonst wird er holzig und sehr scharf. Winterrettich vor stärkerem Frost ernten und kühl lagern.",
   "hinweise": [
@@ -2514,8 +2591,9 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
-   "samenhaus"
+   "ble",
+   "samenhaus",
+   "bzfe"
   ],
   "anleitung": "Sehr früh direkt säen, ab Mitte Februar bis Anfang April – Puffbohnen vertragen Kälte. Bei Blattläusen die Triebspitzen auskneifen. Ernten, solange die Kerne noch grün und weich sind.",
   "hinweise": [
@@ -2545,13 +2623,24 @@ const PFLANZEN = [
   "keimung": "",
   "direktsaat": [
    3,
-   4
+   4,
+   5,
+   6,
+   7,
+   8
   ],
   "pflanzen": [
    4,
-   5
+   5,
+   6,
+   7,
+   8,
+   9
   ],
   "ernte": [
+   3,
+   4,
+   5,
    6,
    7,
    8,
@@ -2569,17 +2658,25 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
    "bingenheim",
-   "bund"
+   "bund",
+   "bzfe"
   ],
   "anleitung": "Von Anfang März bis Anfang April dicht in Reihen säen oder ab Mitte April Jungpflanzen setzen. Geerntet wird frisch mit Laub, sobald die Schäfte bleistift- bis daumendick sind, von Juni bis in den Herbst.",
   "hinweise": [
    "Die BZfE-Tabelle führt sie als „Zwiebeln, Bund-“.",
    "Zehrer, Anbaupause, Keimfähigkeit und Nachbarn: Die Quellen nennen nur allgemein Zwiebeln; die Werte sind von der Küchenzwiebel übernommen."
   ],
-  "vorziehen": []
+  "vorziehen": [
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ]
  },
  {
   "id": "schalotte",
@@ -2660,8 +2757,9 @@ const PFLANZEN = [
   "hoeheHinweis": "Blattstiele und Blätter; Blütenstände werden über 2 m hoch und sollten früh entfernt werden.",
   "einzeln": true,
   "quellen": [
-   "bzfe",
-   "bund"
+   "ble",
+   "bund",
+   "bzfe"
   ],
   "anleitung": "Im Oktober/November oder im März pflanzen und im ersten Jahr nicht ernten. Ab dem zweiten Jahr von Ende April bis Ende Juni die Stiele abdrehen, nie mehr als etwa die Hälfte. Danach die Pflanze in Ruhe lassen, damit sie Kraft fürs nächste Jahr sammelt.",
   "hinweise": [
@@ -2713,8 +2811,9 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
-   "sbb"
+   "ble",
+   "sbb",
+   "bzfe"
   ],
   "anleitung": "Knollen im März/April oder Oktober/November legen. Topinambur wird zwei bis drei Meter hoch und breitet sich stark aus – jede vergessene Knolle treibt wieder aus. Am besten einen festen Platz am Rand geben oder eine Wurzelsperre setzen. Geerntet wird ab September bis zum Frühjahr, wann immer der Boden offen ist.",
   "hinweise": [
@@ -2765,8 +2864,9 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
-   "plantura_misch"
+   "ble",
+   "plantura_misch",
+   "bzfe"
   ],
   "anleitung": "Am einfachsten als Jungpflanze im Frühjahr oder Herbst setzen. Thymian mag es mager und trocken; Staunässe im Winter schadet ihm mehr als Kälte. Nach der Blüte leicht zurückschneiden, damit er nicht verholzt.",
   "hinweise": [
@@ -2824,9 +2924,10 @@ const PFLANZEN = [
   ],
   "einzeln": true,
   "quellen": [
-   "bzfe",
+   "ble",
    "bund",
-   "plantura_misch"
+   "plantura_misch",
+   "bzfe"
   ],
   "anleitung": "Vorziehen oder als Jungpflanze ab Mitte Mai setzen. Salbei braucht Sonne und durchlässigen Boden. Im Frühjahr kräftig zurückschneiden, aber nicht ins alte Holz. Vor Winternässe schützen.",
   "hinweise": [
@@ -2872,9 +2973,10 @@ const PFLANZEN = [
   ],
   "einzeln": true,
   "quellen": [
-   "bzfe",
+   "ble",
    "plantura_misch",
-   "hornbach2"
+   "hornbach2",
+   "bzfe"
   ],
   "anleitung": "Ab Ende April an einen sonnigen, geschützten Platz pflanzen. Rosmarin ist nur bedingt winterhart: In rauen Lagen besser im Kübel ziehen und hell und kühl, aber frostfrei überwintern. Wenig gießen.",
   "hinweise": [
@@ -2930,6 +3032,7 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
+   "ble",
    "bzfe"
   ],
   "anleitung": "Im Februar/März vorziehen oder ab April direkt säen; die feinen Samen nur andrücken. Zur Blütezeit hat Oregano das meiste Aroma, dann zum Trocknen ernten. Breitet sich mit der Zeit aus.",
@@ -2977,9 +3080,10 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
+   "ble",
    "bund",
-   "plantura_kraeuter"
+   "plantura_kraeuter",
+   "bzfe"
   ],
   "anleitung": "Im Frühjahr oder Herbst pflanzen, am besten mit Wurzelsperre oder in einen eingegrabenen Topf – Minze wuchert stark über Ausläufer. Laufend die Triebspitzen ernten. Alle paar Jahre an einen neuen Platz setzen.",
   "hinweise": [
@@ -3028,8 +3132,9 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
-   "plantura_kraeuter"
+   "ble",
+   "plantura_kraeuter",
+   "bzfe"
   ],
   "anleitung": "Als Jungpflanze ab Mitte Mai setzen. Vor der Blüte ernten, dann ist das Aroma am besten. Regelmäßig zurückschneiden; Melisse sät sich gern selbst aus.",
   "hinweise": [
@@ -3082,8 +3187,9 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
-   "plantura_misch"
+   "ble",
+   "plantura_misch",
+   "bzfe"
   ],
   "anleitung": "Einjähriges Sommer-Bohnenkraut ab März unter Glas vorziehen oder ab Mitte Mai direkt säen. Gern zwischen die Bohnen setzen. Kurz vor der Blüte ernten und zum Trocknen bündeln.",
   "hinweise": [
@@ -3123,9 +3229,10 @@ const PFLANZEN = [
   ],
   "einzeln": false,
   "quellen": [
-   "bzfe",
+   "ble",
    "sbb",
-   "bund"
+   "bund",
+   "bzfe"
   ],
   "anleitung": "Im April/Mai direkt säen, Koriander lässt sich schlecht verpflanzen. Die Blätter nach etwa sechs Wochen ernten, bevor er blüht; im Hochsommer schießt er schnell. Die Samen reifen im Juli und August.",
   "hinweise": [
@@ -3499,11 +3606,12 @@ const PFLANZEN = [
   ],
   "einzeln": true,
   "quellen": [
-   "bzfe",
+   "ble",
    "lwg_erdbeere",
    "plantura_erdbeere",
    "obi_erdbeere",
-   "bund"
+   "bund",
+   "bzfe"
   ],
   "anleitung": "Im Juli und August pflanzen, dann tragen die Pflanzen schon im nächsten Juni. Das Herz der Pflanze darf nicht mit Erde bedeckt sein. Nach etwa zwei bis drei Jahren lässt der Ertrag nach; dann ein neues Beet an anderer Stelle anlegen.",
   "hinweise": [
@@ -4217,15 +4325,16 @@ const PFLANZEN = [
   "standort": "sonnig, warm, geschützt",
   "frost": "empfindlich",
   "abstand": [
-   80,
-   70
+   100,
+   60
   ],
-  "abstandHinweis": "Quellen nennen 50 bis 80 cm.",
+  "abstandHinweis": "Quellen nennen 50 bis 100 cm.",
   "saattiefe": "ca. 0,5 cm (nur dünn bedecken)",
   "keimung": "Keimt bei etwa 20 °C",
   "vorziehen": [
    2,
-   3
+   3,
+   4
   ],
   "pflanzen": [
    5,
@@ -4245,6 +4354,7 @@ const PFLANZEN = [
   "hoeheHinweis": "Eine Stütze oder ein Gitter hilft.",
   "einzeln": true,
   "quellen": [
+   "ble",
    "plantura_physalis",
    "sbb"
   ],
@@ -4252,7 +4362,8 @@ const PFLANZEN = [
   "hinweise": [
    "Nährstoffbedarf: Richtwert.",
    "Saattiefe: Manche Quellen nennen Physalis einen Lichtkeimer, andere empfehlen etwa 0,5 cm Erde. Gemeinsam ist: nur dünn bedecken.",
-   "Keimfähigkeit: keine verlässliche Angabe gefunden."
+   "Keimfähigkeit: keine verlässliche Angabe gefunden.",
+   "Abstand: Der BLE-Kalender nennt 100 × 60 cm, andere Quellen 50–80 cm. Die App nimmt 100 × 60 cm."
   ],
   "direktsaat": []
  },
