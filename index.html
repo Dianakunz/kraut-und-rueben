@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Kraut und Rüben · Version 1.0.0 -->
+<!-- Kraut und Rüben · Version 1.1.0 -->
 <html lang="de" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -303,6 +303,12 @@ textarea{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 #pfl-gespeichert.gespeichert{color:var(--gruen);font-weight:650;opacity:1}
 .pl-jahrwahl{display:inline-flex;align-items:center;gap:8px;font-weight:650}
 .pl-ueberschrift{margin:22px 0 10px;font-size:1.15rem}
+.sb-karte summary{cursor:pointer;list-style:none}.sb-karte summary::-webkit-details-marker{display:none}
+.sb-karte summary h2{margin:0;display:flex;align-items:center;gap:8px}.sb-karte[open] summary h2{margin-bottom:10px}
+.sb-zahl{background:var(--rot);color:#fff;border-radius:999px;font-size:.8rem;padding:1px 8px;font-weight:600}
+.ps-hinweis{background:var(--gelb-hell);border-radius:10px;padding:8px 10px;display:flex;gap:6px;align-items:flex-start}
+.sb-titel{font-size:1rem;margin:14px 0 6px}.sb-titel.fehlt{color:var(--rot)}
+.sb-liste{list-style:none;margin:0;padding:0}.sb-liste li{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--linie)}
 .pl-eintrag{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;padding:8px 0;border-bottom:1px dashed var(--linie)}
 .pl-eintrag:last-child{border-bottom:0}
 .warn-text{color:var(--gelb);font-weight:650}
@@ -599,7 +605,9 @@ table.mk-tabelle{border-collapse:separate;border-spacing:3px;font-size:.88rem}
 .rb-pfl .p-badge{width:22px;height:22px;font-size:.62rem}
 .be-checks{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:6px}
 .be-checks input[type=date]{min-height:34px;padding:3px 8px;border-radius:8px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit}
-.be-kopf{margin:6px 0 14px}.be-kopf h1{margin:0}
+.be-kopf{margin:6px 0 14px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.be-kopf h1{margin:0}
+.be-logo{display:flex;align-items:center;gap:8px;color:var(--marke);flex:0 0 auto}.be-logo img{height:56px}.be-logo svg{height:36px;width:auto}
+@media print{.be-logo{color:#2f5d1e}}
 .be-datum{white-space:nowrap;width:1%;color:var(--leise)}
 @media print{
   body.bericht-ansicht .ch-werkzeug,body.bericht-ansicht .seitentitel{display:none!important}
@@ -813,13 +821,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=1.0.0"></script>
+<script src="pflanzen.js?v=1.1.0"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.1.0";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -1035,6 +1043,7 @@ function herkunftName(h) {
     if (t[1] === "sorten") return "Sorten";
     if (t[1] === "kalender") return "Kalender";
     if (t[1] === "quellen") return "Quellen";
+    if ((t[1] || "").startsWith("schutz") || t[1] === "jauchen") return "Pflanzenschutz";
     if (t[1] === "eigene") return null;
     return "Alle Pflanzen";
   }
@@ -1322,19 +1331,20 @@ function legende() {
 /* ---------- Seite „Wissen“ mit Unterbereichen ---------- */
 function wissenSeite(main) {
   const teile = location.hash.replace("#", "").split("/");
-  const bereich = teile[1] || "pflanzen";
+  let bereich = (teile[1] || "pflanzen").split("?")[0];
   seitentitel(main, "Wissen");
   if (!LEX_OK) { main.insertAdjacentHTML("beforeend", `<div class="karte"><p>Die Pflanzendaten (Datei <code>pflanzen.js</code>) konnten nicht geladen werden. Bitte prüfe die Internetverbindung und lade die Seite neu.</p><button class="knopf" id="lex-neu">↻ Neu laden</button></div>`); $("#lex-neu").onclick = () => location.reload(); return; }
   if (bereich === "pflanze") return pflanzenDetail(main, decodeURIComponent(teile[2] || ""));
   if (bereich === "eigene") return eigenePflanzeForm(main, teile[2] ? decodeURIComponent(teile[2]) : null);
   main.insertAdjacentHTML("beforeend", `<div class="unternav">
-    ${[["pflanzen", `${icon("i-garten")} Pflanzen`], ["kalender", `${icon("i-kalender")} Kalender`], ["uebersichten", `${icon("i-liste")} Übersichten`], ["sorten", `${icon("i-steckbrief")} Sorten`], ["jauchen", `${icon("i-w-regen")} Jauchen`], ["quellen", `${icon("i-quellen")} Quellen`]].map(([k, n]) => `<a href="#wissen/${k}" class="${bereich === k ? "an" : ""}">${n}</a>`).join("")}
+    ${[["pflanzen", `${icon("i-garten")} Pflanzen`], ["kalender", `${icon("i-kalender")} Kalender`], ["uebersichten", `${icon("i-liste")} Übersichten`], ["sorten", `${icon("i-steckbrief")} Sorten`], ["schutz", `${icon("i-w-regen")} Pflanzenschutz`], ["quellen", `${icon("i-quellen")} Quellen`]].map(([k, n]) => `<a href="#wissen/${k}" class="${bereich === k || (k === "schutz" && bereich === "jauchen") ? "an" : ""}">${n}</a>`).join("")}
   </div>`);
   if (bereich === "kalender") return kalenderAnsicht(main);
   if (bereich === "uebersichten") return uebersichtSeite(main);
   if (bereich === "sorten") return sortenSeite(main);
   if (bereich === "quellen") return quellenAnsicht(main);
-  if (bereich === "jauchen") return jaucheSeite(main);
+  if (bereich === "jauchen") return schutzSeite(main, "jauchen");
+  if (bereich === "schutz") return schutzSeite(main);
   pflanzenListe(main);
 }
 
@@ -1424,6 +1434,7 @@ function pflanzenDetail(main, id) {
             ${p.baum ? zeile("Kronendurchmesser", (p.krone || []).map(k => `${zahl(k.d / 100, k.d % 100 ? 1 : 0)} m – ${esc(k.text)}`).join("<br>") + `<br><span class="leise">Richtwerte aus den empfohlenen Pflanzabständen; im Plan einstellbar.</span>`) : ""}
             ${p.befruchtung ? zeile("Befruchtung", esc(p.befruchtung)) : ""}
             ${p.schnitt ? zeile("Schnitt", esc(p.schnitt)) : ""}
+            ${p.folgesaat ? zeile("Folgesaat", esc(p.folgesaat.text)) : ""}
             ${p.gd ? zeile("Aussaat", `breitwürfig auf die freie Fläche säen, einharken, feucht halten<br><span class="leise">Saatmenge: ${esc(p.gd.menge)}</span>`) + zeile("Über Winter", esc(p.gd.winter)) + zeile("Einarbeiten", esc(p.gd.einarbeiten)) + zeile("Wirkung", esc(p.gd.wirkung)) : ""}
             ${p.baum || p.gd ? "" : zeile("Abstand", p.abstand ? `${p.abstand[0]} cm zwischen den Reihen, ${p.abstand[1]} cm in der Reihe${p.abstandHinweis ? `<br><span class="leise">${esc(p.abstandHinweis)}</span>` : ""}` : "–")}
             ${p.baum ? "" : zeile("Saattiefe", esc(p.saattiefe || "–") + (p.keimung ? `<br><span class="leise">${esc(p.keimung)}</span>` : ""))}
@@ -1434,6 +1445,7 @@ function pflanzenDetail(main, id) {
           <p class="klein leise" style="margin:10px 0 0">${p.baum ? "Wuchshöhe, Krone und Zeiten sind Richtwerte und hängen von Sorte und Unterlage ab." : p.gd ? "Zeiten und Mengen sind Richtwerte – je später im Jahr gesät wird, desto weniger wächst bis zum Winter." : `Saattiefe, Wuchshöhe und Zeiten sind Richtwerte und hängen von der Sorte ab – die Angaben auf der Samentüte haben Vorrang.`}</p>
         </div>
         ${(p.hinweise || []).length ? `<div class="karte hinweis-karte"><h2>${icon("i-warnung")} Unterschiedliche Angaben</h2><ul>${p.hinweise.map(h => `<li>${esc(h)}</li>`).join("")}</ul></div>` : ""}
+        ${SCHUTZ_ZU(p.id).length ? `<div class="karte"><h2>${icon("i-warnung")} Häufige Probleme</h2><div>${SCHUTZ_ZU(p.id).map(x => `<a class="chip" href="#wissen/schutz?p=${x.id}">${esc(x.name)}</a>`).join("")}</div><p class="klein leise" style="margin:6px 0 0">Erkennen, vorbeugen, handeln – unter Wissen → Pflanzenschutz.</p></div>` : ""}
         ${lexikonGartenHTML(p)}
         ${sortenKarteHTML(p)}
         ${vorratKarteHTML(p)}
@@ -2147,7 +2159,31 @@ function startGartenHTML() {
   const qm = beete.reduce((a, o) => a + flaeche(o), 0) / 10000, liste = echtAktiv(), mo = new Date().getMonth() + 1;
   const ernte = [...new Set(liste.filter(p => (pflanzeVon(p.pflanze)?.ernte || []).includes(mo)).map(p => pflanzeVon(p.pflanze).name))];
   return `<p style="margin-top:0">${beete.length} ${beete.length === 1 ? "Beet" : "Beete"} mit zusammen ${zahl(qm, 1)} m² Pflanzfläche${liste.length ? `, darin ${liste.length} ${liste.length === 1 ? "Pflanzung" : "Pflanzungen"}` : ""}.</p>
-    ${ernte.length ? `<p><b>Laut Kalender Erntezeit:</b> ${esc(ernte.join(", "))}</p>` : (liste.length ? "" : `<p class="leise klein">Noch nichts gepflanzt: Beet im Gartenplan antippen, dann „＋ Pflanze setzen“.</p>`)}`;
+    ${ernte.length ? `<p><b>Laut Kalender Erntezeit:</b> ${esc(ernte.join(", "))}</p>` : (liste.length ? "" : `<p class="leise klein">Noch nichts gepflanzt: Beet im Gartenplan antippen, dann „＋ Pflanze setzen“.</p>`)}
+    ${folgesaatHTML()}`;
+}
+/* Folgesaaten (1.1): nur für Pflanzen, die du dieses Jahr schon gesät oder gesetzt hast */
+function folgesaatFaellig(heute = new Date()) {
+  const j = heute.getFullYear(), mo = heute.getMonth() + 1, iso = heute.toISOString().slice(0, 10), erg = [];
+  const proPflanze = new Map();
+  for (const p of echte()) {
+    if (!(p.gepflanzt || "").startsWith(j + "-") || p.gepflanzt > iso) continue;
+    (proPflanze.get(p.pflanze) || proPflanze.set(p.pflanze, []).get(p.pflanze)).push(p.gepflanzt);
+  }
+  for (const [id, daten] of proPflanze) {
+    const pf = pflanzeVon(id), f = pf && pf.folgesaat; if (!f) continue;
+    const saison = new Set([...(pf.direktsaat || []), ...(pf.pflanzen || []), ...(pf.vorziehen || [])]);
+    const letzte = daten.sort().at(-1), wochen = Math.floor((heute - new Date(letzte + "T12:00")) / 6048e5);
+    // nur kurz nach der letzten Aussaat erinnern – wer länger nicht nachsät, will vermutlich nicht mehr
+    if (f.wochen) { if (saison.has(mo) && wochen >= f.wochen[0] && wochen <= f.wochen[1] + 3) erg.push({ pf, letzte, wochen, text: `${pf.name} (zuletzt vor ${wochen} Wochen)` }); }
+    else if (f.satz2 && f.satz2.includes(mo) && saison.has(mo) && wochen >= 6 && !daten.some(d => +d.slice(5, 7) >= f.satz2[0]))
+      erg.push({ pf, letzte, wochen, text: `${pf.name} – zweiter Satz` });
+  }
+  return erg.sort((a, b) => a.pf.name.localeCompare(b.pf.name, "de"));
+}
+function folgesaatHTML() {
+  const f = folgesaatFaellig(); if (!f.length) return "";
+  return `<p style="margin:8px 0 0"><b>Zeit zum Nachsäen:</b> ${f.map(x => `<a href="#wissen/pflanze/${encodeURIComponent(x.pf.id)}">${esc(x.text)}</a>`).join(", ")}</p>`;
 }
 function lexikonGartenHTML(pf) {
   const akt = echtAktiv().filter(p => p.pflanze === pf.id);
@@ -2593,14 +2629,18 @@ function chronikZeichnen() {
 }
 
 /* ---------- Auswertung ---------- */
+// Ernte nach Pflanze und Sorte getrennt (1.1): Schlüssel "pflanze|sorte"
+const ernteSchluessel = p => `${p.pflanze}|${(p.sorte || "").trim()}`;
+const ernteName = k => { const [id, so] = k.split("|"); return `${esc(pflanzeVon(id)?.name || "?")}${so ? ` <span class="leise">‚${esc(so)}‘</span>` : ""}`; };
+const ernteSort = (a, b) => { const [ia, sa] = a[0].split("|"), [ib, sb] = b[0].split("|"); return (pflanzeVon(ia)?.name || "").localeCompare(pflanzeVon(ib)?.name || "", "de") || sa.localeCompare(sb, "de"); };
 function ernteSummen(jahr) {
   const s = new Map();   // pflanze → { einheit → menge }, anzahl
   for (const p of echte()) for (const e of p.ernten || []) {
     if (!e.datum || !e.datum.startsWith(jahr + "-")) continue;
-    const x = s.get(p.pflanze) || { mengen: {}, anzahl: 0, ohne: 0 };
+    const k = ernteSchluessel(p), x = s.get(k) || { mengen: {}, anzahl: 0, ohne: 0 };
     x.anzahl++;
     if (e.menge) x.mengen[e.einheit] = (x.mengen[e.einheit] || 0) + e.menge; else x.ohne++;
-    s.set(p.pflanze, x);
+    s.set(k, x);
   }
   return s;
 }
@@ -2610,7 +2650,7 @@ function auswertungHTML(jahr) {
   const gesetzt = echte().filter(p => (p.gepflanzt || "").startsWith(jahr + "-"));
   const arten = new Set(gesetzt.map(p => p.pflanze));
   const w = wetterJahr(jahr), wv = wetterJahr(jahr - 1);
-  const zeilen = [...ernte.entries()].sort((a, b) => (pflanzeVon(a[0])?.name || "").localeCompare(pflanzeVon(b[0])?.name || "", "de"));
+  const zeilen = [...ernte.entries()].sort(ernteSort);
   return `<div class="raster zwei">
     <div>
       <div class="karte"><h2>${icon("i-garten")} ${jahr} im Überblick</h2>
@@ -2622,7 +2662,7 @@ function auswertungHTML(jahr) {
         </div></div>
       <div class="karte"><h2>${icon("i-ernte")} Ernte ${jahr}</h2>
         ${zeilen.length ? `<table class="tabelle"><thead><tr><th>Pflanze</th><th>Menge</th><th>Ernten</th><th>${jahr - 1}</th></tr></thead><tbody>
-          ${zeilen.map(([id, x]) => { const v = vor.get(id); return `<tr><td>${esc(pflanzeVon(id)?.name || "?")}</td><td>${mengenText(x.mengen) || "–"}${x.ohne ? ` <span class="leise klein">(+${x.ohne}× ohne Menge)</span>` : ""}</td><td>${x.anzahl}</td><td class="leise">${v ? mengenText(v.mengen) || `${v.anzahl}×` : "–"}</td></tr>`; }).join("")}
+          ${zeilen.map(([id, x]) => { const v = vor.get(id); return `<tr><td>${ernteName(id)}</td><td>${mengenText(x.mengen) || "–"}${x.ohne ? ` <span class="leise klein">(+${x.ohne}× ohne Menge)</span>` : ""}</td><td>${x.anzahl}</td><td class="leise">${v ? mengenText(v.mengen) || `${v.anzahl}×` : "–"}</td></tr>`; }).join("")}
         </tbody></table>` : `<p class="leise klein" style="margin:0">Für ${jahr} sind noch keine Ernten eingetragen. Ernten trägst du im Gartenplan bei der Pflanzung ein (${icon("i-ernte")} Ernte eintragen).</p>`}
       </div>
     </div>
@@ -2744,7 +2784,9 @@ function planListeFuellen() {
     html += `</ul></div>`;
   }
   html += `<p class="klein leise">Mehrjährige Pflanzen wie Rhabarber, Erdbeeren oder Kräuter bleiben stehen – sie sind im Plan blass und müssen nicht neu geplant werden.</p>`;
+  if (liste.length) html += saatBedarfHTML(liste, PL_JAHR);
   box.innerHTML = html;
+  const sb = $("#saat-bedarf", box); if (sb) sb.addEventListener("toggle", () => { SB_OFFEN = sb.open; });
   $$("[data-pl-zeig]", box).forEach(k => k.onclick = () => {
     const p = pflanzung(k.dataset.plZeig); if (!p) return;
     G.pfl = p.id; G.auswahl = p.beet; G.pflPunkt = null;
@@ -2753,6 +2795,53 @@ function planListeFuellen() {
     $(".garten-layout").scrollIntoView({ behavior: "smooth", block: "start" });
   });
   $$("[data-pl-ueber]", box).forEach(k => k.onclick = () => planUebernehmen(k.dataset.plUeber));
+}
+/* ---------- Planung: Saatgut für die Saison (1.1) ---------- */
+let SB_OFFEN = false;
+function saatBedarf(liste, jahr) {
+  // Bezug: Anfang März des Planungsjahres (bzw. heute, wenn das später ist)
+  const maerz = new Date(jahr, 2, 1), bezug = maerz > new Date() ? maerz : new Date();
+  const gruppen = new Map();
+  for (const p of liste) {
+    const pf = pflanzeVon(p.pflanze); if (!pf || pf.baum) continue;
+    const g = gruppen.get(pf.id) || { pf, sorten: new Set(), wie: new Set(), beete: new Set() };
+    if (p.sorte) g.sorten.add(p.sorte.trim());
+    g.wie.add(p.wie || "gepflanzt"); g.beete.add(pflBeetName(p));
+    gruppen.set(pf.id, g);
+  }
+  const erg = { fehlt: [], pruefen: [], da: [], jung: [] };
+  for (const g of gruppen.values()) {
+    const vorrat = (D.saatgut || []).filter(s => s.pflanze === g.pf.id && !s.leer);
+    const mitStatus = vorrat.map(s => ({ s, st: keimStatus(s, bezug) }));
+    const besteRang = mitStatus.length ? Math.max(...mitStatus.map(x => STUFE_RANG[x.st.stufe])) : -1;
+    const sortenFehlen = [...g.sorten].filter(so => !vorrat.some(s => (s.sorte || "").trim().toLowerCase() === so.toLowerCase()));
+    const e = { ...g, mitStatus, sortenFehlen, vegetativ: g.pf.saatgut === "vegetativ" };
+    const nurJung = [...g.wie].every(w => w === "gepflanzt");
+    const keineSorteDa = g.sorten.size && sortenFehlen.length === g.sorten.size;
+    if (nurJung && (!vorrat.length || keineSorteDa)) erg.jung.push(e);
+    else if (!vorrat.length || keineSorteDa) erg.fehlt.push(e);
+    else if (besteRang < STUFE_RANG.gut) erg.pruefen.push(e);
+    else erg.da.push(e);
+  }
+  const nach = (a, b) => a.pf.name.localeCompare(b.pf.name, "de");
+  Object.values(erg).forEach(l => l.sort(nach));
+  return erg;
+}
+function saatBedarfHTML(liste, jahr) {
+  const b = saatBedarf(liste, jahr);
+  const anz = b.fehlt.length + b.pruefen.length;
+  const zeile = (e, extra) => `<li>${pflanzenBadge(e.pf)}<div><b>${esc(e.pf.name)}</b>${e.sorten.size ? ` <span class="leise">(${esc([...e.sorten].join(", "))})</span>` : ""}${e.vegetativ ? ` <span class="marker">Pflanzgut</span>` : ""}
+      <div class="klein leise">${extra}</div></div></li>`;
+  const vorratText = e => e.mitStatus.map(x => `${x.s.sorte ? esc(x.s.sorte) + ": " : ""}${esc(x.st.text)}`).join(" · ");
+  const sortenHinweis = e => e.sortenFehlen.length ? ` · <span class="warn-text">${esc(e.sortenFehlen.join(", "))} nicht im Vorrat</span>` : "";
+  const block = (titel, l, fn, klasse) => l.length ? `<h3 class="sb-titel ${klasse}">${titel} <span class="leise">(${l.length})</span></h3><ul class="sb-liste">${l.map(fn).join("")}</ul>` : "";
+  return `<details class="karte sb-karte" id="saat-bedarf" ${SB_OFFEN ? "open" : ""}><summary><h2>${icon("i-saat")} Saatgut für ${jahr}${anz ? ` <span class="sb-zahl">${anz}</span>` : ""}</h2></summary>
+    <p class="klein leise" style="margin-top:0">Abgleich der Planung mit deinem <a href="#vorrat/saatgut">Saatgutvorrat</a>. Es zählt nur, was für ${jahr} geplant ist – leeres Saatgut von Pflanzen, die du nicht planst, taucht hier nicht auf. Die Keimfähigkeit ist auf das Frühjahr ${jahr} bezogen.</p>
+    ${block("Fehlt im Vorrat", b.fehlt, e => zeile(e, e.mitStatus.length ? `diese Sorte nicht im Vorrat – vorhanden: ${esc(e.mitStatus.map(x => x.s.sorte || "ohne Sortenname").join(", "))}` : `geplant in ${esc([...e.beete].join(", "))}`), "fehlt")}
+    ${block("Vorhanden – Keimprobe lohnt sich", b.pruefen, e => zeile(e, vorratText(e) + sortenHinweis(e)), "pruefen")}
+    ${block("Vorhanden", b.da, e => zeile(e, vorratText(e) + sortenHinweis(e)), "da")}
+    ${block("Als Jungpflanze geplant", b.jung, e => zeile(e, "nur nötig, wenn du selbst vorziehst" + (e.mitStatus.length ? ` – im Vorrat: ${esc(e.mitStatus.map(x => x.s.sorte || "ohne Sortenname").join(", "))}` : "")), "jung")}
+  </details>`;
 }
 function startPlanungHTML() {
   const j = new Date().getFullYear(), bald = new Date(); bald.setDate(bald.getDate() + 14);
@@ -3146,14 +3235,14 @@ function vorratSeite(main) {
 /* ---------- Saatgut ---------- */
 function saatAktiv() { return (D.saatgut || []).filter(s => !s.leer); }
 const saatMonate = p => [...(p.vorziehen || []), ...(p.direktsaat || [])];
-function keimStatus(s) {
-  const jetzt = new Date().getFullYear(), p = pflanzeVon(s.pflanze);
+function keimStatus(s, bezug) {
+  const heute = bezug || new Date(), jetzt = heute.getFullYear(), p = pflanzeVon(s.pflanze);
   if (s.probe && s.probe.prozent != null && +s.probe.datum.slice(0, 4) >= jetzt - 1) {
     const pz = s.probe.prozent;
     return pz >= 50 ? { stufe: "gut", text: `Keimprobe ${pz} %` } : { stufe: "alt", text: `Keimprobe nur ${pz} % – dichter säen oder ersetzen` };
   }
   if (s.bis) {
-    const [by, bm] = bisTeile(s.bis), h = new Date(), rest = (by * 12 + bm) - (h.getFullYear() * 12 + h.getMonth() + 1), t = bisText(s.bis);
+    const [by, bm] = bisTeile(s.bis), h = heute, rest = (by * 12 + bm) - (h.getFullYear() * 12 + h.getMonth() + 1), t = bisText(s.bis);
     if (rest >= 12) return { stufe: "gut", text: `keimfähig bis ${t}` };
     if (rest >= 0) return { stufe: "bald", text: `keimfähig bis ${t} – möglichst bald aufbrauchen` };
     return { stufe: "alt", text: `seit ${t} abgelaufen – Keimprobe machen` };
@@ -3520,9 +3609,9 @@ function ernteZeitraum(von, bis) {
   const s = new Map();
   for (const p of echte()) for (const e of p.ernten || []) {
     if (!e.datum || e.datum < von || e.datum > bis) continue;
-    const x = s.get(p.pflanze) || { mengen: {}, anzahl: 0, ohne: 0 };
+    const k = ernteSchluessel(p), x = s.get(k) || { mengen: {}, anzahl: 0, ohne: 0 };
     x.anzahl++; if (e.menge) x.mengen[e.einheit] = (x.mengen[e.einheit] || 0) + e.menge; else x.ohne++;
-    s.set(p.pflanze, x);
+    s.set(k, x);
   }
   return s;
 }
@@ -3530,7 +3619,7 @@ function ueberblickHTML(z) {
   const vz = { von: vorjahrIso(z.von), bis: vorjahrIso(z.bis) };
   const ernte = ernteZeitraum(z.von, z.bis), vor = ernteZeitraum(vz.von, vz.bis);
   const gesetzt = echte().filter(p => imZeitraum(p.gepflanzt, z)), arten = new Set(gesetzt.map(p => p.pflanze));
-  const zeilen = [...ernte.entries()].sort((a, b) => (pflanzeVon(a[0])?.name || "").localeCompare(pflanzeVon(b[0])?.name || "", "de"));
+  const zeilen = [...ernte.entries()].sort(ernteSort);
   const vorName = BERICHT.art === "jahr" ? String(+z.von.slice(0, 4) - 1) : "Vorjahr";
   return `<div class="raster zwei be-ueberblick">
     <div class="karte"><h2>${icon("i-garten")} Überblick</h2><div class="steckbrief">
@@ -3541,7 +3630,7 @@ function ueberblickHTML(z) {
     </div></div>
     <div class="karte"><h2>${icon("i-ernte")} Ernte</h2>
       ${zeilen.length ? `<table class="tabelle"><thead><tr><th>Pflanze</th><th>Menge</th><th>Ernten</th><th title="gleicher Zeitraum im Vorjahr">${vorName}</th></tr></thead><tbody>
-        ${zeilen.map(([id, x]) => { const v = vor.get(id); return `<tr><td>${esc(pflanzeVon(id)?.name || "?")}</td><td>${mengenText(x.mengen) || "–"}${x.ohne ? ` <span class="leise klein">(+${x.ohne}× ohne Menge)</span>` : ""}</td><td>${x.anzahl}</td><td class="leise">${v ? mengenText(v.mengen) || v.anzahl + "×" : "–"}</td></tr>`; }).join("")}
+        ${zeilen.map(([id, x]) => { const v = vor.get(id); return `<tr><td>${ernteName(id)}</td><td>${mengenText(x.mengen) || "–"}${x.ohne ? ` <span class="leise klein">(+${x.ohne}× ohne Menge)</span>` : ""}</td><td>${x.anzahl}</td><td class="leise">${v ? mengenText(v.mengen) || v.anzahl + "×" : "–"}</td></tr>`; }).join("")}
       </tbody></table>` : `<p class="leise klein" style="margin:0">In diesem Zeitraum sind keine Ernten eingetragen.</p>`}
     </div></div>`;
 }
@@ -3572,7 +3661,7 @@ function berichtHTML(jahr) {
       <p class="klein leise" style="margin:6px 0 0">Zum Drucken oder Speichern als PDF oben auf ${icon("i-drucken")} „Drucken“ tippen – gedruckt wird nur der Bericht, ohne diese Auswahl.</p>
     </div>
     <div class="bericht">
-    <div class="be-kopf"><h1>Gartenbericht ${esc(z.titel)}</h1><p class="leise">${ort && ort.name ? esc(ort.name) + " · " : ""}erstellt am ${datumKurz(heute)} mit Kraut und Rüben</p></div>`;
+    <div class="be-kopf"><div class="be-text"><h1>Gartenbericht ${esc(z.titel)}</h1><p class="leise">${ort && ort.name ? esc(ort.name) + " · " : ""}erstellt am ${datumKurz(heute)} mit Kraut und Rüben</p></div><div class="be-logo" aria-label="Kraut und Rüben"><img src="bilder/ruebe.png" alt=""><svg viewBox="0 0 810 399" aria-hidden="true"><use href="#wm"/></svg></div></div>`;
   if (T.plaene) {
     const gr = berichtPlanTage(jahr, z);
     if (!D.garten.objekte.length) h += `<div class="karte"><p class="leise" style="margin:0">Noch kein Gartenplan angelegt.</p></div>`;
@@ -3729,6 +3818,107 @@ async function wetterBerichtLaden(z) {
   if ($("#be-wetter") === el) el.innerHTML = wetterBerichtHTML(z, tage, fehler);
 }
 
+/* ---------- Wissen: Schädlinge und Krankheiten (1.1) ---------- */
+const SCHUTZ = [
+  { id: "blattlaeuse", name: "Blattläuse", art: "Schädling",
+    pflanzen: ["buschbohne", "puffbohne", "kopfkohl", "rosenkohl", "kopfsalat", "pfluecksalat", "gurke", "zucchini"],
+    erkennen: "Kleine grüne oder schwarze Läuse in Kolonien an Triebspitzen und Blattunterseiten. Blätter kräuseln oder rollen sich ein, oft klebt Honigtau darauf.",
+    vorbeugen: ["Nützlinge fördern: Marienkäfer, Florfliegen und Schwebfliegen fressen Blattläuse – ein paar Läuse muss man nicht bekämpfen.", "Bei Salat: verschiedene Sorten mischen, lieber viele kleine Sätze säen, blattlausresistente Sorten wählen."],
+    handeln: ["Kolonien mit einem kräftigen, kalten Wasserstrahl abspritzen.", "Bei Kohl hilft ein Kulturschutznetz.", "Ein Kaltwasserauszug aus Brennnesseln (siehe Jauchen & Brühen) kann bei leichtem Befall helfen."],
+    hinweis: "Für selbst gemischte Schmierseifenlösungen schwanken die Mengenangaben stark (etwa 15 bis 50 g je Liter). Einfacher und sicherer ist ein fertiges Kaliseife-Präparat aus dem Handel.",
+    quellen: ["lwg_ps", "uba_blattlaus", "nabu_blattlaus"] },
+  { id: "schnecken", name: "Nacktschnecken", art: "Schädling",
+    pflanzen: ["kopfsalat", "pfluecksalat", "zucchini", "kuerbis", "gurke", "kohlrabi", "basilikum", "erdbeere"],
+    erkennen: "Große Fraßlöcher, Schleimspuren, Jungpflanzen sind über Nacht verschwunden. Aktiv vor allem nachts und bei feuchtem Wetter.",
+    vorbeugen: ["Morgens gießen statt abends – nachts soll der Boden abgetrocknet sein.", "Rasen am Beetrand kurz halten.", "Igel und Laufkäfer schonen, sie fressen Schnecken."],
+    handeln: ["Schneckenzaun um das Beet und die Schnecken darin regelmäßig absammeln.", "Bierfallen nur innerhalb eines Zauns – sonst locken sie Schnecken aus der Umgebung an.", "Nematoden wirken gegen die Genetzte Ackerschnecke.", "Schneckenkorn mit Eisen-III-Phosphat nur sparsam streuen: etwa 5 g/m², das sind rund 350 Körner."],
+    quellen: ["lwg_ps"] },
+  { id: "erdfloehe", name: "Erdflöhe", art: "Schädling",
+    pflanzen: ["radieschen", "rucola", "rettich", "kohlrabi", "chinakohl", "kopfkohl", "brokkoli"],
+    erkennen: "Viele winzige, runde Löcher in jungen Blättern, vor allem bei Kreuzblütlern. Die 2–4 mm kleinen Käfer springen bei Berührung weg. Besonders bei warmem, trockenem Wetter.",
+    vorbeugen: ["Boden gleichmäßig feucht halten und lockern.", "Jungpflanzen schnell wachsen lassen – größere Blätter werden kaum noch befallen."],
+    handeln: ["Ein feinmaschiges Netz (Erdflohnetz) direkt nach der Saat auflegen.", "Pflanzen mit Gesteinsmehl bestäuben."],
+    quellen: ["lwg_ps", "plantura_erdfloh"] },
+  { id: "kohlweissling", name: "Kohlweißling", art: "Schädling",
+    pflanzen: ["kopfkohl", "rosenkohl", "brokkoli", "blumenkohl", "gruenkohl", "kohlrabi", "wirsing", "kapuzinerkresse"],
+    erkennen: "Gelbe Eier an den Blattunterseiten – beim Großen Kohlweißling in Gruppen, beim Kleinen einzeln. Grüne bzw. gelbgrün-schwarz gefleckte Raupen fressen Löcher bis zum Blattskelett, dazu grüne Kotkrümel. Die größten Schäden meist im Juni und Juli.",
+    vorbeugen: ["Ein Kulturschutznetz auflegen, bevor die Falter Eier ablegen."],
+    handeln: ["Blattunterseiten regelmäßig ansehen, Eier zerdrücken, Raupen absammeln.", "Bei starkem Befall: Präparate mit Bacillus thuringiensis.", "Schlupfwespen und Vögel sind natürliche Gegenspieler."],
+    quellen: ["lwg_ps", "plantura_kohlweissling", "gj_kohlweissling"] },
+  { id: "kohlhernie", name: "Kohlhernie", art: "Krankheit",
+    pflanzen: ["kopfkohl", "rosenkohl", "brokkoli", "blumenkohl", "gruenkohl", "kohlrabi", "wirsing", "chinakohl", "radieschen", "rettich", "rucola", "gelbsenf"],
+    erkennen: "Pflanzen kümmern und welken an sonnigen Tagen. An den Wurzeln knollige Verdickungen. Verwechslung möglich mit dem Kohlgallenrüssler: Verdickung aufschneiden – sind darin Fraßgänge oder Maden, war es der Käfer.",
+    vorbeugen: ["Fruchtfolge: lange Pause für alle Kreuzblütler – auch Radieschen, Rucola und Senf als Gründüngung zählen dazu.", "Saure, schwere Böden kalken; auf schweren Böden ist ein pH um 7 günstig.", "Staunässe vermeiden."],
+    handeln: ["Befallene Pflanzen mit allen Wurzeln ausgraben und in den Restmüll geben – nicht auf den Kompost.", "Eine direkte Bekämpfung gibt es nicht."],
+    hinweis: "Anbaupause: Die Landwirtschaftskammer Schleswig-Holstein nennt vorbeugend 4 Jahre und nach einem Befall mindestens 7 Jahre, die Bayerische Gartenakademie 5–6 Jahre. Die Dauersporen können 10 bis 20 Jahre im Boden überleben.",
+    quellen: ["lwg_ps", "lksh_ff", "dlr_kohlhernie"] },
+  { id: "moehrenfliege", name: "Möhrenfliege", art: "Schädling",
+    pflanzen: ["moehre", "pastinake", "sellerie", "petersilie"],
+    erkennen: "Rostbraune Fraßgänge in der Möhre; bei starkem Befall vergilbt das Laub. Die erste Generation fliegt ab Mai, eine zweite im Sommer.",
+    vorbeugen: ["Ein Kulturschutznetz direkt nach der Saat auflegen und dicht halten – zum Jäten nur kurz am frühen Morgen öffnen.", "Frühe Sorten säen oder Lagermöhren erst ab Juni säen.", "Vor Möhren keinen frischen Mist oder Kompost geben.", "Beim Ausdünnen locken die Duftstoffe die Fliege an – am besten bei Windstille."],
+    handeln: ["Befallene Möhren früh ernten und aussortieren."],
+    hinweis: "Maschenweite des Netzes: Plantura nennt 1,35 mm oder feiner, die Landwirtschaftskammer Schleswig-Holstein höchstens 1,6 mm.",
+    quellen: ["lwg_ps", "lksh_fliegen", "plantura_moehrenfliege"] },
+  { id: "zwiebelfliegen", name: "Zwiebel- und Lauchfliegen", art: "Schädling",
+    pflanzen: ["zwiebel", "lauch", "knoblauch", "schalotte", "fruehlingszwiebel", "schnittlauch"],
+    erkennen: "Zwiebellaub welkt und kippt um, in der Zwiebel sitzen Maden. Bei Lauch zeigen sich zuerst Miniergänge in den Blättern; später fressen sich die Larven bis ins Herz.",
+    vorbeugen: ["Netz auflegen, bevor die Fliegen kommen.", "Zwiebeln früh mit Steckzwiebeln anbauen."],
+    handeln: ["Blätter mit ersten Miniergängen abschneiden.", "Befallene Pflanzen entfernen."],
+    hinweis: "Mischkultur mit Möhren, Kohlrabi oder Salat wird oft als Abwehr empfohlen – die Bayerische Gartenakademie nennt die Wirkung nicht gesichert.",
+    quellen: ["lwg_ps", "lksh_fliegen"] },
+  { id: "braunfaeule", name: "Kraut- und Braunfäule", art: "Krankheit",
+    pflanzen: ["tomate", "kartoffel"],
+    erkennen: "Graugrüne, später braune Flecken an Blättern und Stängeln. Früchte werden schmutzig braun, runzelig und hart. Tritt nach längeren nassen Phasen auf, vor allem im Freiland.",
+    vorbeugen: ["Regenschutz: Tomatendach oder Platz unter einem Vordach.", "Nur auf den Boden gießen, nie über die Blätter; Boden mulchen.", "Mindestens 50 cm Abstand, damit die Blätter schnell abtrocknen; untere Blätter ab Erntebeginn entfernen.", "Weniger anfällige Sorten wählen und den Platz wechseln; Kartoffeln nicht in der Nähe."],
+    handeln: ["Befallene Blätter und Früchte sofort entfernen.", "Befallene Früchte nicht mehr essen."],
+    hinweis: "Nicht verwechseln mit der Blütenendfäule: Die zeigt sich nur als dunkle Stelle am unteren Fruchtende, die Blätter bleiben gesund. Sie ist keine Krankheit, sondern Kalziummangel, oft durch unregelmäßiges Gießen.",
+    quellen: ["lwg_ps", "lksh_braunfaeule", "sachsen_braunfaeule", "hornbach_braunfaeule"] },
+  { id: "echter-mehltau", name: "Echter Mehltau", art: "Krankheit",
+    pflanzen: ["gurke", "zucchini", "kuerbis", "melone", "moehre", "tomate"],
+    erkennen: "Weißer, mehliger Belag auf der Blattoberseite, der sich abwischen lässt. Ein „Schönwetterpilz“: Er kommt bei trockenem, warmem Wetter, oft ab Juli.",
+    vorbeugen: ["Weniger anfällige Sorten wählen.", "Genug Abstand lassen, damit Luft durch die Pflanzen kommt."],
+    handeln: ["Befallene Blätter früh entfernen.", "Die Früchte bleiben essbar – gut waschen."],
+    hinweis: "Jede Mehltau-Art ist auf ihre Pflanze spezialisiert: Der Mehltau der Zucchini springt nicht auf die Tomate über.",
+    quellen: ["toom_mehltau", "plantura_mehltau", "sachsen_mehltau"] },
+  { id: "falscher-mehltau", name: "Falscher Mehltau", art: "Krankheit",
+    pflanzen: ["kopfsalat", "pfluecksalat", "feldsalat", "spinat", "zwiebel", "gurke", "radieschen", "kopfkohl"],
+    erkennen: "Oben gelbliche Flecken (bei Gurken eckig, von den Blattadern begrenzt), unten ein grauer bis grauvioletter Pilzrasen, der sich nicht abwischen lässt. Kommt bei feucht-kühlem Wetter.",
+    vorbeugen: ["Blätter trocken halten: morgens und nur auf den Boden gießen.", "Luftig pflanzen.", "Bei Salat tolerante oder resistente Sorten wählen.", "Bei Zwiebeln auf die Fruchtfolge achten."],
+    handeln: ["Befallene Blätter entfernen.", "Bei Salat empfiehlt die Bayerische Gartenakademie keine direkte Bekämpfung, sondern robuste Sorten."],
+    hinweis: "Nach mehreren Jahren mit starkem Befall bei Zwiebeln rät die Bayerische Gartenakademie, mindestens 6 Jahre keine Zwiebeln an dieser Stelle anzubauen.",
+    quellen: ["lwg_ps", "toom_mehltau", "plantura_mehltau"] },
+];
+const SCHUTZ_ZU = pfId => SCHUTZ.filter(x => x.pflanzen.includes(pfId));
+let PS = { teil: "probleme", offen: null, filter: "alle" };
+function schutzSeite(main, teil) {
+  if (teil) PS.teil = teil;
+  const q = new URLSearchParams(location.hash.split("?")[1] || ""); if (q.get("p")) { PS.teil = "probleme"; PS.offen = q.get("p"); PS.filter = "alle"; }
+  main.insertAdjacentHTML("beforeend", `<div class="umschalter ue-teile" id="ps-teile">${[["probleme", "Schädlinge & Krankheiten"], ["jauchen", "Jauchen & Brühen"]].map(([k, n]) => `<button data-t="${k}" class="${PS.teil === k ? "an" : ""}">${n}</button>`).join("")}</div><div id="ps-inhalt"></div>`);
+  $$("#ps-teile button").forEach(b => b.onclick = () => { PS.teil = b.dataset.t; $$("#ps-teile button").forEach(x => x.classList.toggle("an", x === b)); schutzZeichnen(); });
+  schutzZeichnen();
+}
+function schutzZeichnen() {
+  const el = $("#ps-inhalt"); if (!el) return; el.innerHTML = "";
+  if (PS.teil === "jauchen") return jaucheSeite(el);
+  const pfLinks = l => l.map(id => pflanzeVon(id)).filter(Boolean).map(p => `<a class="chip" href="#wissen/pflanze/${encodeURIComponent(p.id)}">${esc(p.name)}</a>`).join("");
+  const liste = SCHUTZ.filter(x => PS.filter === "alle" || x.art === PS.filter);
+  el.innerHTML = `<div class="karte"><p style="margin:0">Die häufigsten Probleme im Gemüsegarten – woran du sie erkennst, wie du vorbeugst und was du tun kannst. Es geht um Hausgarten-Maßnahmen ohne chemische Mittel; Vorbeugen ist fast immer wirksamer als Bekämpfen.</p>
+      <div class="umschalter" id="ps-filter" style="margin-top:10px">${[["alle", "Alle"], ["Schädling", "Schädlinge"], ["Krankheit", "Krankheiten"]].map(([k, n]) => `<button data-f="${k}" class="${PS.filter === k ? "an" : ""}">${n}</button>`).join("")}</div></div>
+    <div class="hm-abschnitte">${liste.map(x => `<details class="karte hm-abschnitt" id="ps-${x.id}" data-ps="${x.id}" ${PS.offen === x.id ? "open" : ""}>
+      <summary><h2>${icon(x.art === "Krankheit" ? "i-warnung" : "i-nachbarn")} ${esc(x.name)} <span class="marker">${x.art}</span></h2></summary>
+      <div class="hm-inhalt">
+        <p><b>Erkennen:</b> ${esc(x.erkennen)}</p>
+        <p class="klein"><b>Betrifft u. a.:</b> ${pfLinks(x.pflanzen)}</p>
+        <p style="margin-bottom:4px"><b>Vorbeugen</b></p><ul>${x.vorbeugen.map(t => `<li>${esc(t)}</li>`).join("")}</ul>
+        <p style="margin-bottom:4px"><b>Wenn es passiert ist</b></p><ul>${x.handeln.map(t => `<li>${esc(t)}</li>`).join("")}</ul>
+        ${x.hinweis ? `<p class="klein ps-hinweis">${icon("i-warnung")} ${esc(x.hinweis)}</p>` : ""}
+        <p class="klein leise" style="margin:6px 0 0">Quellen: ${x.quellen.filter(k => QUELLEN[k]).map(k => `<a href="${QUELLEN[k].url}" target="_blank" rel="noopener">${esc(QUELLEN[k].titel.split(":")[0])}</a>`).join(" · ")}</p>
+      </div></details>`).join("")}</div>`;
+  $$("#ps-filter button").forEach(b => b.onclick = () => { PS.filter = b.dataset.f; schutzZeichnen(); });
+  $$("[data-ps]").forEach(d => d.addEventListener("toggle", () => { if (d.open) PS.offen = d.dataset.ps; }));
+  if (PS.offen) setTimeout(() => $("#ps-" + PS.offen)?.scrollIntoView({ block: "start", behavior: "smooth" }), 60);
+}
+
 /* ---------- Wissen: Jauchen und Brühen (0.13) ---------- */
 const JA_QUELLEN = ["nabu_staerkung", "plantura_jauche", "utopia_jauche", "gj_jauche", "samenhaus_jauche", "testde_jauche", "utopia_beinwell", "apotheken_beinwell", "lfl_beinwell", "oekotest_nessel"];
 const jq = (...k) => `<span class="leise">(${k.map(x => esc(((QUELLEN[x] || {}).titel || x).split(":")[0])).join(", ")})</span>`;
@@ -3791,6 +3981,7 @@ const SEITEN = {
     seitentitel(main, begruessung(), `${WOCHENTAGE_LANG[heute.getDay()]}, ${datumText(heute)}`);
     main.insertAdjacentHTML("beforeend", `
       <p class="leise" style="margin-top:-6px" id="datum-gross">${WOCHENTAGE_LANG[heute.getDay()]}, ${datumText(heute)}</p>
+      ${sicherungHinweisHTML()}
       <div class="raster zwei">
         <div class="karte" id="wetter"></div>
         <div>
@@ -3808,6 +3999,7 @@ const SEITEN = {
       </div>`);
     if (window.matchMedia("(min-width:900px)").matches) $(".seitentitel", main)?.remove(); else $("#datum-gross").remove();
     wetterKarte($("#wetter"));
+    sicherungHinweisVerdrahten();
   },
 
   garten(main) { gartenSeite(main); },
@@ -3839,7 +4031,7 @@ const SEITEN = {
       <div class="karte">
         <h2>${icon("i-daten")} Daten</h2>
         <p>Deine Daten liegen in diesem Browser auf diesem Gerät. ${D.geaendert ? `Zuletzt gespeichert: ${zeitText(D.geaendert)}.` : ""}</p>
-        <p class="leise klein">Wenn du die Browserdaten löschst, sind auch die Gartendaten weg. Lade dir deshalb ab und zu eine Sicherung herunter.</p>
+        <p class="leise klein">Wenn du die Browserdaten löschst, sind auch die Gartendaten weg. Lade dir deshalb ab und zu eine Sicherung herunter${abgleichAn() ? "" : ` – ohne Abgleich erinnert dich die Startseite nach ${SICHERUNG_TAGE} Tagen daran`}. ${letzteSicherung() ? `Letzte Sicherung auf diesem Gerät: ${datumKurz(letzteSicherung().slice(0, 10))}.` : "Auf diesem Gerät noch keine Sicherung."}</p>
         <div class="knopfreihe">
           <button class="knopf" id="sichern">⬇️ Sicherung herunterladen</button>
           <button class="knopf" id="laden">⬆️ Sicherung laden</button>
@@ -3950,7 +4142,8 @@ const SEITEN = {
           <p><b>Übersichten:</b> Unter <b>Wissen → Übersichten</b> stehen dieselben Daten nach Themen statt nach Pflanzen: <b>Fruchtfolge</b> (alle Pflanzenfamilien mit Anbaupause und Mitgliedern), <b>Nährstoffbedarf</b> (Stark-, Mittel-, Schwachzehrer), <b>Mischkultur</b> (Pflanzen auswählen oder „aus Beet übernehmen“ – eine Tabelle zeigt für jedes Paar ✓ gut, ✗ schlecht, ? umstritten), <b>Saatgut</b> (wie lange Samen keimfähig sind und wie leicht man selbst Samen gewinnt) und <b>alle Pflanzen als Tabelle</b> (filtern, z. B. nach „halbschattig“ oder „winterhart“, und durch Tippen auf eine Spalte sortieren). Ein Tipp auf eine Pflanze öffnet ihre Karte; oben führt <b>„← Zurück zu …“</b> wieder genau dorthin, wo du warst.</p>
           <p><b>Sorten:</b> Unter <b>Wissen → Sorten</b> sammelst du deine Sorten mit Sternen (0–5) und Erfahrungen. Sorten, die du im Gartenplan bei einer Pflanzung einträgst, erscheinen dort automatisch – mit den Jahren, in denen sie angebaut wurden, und der Erntemenge. Beim Eintragen einer Sorte im Gartenplan schlägt die App deine bekannten Sorten vor. Auf jeder Pflanzenkarte steht „Meine Sorten“.</p>
           <p><b>Gründüngung:</b> Der Filter „Gründüngung“ zeigt Phacelia, Gelbsenf, Inkarnatklee, Serradella, Winterwicke und Welsches Weidelgras – jeweils einzeln, weil Saatzeit, Winterhärte und Familie verschieden sind. Im Steckbrief stehen Saatmenge (g/m²), ob die Pflanze über Winter abfriert, wann du sie einarbeitest und was sie bewirkt. Im Plan säst du sie wie andere Pflanzen als Fläche auf ein freies Beet; die Fruchtfolge zählt sie mit (Senf ist ein Kreuzblütler wie Kohl, Klee und Wicke sind Hülsenfrüchtler wie Erbse und Bohne).</p>
-          <p><b>Jauchen:</b> Unter <b>Wissen → Jauchen</b> stehen Anleitungen für Brennnesseljauche, Brennnessel-Kaltwasserauszug und -Brühe gegen Blattläuse sowie Beinwelljauche – mit Mengen, Verdünnung und den Stellen, an denen die Quellen voneinander abweichen.</p>
+          <p><b>Pflanzenschutz:</b> Unter <b>Wissen → Pflanzenschutz</b> findest du zehn häufige Schädlinge und Krankheiten (Blattläuse, Schnecken, Erdflöhe, Kohlweißling, Kohlhernie, Möhrenfliege, Zwiebel- und Lauchfliegen, Kraut- und Braunfäule, Echter und Falscher Mehltau) – jeweils woran du sie erkennst, wie du vorbeugst und was du tun kannst. Im Steckbrief einer Pflanze stehen die passenden Probleme unter „Häufige Probleme“.</p>
+          <p><b>Jauchen:</b> Unter <b>Wissen → Pflanzenschutz → Jauchen &amp; Brühen</b> stehen Anleitungen für Brennnesseljauche, Brennnessel-Kaltwasserauszug und -Brühe gegen Blattläuse sowie Beinwelljauche – mit Mengen, Verdünnung und den Stellen, an denen die Quellen voneinander abweichen.</p>
           <p><b>Quellen:</b> Unter <b>Wissen → Quellen</b> steht, woher die Angaben stammen. Alle Texte sind in eigenen Worten geschrieben.</p>
         </div></details>
         <details><summary>Vorrat: Saatgut, Haltbarmachen, Rezepte</summary><div>
@@ -3973,6 +4166,7 @@ const SEITEN = {
             <li><b>Mehrjährige Pflanzen</b> (Rhabarber, Erdbeeren, Beeren, Kräuter) bleiben stehen und sind blass zu sehen.</li>
             <li><b>Datum:</b> Die App schlägt den ersten Pflanz- bzw. Säemonat aus dem Lexikon vor; darunter steht zum Vergleich, was das Lexikon empfiehlt.</li>
             <li><b>Liste unter dem Plan:</b> alles Geplante nach Monaten, mit Hinweisen zu Fruchtfolge, Nachbarn und Abstand. „Im Plan“ zeigt die Stelle, „${icon("i-check")} Übernehmen“ macht daraus eine echte Pflanzung mit dem Datum, das du angibst. Auf der Startseite erscheint ein Hinweis, wenn Geplantes in den nächsten zwei Wochen dran ist.</li>
+            <li><b>Saatgut für die Saison:</b> Unter der Liste klappst du „Saatgut für …“ auf. Die App gleicht ab, was du geplant hast, mit deinem Saatgutvorrat: <b>fehlt im Vorrat</b> (auch wenn nur eine andere Sorte da ist), <b>vorhanden – Keimprobe lohnt sich</b>, <b>vorhanden</b> und <b>als Jungpflanze geplant</b> (nur nötig, wenn du selbst vorziehst). Die Keimfähigkeit wird auf das Frühjahr des Planungsjahres bezogen. Es zählt nur, was geplant ist – aufgebrauchtes Saatgut von Pflanzen, die du nicht planst, erscheint nicht. Die Zahl im roten Kreis sagt, wie viele Punkte zu erledigen sind; Meldungen von selbst gibt es keine.</li>
             <li><b>Drucken:</b> „${icon("i-drucken")} Plan drucken“ druckt den Plan mit einer Liste (oder speichert ihn als PDF). Im Reiter Garten gibt es denselben Knopf für den aktuellen Garten.</li>
           </ul>
         </div></details>
@@ -3982,9 +4176,9 @@ const SEITEN = {
             <li><b>Tagebuch-Eintrag:</b> „＋ Tagebuch-Eintrag“ oben in der Chronik, oder im Gartenplan beim Beet bzw. bei einer Pflanzung auf „${icon("i-notiz")} Tagebuch“ (dann sind Beet und Pflanze schon ausgewählt). Datum, Text und – freiwillig – Beet und Pflanze. Antippen von „Bearbeiten“ ändert oder löscht einen Eintrag.</li>
             <li><b>Filter:</b> Jahr, Art (Garten, Ernte, Tagebuch, Wetter), Beet und Pflanze. „Im Plan“ springt zur Pflanzung im Gartenplan.</li>
             <li><b>Wetter:</b> Die App merkt sich das Wetter der vergangenen Tage, sobald die Startseite mit Standort das Wetter lädt (es reicht, die App mindestens einmal pro Woche zu öffnen). Daraus entstehen Einträge für Frostnächte (ab 0 °C), Hitzetage (ab 30 °C), Starkregen (ab 20 mm) und Trockenphasen (mindestens 10 Tage mit zusammen unter 5 mm).</li>
-            <li><b>Auswertung:</b> Pflanzungen und Ernten des Jahres, Erntemengen je Pflanze im Vergleich zum Vorjahr, letzter Frost im Frühjahr und erster Frost im Herbst, Frostnächte, Hitzetage und Regenmenge.</li>
+            <li><b>Auswertung:</b> Pflanzungen und Ernten des Jahres, Erntemengen je Pflanze und Sorte im Vergleich zum Vorjahr (so siehst du, welche Sorte sich gelohnt hat; dafür beim Ernten die Menge eintragen), letzter Frost im Frühjahr und erster Frost im Herbst, Frostnächte, Hitzetage und Regenmenge.</li>
             <li><b>Rückblick:</b> zeigt den Gartenplan an einem früheren Tag – mit Datumsfeld, Schieberegler oder den Monatsknöpfen (jeweils der 15.). Darunter steht, was an dem Tag in welchem Beet wuchs. Beete und Wege sind immer im heutigen Zustand, weil sich die App Umbauten nicht merkt.</li>
-            <li><b>Bericht:</b> stellt einen Bericht zum Drucken oder als PDF zusammen – für ein <b>ganzes Jahr</b>, einen <b>Monat</b> oder einen <b>eigenen Zeitraum</b> (von–bis). Gedruckt wird mit „Drucken“ oben; die Auswahl selbst wird nicht mitgedruckt. Beim Speichern als PDF schlägt die App einen Dateinamen mit dem Zeitraum vor (z. B. „Gartenbericht 2026-11 November“), damit sich Berichte nicht überschreiben. Enthalten sind: Gartenpläne zu wählbaren Zeitpunkten (beim Jahr z. B. Mitte Mai, Juli, September, bei Monat und Zeitraum Beginn und Ende, dazu ein eigenes Datum; ist die Bepflanzung gleich geblieben, erscheint der Plan nur einmal), Überblick und Ernte (mit Vergleich zum gleichen Zeitraum im Vorjahr), Wetter mit Diagrammen (Temperatur, Regen und Sonnenstunden – bei kurzen Zeiträumen pro Tag, sonst pro Woche) und Monatstabelle – die Wetterdaten holt der Bericht für das ganze Jahr aus dem Open-Meteo-Archiv, Lücken gibt es dort also nicht –, was im Garten geschah, und das Tagebuch. Abschnitte lassen sich abwählen.</li>
+            <li><b>Bericht:</b> stellt einen Bericht mit dem Logo der App zum Drucken oder als PDF zusammen – für ein <b>ganzes Jahr</b>, einen <b>Monat</b> oder einen <b>eigenen Zeitraum</b> (von–bis). Gedruckt wird mit „Drucken“ oben; die Auswahl selbst wird nicht mitgedruckt. Beim Speichern als PDF schlägt die App einen Dateinamen mit dem Zeitraum vor (z. B. „Gartenbericht 2026-11 November“), damit sich Berichte nicht überschreiben. Enthalten sind: Gartenpläne zu wählbaren Zeitpunkten (beim Jahr z. B. Mitte Mai, Juli, September, bei Monat und Zeitraum Beginn und Ende, dazu ein eigenes Datum; ist die Bepflanzung gleich geblieben, erscheint der Plan nur einmal), Überblick und Ernte (mit Vergleich zum gleichen Zeitraum im Vorjahr), Wetter mit Diagrammen (Temperatur, Regen und Sonnenstunden – bei kurzen Zeiträumen pro Tag, sonst pro Woche) und Monatstabelle – die Wetterdaten holt der Bericht für das ganze Jahr aus dem Open-Meteo-Archiv, Lücken gibt es dort also nicht –, was im Garten geschah, und das Tagebuch. Abschnitte lassen sich abwählen.</li>
             <li><b>Drucken:</b> „${icon("i-drucken")} Drucken“ druckt die aktuelle Ansicht oder speichert sie als PDF.</li>
           </ul>
         </div></details>
@@ -4009,6 +4203,8 @@ const SEITEN = {
             <li><b>Hitze:</b> ab 30 °C.</li>
             <li><b>Trockenphase:</b> wenn es in den letzten 7 Tagen weniger als 5 mm geregnet hat, in den nächsten 3 Tagen kaum Regen kommt und es tagsüber mindestens 12 °C warm ist. Das ist eine Faustregel der App, keine amtliche Warnung.</li>
           </ul>
+          <p><b>Zeit zum Nachsäen:</b> Hast du dieses Jahr schon Radieschen, Salat oder Rucola gesät, erinnert die Karte „Im Garten“ kurz daran, wenn es Zeit für den nächsten Satz ist (je nach Pflanze nach 2–4 Wochen). Bei Buschbohnen (Juni/Juli) und Spinat (August/September) erinnert sie an den zweiten Satz. Säst du eine Weile nicht nach, verschwindet der Hinweis wieder – die App geht dann davon aus, dass du keinen weiteren Satz willst. Im Lexikon steht bei diesen Pflanzen unter „Folgesaat“, was sich lohnt.</p>
+          <p><b>Zeit für eine Sicherung:</b> Ohne Abgleich erinnert dich die Startseite, wenn deine letzte Sicherung auf diesem Gerät 30 Tage oder länger her ist. „In 2 Wochen erinnern“ schiebt den Hinweis auf. Mit Abgleich gibt es den Hinweis nicht, weil deine Daten dann ohnehin auf GitHub liegen.</p>
           <p>Das Wetter wird höchstens einmal pro Stunde neu geladen. Ohne Internet siehst du den letzten Stand. Amtliche Unwetterwarnungen gibt es beim Deutschen Wetterdienst.</p>
         </div></details>
         <details><summary>Standort ändern</summary><div>
@@ -4017,7 +4213,7 @@ const SEITEN = {
         <details><summary>Deine Daten und Sicherungen</summary><div>
           <p>Alles, was du einträgst, wird in diesem Browser auf diesem Gerät gespeichert – es gibt kein Konto und keine Anmeldung.</p>
           <p>Unter <b>Zahnrad → Daten</b> kannst du eine Sicherung als Datei herunterladen und später wieder laden. Beim Laden werden die aktuellen Daten ersetzt.</p>
-          <p>Ein automatischer Abgleich zwischen Laptop und Handy ist geplant.</p>
+          <p>Den Abgleich zwischen Laptop und Handy über GitHub richtest du ebenfalls über das Zahnrad ein (siehe „Abgleich zwischen Laptop und Handy“). Ohne Abgleich erinnert dich die Startseite alle 30 Tage an eine Sicherung.</p>
         </div></details>
         <details><summary>Hell oder dunkel</summary><div>
           <p>Unter <b>Zahnrad → Darstellung</b> wählst du Hell, Dunkel oder „Wie das Gerät“.</p>
@@ -5429,7 +5625,31 @@ function sicherungHerunterladen() {
   a.download = `kraut-und-rueben-sicherung-${heuteISO()}.json`;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  try { localStorage.setItem("kur-gesichert", new Date().toISOString()); localStorage.removeItem("kur-sicherung-spaeter"); } catch (e) {}
   melden("Sicherung heruntergeladen.");
+}
+/* Erinnerung an die Sicherung (1.1): nur ohne GitHub-Abgleich, nur wenn es Daten gibt */
+const SICHERUNG_TAGE = 30;
+function letzteSicherung() { try { return localStorage.getItem("kur-gesichert"); } catch (e) { return null; } }
+function sicherungFaellig() {
+  if (abgleichAn()) return false;
+  if (!(D.pflanzungen.length || D.garten.objekte.length || (D.tagebuch || []).length || (D.saatgut || []).length)) return false;
+  let spaeter = null; try { spaeter = localStorage.getItem("kur-sicherung-spaeter"); } catch (e) {}
+  if (spaeter && spaeter > heuteISO()) return false;
+  const l = letzteSicherung();
+  return !l || (Date.now() - new Date(l).getTime()) / 864e5 >= SICHERUNG_TAGE;
+}
+function sicherungHinweisHTML() {
+  if (!sicherungFaellig()) return "";
+  const l = letzteSicherung();
+  return `<div class="karte hinweis-karte sicher-hinweis" id="sicher-hinweis"><h2>${icon("i-daten")} Zeit für eine Sicherung</h2>
+    <p style="margin:0 0 8px">${l ? `Deine letzte Sicherung auf diesem Gerät ist vom ${datumKurz(l.slice(0, 10))}.` : "Auf diesem Gerät hast du noch keine Sicherung heruntergeladen."} Deine Gartendaten liegen nur in diesem Browser – eine Sicherungsdatei schützt sie, falls der Browser einmal geleert wird.</p>
+    <div class="knopfreihe" style="margin:0"><button class="knopf haupt" id="sicher-jetzt">⬇️ Jetzt sichern</button><button class="knopf text" id="sicher-spaeter">In 2 Wochen erinnern</button></div></div>`;
+}
+function sicherungHinweisVerdrahten() {
+  const k = $("#sicher-hinweis"); if (!k) return;
+  $("#sicher-jetzt").onclick = () => { sicherungHerunterladen(); k.remove(); };
+  $("#sicher-spaeter").onclick = () => { const d = new Date(); d.setDate(d.getDate() + 14); try { localStorage.setItem("kur-sicherung-spaeter", d.toISOString().slice(0, 10)); } catch (e) {} k.remove(); };
 }
 
 async function sicherungLaden(datei) {

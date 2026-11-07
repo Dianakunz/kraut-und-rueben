@@ -8,11 +8,11 @@ Ein Gartenplaner als Web-App – für den Laptop und das Handy, ohne Anmeldung.
 
 ## Was die App kann
 
-- **Start:** was diesen Monat ansteht, dazu das Wetter der nächsten Tage mit Hinweisen zu Frost, Hitze und Trockenheit
+- **Start:** was diesen Monat ansteht, Erinnerungen ans Nachsäen, dazu das Wetter der nächsten Tage mit Hinweisen zu Frost, Hitze und Trockenheit
 - **Garten:** den Garten in seiner echten Form zeichnen, Beete und Flächen anlegen, Pflanzen und Obstbäume setzen, ernten und abräumen – mit Warnungen zu Abstand, Mischkultur und Fruchtfolge
-- **Planung:** die nächste Saison im Voraus planen und den Plan später übernehmen
+- **Planung:** die nächste Saison im Voraus planen, mit Abgleich gegen den Saatgutvorrat, und den Plan später übernehmen
 - **Chronik:** was wann gesät, gepflanzt, geerntet und notiert wurde; Rückblick auf den Garten an einem früheren Tag und ein druckbarer Bericht für Monat, Jahr oder einen eigenen Zeitraum – mit Gartenplan und Wetter
-- **Wissen:** Pflanzenlexikon mit Gemüse, Kräutern, Obst, essbaren Blüten und Gründüngung, Aussaatkalender, Übersichten zu Fruchtfolge, Mischkultur und Keimfähigkeit, eigene Sorten sowie Anleitungen für Jauchen und Brühen
+- **Wissen:** Pflanzenlexikon mit Gemüse, Kräutern, Obst, essbaren Blüten und Gründüngung, Aussaatkalender, Übersichten zu Fruchtfolge, Mischkultur und Keimfähigkeit, eigene Sorten sowie Pflanzenschutz: häufige Schädlinge und Krankheiten und Anleitungen für Jauchen und Brühen
 - **Vorrat:** Saatgutvorrat mit Haltbarkeit und Keimprobe, Grundlagen zum Haltbarmachen, eigene Rezepte
 
 ## Woher die Angaben stammen

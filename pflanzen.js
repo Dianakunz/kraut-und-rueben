@@ -1,4 +1,4 @@
-/* Kraut und Rüben – Pflanzendaten (Etappen 1 bis 3)
+/* Kraut und Rüben – Pflanzendaten (Etappen 1 bis 5)
    Alle Texte in eigenen Worten; Werte aus den unter QUELLEN genannten Fachquellen.
    Diese Datei wird automatisch erzeugt. */
 const PFLANZEN_STAND = "2026-11-07";
@@ -266,6 +266,98 @@ const QUELLEN = {
  "utopia_sonnenblume": {
   "titel": "Utopia: Sonnenblumen vorziehen (Kernreife Ende August/Anfang September)",
   "url": "https://utopia.de/ratgeber/sonnenblumen-vorziehen-vom-samen-zur-gelben-bluetenpracht_289199/"
+ },
+ "sperli_radieschen": {
+  "titel": "Sperli (bei OBI): Radieschen – Folgeaussaaten alle 2 bis 3 Wochen",
+  "url": "https://www.obi.de/p/9291337/sperli-radieschen-rundes-halbrot-halbweiss-"
+ },
+ "stz_radieschen": {
+  "titel": "Stuttgarter Zeitung: Radieschen anbauen – Aussaat in Abständen von zwei bis drei Wochen",
+  "url": "https://www.stuttgarter-zeitung.de/wissen/gartenideen/radieschen-anbauen-tipps-zum-saeen-pflegen-und-ernten-78848202.html"
+ },
+ "gj_salat": {
+  "titel": "Gartenjournal: Salat pflanzen – alle zwei bis vier Wochen nachsäen",
+  "url": "https://www.gartenjournal.net/knackig-frisch-und-gesund-salat-pflanzen"
+ },
+ "plantura_rucola": {
+  "titel": "Plantura: Rucola anbauen – satzweise alle drei Wochen säen",
+  "url": "https://www.plantura.garden/gemuese/rucola/rucola-anbauen"
+ },
+ "lwg_nachkultur": {
+  "titel": "Bayerische Gartenakademie, Merkblatt 2102: Gemüsearten zur Nachkultur (Buschbohnen bis 10.7., Spinat ab August)",
+  "url": "https://www.lwg.bayern.de/mam/cms06/gartenakademie/dateien/2012-2016.pdf"
+ },
+ "utopia_buschbohne": {
+  "titel": "Utopia: Buschbohnen pflanzen – Direktsaat bis Mitte Juli",
+  "url": "https://utopia.de/ratgeber/buschbohnen-pflanzen-pflanzzeit-standort-und-pflege/"
+ },
+ "gj_buschbohne": {
+  "titel": "Gartenjournal: Buschbohnen – zweite Aussaat bis Ende Juli",
+  "url": "https://www.gartenjournal.net/gemuese/fruchtgemuese/huelsenfruechte/bohnen/buschbohnen"
+ },
+ "lwg_ps": {
+  "titel": "Bayerische Gartenakademie (LWG): Pflanzenschutz im Garten – Broschüre (Gemüse, Schnecken)",
+  "url": "https://lwg.bayern.de/mam/cms06/gartenakademie/dateien/pflanzenschutzbroschuere.pdf"
+ },
+ "uba_blattlaus": {
+  "titel": "Umweltbundesamt: Blattläuse – unbeliebte Gartenbesucher",
+  "url": "https://www.umweltbundesamt.de/print/42042"
+ },
+ "nabu_blattlaus": {
+  "titel": "NABU: Blattläuse giftfrei behandeln",
+  "url": "https://www.nabu.de/umwelt-und-ressourcen/oekologisch-leben/balkon-und-garten/pflege/giftfrei/behandeln/24785.html"
+ },
+ "plantura_erdfloh": {
+  "titel": "Plantura: Erdflöhe erkennen und bekämpfen",
+  "url": "https://www.plantura.garden/schaedlinge/erdfloehe/erdfloehe-bekaempfen"
+ },
+ "plantura_kohlweissling": {
+  "titel": "Plantura: Kohlweißling – Eier, Raupen, Schadbild, Nützlinge",
+  "url": "https://www.plantura.garden/schaedlinge/kohlweissling/kohlweissling-bekaempfen"
+ },
+ "gj_kohlweissling": {
+  "titel": "Gartenjournal: Kohlweißling – Großer und Kleiner, Schadzeit Juni/Juli",
+  "url": "https://www.gartenjournal.net/kohlweissling"
+ },
+ "lksh_ff": {
+  "titel": "Landwirtschaftskammer Schleswig-Holstein: Fruchtfolge im Garten (Kohlhernie, Anbaupausen)",
+  "url": "https://www.lksh.de/fileadmin/PDFs/Gartenbau/Fruchtfolge_im_Garten.pdf"
+ },
+ "dlr_kohlhernie": {
+  "titel": "DLR Rheinland-Pfalz: Infoblatt Kohlhernie (Schadbild, Kohlgallenrüssler, Dauersporen)",
+  "url": "https://www.biodiversitaet.dlr.rlp.de/Internet/global/themen.nsf/(Web_P_GA_XP_Kat)/3572306455884112C12571DF003BE053/$FILE/9)%20Neue%20InfoblätterKohlhernie.pdf"
+ },
+ "lksh_fliegen": {
+  "titel": "Landwirtschaftskammer Schleswig-Holstein: Gemüsefliegen (Flugzeit, Netz bis 1,6 mm)",
+  "url": "https://www.lksh.de/fileadmin/PDFs/Gartenbau/Gemuesefliegen.pdf"
+ },
+ "plantura_moehrenfliege": {
+  "titel": "Plantura: Möhrenfliege – Schadbild, frühe Sorten, Netz 1,35 mm",
+  "url": "https://www.plantura.garden/gemuese/karotten/moehrenfliege"
+ },
+ "lksh_braunfaeule": {
+  "titel": "Landwirtschaftskammer Schleswig-Holstein: Kraut- und Braunfäule (Schadbild)",
+  "url": "https://www.lksh.de/fileadmin/PDFs/Gartenbau/Kraut-und_Braunfaeule.pdf"
+ },
+ "sachsen_braunfaeule": {
+  "titel": "Sächsisches Landesamt (LfULG), Gartenakademie: Kraut- und Braunfäule der Tomate",
+  "url": "https://publikationen.sachsen.de/bdb/artikel/13800/documents/16041"
+ },
+ "hornbach_braunfaeule": {
+  "titel": "Hornbach: Braunfäule bei Tomaten – Unterschied zur Blütenendfäule",
+  "url": "https://www.hornbach.ch/projekte/braunfaeule-bei-tomaten-bekaempfen/"
+ },
+ "toom_mehltau": {
+  "titel": "toom Ratgeber: Echter und Falscher Mehltau erkennen",
+  "url": "https://toom.de/selbermachen/garten-freizeit/gartenpflege/nuetzlinge-schaedlinge/mehltau/"
+ },
+ "plantura_mehltau": {
+  "titel": "Plantura: Echter und Falscher Mehltau – Unterschiede",
+  "url": "https://www.plantura.garden/pflanzenkrankheiten/echter-und-falscher-mehltau"
+ },
+ "sachsen_mehltau": {
+  "titel": "Sächsisches Landesamt (LfULG), Gartenakademie: Mehltauerkrankungen an Gurken",
+  "url": "https://publikationen.sachsen.de/bdb/artikel/13865/documents/16193"
  },
  "ble": {
   "titel": "BLE/BZL: Saat- und Pflanzkalender, 2. Auflage 2024 (Abstände, Anzucht, Direktsaat, Pflanzung, Ernte)",
@@ -744,15 +836,29 @@ const PFLANZEN = [
   "anleitung": "Erst säen, wenn der Boden warm ist (ab Anfang Mai, besser nach den Eisheiligen). Gesät wird in Reihen oder in kleinen Gruppen (Horsten). Nach etwa zwei bis drei Monaten laufend ernten, solange die Hülsen zart sind.",
   "vorziehen": [],
   "pflanzen": [],
-  "hinweise": [],
+  "hinweise": [
+   "Späteste Aussaat: Die Bayerische Gartenakademie nennt den 10. Juli, Utopia Mitte Juli, Gartenjournal Ende Juli. In kühleren Lagen eher früh säen."
+  ],
   "quellen": [
    "ble",
    "sbb",
    "bingenheim",
    "bund",
    "psr",
+   "lwg_nachkultur",
+   "utopia_buschbohne",
+   "gj_buschbohne",
    "bzfe"
   ],
+  "folgesaat": {
+   "text": "Zwei Sätze lohnen sich: ein erster ab Mitte Mai und ein zweiter im Juli, oft auf einem Beet, auf dem schon geerntet ist. Der zweite Satz trägt dann bis in den Herbst.",
+   "wochen": null,
+   "satz2": [
+    6,
+    7
+   ],
+   "hinweis": "Späteste Aussaat: Die Bayerische Gartenakademie nennt den 10. Juli, Utopia Mitte Juli, Gartenjournal Ende Juli. In kühleren Lagen eher früh säen."
+  },
   "hoehe": [
    30,
    50
@@ -1094,8 +1200,17 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr",
+   "sperli_radieschen",
+   "stz_radieschen",
    "bzfe"
   ],
+  "folgesaat": {
+   "text": "Alle 2–3 Wochen eine kleine Menge nachsäen, dann gibt es von Frühjahr bis Herbst laufend frische Radieschen.",
+   "wochen": [
+    2,
+    3
+   ]
+  },
   "hoehe": [
    10,
    20
@@ -1506,8 +1621,16 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr",
+   "gj_salat",
    "bzfe"
   ],
+  "folgesaat": {
+   "text": "Alle 2–4 Wochen ein paar Pflanzen säen oder setzen – so werden nicht alle Köpfe gleichzeitig reif.",
+   "wochen": [
+    2,
+    4
+   ]
+  },
   "hoehe": [
    20,
    30
@@ -1578,8 +1701,16 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr",
+   "gj_salat",
    "bzfe"
   ],
+  "folgesaat": {
+   "text": "Alle 2–4 Wochen nachsäen, dann bleiben immer junge, zarte Blätter zum Pflücken.",
+   "wochen": [
+    2,
+    4
+   ]
+  },
   "hoehe": [
    20,
    40
@@ -1683,8 +1814,17 @@ const PFLANZEN = [
    "bingenheim",
    "bund",
    "psr",
+   "lwg_nachkultur",
    "bzfe"
   ],
+  "folgesaat": {
+   "text": "Zwei Sätze: einer im Frühjahr, ein zweiter ab August für die Ernte im Herbst – im Hochsommer schießt Spinat schnell.",
+   "wochen": null,
+   "satz2": [
+    8,
+    9
+   ]
+  },
   "hoehe": [
    20,
    30
@@ -2361,6 +2501,7 @@ const PFLANZEN = [
   "quellen": [
    "ble",
    "sbb",
+   "plantura_rucola",
    "bzfe"
   ],
   "anleitung": "Von April bis September in Reihen säen, am besten alle drei bis vier Wochen ein neuer Satz. Nach vier bis sechs Wochen die Blätter schneiden, sie wachsen nach. Im Hochsommer blüht Rucola schnell und wird scharf; Vlies und feuchter Boden halten Erdflöhe fern.",
@@ -2368,7 +2509,14 @@ const PFLANZEN = [
    "Keimfähigkeit: In den genutzten Quellen nicht angegeben."
   ],
   "vorziehen": [],
-  "pflanzen": []
+  "pflanzen": [],
+  "folgesaat": {
+   "text": "Rucola lässt sich nur zwei- bis dreimal schneiden, bevor er blüht – deshalb alle 3 Wochen eine neue Reihe säen.",
+   "wochen": [
+    3,
+    3
+   ]
+  }
  },
  {
   "id": "endivie",
@@ -4825,7 +4973,7 @@ const PFLANZEN = [
    "nabu_staerkung",
    "plantura_jauche"
   ],
-  "anleitung": "Meist wächst sie schon irgendwo – sonst ein Stück Wurzelstock im Frühjahr oder Herbst umsetzen. Am besten in eine Ecke mit Wurzelsperre, denn die Brennnessel wandert unterirdisch. Junge Triebspitzen sind ein Wildgemüse (wie Spinat). Für Jauche und Brühe vor der Blüte schneiden; ein Stück stehen lassen, weil viele Schmetterlingsraupen davon leben. Handschuhe tragen. Anleitungen: Wissen → Jauchen.",
+  "anleitung": "Meist wächst sie schon irgendwo – sonst ein Stück Wurzelstock im Frühjahr oder Herbst umsetzen. Am besten in eine Ecke mit Wurzelsperre, denn die Brennnessel wandert unterirdisch. Junge Triebspitzen sind ein Wildgemüse (wie Spinat). Für Jauche und Brühe vor der Blüte schneiden; ein Stück stehen lassen, weil viele Schmetterlingsraupen davon leben. Handschuhe tragen. Anleitungen: Wissen → Pflanzenschutz → Jauchen & Brühen.",
   "hinweise": [
    "„Ernten“ meint hier Blätter und Triebe – für Jauche nur Pflanzen ohne Blüten und Samen nehmen.",
    "Ausbreitung: Öko-Test rät zu einer Wurzelsperre, damit sie an ihrem Platz bleibt.",
@@ -4879,7 +5027,7 @@ const PFLANZEN = [
    "apotheken_beinwell",
    "nabu_staerkung"
   ],
-  "anleitung": "Als Jungpflanze im Frühjahr oder Herbst mit etwa 50 cm Abstand setzen. Die Blätter lassen sich mehrmals im Jahr abschneiden – für kaliumreiche Jauche (gut für Tomaten, Kartoffeln, Kürbis) oder als Mulch unter Starkzehrern. Bienen und Hummeln lieben die Glockenblüten. Anleitungen: Wissen → Jauchen.",
+  "anleitung": "Als Jungpflanze im Frühjahr oder Herbst mit etwa 50 cm Abstand setzen. Die Blätter lassen sich mehrmals im Jahr abschneiden – für kaliumreiche Jauche (gut für Tomaten, Kartoffeln, Kürbis) oder als Mulch unter Starkzehrern. Bienen und Hummeln lieben die Glockenblüten. Anleitungen: Wissen → Pflanzenschutz → Jauchen & Brühen.",
   "hinweise": [
    "Nicht essen und keinen Tee daraus machen: Beinwell enthält Pyrrolizidinalkaloide, die die Leber schädigen können (Apotheken Umschau, LfL Bayern).",
    "Standort gut wählen: Beinwell bildet eine kräftige, fleischige Pfahlwurzel (LfL Bayern) – umsetzen ist mühsam.",
