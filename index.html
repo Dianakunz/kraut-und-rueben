@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Kraut und Rüben · Version 0.11.2 -->
+<!-- Kraut und Rüben · Version 0.11.3 -->
 <html lang="de" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -596,7 +596,7 @@ table.mk-tabelle{border-collapse:separate;border-spacing:3px;font-size:.88rem}
   .be-plan{break-inside:avoid-page}
   .bericht .raster.zwei{display:block}
 }
-.be-kennz{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:4px 0 14px}
+.be-kennz{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:4px 0 14px}
 .be-kennz div{background:var(--karte2);border-radius:10px;padding:8px 12px}
 .be-kennz b{display:block;font-size:1.25rem}.be-kennz span{font-size:.82rem;color:var(--leise)}
 @media (max-width:600px){.be-kennz{grid-template-columns:repeat(2,1fr)}}
@@ -606,6 +606,11 @@ table.mk-tabelle{border-collapse:separate;border-spacing:3px;font-size:.88rem}
 .dia-achse{font-size:11px;fill:var(--leise)}
 .dia-wert{font-size:11px;fill:var(--text);font-weight:600}
 .dia-band{fill:var(--rot);fill-opacity:.55;stroke:none}
+.dia-band-linie{stroke:var(--rot);stroke-opacity:.7;stroke-width:3;stroke-linecap:round}
+.be-gleich{font-size:.9rem;font-weight:500}
+#be-art{display:inline-flex}
+.be-optionen select{width:auto;min-height:38px;border-radius:10px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit;padding:4px 8px}
+.be-optionen input[type=date]{min-height:34px;padding:3px 8px;border-radius:8px;border:1px solid var(--linie);background:var(--karte);color:var(--text);font:inherit}
 .dia-frost{stroke:var(--blau);stroke-width:1.5;stroke-dasharray:5 4}
 .dia-punkt{fill:var(--text);stroke:var(--karte);stroke-width:2}
 .dia-regen{fill:var(--blau)}
@@ -794,13 +799,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.11.2"></script>
+<script src="pflanzen.js?v=0.11.3"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.11.2";
+const APP_VERSION = "0.11.3";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -3402,46 +3407,112 @@ function rueckblickAktiv(jahr) {
   $$(".rb-monate button[data-m]").forEach(b => b.onclick = () => { CH.tag = `${jahr}-${String(b.dataset.m).padStart(2, "0")}-15`; zeichne(); });
 }
 
-/* ---------- Jahresbericht ---------- */
-const BERICHT = { zeiten: ["05-15", "07-15", "09-15"], eigen: "", teile: { plaene: true, ueberblick: true, wetter: true, verlauf: true, tagebuch: true } };
+/* ---------- Bericht: Jahr, Monat oder eigener Zeitraum (0.11.3) ---------- */
+const BERICHT = { art: "jahr", monat: new Date().getMonth() + 1, von: "", bis: "", zeiten: ["05-15", "07-15", "09-15"], anfang: true, ende: true, eigen: "",
+  teile: { plaene: true, ueberblick: true, wetter: true, verlauf: true, tagebuch: true } };
 const BERICHT_ZEITEN = [["04-15", "Mitte April"], ["05-15", "Mitte Mai"], ["06-15", "Mitte Juni"], ["07-15", "Mitte Juli"], ["08-15", "Mitte August"], ["09-15", "Mitte September"], ["10-15", "Mitte Oktober"]];
-const BERICHT_TEILE = [["plaene", "Gartenpläne"], ["ueberblick", "Überblick und Ernte"], ["wetter", "Wetter nach Monaten"], ["verlauf", "Was im Garten geschah"], ["tagebuch", "Tagebuch"]];
+const BERICHT_TEILE = [["plaene", "Gartenpläne"], ["ueberblick", "Überblick und Ernte"], ["wetter", "Wetter"], ["verlauf", "Was im Garten geschah"], ["tagebuch", "Tagebuch"]];
+const tageZwischen = (a, b) => Math.round((new Date(b + "T12:00") - new Date(a + "T12:00")) / 864e5);
+const isoPlus = (iso, n) => { const d = new Date(iso + "T12:00"); d.setDate(d.getDate() + n); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+const minIso = (a, b) => a < b ? a : b;
+const vorjahrIso = iso => (+iso.slice(0, 4) - 1) + iso.slice(4).replace("02-29", "02-28");
 
-function wetterMonate(jahr) {
-  const log = D.wetterLog || {}, m = [];
-  for (let i = 1; i <= 12; i++) {
-    const tage = Object.keys(log).filter(t => t.startsWith(`${jahr}-${String(i).padStart(2, "0")}-`)).map(t => log[t]);
-    if (!tage.length) continue;
-    m.push({ monat: i, tage: tage.length, min: Math.min(...tage.map(x => x.min)), max: Math.max(...tage.map(x => x.max)),
-      frost: tage.filter(x => x.min <= GRENZEN.frost).length, hitze: tage.filter(x => x.max >= GRENZEN.hitze).length, regen: tage.reduce((s, x) => s + (x.regen || 0), 0) });
+function berichtZeitraum(jahr) {
+  const heute = heuteISO();
+  if (BERICHT.art === "monat") {
+    const m = String(BERICHT.monat).padStart(2, "0"), letzter = new Date(jahr, BERICHT.monat, 0).getDate();
+    return { von: `${jahr}-${m}-01`, bis: minIso(`${jahr}-${m}-${letzter}`, heute), titel: `${MONATE[BERICHT.monat - 1]} ${jahr}` };
   }
-  return m;
+  if (BERICHT.art === "zeitraum") {
+    if (!BERICHT.von) BERICHT.von = heute.slice(0, 8) + "01";
+    if (!BERICHT.bis) BERICHT.bis = heute;
+    let von = minIso(BERICHT.von, heute), bis = minIso(BERICHT.bis, heute);
+    if (von > bis) [von, bis] = [bis, von];
+    return { von, bis, titel: `${datumKurz(von)} – ${datumKurz(bis)}` };
+  }
+  return { von: `${jahr}-01-01`, bis: minIso(`${jahr}-12-31`, heute), titel: `${jahr}` };
 }
+const imZeitraum = (d, z) => d && d >= z.von && d <= z.bis;
+
+function berichtPlanTage(jahr, z) {
+  let t = BERICHT.art === "jahr" ? BERICHT.zeiten.map(x => `${jahr}-${x}`) : [BERICHT.anfang ? z.von : null, BERICHT.ende ? z.bis : null];
+  if (BERICHT.eigen && imZeitraum(BERICHT.eigen, z)) t.push(BERICHT.eigen);
+  t = [...new Set(t.filter(x => x && imZeitraum(x, z)))].sort();
+  // gleiche Bepflanzung an aufeinanderfolgenden Tagen nur einmal zeigen
+  const gruppen = [];
+  for (const tag of t) {
+    const k = standAm(tag).map(p => p.id).sort().join(",");
+    const g = gruppen[gruppen.length - 1];
+    if (g && g.k === k) g.bis = tag; else gruppen.push({ k, von: tag, bis: tag });
+  }
+  return gruppen;
+}
+
+function ernteZeitraum(von, bis) {
+  const s = new Map();
+  for (const p of echte()) for (const e of p.ernten || []) {
+    if (!e.datum || e.datum < von || e.datum > bis) continue;
+    const x = s.get(p.pflanze) || { mengen: {}, anzahl: 0, ohne: 0 };
+    x.anzahl++; if (e.menge) x.mengen[e.einheit] = (x.mengen[e.einheit] || 0) + e.menge; else x.ohne++;
+    s.set(p.pflanze, x);
+  }
+  return s;
+}
+function ueberblickHTML(z) {
+  const vz = { von: vorjahrIso(z.von), bis: vorjahrIso(z.bis) };
+  const ernte = ernteZeitraum(z.von, z.bis), vor = ernteZeitraum(vz.von, vz.bis);
+  const gesetzt = echte().filter(p => imZeitraum(p.gepflanzt, z)), arten = new Set(gesetzt.map(p => p.pflanze));
+  const zeilen = [...ernte.entries()].sort((a, b) => (pflanzeVon(a[0])?.name || "").localeCompare(pflanzeVon(b[0])?.name || "", "de"));
+  const vorName = BERICHT.art === "jahr" ? String(+z.von.slice(0, 4) - 1) : "Vorjahr";
+  return `<div class="raster zwei be-ueberblick">
+    <div class="karte"><h2>${icon("i-garten")} Überblick</h2><div class="steckbrief">
+      <div class="sb-l">Gepflanzt oder gesät</div><div class="sb-w">${gesetzt.length}${gesetzt.length ? ` (${arten.size} verschiedene Pflanzen)` : ""}</div>
+      <div class="sb-l">Ernten eingetragen</div><div class="sb-w">${[...ernte.values()].reduce((s, x) => s + x.anzahl, 0)}</div>
+      <div class="sb-l">Abgeräumt</div><div class="sb-w">${echte().filter(p => imZeitraum(p.abgeraeumt, z)).length}</div>
+      <div class="sb-l">Tagebuch-Einträge</div><div class="sb-w">${(D.tagebuch || []).filter(t => imZeitraum(t.datum, z)).length}</div>
+    </div></div>
+    <div class="karte"><h2>${icon("i-ernte")} Ernte</h2>
+      ${zeilen.length ? `<table class="tabelle"><thead><tr><th>Pflanze</th><th>Menge</th><th>Ernten</th><th title="gleicher Zeitraum im Vorjahr">${vorName}</th></tr></thead><tbody>
+        ${zeilen.map(([id, x]) => { const v = vor.get(id); return `<tr><td>${esc(pflanzeVon(id)?.name || "?")}</td><td>${mengenText(x.mengen) || "–"}${x.ohne ? ` <span class="leise klein">(+${x.ohne}× ohne Menge)</span>` : ""}</td><td>${x.anzahl}</td><td class="leise">${v ? mengenText(v.mengen) || v.anzahl + "×" : "–"}</td></tr>`; }).join("")}
+      </tbody></table>` : `<p class="leise klein" style="margin:0">In diesem Zeitraum sind keine Ernten eingetragen.</p>`}
+    </div></div>`;
+}
+
 function berichtHTML(jahr) {
-  const heute = heuteISO(), T = BERICHT.teile;
-  const tage = [...new Set([...BERICHT.zeiten.map(z => `${jahr}-${z}`), ...(BERICHT.eigen && BERICHT.eigen.startsWith(jahr + "-") ? [BERICHT.eigen] : [])])].filter(t => t <= heute).sort();
-  const ort = D.einstellungen.standort;
-  const ev = chronikEreignisse(jahr).sort((a, b) => a.datum.localeCompare(b.datum));
+  const heute = heuteISO(), T = BERICHT.teile, z = berichtZeitraum(jahr), ort = D.einstellungen.standort;
+  const jahre = []; for (let y = +z.von.slice(0, 4); y <= +z.bis.slice(0, 4); y++) jahre.push(y);
+  const ev = jahre.flatMap(y => chronikEreignisse(y)).filter(e => imZeitraum(e.datum, z)).sort((a, b) => a.datum.localeCompare(b.datum));
   const garten = ev.filter(e => e.typ !== "tagebuch"), tb = ev.filter(e => e.typ === "tagebuch");
-  const wm = wetterMonate(jahr);
+  const moeglMonate = MONATE.map((m, i) => [i + 1, m]).filter(([i]) => `${jahr}-${String(i).padStart(2, "0")}-01` <= heute);
   let h = `<div class="karte nicht-drucken be-optionen">
-      <h2>${icon("i-drucken")} Jahresbericht ${jahr} zusammenstellen</h2>
-      <div class="nb-gruppe"><div class="nb-titel">Gartenplan zeigen am</div>
-        <div class="be-checks">${BERICHT_ZEITEN.map(([z, n]) => `<label class="schalter-klein"><input type="checkbox" data-zeit="${z}" ${BERICHT.zeiten.includes(z) ? "checked" : ""} ${`${jahr}-${z}` > heute ? "disabled" : ""}> ${n}</label>`).join("")}
-        <label class="schalter-klein">eigenes Datum: <input type="date" id="be-eigen" min="${jahr}-01-01" max="${jahr === +heute.slice(0, 4) ? heute : jahr + "-12-31"}" value="${BERICHT.eigen.startsWith(jahr + "-") ? BERICHT.eigen : ""}"></label></div></div>
+      <h2>${icon("i-liste")} Bericht zusammenstellen</h2>
+      <div class="nb-gruppe"><div class="nb-titel">Zeitraum</div>
+        <div class="be-checks">
+          <div class="umschalter" id="be-art">${[["jahr", "Ganzes Jahr"], ["monat", "Monat"], ["zeitraum", "Eigener Zeitraum"]].map(([k, n]) => `<button data-art="${k}" class="${BERICHT.art === k ? "an" : ""}">${n}</button>`).join("")}</div>
+          ${BERICHT.art === "monat" ? `<select id="be-monat">${moeglMonate.map(([i, m]) => `<option value="${i}" ${BERICHT.monat === i ? "selected" : ""}>${m} ${jahr}</option>`).join("")}</select>` : ""}
+          ${BERICHT.art === "zeitraum" ? `<label class="schalter-klein">von <input type="date" id="be-von" max="${heute}" value="${z.von}"></label><label class="schalter-klein">bis <input type="date" id="be-bis" max="${heute}" value="${z.bis}"></label>` : ""}
+          ${BERICHT.art === "jahr" ? `<span class="klein leise">Jahr oben links wählen</span>` : ""}
+        </div></div>
+      ${T.plaene ? `<div class="nb-gruppe"><div class="nb-titel">Gartenplan zeigen am</div><div class="be-checks">
+        ${BERICHT.art === "jahr"
+          ? BERICHT_ZEITEN.map(([x, n]) => `<label class="schalter-klein"><input type="checkbox" data-zeit="${x}" ${BERICHT.zeiten.includes(x) ? "checked" : ""} ${`${jahr}-${x}` > heute ? "disabled" : ""}> ${n}</label>`).join("")
+          : `<label class="schalter-klein"><input type="checkbox" id="be-anfang" ${BERICHT.anfang ? "checked" : ""}> Beginn (${datumKurz(z.von)})</label><label class="schalter-klein"><input type="checkbox" id="be-ende" ${BERICHT.ende ? "checked" : ""}> Ende (${datumKurz(z.bis)})</label>`}
+        <label class="schalter-klein">eigenes Datum: <input type="date" id="be-eigen" min="${z.von}" max="${z.bis}" value="${imZeitraum(BERICHT.eigen, z) ? BERICHT.eigen : ""}"></label></div>
+        <p class="klein leise" style="margin:2px 0 0">Ist die Bepflanzung an zwei gewählten Tagen gleich, erscheint der Plan nur einmal.</p></div>` : ""}
       <div class="nb-gruppe"><div class="nb-titel">Abschnitte</div>
         <div class="be-checks">${BERICHT_TEILE.map(([k, n]) => `<label class="schalter-klein"><input type="checkbox" data-teil="${k}" ${T[k] ? "checked" : ""}> ${n}</label>`).join("")}</div></div>
-      <button class="knopf haupt" id="be-drucken">${icon("i-drucken")} Bericht drucken oder als PDF speichern</button>
+      <p class="klein leise" style="margin:6px 0 0">Zum Drucken oder Speichern als PDF oben auf ${icon("i-drucken")} „Drucken“ tippen – gedruckt wird nur der Bericht, ohne diese Auswahl.</p>
     </div>
     <div class="bericht">
-    <div class="be-kopf"><h1>Gartenbericht ${jahr}</h1><p class="leise">${ort && ort.name ? esc(ort.name) + " · " : ""}erstellt am ${datumKurz(heute)} mit Kraut und Rüben</p></div>`;
+    <div class="be-kopf"><h1>Gartenbericht ${esc(z.titel)}</h1><p class="leise">${ort && ort.name ? esc(ort.name) + " · " : ""}erstellt am ${datumKurz(heute)} mit Kraut und Rüben</p></div>`;
   if (T.plaene) {
+    const gr = berichtPlanTage(jahr, z);
     if (!D.garten.objekte.length) h += `<div class="karte"><p class="leise" style="margin:0">Noch kein Gartenplan angelegt.</p></div>`;
-    else if (!tage.length) h += `<div class="karte nicht-drucken"><p class="leise" style="margin:0">Kein Zeitpunkt für den Gartenplan gewählt.</p></div>`;
-    else h += tage.map(t => `<div class="karte be-plan"><h2>${icon("i-garten")} Garten am ${datumText(new Date(t + "T12:00"))}</h2>${planBild(t)}${standListeHTML(t)}</div>`).join("");
+    else if (!gr.length) h += `<div class="karte nicht-drucken"><p class="leise" style="margin:0">Kein Zeitpunkt für den Gartenplan gewählt.</p></div>`;
+    else h += gr.map(g => `<div class="karte be-plan"><h2>${icon("i-garten")} Garten am ${datumText(new Date(g.von + "T12:00"))}${g.bis !== g.von ? ` <span class="leise be-gleich">– am ${datumKurz(g.bis)} noch genauso</span>` : ""}</h2>${planBild(g.von)}${standListeHTML(g.von)}</div>`).join("");
   }
-  if (T.ueberblick) h += auswertungHTML(jahr);
-  if (T.wetter) h += `<div class="karte be-wetter" id="be-wetter"><h2>${icon("i-w-teils")} Wetter ${jahr}</h2><p class="leise klein">Wetterdaten werden geladen …</p></div>`;
+  if (T.ueberblick) h += ueberblickHTML(z);
+  if (T.wetter) h += `<div class="karte be-wetter" id="be-wetter"><h2>${icon("i-w-teils")} Wetter</h2><p class="leise klein">Wetterdaten werden geladen …</p></div>`;
   if (T.verlauf) h += `<div class="karte be-liste"><h2>${icon("i-liste")} Was im Garten geschah</h2>
     ${garten.length ? `<table class="tabelle"><tbody>${garten.map(e => `<tr><td class="be-datum">${datumKurz(e.datum)}</td><td>${esc(e.text)}${e.zusatz ? ` <span class="leise klein">${esc(e.zusatz)}</span>` : ""}</td></tr>`).join("")}</tbody></table>` : `<p class="leise klein" style="margin:0">Keine Einträge.</p>`}</div>`;
   if (T.tagebuch) h += `<div class="karte be-liste"><h2>${icon("i-notiz")} Tagebuch</h2>
@@ -3449,45 +3520,58 @@ function berichtHTML(jahr) {
   return h + `</div>`;
 }
 function berichtAktiv(jahr) {
+  $$("#be-art button").forEach(b => b.onclick = () => { BERICHT.art = b.dataset.art; if (BERICHT.art === "monat" && `${jahr}-${String(BERICHT.monat).padStart(2, "0")}-01` > heuteISO()) BERICHT.monat = new Date().getMonth() + 1; chronikZeichnen(); });
+  const m = $("#be-monat"); if (m) m.onchange = () => { BERICHT.monat = +m.value; chronikZeichnen(); };
+  const v = $("#be-von"), bi = $("#be-bis");
+  if (v) v.onchange = () => { if (v.value) { BERICHT.von = v.value; chronikZeichnen(); } };
+  if (bi) bi.onchange = () => { if (bi.value) { BERICHT.bis = bi.value; chronikZeichnen(); } };
   $$("[data-zeit]").forEach(c => c.onchange = () => { BERICHT.zeiten = $$("[data-zeit]").filter(x => x.checked).map(x => x.dataset.zeit); chronikZeichnen(); });
+  const a = $("#be-anfang"), e = $("#be-ende");
+  if (a) a.onchange = () => { BERICHT.anfang = a.checked; chronikZeichnen(); };
+  if (e) e.onchange = () => { BERICHT.ende = e.checked; chronikZeichnen(); };
   $$("[data-teil]").forEach(c => c.onchange = () => { BERICHT.teile[c.dataset.teil] = c.checked; chronikZeichnen(); });
-  const e = $("#be-eigen"); if (e) e.onchange = () => { BERICHT.eigen = e.value || ""; chronikZeichnen(); };
-  const d = $("#be-drucken"); if (d) d.onclick = () => window.print();
-  if (BERICHT.teile.wetter) wetterBerichtLaden(jahr);
+  const ei = $("#be-eigen"); if (ei) ei.onchange = () => { BERICHT.eigen = ei.value || ""; chronikZeichnen(); };
+  if (BERICHT.teile.wetter) wetterBerichtLaden(berichtZeitraum(jahr));
 }
 
-/* ---------- Wetter im Jahresbericht: Archiv von Open-Meteo + Diagramme ---------- */
+/* ---------- Wetter im Bericht: Archiv von Open-Meteo + Diagramme ---------- */
 const ARCHIV = {};
-async function archivWetter(jahr) {
+async function archivWetter(von, bis) {
   const ort = D.einstellungen.standort; if (!ort) return null;
-  const heute = heuteISO(), gestern = isoAusTag(+heute.slice(0, 4), tagImJahr(heute) - 1);
-  const ende = jahr === +heute.slice(0, 4) ? gestern : `${jahr}-12-31`;
-  if (ende < `${jahr}-01-01`) return [];
-  const key = `${jahr}|${ort.lat}|${ort.lon}|${ende}`; if (ARCHIV[key]) return ARCHIV[key];
-  const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${ort.lat}&longitude=${ort.lon}&start_date=${jahr}-01-01&end_date=${ende}` +
-    `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,sunshine_duration&timezone=auto`;
-  const r = await fetch(url); if (!r.ok) throw new Error("Server antwortet mit " + r.status);
-  const d = (await r.json()).daily, log = D.wetterLog || {};
-  const tage = d.time.map((t, i) => ({ datum: t, max: d.temperature_2m_max[i], min: d.temperature_2m_min[i], regen: d.precipitation_sum[i], sonne: d.sunshine_duration[i] == null ? null : d.sunshine_duration[i] / 3600 }));
-  for (const x of tage) if (x.max == null && log[x.datum]) Object.assign(x, { max: log[x.datum].max, min: log[x.datum].min, regen: log[x.datum].regen, ausApp: true });
-  return (ARCHIV[key] = tage.filter(x => x.max != null && x.min != null));
-}
-function wetterMonateAus(tage) {
-  const m = [];
-  for (let i = 1; i <= 12; i++) {
-    const t = tage.filter(x => +x.datum.slice(5, 7) === i); if (!t.length) continue;
-    const s = t.filter(x => x.sonne != null);
-    m.push({ monat: i, tage: t.length, min: Math.min(...t.map(x => x.min)), max: Math.max(...t.map(x => x.max)), frost: t.filter(x => x.min <= GRENZEN.frost).length,
-      hitze: t.filter(x => x.max >= GRENZEN.hitze).length, regen: t.reduce((a, x) => a + (x.regen || 0), 0), sonne: s.length ? s.reduce((a, x) => a + x.sonne, 0) : null });
+  const ende = minIso(bis, isoPlus(heuteISO(), -1));
+  if (ende < von) return logTage(von, bis);
+  const key = `${von}|${ende}|${ort.lat}|${ort.lon}`;
+  if (!ARCHIV[key]) {
+    const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${ort.lat}&longitude=${ort.lon}&start_date=${von}&end_date=${ende}` +
+      `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,sunshine_duration&timezone=auto`;
+    const r = await fetch(url); if (!r.ok) throw new Error("Server antwortet mit " + r.status);
+    const d = (await r.json()).daily;
+    ARCHIV[key] = d.time.map((t, i) => ({ datum: t, max: d.temperature_2m_max[i], min: d.temperature_2m_min[i], regen: d.precipitation_sum[i], sonne: d.sunshine_duration[i] == null ? null : d.sunshine_duration[i] / 3600 }));
   }
-  return m;
+  const log = D.wetterLog || {}, tage = ARCHIV[key].map(x => ({ ...x }));
+  for (const x of tage) if (x.max == null && log[x.datum]) Object.assign(x, { max: log[x.datum].max, min: log[x.datum].min, regen: log[x.datum].regen, ausApp: true });
+  const da = new Set(tage.map(x => x.datum));
+  for (const t of Object.keys(log)) if (t >= von && t <= bis && !da.has(t)) tage.push({ datum: t, ...log[t], sonne: null, ausApp: true });
+  return tage.filter(x => x.max != null && x.min != null).sort((a, b) => a.datum.localeCompare(b.datum));
+}
+function logTage(von, bis) { const log = D.wetterLog || {}; return Object.keys(log).filter(t => t >= von && t <= bis).sort().map(t => ({ datum: t, ...log[t], sonne: null, ausApp: true })); }
+function wetterMonateAus(tage) {
+  const m = new Map();
+  for (const x of tage) { const k = x.datum.slice(0, 7); if (!m.has(k)) m.set(k, []); m.get(k).push(x); }
+  return [...m.entries()].map(([k, t]) => { const s = t.filter(x => x.sonne != null);
+    return { monat: +k.slice(5), jahr: +k.slice(0, 4), tage: t.length, min: Math.min(...t.map(x => x.min)), max: Math.max(...t.map(x => x.max)), frost: t.filter(x => x.min <= GRENZEN.frost).length,
+      hitze: t.filter(x => x.max >= GRENZEN.hitze).length, regen: t.reduce((a, x) => a + (x.regen || 0), 0), sonne: s.length ? s.reduce((a, x) => a + x.sonne, 0) : null }; });
 }
 const DIA = { b: 900, l: 44, r: 12, o: 14, u: 26 };
-function diaMonate(h, xVon) {
-  let g = "";
-  for (let i = 0; i < 12; i++) {
-    const x = xVon(tagImJahr(`2001-${String(i + 1).padStart(2, "0")}-01`));
-    g += `<line class="dia-gitter" x1="${x}" y1="${DIA.o}" x2="${x}" y2="${h - DIA.u}"/><text class="dia-achse" x="${x + 4}" y="${h - 8}">${MONATE[i].slice(0, 3)}</text>`;
+function diaAchseX(h, z, xVon) {
+  const n = tageZwischen(z.von, z.bis) + 1; let g = "";
+  if (n <= 62) {
+    for (let i = 0; i < n; i += n <= 14 ? 1 : 7) { const t = isoPlus(z.von, i), x = xVon(i);
+      g += `<line class="dia-gitter" x1="${x}" y1="${DIA.o}" x2="${x}" y2="${h - DIA.u}"/><text class="dia-achse" x="${x + 3}" y="${h - 8}">${+t.slice(8)}.${+t.slice(5, 7)}.</text>`; }
+  } else {
+    for (let i = 0; i < n; i++) { const t = isoPlus(z.von, i); if (t.slice(8) !== "01" && i) continue;
+      const x = xVon(i), mo = +t.slice(5, 7);
+      g += `<line class="dia-gitter" x1="${x}" y1="${DIA.o}" x2="${x}" y2="${h - DIA.u}"/><text class="dia-achse" x="${x + 4}" y="${h - 8}">${MONATE[mo - 1].slice(0, 3)}${mo === 1 && i ? " " + t.slice(2, 4) : ""}</text>`; }
   }
   return g;
 }
@@ -3497,65 +3581,68 @@ function diaSkala(lo, hi, schritt, yVon, einheit) {
     g += `<line class="dia-gitter" x1="${DIA.l}" y1="${yVon(v)}" x2="${DIA.b - DIA.r}" y2="${yVon(v)}"/><text class="dia-achse" x="${DIA.l - 6}" y="${yVon(v) + 4}" text-anchor="end">${v}${einheit}</text>`;
   return g;
 }
-function tempDiagramm(tage, jahr) {
-  const h = 230, n = tagImJahr(`${jahr}-12-31`) + 1, w = (DIA.b - DIA.l - DIA.r) / n;
-  const xVon = t => DIA.l + t * w;
+function tempDiagramm(tage, z) {
+  const h = 230, n = tageZwischen(z.von, z.bis) + 1, w = (DIA.b - DIA.l - DIA.r) / n;
+  const xVon = t => DIA.l + t * w, ti = x => tageZwischen(z.von, x.datum);
   const lo = Math.min(-5, Math.floor(Math.min(...tage.map(x => x.min)) / 5) * 5), hi = Math.max(25, Math.ceil(Math.max(...tage.map(x => x.max)) / 5) * 5);
   const yVon = v => DIA.o + (hi - v) / (hi - lo) * (h - DIA.o - DIA.u);
-  // Band in zusammenhängenden Stücken (Lücken nicht überbrücken)
   const stuecke = []; let akt = [];
-  tage.forEach((x, i) => { if (i && tagImJahr(x.datum) - tagImJahr(tage[i - 1].datum) > 1) { stuecke.push(akt); akt = []; } akt.push(x); });
+  tage.forEach((x, i) => { if (i && ti(x) - ti(tage[i - 1]) > 1) { stuecke.push(akt); akt = []; } akt.push(x); });
   if (akt.length) stuecke.push(akt);
-  const band = stuecke.map(s => { const m = x => xVon(tagImJahr(x.datum) + 0.5);
-    return `<path class="dia-band" d="M${s.map(x => `${m(x).toFixed(1)},${yVon(x.max).toFixed(1)}`).join("L")}L${[...s].reverse().map(x => `${m(x).toFixed(1)},${yVon(x.min).toFixed(1)}`).join("L")}Z"/>`; }).join("");
-  const treffer = tage.map(x => `<rect class="dia-treffer" x="${xVon(tagImJahr(x.datum)).toFixed(1)}" y="${DIA.o}" width="${w.toFixed(2)}" height="${h - DIA.o - DIA.u}"><title>${datumKurz(x.datum)}: ${zahl(x.min, 1)} bis ${zahl(x.max, 1)} °C</title></rect>`).join("");
+  const m = x => xVon(ti(x) + 0.5);
+  const band = stuecke.map(s => s.length === 1
+    ? `<line class="dia-band-linie" x1="${m(s[0])}" y1="${yVon(s[0].max)}" x2="${m(s[0])}" y2="${yVon(s[0].min)}"/>`
+    : `<path class="dia-band" d="M${s.map(x => `${m(x).toFixed(1)},${yVon(x.max).toFixed(1)}`).join("L")}L${[...s].reverse().map(x => `${m(x).toFixed(1)},${yVon(x.min).toFixed(1)}`).join("L")}Z"/>`).join("");
+  const treffer = tage.map(x => `<rect class="dia-treffer" x="${xVon(ti(x)).toFixed(1)}" y="${DIA.o}" width="${w.toFixed(2)}" height="${h - DIA.o - DIA.u}"><title>${datumKurz(x.datum)}: ${zahl(x.min, 1)} bis ${zahl(x.max, 1)} °C</title></rect>`).join("");
   const kalt = tage.reduce((a, x) => x.min < a.min ? x : a), warm = tage.reduce((a, x) => x.max > a.max ? x : a);
-  return `<svg class="dia" viewBox="0 0 ${DIA.b} ${h}" role="img" aria-label="Temperatur ${jahr}: Tiefst- und Höchstwerte pro Tag">
-    ${diaSkala(lo, hi, 10, yVon, "°")}${diaMonate(h, xVon)}
+  const anker = x => m(x) > DIA.b - 80 ? "end" : m(x) < DIA.l + 40 ? "start" : "middle";
+  return `<svg class="dia" viewBox="0 0 ${DIA.b} ${h}" role="img" aria-label="Temperatur: Tiefst- und Höchstwerte pro Tag">
+    ${diaSkala(lo, hi, 10, yVon, "°")}${diaAchseX(h, z, xVon)}
     <line class="dia-frost" x1="${DIA.l}" y1="${yVon(0)}" x2="${DIA.b - DIA.r}" y2="${yVon(0)}"/><text class="dia-wert" x="${DIA.b - DIA.r - 4}" y="${yVon(0) - 5}" text-anchor="end">Frost (0 °C)</text>
     ${band}
-    <circle class="dia-punkt" cx="${xVon(tagImJahr(warm.datum) + 0.5)}" cy="${yVon(warm.max)}" r="4"/><text class="dia-wert" x="${xVon(tagImJahr(warm.datum) + 0.5)}" y="${yVon(warm.max) - 8}" text-anchor="middle">${zahl(warm.max, 0)} °C</text>
-    <circle class="dia-punkt" cx="${xVon(tagImJahr(kalt.datum) + 0.5)}" cy="${yVon(kalt.min)}" r="4"/><text class="dia-wert" x="${xVon(tagImJahr(kalt.datum) + 0.5) + 8}" y="${yVon(kalt.min) + 4}">${zahl(kalt.min, 1)} °C</text>
+    <circle class="dia-punkt" cx="${m(warm)}" cy="${yVon(warm.max)}" r="4"/><text class="dia-wert" x="${m(warm)}" y="${yVon(warm.max) - 8}" text-anchor="${anker(warm)}">${zahl(warm.max, 0)} °C</text>
+    <circle class="dia-punkt" cx="${m(kalt)}" cy="${yVon(kalt.min)}" r="4"/><text class="dia-wert" x="${m(kalt)}" y="${yVon(kalt.min) + 16}" text-anchor="${anker(kalt)}">${zahl(kalt.min, 1)} °C</text>
     ${treffer}</svg>`;
 }
-function wochenDiagramm(tage, jahr, feld, klasse, einheit, titel) {
-  const h = 170, wochen = [];
-  for (const x of tage) { if (x[feld] == null) continue; const k = Math.floor(tagImJahr(x.datum) / 7); (wochen[k] = wochen[k] || { k, summe: 0, tage: 0, von: x.datum, bis: x.datum }); wochen[k].summe += x[feld]; wochen[k].tage++; wochen[k].bis = x.datum; }
-  const liste = wochen.filter(Boolean); if (!liste.length) return "";
-  const n = tagImJahr(`${jahr}-12-31`) + 1, w = (DIA.b - DIA.l - DIA.r) / n, xVon = t => DIA.l + t * w;
-  const maxW = Math.max(...liste.map(x => x.summe)), schritt = maxW > 60 ? 20 : maxW > 30 ? 10 : 5, hi = Math.max(schritt, Math.ceil(maxW / schritt) * schritt);
+function balkenDiagramm(tage, z, feld, klasse, einheit, titel) {
+  const h = 170, n = tageZwischen(z.von, z.bis) + 1, block = n <= 62 ? 1 : 7, gruppen = [];
+  for (const x of tage) { if (x[feld] == null) continue; const k = Math.floor(tageZwischen(z.von, x.datum) / block);
+    (gruppen[k] = gruppen[k] || { k, summe: 0, tage: 0, von: x.datum, bis: x.datum }); gruppen[k].summe += x[feld]; gruppen[k].tage++; gruppen[k].bis = x.datum; }
+  const liste = gruppen.filter(Boolean); if (!liste.length) return `<p class="leise klein">Keine Werte.</p>`;
+  const w = (DIA.b - DIA.l - DIA.r) / n, xVon = t => DIA.l + t * w;
+  const maxW = Math.max(...liste.map(x => x.summe), 0.1), schritt = maxW > 60 ? 20 : maxW > 30 ? 10 : maxW > 10 ? 5 : maxW > 4 ? 2 : 1, hi = Math.max(schritt, Math.ceil(maxW / schritt) * schritt);
   const yVon = v => DIA.o + (hi - v) / hi * (h - DIA.o - DIA.u), spitze = liste.reduce((a, x) => x.summe > a.summe ? x : a);
-  const balken = liste.map(x => { const x0 = xVon(x.k * 7) + 1, bw = Math.max(7 * w - 2, 1), y = yVon(x.summe), hb = yVon(0) - y, r = Math.min(3, hb / 2, bw / 2);
-    return `<path class="${klasse}" d="M${x0},${yVon(0)}V${y + r}Q${x0},${y} ${x0 + r},${y}H${x0 + bw - r}Q${x0 + bw},${y} ${x0 + bw},${y + r}V${yVon(0)}Z"><title>${datumKurz(x.von)}–${datumKurz(x.bis)}: ${zahl(x.summe, 0)} ${einheit}${x.tage < 7 ? ` (${x.tage} Tage)` : ""}</title></path>`; }).join("");
+  const balken = liste.map(x => { const bw = Math.max(block * w - 2, 1), x0 = xVon(x.k * block) + 1, y = yVon(x.summe), hb = yVon(0) - y, r = Math.max(0, Math.min(3, hb / 2, bw / 2));
+    return `<path class="${klasse}" d="M${x0},${yVon(0)}V${y + r}Q${x0},${y} ${x0 + r},${y}H${x0 + bw - r}Q${x0 + bw},${y} ${x0 + bw},${y + r}V${yVon(0)}Z"><title>${block === 1 ? datumKurz(x.von) : `${datumKurz(x.von)}–${datumKurz(x.bis)}`}: ${zahl(x.summe, x.summe < 10 ? 1 : 0)} ${einheit}${block > 1 && x.tage < 7 ? ` (${x.tage} Tage)` : ""}</title></path>`; }).join("");
+  const sx = xVon(spitze.k * block + block / 2);
   return `<svg class="dia" viewBox="0 0 ${DIA.b} ${h}" role="img" aria-label="${esc(titel)}">
-    ${diaSkala(0, hi, schritt, yVon, "")}${diaMonate(h, xVon)}${balken}
-    <text class="dia-wert" x="${xVon(spitze.k * 7 + 3.5)}" y="${yVon(spitze.summe) - 6}" text-anchor="middle">${zahl(spitze.summe, 0)} ${einheit}</text></svg>`;
+    ${diaSkala(0, hi, schritt, yVon, "")}${diaAchseX(h, z, xVon)}${balken}
+    <text class="dia-wert" x="${sx}" y="${yVon(spitze.summe) - 6}" text-anchor="${sx > DIA.b - 60 ? "end" : "middle"}">${zahl(spitze.summe, spitze.summe < 10 ? 1 : 0)} ${einheit}</text></svg>`;
 }
-function wetterBerichtHTML(jahr, tage, fehler) {
-  if (!tage || !tage.length) {
-    const wm = wetterMonate(jahr);
-    return `<h2>${icon("i-w-teils")} Wetter ${jahr}</h2>
-      <p class="klein leise">${!D.einstellungen.standort ? "Für Diagramme und Sonnenstunden fehlt der Standort (Zahnrad → Standort)." : fehler ? `Die Wetterdaten von Open-Meteo konnten nicht geladen werden (${esc(fehler)}). Angezeigt wird, was die App selbst aufgezeichnet hat.` : "Für dieses Jahr gibt es keine Wetterdaten."}</p>
-      ${wm.length ? `<table class="tabelle"><thead><tr><th>Monat</th><th>Tiefstwert</th><th>Höchstwert</th><th>Frostnächte</th><th>Hitzetage</th><th>Regen</th></tr></thead><tbody>${wm.map(m => `<tr><td>${MONATE[m.monat - 1]}</td><td>${zahl(m.min, 1)} °C</td><td>${zahl(m.max, 0)} °C</td><td>${m.frost}</td><td>${m.hitze}</td><td>${zahl(m.regen, 0)} mm</td></tr>`).join("")}</tbody></table>` : ""}`;
-  }
-  const wm = wetterMonateAus(tage), sumR = tage.reduce((a, x) => a + (x.regen || 0), 0), sumS = tage.reduce((a, x) => a + (x.sonne || 0), 0);
-  const ausApp = tage.filter(x => x.ausApp).length;
-  return `<h2>${icon("i-w-teils")} Wetter ${jahr}</h2>
-    <div class="be-kennz"><div><b>${tage.filter(x => x.min <= GRENZEN.frost).length}</b><span>Frostnächte</span></div><div><b>${tage.filter(x => x.max >= GRENZEN.hitze).length}</b><span>Hitzetage</span></div>
-      <div><b>${zahl(sumR, 0)} mm</b><span>Regen</span></div><div><b>${zahl(sumS, 0)} h</b><span>Sonnenstunden</span></div></div>
-    <h3 class="dia-titel">Temperatur pro Tag (Tiefst- bis Höchstwert)</h3>${tempDiagramm(tage, jahr)}
-    <h3 class="dia-titel">Regen pro Woche (mm)</h3>${wochenDiagramm(tage, jahr, "regen", "dia-regen", "mm", `Regen pro Woche ${jahr}`)}
-    <h3 class="dia-titel">Sonnenstunden pro Woche</h3>${wochenDiagramm(tage, jahr, "sonne", "dia-sonne", "h", `Sonnenstunden pro Woche ${jahr}`)}
-    <table class="tabelle be-wtab"><thead><tr><th>Monat</th><th>Tiefstwert</th><th>Höchstwert</th><th>Frostnächte</th><th>Hitzetage</th><th>Regen</th><th>Sonne</th></tr></thead><tbody>
-      ${wm.map(m => `<tr><td>${MONATE[m.monat - 1]}</td><td>${zahl(m.min, 1)} °C</td><td>${zahl(m.max, 0)} °C</td><td>${m.frost}</td><td>${m.hitze}</td><td>${zahl(m.regen, 0)} mm</td><td>${m.sonne == null ? "–" : zahl(m.sonne, 0) + " h"}</td></tr>`).join("")}
-    </tbody></table>
-    <p class="klein leise" style="margin:8px 0 0">Wetterdaten: Open-Meteo.com (Archiv). Es sind berechnete Werte für deinen Standort, keine Messung im Garten. Frostnacht: Tiefstwert ${GRENZEN.frost} °C oder darunter · Hitzetag: ab ${GRENZEN.hitze} °C.${ausApp ? ` Die letzten ${ausApp} Tage fehlen im Archiv noch und stammen aus der App (ohne Sonnenstunden).` : ""} Mit der Maus über dem Diagramm siehst du die einzelnen Werte.</p>`;
+function wetterBerichtHTML(z, tage, fehler) {
+  if (!tage || !tage.length) return `<h2>${icon("i-w-teils")} Wetter</h2><p class="klein leise" style="margin:0">${!D.einstellungen.standort ? "Für das Wetter fehlt der Standort (Zahnrad → Standort)." : fehler ? `Die Wetterdaten von Open-Meteo konnten nicht geladen werden (${esc(fehler)}), und die App hat für diesen Zeitraum selbst nichts aufgezeichnet.` : "Für diesen Zeitraum gibt es keine Wetterdaten."}</p>`;
+  const wm = wetterMonateAus(tage), sumR = tage.reduce((a, x) => a + (x.regen || 0), 0), mitSonne = tage.filter(x => x.sonne != null), sumS = mitSonne.reduce((a, x) => a + x.sonne, 0);
+  const ausApp = tage.filter(x => x.ausApp).length, n = tageZwischen(z.von, z.bis) + 1, einheit = n <= 62 ? "Tag" : "Woche";
+  const kalt = tage.reduce((a, x) => x.min < a.min ? x : a), warm = tage.reduce((a, x) => x.max > a.max ? x : a);
+  return `<h2>${icon("i-w-teils")} Wetter</h2>
+    ${fehler ? `<p class="klein leise">Open-Meteo war nicht erreichbar (${esc(fehler)}). Angezeigt wird, was die App selbst aufgezeichnet hat – ohne Sonnenstunden und eventuell mit Lücken.</p>` : ""}
+    <div class="be-kennz">
+      <div><b>${zahl(kalt.min, 1)} °C</b><span>Tiefstwert (${datumKurz(kalt.datum)})</span></div><div><b>${zahl(warm.max, 0)} °C</b><span>Höchstwert (${datumKurz(warm.datum)})</span></div>
+      <div><b>${tage.filter(x => x.min <= GRENZEN.frost).length}</b><span>Frostnächte</span></div><div><b>${tage.filter(x => x.max >= GRENZEN.hitze).length}</b><span>Hitzetage</span></div>
+      <div><b>${zahl(sumR, 0)} mm</b><span>Regen</span></div><div><b>${mitSonne.length ? zahl(sumS, 0) + " h" : "–"}</b><span>Sonnenstunden</span></div></div>
+    <h3 class="dia-titel">Temperatur pro Tag (Tiefst- bis Höchstwert)</h3>${tempDiagramm(tage, z)}
+    <h3 class="dia-titel">Regen pro ${einheit} (mm)</h3>${balkenDiagramm(tage, z, "regen", "dia-regen", "mm", `Regen pro ${einheit}`)}
+    ${mitSonne.length ? `<h3 class="dia-titel">Sonnenstunden pro ${einheit}</h3>${balkenDiagramm(tage, z, "sonne", "dia-sonne", "h", `Sonnenstunden pro ${einheit}`)}` : ""}
+    ${wm.length > 1 ? `<table class="tabelle be-wtab"><thead><tr><th>Monat</th><th>Tiefstwert</th><th>Höchstwert</th><th>Frostnächte</th><th>Hitzetage</th><th>Regen</th><th>Sonne</th></tr></thead><tbody>
+      ${wm.map(m => `<tr><td>${MONATE[m.monat - 1]}${wm.some(x => x.jahr !== m.jahr) ? " " + m.jahr : ""}</td><td>${zahl(m.min, 1)} °C</td><td>${zahl(m.max, 0)} °C</td><td>${m.frost}</td><td>${m.hitze}</td><td>${zahl(m.regen, 0)} mm</td><td>${m.sonne == null ? "–" : zahl(m.sonne, 0) + " h"}</td></tr>`).join("")}
+    </tbody></table>` : ""}
+    <p class="klein leise" style="margin:8px 0 0">Wetterdaten: Open-Meteo.com (Archiv). Es sind berechnete Werte für deinen Standort, keine Messung im Garten. Frostnacht: Tiefstwert ${GRENZEN.frost} °C oder darunter · Hitzetag: ab ${GRENZEN.hitze} °C.${ausApp && !fehler ? ` ${ausApp} Tag${ausApp > 1 ? "e" : ""} stamm${ausApp > 1 ? "en" : "t"} aus der App, weil das Archiv sie noch nicht hat (ohne Sonnenstunden).` : ""} Mit der Maus über dem Diagramm siehst du die einzelnen Werte.</p>`;
 }
-async function wetterBerichtLaden(jahr) {
+async function wetterBerichtLaden(z) {
   const el = $("#be-wetter"); if (!el) return;
   let tage = null, fehler = null;
-  try { tage = await archivWetter(jahr); } catch (e) { fehler = navigator.onLine ? e.message : "keine Internetverbindung"; }
-  if ($("#be-wetter") === el) el.innerHTML = wetterBerichtHTML(jahr, tage, fehler);
+  try { tage = await archivWetter(z.von, z.bis); } catch (e) { fehler = navigator.onLine ? e.message : "keine Internetverbindung"; tage = logTage(z.von, z.bis); }
+  if ($("#be-wetter") === el) el.innerHTML = wetterBerichtHTML(z, tage, fehler);
 }
 
 function seitentitel(main, titel, unter) {
@@ -3762,7 +3849,7 @@ const SEITEN = {
             <li><b>Wetter:</b> Die App merkt sich das Wetter der vergangenen Tage, sobald die Startseite mit Standort das Wetter lädt (es reicht, die App mindestens einmal pro Woche zu öffnen). Daraus entstehen Einträge für Frostnächte (ab 0 °C), Hitzetage (ab 30 °C), Starkregen (ab 20 mm) und Trockenphasen (mindestens 10 Tage mit zusammen unter 5 mm).</li>
             <li><b>Auswertung:</b> Pflanzungen und Ernten des Jahres, Erntemengen je Pflanze im Vergleich zum Vorjahr, letzter Frost im Frühjahr und erster Frost im Herbst, Frostnächte, Hitzetage und Regenmenge.</li>
             <li><b>Rückblick:</b> zeigt den Gartenplan an einem früheren Tag – mit Datumsfeld, Schieberegler oder den Monatsknöpfen (jeweils der 15.). Darunter steht, was an dem Tag in welchem Beet wuchs. Beete und Wege sind immer im heutigen Zustand, weil sich die App Umbauten nicht merkt.</li>
-            <li><b>Bericht:</b> stellt einen Jahresbericht zum Drucken oder als PDF zusammen: Gartenpläne zu wählbaren Zeitpunkten (z. B. Mitte Mai, Juli, September oder ein eigenes Datum), Überblick und Ernte, Wetter mit Diagrammen (Temperatur, Regen und Sonnenstunden pro Woche) und Monatstabelle – die Wetterdaten holt der Bericht für das ganze Jahr aus dem Open-Meteo-Archiv, Lücken gibt es dort also nicht –, was im Garten geschah, und das Tagebuch. Abschnitte lassen sich abwählen.</li>
+            <li><b>Bericht:</b> stellt einen Bericht zum Drucken oder als PDF zusammen – für ein <b>ganzes Jahr</b>, einen <b>Monat</b> oder einen <b>eigenen Zeitraum</b> (von–bis). Gedruckt wird mit „Drucken“ oben; die Auswahl selbst wird nicht mitgedruckt. Enthalten sind: Gartenpläne zu wählbaren Zeitpunkten (beim Jahr z. B. Mitte Mai, Juli, September, bei Monat und Zeitraum Beginn und Ende, dazu ein eigenes Datum; ist die Bepflanzung gleich geblieben, erscheint der Plan nur einmal), Überblick und Ernte (mit Vergleich zum gleichen Zeitraum im Vorjahr), Wetter mit Diagrammen (Temperatur, Regen und Sonnenstunden – bei kurzen Zeiträumen pro Tag, sonst pro Woche) und Monatstabelle – die Wetterdaten holt der Bericht für das ganze Jahr aus dem Open-Meteo-Archiv, Lücken gibt es dort also nicht –, was im Garten geschah, und das Tagebuch. Abschnitte lassen sich abwählen.</li>
             <li><b>Drucken:</b> „${icon("i-drucken")} Drucken“ druckt die aktuelle Ansicht oder speichert sie als PDF.</li>
           </ul>
         </div></details>
