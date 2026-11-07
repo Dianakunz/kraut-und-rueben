@@ -36,8 +36,8 @@ const QUELLEN = {
   "url": "https://www.plantura.garden/gemuese/knoblauch/knoblauch-pflanzen"
  },
  "samenhaus": {
-  "titel": "Samenhaus: Keimfähigkeit von Gemüse- und Kräutersamen",
-  "url": "https://www.samenhaus.de/gartenblog/?p=10692"
+  "titel": "Samenhaus: Lagerung von Saatgut und Keimfähigkeit von Gemüse- und Kräutersamen",
+  "url": "https://www.samenhaus.de/gartenblog/lagerung-und-aufbewahrung-von-saatgut-und-samen"
  },
  "plantura_misch": {
   "titel": "Plantura: Mischkultur – Pflanzen mit Schutzwirkung (Tabelle)",
@@ -53,15 +53,15 @@ const QUELLEN = {
  },
  "hornbach2": {
   "titel": "Hornbach: Beetnachbarn-Tabelle (Tomate, Kartoffel, Zucchini, Kürbis, Karotte)",
-  "url": "https://media.hornbach.lu/cmsm/lu/de-lu/lu-2.pdf"
+  "url": "https://media.hornbach.lu/cms/lu/de-lu/lu-mischkultur-beetnachbarn.pdf"
  },
  "samenhaus_misch": {
-  "titel": "Samenhaus: Pflanzenschutz durch Mischkultur (Tagetes, Ringelblume an Erdbeeren)",
-  "url": "https://www.samenhaus.de/gartenblog/?p=825"
+  "titel": "Samenhaus: Pflanzen gegen Schädlinge im Blumen- und Gemüsebeet (Tagetes, Ringelblume an Erdbeeren)",
+  "url": "https://www.samenhaus.de/gartenblog/pflanzen-gegen-schaedlinge-im-blumen-und-gemuesebeet"
  },
  "samenhaus2": {
   "titel": "Samenhaus: Saatgut-Keimfähigkeit (Chinakohl, Rettich u. a.)",
-  "url": "https://www.samenhaus.de/gartenblog/?p=179"
+  "url": "https://www.samenhaus.de/gartenblog/keimfaehigkeit-von-samen-wie-lange-ist-saatgut-haltbar"
  },
  "lwg_erdbeere": {
   "titel": "Bayerische Gartenakademie, Merkblatt 3182: Erdbeeren",
@@ -133,7 +133,7 @@ const QUELLEN = {
  },
  "samenhaus_feige": {
   "titel": "Samenhaus: Feigen im Garten (selbstfruchtende, winterharte Sorten)",
-  "url": "https://www.samenhaus.de/gartenblog/?p=9359"
+  "url": "https://www.samenhaus.de/gartenblog/feigen-selbst-ziehen-tipps-zu-anbau-und-pflege"
  },
  "zdf_feige": {
   "titel": "ZDFheute: Feigenbaum pflanzen (Reife Ende Juli/August bis Oktober)",
@@ -149,7 +149,7 @@ const QUELLEN = {
  },
  "samenhaus_melone": {
   "titel": "Samenhaus: Melonen anbauen (Abstand 80–100 cm)",
-  "url": "https://www.samenhaus.de/gartenblog/?p=301"
+  "url": "https://www.samenhaus.de/gartenblog/melonen-koestliche-sommerfruechte-aus-dem-eigenen-garten"
  },
  "bund_gd": {
   "titel": "BUND: Gründüngungspflanzen (Tabelle mit Boden, Saatzeit, Saatmenge g/m²)",
@@ -204,8 +204,8 @@ const QUELLEN = {
   "url": "https://www.gartenjournal.net/brennnesseljauche-gegen-mehltau"
  },
  "samenhaus_jauche": {
-  "titel": "Samenhaus: Pflanzenjauchen und Kaltwasserauszüge (Mengen je Pflanze)",
-  "url": "https://www.samenhaus.de/gartenblog/?p=1146"
+  "titel": "Samenhaus: Pflanzenbrühe, Jauche und Kaltwasserauszug gegen Schädlinge und Krankheiten",
+  "url": "https://www.samenhaus.de/gartenblog/pflanzenbruehe-schaedlinge-und-krankheiten-bekaempfen"
  },
  "oekotest_nessel": {
   "titel": "Öko-Test: Von wegen Unkraut – die Brennnessel ist im Garten nützlich (Wurzelsperre)",
@@ -231,9 +231,9 @@ const QUELLEN = {
   "titel": "Pabst Keimkraft (bei Hornbach): Kornblume 'Blauer Junge' – Aussaat, Saattiefe, Abstand",
   "url": "https://www.hornbach.de/p/kornblume-blauer-junge-samen-von-pabst-keimkraft/12422801/"
  },
- "quedlinburger_kornblume": {
-  "titel": "Quedlinburger (bei toom): Kornblumen gefüllt – Saattiefe 1,5 cm",
-  "url": "https://toom.de/p/kornblumen-gefuellt-mischung/4234098"
+ "kiepenkerl_kornblume": {
+  "titel": "Kiepenkerl (bei Hornbach): Kornblume 'Blauer Junge' – Aussaat März–Juni und September, Saattiefe 0,5–1 cm",
+  "url": "https://www.hornbach.at/p/blumensamen-kiepenkerl-kornblume-blauer-junge/12599865/"
  },
  "plantura_kornblume": {
   "titel": "Plantura: Kornblume – Sorten, Aussaat, Verwendung",
@@ -267,13 +267,9 @@ const QUELLEN = {
   "titel": "Hornbach: Sonnenblumen – wann aussäen? (Saattiefe 2–3 cm)",
   "url": "https://www.hornbach.de/projekte/sonnenblumen-saeen/"
  },
- "selbst_sonnenblume": {
-  "titel": "selbst.de: Sonnenblumen pflanzen, säen und ernten",
-  "url": "https://www.selbst.de/sonnenblumen-so-retten-bambusstaebe-ihre-sonnenblumen-48215.html"
- },
- "selbst_gd": {
-  "titel": "selbst.de: Gründüngung mit Gelbsenf (Fruchtfolge mit Kreuzblütlern)",
-  "url": "https://selbst.de/gruenduengung-mit-gelbsenf-54764.html"
+ "utopia_sonnenblume": {
+  "titel": "Utopia: Sonnenblumen vorziehen (Kernreife Ende August/Anfang September)",
+  "url": "https://utopia.de/ratgeber/sonnenblumen-vorziehen-vom-samen-zur-gelben-bluetenpracht_289199/"
  },
  "ble": {
   "titel": "BLE/BZL: Saat- und Pflanzkalender, 2. Auflage 2024 (Abstände, Anzucht, Direktsaat, Pflanzung, Ernte)",
@@ -4598,15 +4594,15 @@ const PFLANZEN = [
   "einzeln": false,
   "quellen": [
    "pabst_kornblume",
-   "quedlinburger_kornblume",
+   "kiepenkerl_kornblume",
    "plantura_kornblume",
    "bund_gd"
   ],
   "anleitung": "Von März bis in den Frühsommer direkt ins Beet säen und auf etwa 15 cm vereinzeln; eine Herbstsaat im September überwintert und blüht schon ab Mai. Blüht von Juni bis September; Verblühtes abschneiden verlängert die Blüte. Die Blütenblätter sind essbar – als Farbtupfer im Salat, auf Kuchen oder getrocknet im Tee.",
   "hinweise": [
    "„Ernten“ meint hier die Blüten.",
-   "Aussaatzeit: Pabst nennt März/April und September, andere Anbieter März bis Juni.",
-   "Saattiefe: Pabst gibt 0,5 cm an, Quedlinburger 1,5 cm. Manche Ratgeber nennen die Kornblume Licht-, andere Dunkelkeimer – dünn bedecken ist ein guter Mittelweg.",
+   "Aussaatzeit: Pabst nennt März/April und September, Kiepenkerl März bis Juni und September.",
+   "Saattiefe: Pabst gibt 0,5 cm an, Kiepenkerl 0,5–1 cm. Plantura nennt die Kornblume Lichtkeimer, Gartenjournal Dunkelkeimer – dünn bedecken ist ein guter Mittelweg.",
    "Nährstoffbedarf: Richtwert."
   ],
   "vorziehen": [],
@@ -4656,14 +4652,14 @@ const PFLANZEN = [
   "quellen": [
    "toom_sonnenblume",
    "hornbach_sonnenblume",
-   "selbst_sonnenblume",
+   "utopia_sonnenblume",
    "bund_gd"
   ],
   "anleitung": "Sonnenblumen vertragen keinen Frost: nach den Eisheiligen direkt säen oder ab März im Haus vorziehen und Mitte Mai auspflanzen. Hohe Sorten an einen Stab binden. Für Kerne die Köpfe stehen lassen, bis sie sich hängen und die Rückseite braun ist; ein Netz oder Gazetuch schützt vor Vögeln. Die Kerne sind essbar und lassen sich im nächsten Jahr wieder aussäen.",
   "hinweise": [
    "„Ernten“ meint hier die Kerne.",
    "Aussaat: toom nennt April bis Juni, Utopia rät nicht vor Ende April, die meisten Ratgeber warten bis nach den Eisheiligen – die App nennt Mai/Juni als sicheren Zeitraum.",
-   "Kernreife: Utopia nennt Ende August/Anfang September, selbst.de Oktober – je nach Sorte und Aussaat.",
+   "Kernreife: Utopia nennt Ende August/Anfang September, späte Aussaaten reifen bis in den Oktober (Richtwert). Reif sind die Kerne, wenn der Kopf hängt und die Rückseite braun wird.",
    "Nährstoffbedarf: Starkzehrer ist ein Richtwert."
   ]
  },
@@ -4989,13 +4985,12 @@ const PFLANZEN = [
    "bund_gd",
    "vdl_gd",
    "nig_gd",
-   "oekotest_gd",
-   "selbst_gd"
+   "oekotest_gd"
   ],
   "anleitung": "Der schnellste Gründünger – auch spät im Jahr noch eine Hilfe. Achtung Fruchtfolge: Senf ist ein Kreuzblütler wie Kohl, Radieschen und Rucola. Nicht vor oder nach diesen säen, sonst können sich Kohlhernie und Schädlinge halten.",
   "hinweise": [
    "Späteste Aussaat: BUND nennt Ende August, der VdL September, Öko-Test sogar Oktober – je später, desto weniger Masse bildet er.",
-   "Fruchtfolge: BUND und selbst.de warnen ausdrücklich vor Senf vor oder nach Kreuzblütlern."
+   "Fruchtfolge: Der BUND warnt ausdrücklich vor Senf vor oder nach Kreuzblütlern."
   ],
   "vorziehen": [],
   "pflanzen": []

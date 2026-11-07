@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Kraut und Rüben · Version 0.13.1 -->
+<!-- Kraut und Rüben · Version 0.13.2 -->
 <html lang="de" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -813,13 +813,13 @@ table.tabelle th{font-weight:650;color:var(--leise)}
 <dialog id="dialog"></dialog>
 <div id="meldung" class="verborgen"></div>
 
-<script src="pflanzen.js?v=0.13.1"></script>
+<script src="pflanzen.js?v=0.13.2"></script>
 <script>
 "use strict";
 /* ============================================================
    KRAUT UND RÜBEN – Gartenplaner
    ============================================================ */
-const APP_VERSION = "0.13.1";
+const APP_VERSION = "0.13.2";
 const SPEICHER_SCHLUESSEL = "kur-daten";
 const WETTER_SCHLUESSEL = "kur-wetter";
 const DATEN_SCHEMA = 1;
@@ -3749,21 +3749,21 @@ const JA_TEILE = [
       <li>Täglich umrühren. Eine Handvoll Gesteinsmehl mildert den Geruch. Am besten im Freien und abseits der Terrasse ansetzen.</li>
       <li>Fertig ist die Jauche nach etwa zwei bis drei Wochen, wenn sie dunkel ist und <b>nicht mehr schäumt</b>. Absieben, die Reste auf den Kompost.</li>
     </ol>
-    <p><b>Anwenden:</b> nie pur. Zum Gießen <b>1 : 10</b> verdünnen (1 Liter Jauche auf 10 Liter Wasser), für junge Pflanzen schwächer, etwa ½ Liter auf 10 Liter. Auf feuchte Erde an den Fuß der Pflanze gießen, in der Wachstumszeit etwa alle ein bis zwei Wochen (Richtwert). ${jq("utopia_jauche", "nabu_staerkung")}</p>
+    <p><b>Anwenden:</b> nie pur. Zum Gießen <b>1 : 10</b> verdünnen (1 Liter Jauche auf 10 Liter Wasser), für junge Pflanzen schwächer, etwa ½ Liter auf 10 Liter. Auf feuchte Erde an den Fuß der Pflanze gießen, in der Wachstumszeit etwa alle ein bis zwei Wochen (Richtwert). Als Blattdünger auf die Blätter gesprüht 1 : 20. ${jq("utopia_jauche", "samenhaus_jauche", "nabu_staerkung")}</p>
     <p><b>Gut für</b> Starkzehrer wie Tomate, Gurke, Kürbis, Paprika und Kartoffel. ${jq("utopia_jauche")}</p>` },
   { id: "nessel-spritz", titel: "Brennnessel gegen Blattläuse", icon: "i-w-regen", html: () => `
-    <p><b>Kaltwasserauszug:</b> frische Brennnesseln zerkleinern, mit kaltem Wasser bedecken und etwa einen Tag ziehen lassen – es darf <b>nicht gären</b>. Absieben und unverdünnt auf die befallenen Triebe sprühen; bei Bedarf nach ein paar Tagen wiederholen. Samenhaus nennt 100 g frische Brennnesseln je Ansatz. ${jq("samenhaus_jauche", "nabu_staerkung")}</p>
+    <p><b>Kaltwasserauszug:</b> frische Brennnesseln zerkleinern, mit kaltem Wasser bedecken und einen bis drei Tage ziehen lassen – es darf <b>nicht gären</b>. Absieben und unverdünnt auf die befallenen Triebe sprühen; bei Bedarf nach ein paar Tagen wiederholen. ${jq("samenhaus_jauche", "nabu_staerkung")}</p>
     <p><b>Brühe:</b> Brennnesseln 24 Stunden einweichen, eine halbe Stunde köcheln, abkühlen lassen, absieben und verdünnt spritzen. Wirkt eher stärkend als düngend. ${jq("nabu_staerkung", "plantura_jauche")}</p>
-    <p class="klein leise">Spritzen am besten abends oder bei bedecktem Himmel, nicht in praller Sonne und nicht in offene Blüten.</p>` },
+    <p class="klein leise">Nur auf trockene Pflanzen spritzen, wenn kein Regen kommt – aber nicht in praller Sonne, sonst drohen Verbrennungen. Mehr Pflanzen pro Liter macht es nicht besser, sondern kann schaden. ${jq("samenhaus_jauche")}</p>` },
   { id: "beinwell", titel: "Beinwelljauche (Kalium)", icon: "i-w-regen", html: () => `
     <p>Wird genauso angesetzt wie Brennnesseljauche: etwa 1 kg zerkleinerte Beinwellblätter auf 10 Liter Regenwasser, 10–20 Tage gären lassen, bis kein Schaum mehr entsteht. ${jq("utopia_beinwell")}</p>
     <p><b>Anwenden:</b> 1 : 10 verdünnt gießen. Beinwell ist reich an <b>Kalium</b> – gut für Fruchtgemüse wie Tomaten und für Kartoffeln, gern auch gemischt mit Brennnesseljauche.</p>
     <p class="klein"><b>Wichtig:</b> Beinwell enthält Pyrrolizidinalkaloide. Er ist ein Dünger, kein Tee – nicht essen, nicht trinken. ${jq("apotheken_beinwell", "lfl_beinwell")}</p>` },
 ];
 const JA_WIDERSPRUECHE = [
-  "Verdünnung zum Spritzen: Manche Ratgeber verdünnen Brennnesseljauche für die Blätter 1 : 20, Gartenjournal gegen Schädlinge sogar 1 : 50. Gärende Jauche kann Blätter verätzen – deshalb für die Blätter lieber Kaltwasserauszug oder Brühe nehmen.",
-  "Kaltwasserauszug: Der NABU nennt 24 Stunden bis 3 Tage, viele Anleitungen nur 12–24 Stunden. Je länger er steht, desto eher beginnt er zu gären – dann wird er zur Jauche.",
-  "Gärdauer: Für Brennnesseljauche werden meist zwei bis drei Wochen genannt, für Beinwelljauche bei Utopia 10–20 Tage. Entscheidend ist, dass sich kein Schaum mehr bildet.",
+  "Verdünnung zum Spritzen: Samenhaus verdünnt Brennnesseljauche für die Blätter 1 : 20, Gartenjournal gegen Schädlinge sogar 1 : 50. Gärende Jauche kann Blätter verätzen – gegen Läuse lieber Kaltwasserauszug oder Brühe nehmen.",
+  "Kaltwasserauszug: NABU und Samenhaus nennen 24 bis 72 Stunden, andere Anleitungen nur 12–24 Stunden. Je länger er steht, desto eher beginnt er zu gären – dann wird er zur Jauche.",
+  "Gärdauer: Für Brennnesseljauche werden meist zwei bis drei Wochen genannt, manche Ratgeber auch nur 10–14 Tage, für Beinwelljauche Utopia 10–20 Tage. Entscheidend ist, dass sich kein Schaum mehr bildet.",
   "Brühe: Die Anleitungen verdünnen unterschiedlich stark, häufig 1 : 5 bis 1 : 10. Bei empfindlichen Jungpflanzen zuerst an wenigen Blättern ausprobieren.",
 ];
 const JA = { offen: "nessel-jauche" };
